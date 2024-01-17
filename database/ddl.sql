@@ -18,6 +18,9 @@ CREATE TABLE `users` (
   `sign_in_time` datetime DEFAULT NULL,
   `sign_up_time` datetime NOT NULL DEFAULT current_timestamp(),
   `flag_private` int(11) NOT NULL DEFAULT 0,
+  `cnt_report` int(11) not null default 0,
+  `cnt_win` int(11) not null default 0,
+  `cnt_play` int(11) not null default 0,
   PRIMARY KEY (`email_id`),
   UNIQUE KEY `users_unique` (`identifier`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;

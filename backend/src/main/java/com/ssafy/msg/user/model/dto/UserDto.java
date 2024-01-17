@@ -14,9 +14,13 @@ public class UserDto {
 	private String emailPassword;
 	private String nickname;
 	private String provider;
-	private String role;
 	private String identifier;
+	private int flagAdmin;
 	private String refreshToken;
 	private String signInTime;
 	private String signUpTime;
+	private int flagPrivate;
+	private int cntReport;
+	private int cntWin;
+	private int cntPlay;
 }

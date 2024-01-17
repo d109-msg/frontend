@@ -24,12 +24,24 @@ public class UserInfoDto {
 	@Schema(description = "회원 식별 아이디", nullable = true)
 	private String identifier;
 	
-	@Schema(description = "회원 권한", nullable = false)
-	private String role;
+	@Schema(description = "관리자 여부", nullable = false)
+	private int flagAdmin;
 	
 	@Schema(description = "최근 로그인 시간", nullable = false)
 	private String signInTime;
 	
 	@Schema(description = "회원가입 시간", nullable = false)
 	private String signUpTime;
+	
+	@Schema(description = "비공개 여부", nullable = false)
+	private int flagPrivate;
+	
+	@Schema(description = "신고당한 횟수", nullable = false)
+	private int cntReport;
+	
+	@Schema(description = "이긴 횟수", nullable = false)
+	private int cntWin;
+	
+	@Schema(description = "플레이 횟수", nullable = false)
+	private int cntPlay;
 }

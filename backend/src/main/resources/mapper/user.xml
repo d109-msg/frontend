@@ -8,7 +8,8 @@
 	<select id="findUserByEmailId" parameterType="string"
 		resultType="UserDto">
 		select email_id, email_password, nickname, provider,
-		identifier, role, refresh_token, sign_in_time, sign_up_time
+		identifier, flag_admin, refresh_token, sign_in_time, sign_up_time, flag_private,
+		cnt_report, cnt_win, cnt_play
 		from users
 		where
 		email_id =
@@ -18,8 +19,8 @@
 	<select id="getUserInfo" parameterType="string"
 		resultType="UserInfoDto">
 		select nickname, email_id, provider,
-		identifier, role, sign_in_time,
-		sign_up_time
+		identifier, flag_admin, sign_in_time, sign_up_time, flag_private,
+		cnt_report, cnt_win, cnt_play
 		from users
 		where email_id =
 		#{emailId}
@@ -34,7 +35,8 @@
 
 	<update id="signInWithOauth2" parameterType="map">
 		update users set
-		refresh_token = #{refreshToken} where email_id = #{emailId}
+		refresh_token = #{refreshToken}, sign_in_time = now()
+		where email_id = #{emailId}
 	</update>
 
 	<insert id="signUp" parameterType="SignUpDto">
@@ -46,8 +48,8 @@
 
 	<update id="signIn" parameterType="UserDto">
 		update users set
-		refresh_token
-		= #{refreshToken} where email_id = #{emailId}
+		refresh_token = #{refreshToken}, sign_in_time = now()
+		where email_id = #{emailId}
 	</update>
 
 	<update id="signOut" parameterType="string">

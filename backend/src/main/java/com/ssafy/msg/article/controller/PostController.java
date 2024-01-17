@@ -13,7 +13,7 @@ import org.springframework.web.multipart.MultipartFile;
 @RequestMapping("/post")
 @RequiredArgsConstructor
 @Slf4j
-@Tag(name = "post", description = "게시물 API")
+@Tag(name = "Post", description = "게시물 API")
 public class PostController {
 
     private final OpenAiUtil openAiUtil;
