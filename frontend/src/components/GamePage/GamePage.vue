@@ -1,27 +1,22 @@
 <template>
-    <!-- 메인 페이지 -->
+  <div>
     <div>
         <div class="banner"></div>
         <div style="height: 100000px;"></div>
     </div>
+  </div>
 </template>
 
 <script>
-
-
 export default {
-    name : 'MainPage',
+    name: "GamePage",
     data(){
-        return {
+        return{
             prevScrollY : '',
         }
     },
-    components :{
-
-    },
 
     mounted(){
-
         let banner = document.querySelector('.banner')
         this.prevScrollY = window.scrollY
         window.addEventListener('scroll',()=>{
@@ -37,10 +32,10 @@ export default {
             this.prevScrollY = nowScrollY
 
         })
-    }
+    },
 }
 </script>
 
-<style src="./MainPage.css">
+<style scoped src="./GamePage.css">
 
 </style>
