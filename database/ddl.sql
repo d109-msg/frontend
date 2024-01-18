@@ -117,6 +117,7 @@ CREATE TABLE `rooms` (
   `id` varchar(100) NOT NULL,
   `create_time` datetime NOT NULL,
   `last_message_id` int(11) DEFAULT NULL,
+  `
   PRIMARY KEY (`id`),
   KEY `rooms_messages_FK` (`last_message_id`),
   CONSTRAINT `rooms_messages_FK` FOREIGN KEY (`last_message_id`) REFERENCES `messages` (`id`)
@@ -137,6 +138,7 @@ CREATE TABLE `room_users` (
   `user_email_id` varchar(100) NOT NULL,
   `last_message_id` int(11) DEFAULT NULL,
   `job_id` varchar(50) DEFAULT NULL,
+  `data_type` varchar(100) NOT NULL, -- 개인, 그룹, 랜덤, 대기
   PRIMARY KEY (`room_id`,`user_email_id`),
   KEY `room_users_jobs_FK` (`job_id`),
   CONSTRAINT `room_users_jobs_FK` FOREIGN KEY (`job_id`) REFERENCES `jobs` (`id`),
@@ -150,7 +152,7 @@ CREATE TABLE `messages` (
   `room_id` varchar(100) NOT NULL,
   `user_email_id` varchar(100) NOT NULL,
   `send_time` datetime NOT NULL,
-  `type` varchar(100) NOT NULL DEFAULT 'normal',
+  `data_type` varchar(100) NOT NULL, -- 텍스트, 이미지
   PRIMARY KEY (`id`),
   KEY `messages_users_FK` (`user_email_id`),
   KEY `messages_rooms_FK` (`room_id`),
