@@ -1,4 +1,4 @@
-# msg_sns_pjt
+# frontend
 
 ## Project setup
 ```

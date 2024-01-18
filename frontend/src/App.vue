@@ -1,26 +1,52 @@
 <template>
-  <img alt="Vue logo" src="./assets/logo.png">
-  <HelloWorld msg="Welcome to Your Vue.js App"/>
+  <div>
+    <router-view></router-view>
+  </div>
 </template>
 
 <script>
-import HelloWorld from './components/HelloWorld.vue'
+import { useMeta } from 'vue-meta'
+
+
 
 export default {
   name: 'App',
-  components: {
-    HelloWorld
-  }
+  
+
+
+  setup(){
+
+
+
+// 메타데이터 설정(open graph)
+useMeta({
+  title: "SNS 음식 공유 플랫폼",
+  meta: [
+  {
+    vmid: 'description',
+    name: 'description',
+    content:
+      'HONEYCOMB로 음식 조합을 공유하고 자랑해보세요',
+  },
+  {
+    vmid: 'keywords',
+    name: 'keywords',
+    content: 'Eat, Share, HONEYCOMB',
+  },
+  {
+    vmid: 'author',
+    name: 'author',
+    content: '',
+  },
+  ]}) // end useMeta
+
+
+
+}
 }
 </script>
 
 <style>
-#app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-  margin-top: 60px;
-}
+@import './assets/css/reset.css';
+
 </style>
