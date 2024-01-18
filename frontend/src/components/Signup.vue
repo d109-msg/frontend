@@ -1,0 +1,167 @@
+<template>
+    <div class="container">
+      <div class="main-img"></div>
+      <div class="login-box">
+          <p class="login-title">WELCOME!!</p>
+          <div class="name-form">
+              <input type="text" class="name-input" required v-model="name">
+              <p class="name-label">이름</p>
+              <img src="@/assets/css/HomepageImg/icon/user_grey_icon.png" alt="" class="email-img">
+              <p class="name-warn" v-if="nameCheck">올바른 형식의 이름을 기입해주세요.</p>
+          </div>
+          <div class="email-form">
+              <input type="text" class="email-input" required v-model="email">
+              <p class="email-label">이메일</p>
+              <img src="@/assets/css/loginformImg/email.png" alt="" class="email-img">
+              <p class="email-warn" v-if="emailCheck">올바른 형식의 이메일을 기입해주세요.</p>
+          </div>
+          <div class="password-form">
+              <input type="password" class="password-input" required v-model="password">
+              <p class="password-label">비밀번호</p>
+              <img src="@/assets/css/loginformImg/password.png" alt="" class="password-img">
+              <p class="password-warn" v-if="passwordCheck">특수문자를 포함한 비밀번호(8~15 글자)를 입력해주세요.</p>
+          </div>
+          <div class="validation-form">
+              <input type="password" class="validation-input" required v-model="validation">
+              <p class="validation-label">비밀번호 확인</p>
+              <img src="@/assets/css/SignupImg/check_icon.png" alt="" class="password-img">
+              <p class="validation-warn" v-if="validationCheck">비밀번호가 일치하지 않습니다.</p>
+          </div>
+          <button class="login-btn" @click="signUp">
+              가입하기
+          </button>
+          <div style="margin-top: 5%; font-size: 0.8rem; color: rgba(0,0,0,0.6);">
+              <span style="cursor: pointer;">아이디 찾기</span>
+              <span> | </span>
+              <span style="cursor: pointer;">비밀번호 찾기</span>
+              <span > | </span>
+              <span style="cursor: pointer;"
+              @click="$router.push('/login')"
+              >로그인</span>
+
+          </div>
+          <div style="display: flex; justify-content: center;">
+          
+          </div>
+      </div>
+</div>
+
+</template>
+
+<script>
+import axios from 'axios'
+
+
+export default {
+    name : "SignupPage",
+    data(){
+        return{
+            server : "",
+            name : "",
+            nameCheck : false,
+            email : "",
+            emailCheck : false,
+            password : "",
+            passwordCheck : false,
+            validation : "",
+            validationCheck : false,
+        }
+    },
+    methods : {
+        checkName : function(){
+            const valid = /^[가-힣]{2,6}$/
+            if(!valid.test(this.name)|| !this.name){
+                this.nameCheck = true
+                return
+            }
+            this.nameCheck = false
+        },
+
+
+        checkEmail : function(){
+            const valid = /^[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*.[a-zA-Z]{2,3}$/i;
+            if(!valid.test(this.email)|| !this.email) {
+                this.emailCheck = true
+                return
+            }
+            this.emailCheck = false
+            },
+
+
+        checkPassword : function(){
+            const valid = /^(?=.*[a-zA-Z])(?=.*[!@#$%^*+=-])(?=.*[0-9]).{8,15}$/; 
+            if(!valid.test(this.password)|| !this.password){
+                this.passwordCheck = true
+                return
+            }
+            this.passwordCheck = false
+        },
+        checkValidation : function(){
+            if(this.validation === this.password){
+                this.validationCheck = false
+                return
+            }
+            else{
+                this.validationCheck = true
+                return
+            }
+        },
+
+
+        isDuplicateEmail : function(){
+            axios.get(this.server + "")
+            .then((result)=>{
+                console.log(result)
+            })
+            .catch((err)=>{
+                console.log(err)
+            })
+        },
+
+
+        signUp : function(){
+            const data = {
+                nickname : this.name,
+                emailId : this.email,
+                emailPassword : this.password,
+
+            }
+            axios.post("http://localhost:8080/user/sign-up", JSON.stringify(data),{
+                headers: {"Content-Type": `application/json`}
+            })
+            .then(result=>{
+                console.log(result,"성공")
+            })
+            .catch(err => {
+                console.log(err)
+            })
+        }
+
+    },
+
+    watch:{
+
+        name(){
+            this.checkName()
+        },
+
+
+        email(){
+            this.checkEmail()
+        },
+
+        password(){
+            this.checkValidation()
+            this.checkPassword()
+        },
+        
+        validation(){
+            this.checkValidation()
+        },
+    },
+}
+</script>
+
+<style scoped src="../assets/css/Signupform.css">
+
+</style>
