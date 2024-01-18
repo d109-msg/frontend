@@ -1,25 +1,24 @@
 <template>
   <div class="container">
-      <NavBarVue></NavBarVue>
-      <MainPageVue></MainPageVue>
+    <NavBarVue/>
+    <MainPage/>
   </div>
 </template>
 
 <script>
-import MainPageVue from '@/components/MainPage/MainPage.vue'
 import NavBarVue from '@/components/NavBar/NavBar.vue'
+import MainPage from '../MainPage/MainPage.vue';
 
 export default {
   name:"HomePage",
   components:{
       NavBarVue,
-      MainPageVue,
-  }
- ,
+      MainPage
+  },
 }
 </script>
 
 
-<style scoped src="../assets/css/Homepage.css">
-
+<style scoped src="./Homepage.css">
+  
 </style>
