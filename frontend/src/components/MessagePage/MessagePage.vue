@@ -1,6 +1,6 @@
 <template>
   <div>
-    채팅창입니다
+    <h1 style="margin-top: 93px;">adjvlaksdjvklasdjlkv;asdlkvj</h1>
   </div>
 </template>
 
