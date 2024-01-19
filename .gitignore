@@ -4,13 +4,15 @@
 ### Java ###
 # Compiled class file
 *.class
-application.yml
+*.yml
 
 # Log file
 *.log
 
 # BlueJ files
 *.ctxt
+
+*.env
 
 # Mobile Tools for Java (J2ME)
 .mtj.tmp/
