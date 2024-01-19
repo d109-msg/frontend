@@ -9,30 +9,37 @@ import TodayPage from './components/TodayPage/TodayPage.vue'
 import SocialSign from './components/SocialSign.vue'
 import Mainpage from './components/MainPage/MainPage.vue'
 import GamePage from './components/GamePage/GamePage.vue'
+
+
+
 const routes = [
     {
         path: "/",   // 문자열 ""로 써야함 주의
         component : HomePage,
+        name: 'HomePage',
         children:[
             {   
                 name: "main",
-                path: "/main",
+                path: "",
                 component: Mainpage
             },
             {   
                 name: "messgage",
-                path: "message",
+                path: "/message",
                 component: MessagePage
             },
             {
                 name: "game",
-                path: "game",
+                path: "/game",
                 component: GamePage
             },
             {   name: "mypage",
                 path: "/mypage",
                 component : MyPage,
             },
+
+
+            
         ]
     },
 
@@ -60,6 +67,15 @@ const routes = [
         path : "/sign-in/callback/:id", //소셜로그인
         component : SocialSign,
     },
+
+
+
+
+    { //없는 URL 매핑시키는 로직 맨 마지막에 넣으면 됩니다.
+        name: "NotFoundPage",
+        path: "/:notFound(.*)*",
+        redirect: '/'
+    }
 ]
 
 const router = createRouter({

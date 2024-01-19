@@ -1,10 +1,8 @@
 <template>
     <div class="nav-container" >
-        <div style="width:58px; height: 58px; border: 1px dotted; margin-left: 50px;">
-
-        </div>
+        <div style="width:58px; height: 58px; border: 1px dotted; margin-left: 50px;"></div>
         <div class="right-bar">
-            <div class="tag" @click="tagClick('/main')" id="/main">HOME</div>
+            <div class="tag" @click="tagClick('/')" id="/">HOME</div>
             <div class="tag" @click="tagClick('/game')" id="/game">GAME</div>
             <div class="tag" @click="tagClick('/message')" id="/message">MESSAGE</div>
             <div class="tag" @click="tagClick('/mypage')" id="/mypage">MYPAGE</div>
@@ -33,9 +31,7 @@ export default {
             const current = document.getElementById(place)
             current.classList.add('tag-click')
             this.selectedTag = current
-
             //라우터 추가 함수 여기에 넣으면 됩니다.
-
             router.push({path:place})
         },
 
@@ -43,6 +39,12 @@ export default {
     mounted() {
         const basicUrl = window.location.pathname
         this.selectedTag = document.getElementById(basicUrl)
+        // if(this.selectedTag==null){ //Home에서 잘못된 URI로 접근시, ex. router-view가 적용 되지 않은 local.../main 의 주소
+        //     router.push({name:'main'})
+        //     setTimeout(()=>{
+        //         window.location.reload() // router push 이후 새로고침이 안되서 강제로 해줌
+        //     },500)
+        // }
         this.selectedTag.classList.add('tag-click')
         let navContainer = document.querySelector('.nav-container')
         this.prevScrollY = window.scrollY
