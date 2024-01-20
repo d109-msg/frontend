@@ -32,3 +32,28 @@
 .banner-down-event{
     animation: banner-down forwards 0.2s;
 }
+
+.main-container{
+    margin-top: 40px;
+    margin-left: 64px;
+    margin-right: 64px;
+    border: 1px dotted black;
+    display: flex;
+    flex-direction: row;
+    margin-bottom: 100px;
+}
+
+/* .feed-page{
+    width: 70%;
+    border: 1px solid black;
+    margin: 30px;
+    margin-top: 0;
+    margin-left: 0;
+} */
+
+
+
+
+
+
+

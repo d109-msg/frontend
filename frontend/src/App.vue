@@ -48,5 +48,8 @@ useMeta({
 
 <style>
 @import './assets/css/reset.css';
-
+body{
+  background-color: #FFF8ED;
+  scroll-snap-type: y mandatory;
+}
 </style>

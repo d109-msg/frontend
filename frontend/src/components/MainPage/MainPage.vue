@@ -2,12 +2,20 @@
     <!-- 메인 페이지 -->
     <div>
         <div class="banner"></div>
-        <div style="height: 100000px;"></div>
+        <div class="main-container">
+            <!-- 추후 컴포넌트로 분리 가능(피드) -->
+            <FeedPage/>
+
+            <!-- 추후 컴포넌트로 분리 가능(작은 프로필) -->
+            <MiniProfile/>
+
+        </div>
     </div>
 </template>
 
 <script>
-
+import FeedPage from '../FeedPage/FeedPage.vue'
+import MiniProfile from '../MiniProfile/MiniProfile.vue'
 
 export default {
     name : 'MainPage',
@@ -17,11 +25,15 @@ export default {
         }
     },
     components :{
-
+        MiniProfile,
+        FeedPage,
     },
 
     mounted(){
 
+
+
+        // 스크롤 이벤트에 따른 배너 margin 조정
         let banner = document.querySelector('.banner')
         this.prevScrollY = window.scrollY
         window.addEventListener('scroll',()=>{
@@ -35,8 +47,10 @@ export default {
                 banner.classList.remove('banner-down-event')
             }
             this.prevScrollY = nowScrollY
-
         })
+
+
+
     }
 }
 </script>

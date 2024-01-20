@@ -15,6 +15,7 @@ export default {
       NavBarVue,
       MainPage
   },
+ 
 }
 </script>
 
