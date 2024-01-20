@@ -26,11 +26,11 @@ public class WebConfig implements WebMvcConfigurer {
 				.maxAge(1800);
 	}
 	
-	@Override
-	public void addInterceptors(InterceptorRegistry registry) {
-		registry.addInterceptor(userInterceptor)
-				.addPathPatterns("/**")
-				.excludePathPatterns("/swagger-ui/**", "/swagger-resources/**", "/v3/api-docs/**", "/error/**")
-				.excludePathPatterns("/user/sign-in/**", "/user/sign-up/**", "/user/token/**", "/user/reset-pw/**");
-	}
+//	@Override
+//	public void addInterceptors(InterceptorRegistry registry) {
+//		registry.addInterceptor(userInterceptor)
+//				.addPathPatterns("/**")
+//				.excludePathPatterns("/swagger-ui/**", "/swagger-resources/**", "/v3/api-docs/**", "/error/**")
+//				.excludePathPatterns("/user/sign-in/**", "/user/sign-up/**", "/user/token/**", "/user/reset-pw/**");
+//	}
 }

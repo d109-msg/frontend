@@ -14,7 +14,7 @@ import org.springframework.web.multipart.MultipartFile;
 @RequiredArgsConstructor
 @Slf4j
 
-@Tag(name = "Article", description = "게시물 API")
+@Tag(name = "Article", description = "게시물 관련 API")
 public class ArticleController {
 
     private final OpenAiUtil openAiUtil;

@@ -62,7 +62,7 @@ import lombok.extern.slf4j.Slf4j;
  * Swagger 설정
  * 1. @Tag로 API를 그룹화 (회원 CRUD API를 User로 그룹화, 게시물 CRUD API를 Article로 그룹화 등)
  */
-@Tag(name="User", description="회원 API")
+@Tag(name="User", description="회원 관련 API")
 public class UserController {
 	
 	@Value("${header.authorization}")
