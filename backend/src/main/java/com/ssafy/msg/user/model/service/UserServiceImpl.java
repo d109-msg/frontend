@@ -72,4 +72,10 @@ public class UserServiceImpl implements UserService {
 		userMapper.updateUserInfo(userDto);
 	}
 
+	@Override
+	public void resetPassword(UserDto userDto) throws Exception {
+		String encodedPassword = passwordEncoder.encode(userDto.getEmailPassword());
+		userDto.setEmailPassword(encodedPassword);
+        userMapper.resetPassword(userDto);
+	}
 }

@@ -13,5 +13,5 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class AccessTokenDto {
 	@Schema(description = "JWT Access Token", nullable = false)
-	String accessToken;
+	private String accessToken;
 }

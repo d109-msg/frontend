@@ -2,14 +2,13 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
-<mapper
-	namespace="com.ssafy.msg.user.model.mapper.UserMapper">
+<mapper namespace="com.ssafy.msg.user.model.mapper.UserMapper">
 
 	<select id="findUserByEmailId" parameterType="string"
 		resultType="UserDto">
 		select email_id, email_password, nickname, provider,
-		identifier, flag_admin, refresh_token, sign_in_time, sign_up_time, flag_private,
-		cnt_report, cnt_win, cnt_play
+		identifier, flag_admin, refresh_token, sign_in_time, sign_up_time,
+		flag_private, image_url
 		from users
 		where
 		email_id =
@@ -19,8 +18,8 @@
 	<select id="getUserInfo" parameterType="string"
 		resultType="UserInfoDto">
 		select nickname, email_id, provider,
-		identifier, flag_admin, sign_in_time, sign_up_time, flag_private,
-		cnt_report, cnt_win, cnt_play
+		identifier, flag_admin,
+		sign_in_time, sign_up_time, flag_private, image_url
 		from users
 		where email_id =
 		#{emailId}
@@ -28,7 +27,8 @@
 
 	<insert id="signUpWithOauth2" parameterType="Oauth2Dto">
 		insert into users
-		(nickname, email_id, provider, refresh_token, sign_in_time) values (#{nickname},
+		(nickname, email_id, provider, refresh_token, sign_in_time) values
+		(#{nickname},
 		#{emailId},
 		#{provider}, #{refreshToken}, now())
 	</insert>
@@ -36,7 +36,8 @@
 	<update id="signInWithOauth2" parameterType="map">
 		update users set
 		refresh_token = #{refreshToken}, sign_in_time = now()
-		where email_id = #{emailId}
+		where email_id =
+		#{emailId}
 	</update>
 
 	<insert id="signUp" parameterType="SignUpDto">
@@ -48,7 +49,8 @@
 
 	<update id="signIn" parameterType="UserDto">
 		update users set
-		refresh_token = #{refreshToken}, sign_in_time = now()
+		refresh_token
+		= #{refreshToken}, sign_in_time = now()
 		where email_id = #{emailId}
 	</update>
 
@@ -65,6 +67,12 @@
 	<update id="updateUserInfo" parameterType="UserDto">
 		update users set
 		nickname = #{nickname}
+		where email_id = #{emailId}
+	</update>
+
+	<update id="resetPassword" parameterType="UserDto">
+		update users set
+		email_password = #{emailPassword}
 		where email_id = #{emailId}
 	</update>
 </mapper>

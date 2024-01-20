@@ -8,20 +8,14 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-@Schema(description = "로그인에 대한 요청 DTO")
+@Schema(description = "임시 비밀번호 발송에 대한 DTO")
 @Data
-@NoArgsConstructor	
+@NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class SignInDto {
-	
+public class ResetPasswordDto {
 	@Schema(description = "이메일 아이디", nullable = false, example = "hong@gmail.com")
 	@NotEmpty(message = "이메일을 입력해주세요.")
 	@Pattern(regexp = "^[a-zA-Z0-9+-\\_.]+@[a-zA-Z0-9-]+\\.[a-zA-Z0-9-.]+$", message = "이메일 형식에 맞지 않습니다.")
 	private String emailId;
-	
-	@Schema(description = "이메일 비밀번호", nullable = false, example = "Hong1234!")
-	@NotEmpty(message = "비밀번호를 입력해주세요.")
-	@Pattern(regexp = "^(?=.*[A-Za-z])(?=.*\\d)(?=.*[@$!%*#?&])[A-Za-z\\d@$!%*#?&]{8,20}$", message = "비밀번호는 8-20자의 영문 대소문자, 숫자, 특수문자로 구성되어야 합니다.")
-	private String emailPassword;
 }
