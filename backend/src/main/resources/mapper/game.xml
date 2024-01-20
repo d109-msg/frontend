@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+ "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper
+	namespace="com.ssafy.msg.user.model.mapper.GameMapper">
+
+	<select id="getRandomNicknames" resultType="RandomNickname">
+		SELECT
+			fn.id AS first_nickname,
+			ln.id AS last_nickname
+		FROM
+			(SELECT id, ROW_NUMBER() OVER () AS rownum FROM first_nicknames ORDER BY RAND()) fn
+				JOIN
+			(SELECT id, ROW_NUMBER() OVER () AS rownum FROM last_nicknames ORDER BY RAND()) ln
+			ON fn.rownum = ln.rownum
+			LIMIT #{limit}
+	</select>
+</mapper>
+
