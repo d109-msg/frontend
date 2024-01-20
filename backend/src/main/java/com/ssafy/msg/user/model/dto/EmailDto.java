@@ -9,9 +9,9 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class Oauth2Dto {
-	private String nickname;
+public class EmailDto {
+	
 	private String emailId;
-	private String provider;
-	private String refreshToken;
+	private String title;
+	private String content;
 }

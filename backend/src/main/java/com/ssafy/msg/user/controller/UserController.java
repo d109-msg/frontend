@@ -5,6 +5,7 @@ import java.util.Arrays;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -20,6 +21,7 @@ import com.ssafy.msg.user.exception.UserDuplicateException;
 import com.ssafy.msg.user.exception.UserNotFoundException;
 import com.ssafy.msg.user.model.dto.AccessTokenDto;
 import com.ssafy.msg.user.model.dto.Oauth2Dto;
+import com.ssafy.msg.user.model.dto.ResetPasswordDto;
 import com.ssafy.msg.user.model.dto.SignInDto;
 import com.ssafy.msg.user.model.dto.SignUpDto;
 import com.ssafy.msg.user.model.dto.TokenDto;
@@ -27,8 +29,10 @@ import com.ssafy.msg.user.model.dto.UpdateDto;
 import com.ssafy.msg.user.model.dto.UserDto;
 import com.ssafy.msg.user.model.dto.UserInfoDto;
 import com.ssafy.msg.user.model.service.UserService;
+import com.ssafy.msg.user.util.EmailUtil;
 import com.ssafy.msg.user.util.JwtUtil;
 import com.ssafy.msg.user.util.Oauth2Util;
+import com.ssafy.msg.user.util.PasswordUtil;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -65,6 +69,10 @@ public class UserController {
 	private String authorization;
 
 	private final JwtUtil jwtUtil;
+	
+	private final EmailUtil emailUtil;
+	
+	private final PasswordUtil passwordUtil;
 
 	private final Oauth2Util[] oauth2Utils;
 	
@@ -210,6 +218,8 @@ public class UserController {
 			@ApiResponse(responseCode = "400", description = "액세스 토큰 재발급 실패", content = @Content) })
 	@GetMapping("/token")
 	public ResponseEntity<?> reissueAccessToken(HttpServletRequest request) {
+		log.info("reissueAccessToken() -> Start");
+		
 		String header = request.getHeader(authorization);
 		if (header == null || !header.startsWith("Bearer ")) {
 			throw new TokenInvalidException();
@@ -235,6 +245,8 @@ public class UserController {
 		String accessToken = jwtUtil.createAccessToken(emailId);
 		AccessTokenDto accessTokenDto = AccessTokenDto.builder().accessToken(accessToken).build();
 		
+		log.info("reissueAccessToken() -> Success");
+		log.info("reissueAccessToken() -> End");
 		return new ResponseEntity<>(accessTokenDto, HttpStatus.CREATED);
 	}
 	
@@ -245,17 +257,22 @@ public class UserController {
 			@ApiResponse(responseCode = "404", description = "회원정보 조회 실패", content = @Content) })
 	@GetMapping("/info")
 	public ResponseEntity<?> getUserInfo(HttpServletRequest request) {
+		log.info("getUserInfo() -> Start");
 		
 		String emailId = (String) request.getAttribute("emailId");
 
 		UserInfoDto userInfoDto = null;
 		try {
 			userInfoDto = userService.getUserInfo(emailId);
+			System.out.println(userInfoDto);
+			log.info("getUserInfo() -> Success");
+			return new ResponseEntity<>(userInfoDto, HttpStatus.OK);
 		} catch (Exception e) {
-			throw new UserNotFoundException();
+			log.error("getUserInfo() -> Exception : {}", e);
+			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+		} finally {
+			log.info("getUserInfo() -> End");
 		}
-
-		return new ResponseEntity<>(userInfoDto, HttpStatus.OK);
 	}
 	
 	@Operation(summary = "로그아웃", description = "액세스 토큰으로 로그아웃")
@@ -263,16 +280,20 @@ public class UserController {
 			@ApiResponse(responseCode = "404", description = "로그아웃 실패", content = @Content) })
 	@GetMapping("/sign-out")
 	public ResponseEntity<?> signOut(HttpServletRequest request) {
+		log.info("signOut() -> Start");
 		
 		String emailId = (String) request.getAttribute("emailId");
 		
 		try {
 			userService.signOut(emailId);
+			log.info("signOut() -> Success");
+			return new ResponseEntity<>(HttpStatus.OK);
 		} catch (Exception e) {
-			throw new UserNotFoundException();
+			log.error("signOut() -> Exception : {}", e);
+			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+		} finally {
+			log.info("signOut() -> End");
 		}
-		
-		return new ResponseEntity<>(HttpStatus.OK);
 	}
 	
 	@Operation(summary = "회원탈퇴", description = "액세스 토큰으로 회원탈퇴")
@@ -280,16 +301,20 @@ public class UserController {
 			@ApiResponse(responseCode = "404", description = "회원탈퇴 실패", content = @Content) })
 	@DeleteMapping
 	public ResponseEntity<?> withdraw(HttpServletRequest request) {
-
+		log.info("withdraw() -> Start");
+		
 		String emailId = (String) request.getAttribute("emailId");
 
 		try {
 			userService.withdraw(emailId);
+			log.info("withdraw() -> Success");
+			return new ResponseEntity<>(HttpStatus.OK);
 		} catch (Exception e) {
-			throw new UserNotFoundException();
+			log.error("withdraw() -> Exception : {}", e);
+			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+		} finally {
+			log.info("withdraw() -> End");
 		}
-
-		return new ResponseEntity<>(HttpStatus.OK);
 	}
 	
 	@Operation(summary = "회원정보 수정", description = "액세스 토큰으로 회원정보 수정")
@@ -297,16 +322,56 @@ public class UserController {
 			@ApiResponse(responseCode = "404", description = "회원정보 수정 실패", content = @Content) })
 	@PatchMapping
 	public ResponseEntity<?> updateUserInfo(HttpServletRequest request, @RequestBody UpdateDto updateDto) {
-
+		log.info("updateUserInfo() -> Start");
+		log.info("updateUserInfo() -> Receive updateDto : {}", updateDto);
+		
 		String emailId = (String) request.getAttribute("emailId");
 
 		try {
 			UserDto userDto = UserDto.builder().emailId(emailId).nickname(updateDto.getNickname()).build();
 			userService.updateUserInfo(userDto);
+			log.info("updateUserInfo() -> Success");
+			return new ResponseEntity<>(HttpStatus.OK);
 		} catch (Exception e) {
-			throw new UserNotFoundException();
+			log.error("updateUserInfo() -> Exception : {}", e);
+			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+		} finally {
+			log.info("updateUserInfo() -> End");
 		}
-
-		return new ResponseEntity<>(HttpStatus.OK);
+	}
+	
+	@Transactional
+	@Operation(summary = "임시 비밀번호 발송", description = "기존 가입된 이메일에 임시 비밀번호 발송")
+	@ApiResponses(value = { @ApiResponse(responseCode = "200", description = "임시 비밀번호 발송 성공", content = @Content),
+			@ApiResponse(responseCode = "404", description = "임시 비밀번호 발송 실패", content = @Content) })
+	@PostMapping("/reset-pw")
+	public ResponseEntity<?> resetPassword(@RequestBody ResetPasswordDto resetPasswordDto) {
+		log.info("resetPassword() -> Start");
+		log.info("resetPassword() -> Receive emailId : {}", resetPasswordDto.getEmailId());
+		
+		try {
+			UserDto userDto = userService.findUserByEmailId(resetPasswordDto.getEmailId());
+			if (userDto == null || userDto.getProvider() != null) {
+				throw new UserNotFoundException();
+			}
+			
+			String randomPassword = passwordUtil.generateRandomPassword();
+			log.info("resetPassword() -> Create randomPassword : {}", randomPassword);
+			
+			userDto.setEmailPassword(randomPassword);
+			
+			emailUtil.sendTempPassword(userDto);
+			log.info("sendTempPassword() -> Success");
+			
+			userService.resetPassword(userDto);
+			log.info("resetPassword() -> Success");
+			
+			return new ResponseEntity<>(HttpStatus.OK);
+		} catch (Exception e) {
+			log.error("resetPassword() -> Exception : {}", e);
+			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+		} finally {
+			log.info("resetPassword() -> End");
+		}
 	}
 }

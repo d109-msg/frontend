@@ -27,4 +27,6 @@ public interface UserService {
 
 	void updateUserInfo(UserDto userDto) throws Exception;
 
+	void resetPassword(UserDto userDto) throws Exception;
+
 }

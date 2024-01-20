@@ -36,12 +36,7 @@ public class UserInfoDto {
 	@Schema(description = "비공개 여부", nullable = false)
 	private int flagPrivate;
 	
-	@Schema(description = "신고당한 횟수", nullable = false)
-	private int cntReport;
+	@Schema(description = "프로필 이미지", nullable = false)
+    private String imageUrl;
 	
-	@Schema(description = "이긴 횟수", nullable = false)
-	private int cntWin;
-	
-	@Schema(description = "플레이 횟수", nullable = false)
-	private int cntPlay;
 }

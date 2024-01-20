@@ -29,4 +29,6 @@ public interface UserMapper {
 	UserInfoDto getUserInfo(String emailId) throws SQLException;
 
 	void updateUserInfo(UserDto userDto) throws SQLException;
+
+	void resetPassword(UserDto userDto) throws SQLException;
 }

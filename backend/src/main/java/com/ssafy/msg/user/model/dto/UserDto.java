@@ -20,7 +20,5 @@ public class UserDto {
 	private String signInTime;
 	private String signUpTime;
 	private int flagPrivate;
-	private int cntReport;
-	private int cntWin;
-	private int cntPlay;
+	private String imageUrl;
 }

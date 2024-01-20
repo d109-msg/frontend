@@ -18,5 +18,5 @@ public class UpdateDto {
 	@Schema(description = "닉네임", nullable = false, example = "홍싸피")
 	@NotEmpty(message = "닉네임을 입력해주세요.")
 	@Pattern(regexp = "^[a-zA-Z0-9ㄱ-힣 ]{1,20}$", message = "닉네임은 1-20자의 영문, 한글, 숫자, 공백만 가능합니다.")
-	String nickname;
+	private String nickname;
 }
