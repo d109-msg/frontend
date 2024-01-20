@@ -39,6 +39,8 @@ pnpm-debug.log*
 # BlueJ files
 *.ctxt
 
+*.env
+
 # Mobile Tools for Java (J2ME)
 .mtj.tmp/
 
