@@ -3,18 +3,33 @@
  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper
-	namespace="com.ssafy.msg.user.model.mapper.GameMapper">
+	namespace="com.ssafy.msg.game.model.mapper.GameMapper">
 
-	<select id="getRandomNicknames" resultType="RandomNickname">
+	<select id="getRandomNicknames" parameterType="int"
+			resultType="RandomNameDto">
 		SELECT
-			fn.id AS first_nickname,
-			ln.id AS last_nickname
+			fn.id AS first_name,
+			ln.id AS last_name
 		FROM
-			(SELECT id, ROW_NUMBER() OVER () AS rownum FROM first_nicknames ORDER BY RAND()) fn
-				JOIN
-			(SELECT id, ROW_NUMBER() OVER () AS rownum FROM last_nicknames ORDER BY RAND()) ln
+			(SELECT id, ROW_NUMBER() OVER () AS rownum FROM first_nicknames ORDER BY RAND()) as fn
+		JOIN
+			(SELECT id, ROW_NUMBER() OVER () AS rownum FROM last_nicknames ORDER BY RAND()) as ln
 			ON fn.rownum = ln.rownum
-			LIMIT #{limit}
+		LIMIT #{limit}
 	</select>
+
+	<select id="getRandomRoomName" parameterType="int"
+			resultType="RandomNameDto">
+		SELECT
+			fn.id AS first_name,
+			ln.id AS last_name
+		FROM
+			(SELECT id, ROW_NUMBER() OVER () AS rownum FROM first_room_names ORDER BY RAND()) as fn
+				JOIN
+			(SELECT id, ROW_NUMBER() OVER () AS rownum FROM last_room_names ORDER BY RAND()) as ln
+			ON fn.rownum = ln.rownum
+			LIMIT 1;
+	</select>
+
 </mapper>
 

@@ -1,7 +1,10 @@
 package com.ssafy.msg.game.model.service;
 
-import com.ssafy.msg.game.model.Dto.RandomNickname;
+import java.util.List;
 
 public interface GameService {
-    RandomNickname[] getRandomNicknames(int limit);
+    List<String> getRandomNicknames(int limit);
+
+    String getRandomRoomName();
 }
+
