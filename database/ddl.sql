@@ -6,12 +6,44 @@ use msg;
 
 SET FOREIGN_KEY_CHECKS=0;
 
+-- msg.first_nicknames definition
+
+CREATE TABLE `first_nicknames` (
+  `id` varchar(100) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+
+-- msg.first_room_names definition
+
+CREATE TABLE `first_room_names` (
+  `id` varchar(100) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+
 -- msg.jobs definition
 
 CREATE TABLE `jobs` (
   `id` varchar(50) NOT NULL,
   `info` varchar(500) NOT NULL,
   `image_url` varchar(300) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+
+-- msg.last_nicknames definition
+
+CREATE TABLE `last_nicknames` (
+  `id` varchar(100) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+
+-- msg.last_room_names definition
+
+CREATE TABLE `last_room_names` (
+  `id` varchar(100) NOT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
@@ -26,11 +58,27 @@ CREATE TABLE `missions` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 
+-- msg.nickname_images definition
+
+CREATE TABLE `nickname_images` (
+  `url` varchar(300) NOT NULL,
+  PRIMARY KEY (`url`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+
 -- msg.nicknames definition
 
 CREATE TABLE `nicknames` (
   `id` varchar(50) NOT NULL,
   PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+
+-- msg.room_images definition
+
+CREATE TABLE `room_images` (
+  `url` varchar(300) NOT NULL,
+  PRIMARY KEY (`url`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 
@@ -53,91 +101,6 @@ CREATE TABLE `users` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 
--- msg.first_room_names definition
-
-CREATE TABLE `first_room_names` (
-  `id` varchar(100) NOT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
-
--- msg.last_room_names definition
-
-CREATE TABLE `last_room_names` (
-  `id` varchar(100) NOT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
-
--- msg.room_images definition
-
-CREATE TABLE `room_images` (
-  `url` varchar(300) NOT NULL,
-  PRIMARY KEY (`url`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
-
--- msg.first_nicknames definition
-
-CREATE TABLE `first_nicknames` (
-  `id` varchar(100) NOT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
-
--- msg.last_nicknames definition
-
-CREATE TABLE `last_nicknames` (
-  `id` varchar(100) NOT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
-
--- msg.nickname_images definition
-
-CREATE TABLE `nickname_images` (
-  `url` varchar(300) NOT NULL,
-  PRIMARY KEY (`url`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
-
--- msg.articles definition
-
-CREATE TABLE `articles` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `user_email_id` varchar(100) NOT NULL,
-  `content` varchar(50) DEFAULT NULL,
-  `create_time` datetime NOT NULL DEFAULT current_timestamp(),
-  `flag_private` int(11) DEFAULT NULL,
-  `modify_time` datetime NOT NULL DEFAULT current_timestamp(),
-  PRIMARY KEY (`id`),
-  KEY `articles_users_FK` (`user_email_id`),
-  CONSTRAINT `articles_users_FK` FOREIGN KEY (`user_email_id`) REFERENCES `users` (`email_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
-
--- msg.comments definition
-
-CREATE TABLE `comments` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `article_id` int(11) NOT NULL,
-  `user_email_id` varchar(100) NOT NULL,
-  `comment_id` int(11) DEFAULT NULL,
-  `parent_comment_id` int(11) DEFAULT NULL,
-  `content` varchar(500) NOT NULL,
-  `create_time` datetime NOT NULL DEFAULT current_timestamp(),
-  PRIMARY KEY (`id`),
-  KEY `comments_articles_FK` (`article_id`),
-  KEY `comments_users_FK` (`user_email_id`),
-  KEY `comments_comments_FK` (`comment_id`),
-  KEY `comments_comments_FK_1` (`parent_comment_id`),
-  CONSTRAINT `comments_articles_FK` FOREIGN KEY (`article_id`) REFERENCES `articles` (`id`),
-  CONSTRAINT `comments_comments_FK` FOREIGN KEY (`comment_id`) REFERENCES `comments` (`id`),
-  CONSTRAINT `comments_comments_FK_1` FOREIGN KEY (`parent_comment_id`) REFERENCES `comments` (`id`),
-  CONSTRAINT `comments_users_FK` FOREIGN KEY (`user_email_id`) REFERENCES `users` (`email_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
-
 -- msg.follows definition
 
 CREATE TABLE `follows` (
@@ -150,21 +113,6 @@ CREATE TABLE `follows` (
   KEY `follows_users_FK_1` (`to_user_email_id`),
   CONSTRAINT `follows_users_FK` FOREIGN KEY (`from_user_email_id`) REFERENCES `users` (`email_id`),
   CONSTRAINT `follows_users_FK_1` FOREIGN KEY (`to_user_email_id`) REFERENCES `users` (`email_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
-
--- msg.article_reports definition
-
-CREATE TABLE `article_reports` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `article_id` int(11) NOT NULL,
-  `from_user_email_id` varchar(100) NOT NULL,
-  `create_time` datetime NOT NULL DEFAULT current_timestamp(),
-  PRIMARY KEY (`id`),
-  KEY `article_reports_articles_FK` (`article_id`),
-  KEY `article_reports_users_FK` (`from_user_email_id`),
-  CONSTRAINT `article_reports_articles_FK` FOREIGN KEY (`article_id`) REFERENCES `articles` (`id`),
-  CONSTRAINT `article_reports_users_FK` FOREIGN KEY (`from_user_email_id`) REFERENCES `users` (`email_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 
@@ -210,6 +158,39 @@ CREATE TABLE `article_likes` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 
+-- msg.article_reports definition
+
+CREATE TABLE `article_reports` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `article_id` int(11) NOT NULL,
+  `from_user_email_id` varchar(100) NOT NULL,
+  `create_time` datetime NOT NULL DEFAULT current_timestamp(),
+  PRIMARY KEY (`id`),
+  KEY `article_reports_articles_FK` (`article_id`),
+  KEY `article_reports_users_FK` (`from_user_email_id`),
+  CONSTRAINT `article_reports_articles_FK` FOREIGN KEY (`article_id`) REFERENCES `articles` (`id`),
+  CONSTRAINT `article_reports_users_FK` FOREIGN KEY (`from_user_email_id`) REFERENCES `users` (`email_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+
+-- msg.articles definition
+
+CREATE TABLE `articles` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `user_email_id` varchar(100) NOT NULL,
+  `content` varchar(50) DEFAULT NULL,
+  `create_time` datetime NOT NULL DEFAULT current_timestamp(),
+  `flag_private` int(11) DEFAULT NULL,
+  `modify_time` datetime NOT NULL DEFAULT current_timestamp(),
+  `room_id` varchar(100) DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `articles_users_FK` (`user_email_id`),
+  KEY `articles_rooms_FK` (`room_id`),
+  CONSTRAINT `articles_rooms_FK` FOREIGN KEY (`room_id`) REFERENCES `rooms` (`id`),
+  CONSTRAINT `articles_users_FK` FOREIGN KEY (`user_email_id`) REFERENCES `users` (`email_id`)
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+
 -- msg.comment_likes definition
 
 CREATE TABLE `comment_likes` (
@@ -222,6 +203,28 @@ CREATE TABLE `comment_likes` (
   KEY `comment_likes_users_FK` (`user_email_id`),
   CONSTRAINT `comment_likes_comments_FK` FOREIGN KEY (`comment_id`) REFERENCES `comments` (`id`),
   CONSTRAINT `comment_likes_users_FK` FOREIGN KEY (`user_email_id`) REFERENCES `users` (`email_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+
+-- msg.comments definition
+
+CREATE TABLE `comments` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `article_id` int(11) NOT NULL,
+  `user_email_id` varchar(100) NOT NULL,
+  `comment_id` int(11) DEFAULT NULL,
+  `parent_comment_id` int(11) DEFAULT NULL,
+  `content` varchar(500) NOT NULL,
+  `create_time` datetime NOT NULL DEFAULT current_timestamp(),
+  PRIMARY KEY (`id`),
+  KEY `comments_articles_FK` (`article_id`),
+  KEY `comments_users_FK` (`user_email_id`),
+  KEY `comments_comments_FK` (`comment_id`),
+  KEY `comments_comments_FK_1` (`parent_comment_id`),
+  CONSTRAINT `comments_articles_FK` FOREIGN KEY (`article_id`) REFERENCES `articles` (`id`),
+  CONSTRAINT `comments_comments_FK` FOREIGN KEY (`comment_id`) REFERENCES `comments` (`id`),
+  CONSTRAINT `comments_comments_FK_1` FOREIGN KEY (`parent_comment_id`) REFERENCES `comments` (`id`),
+  CONSTRAINT `comments_users_FK` FOREIGN KEY (`user_email_id`) REFERENCES `users` (`email_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 
@@ -318,21 +321,6 @@ CREATE TABLE `participants` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 
--- msg.user_reports definition
-
-CREATE TABLE `user_reports` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `participant_id` int(11) NOT NULL,
-  `to_user_email_id` varchar(100) NOT NULL,
-  `create_time` datetime NOT NULL DEFAULT current_timestamp(),
-  PRIMARY KEY (`id`),
-  KEY `reports_participants_FK` (`participant_id`),
-  KEY `reports_users_FK` (`to_user_email_id`),
-  CONSTRAINT `reports_participants_FK` FOREIGN KEY (`participant_id`) REFERENCES `participants` (`id`),
-  CONSTRAINT `reports_users_FK` FOREIGN KEY (`to_user_email_id`) REFERENCES `users` (`email_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
-
 -- msg.rooms definition
 
 CREATE TABLE `rooms` (
@@ -349,6 +337,21 @@ CREATE TABLE `rooms` (
   KEY `rooms_room_images_FK` (`image_url`),
   CONSTRAINT `rooms_messages_FK` FOREIGN KEY (`last_message_id`) REFERENCES `messages` (`id`),
   CONSTRAINT `rooms_room_images_FK` FOREIGN KEY (`image_url`) REFERENCES `room_images` (`url`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+
+-- msg.user_reports definition
+
+CREATE TABLE `user_reports` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `participant_id` int(11) NOT NULL,
+  `to_user_email_id` varchar(100) NOT NULL,
+  `create_time` datetime NOT NULL DEFAULT current_timestamp(),
+  PRIMARY KEY (`id`),
+  KEY `reports_participants_FK` (`participant_id`),
+  KEY `reports_users_FK` (`to_user_email_id`),
+  CONSTRAINT `reports_participants_FK` FOREIGN KEY (`participant_id`) REFERENCES `participants` (`id`),
+  CONSTRAINT `reports_users_FK` FOREIGN KEY (`to_user_email_id`) REFERENCES `users` (`email_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 SET FOREIGN_KEY_CHECKS=1;
