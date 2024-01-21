@@ -5,29 +5,45 @@
 <mapper
 	namespace="com.ssafy.msg.game.model.mapper.GameMapper">
 
+	<insert id="insertParticipants" parameterType="ParticipantDto" >
+		INSERT INTO participants
+		(room_id, user_email_id, job_id, nickname, image_url)
+		VALUES
+		<foreach collection="list" item="participant" separator=",">
+			(#{participant.roomId}, #{participant.userEmailId}, #{participant.jobId}, #{participant.nickname}, #{participant.imageUrl})
+		</foreach>
+	</insert>
+
 	<select id="getRandomNicknames" parameterType="int"
 			resultType="RandomNameDto">
 		SELECT
 			fn.id AS first_name,
-			ln.id AS last_name
+			ln.id AS last_name,
+			img.url as img_url
 		FROM
 			(SELECT id, ROW_NUMBER() OVER () AS rownum FROM first_nicknames ORDER BY RAND()) as fn
-		JOIN
+				JOIN
 			(SELECT id, ROW_NUMBER() OVER () AS rownum FROM last_nicknames ORDER BY RAND()) as ln
 			ON fn.rownum = ln.rownum
-		LIMIT #{limit}
+				JOIN
+			(SELECT url, ROW_NUMBER() OVER () AS rownum FROM nickname_images ORDER BY RAND()) as img
+			ON ln.rownum = img.rownum
+			LIMIT #{limit};
 	</select>
 
-	<select id="getRandomRoomName" parameterType="int"
-			resultType="RandomNameDto">
+	<select id="getRandomRoomName" resultType="RandomNameDto">
 		SELECT
 			fn.id AS first_name,
-			ln.id AS last_name
+			ln.id AS last_name,
+			img.url as img_url
 		FROM
 			(SELECT id, ROW_NUMBER() OVER () AS rownum FROM first_room_names ORDER BY RAND()) as fn
 				JOIN
 			(SELECT id, ROW_NUMBER() OVER () AS rownum FROM last_room_names ORDER BY RAND()) as ln
 			ON fn.rownum = ln.rownum
+				JOIN
+			(SELECT url, ROW_NUMBER() OVER () AS rownum FROM room_images ORDER BY RAND()) as img
+			ON ln.rownum = img.rownum
 			LIMIT 1;
 	</select>
 

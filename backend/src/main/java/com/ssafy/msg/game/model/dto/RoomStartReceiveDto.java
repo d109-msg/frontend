@@ -4,11 +4,12 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
+
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class RandomNameDto {
-    private String firstName;
-    private String lastName;
-    private String imgUrl;
+public class RoomStartReceiveDto {
+    private String roomId;
+    private List<String> userList;
 }

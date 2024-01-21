@@ -18,3 +18,25 @@ INSERT INTO last_room_names  (`id`) VALUES
 ('런던'), ('둔산동'), ('인의동'), ('애버내시'),
 ('파리'), ('서울'), ('뉴욕'), ('베를린'), ('도쿄');
 
+insert into jobs (`id`, `info`, `image_url`) values
+('마피아', '마피아입니다.', 'tmpurl'),
+('시민', '시민입니다.', 'tmpurl'),
+('의사', '의사입니다.', 'tmpurl');
+
+INSERT INTO users (email_id, nickname, sign_up_time) VALUES 
+('test1@naver.com', 'test1', NOW()),
+('test2@naver.com', 'test2', NOW()),
+('test3@naver.com', 'test3', NOW()),
+('test4@naver.com', 'test4', NOW()),
+('test5@naver.com', 'test5', NOW()),
+('test6@naver.com', 'test6', NOW()),
+('test7@naver.com', 'test7', NOW()),
+('test8@naver.com', 'test8', NOW()),
+('test9@naver.com', 'test9', NOW()),
+('test10@naver.com', 'test10', NOW());
+
+INSERT INTO rooms (id, data_type, create_time, title, image_url) 
+VALUES ('room1', 'text', NOW(), 'Sample Room', 'tmp1');
+
+insert into nickname_images (url) values ('tmp1'), ('tmp2'), ('tmp4'), ('tmp5'), ('tmp6'), ('tmp7'), ('tmp8'), ('tmp9'), ('tmp10');
+insert into room_images  (url) values ('tmp1'), ('tmp2'), ('tmp4'), ('tmp5'), ('tmp6'), ('tmp7'), ('tmp8'), ('tmp9'), ('tmp10');
