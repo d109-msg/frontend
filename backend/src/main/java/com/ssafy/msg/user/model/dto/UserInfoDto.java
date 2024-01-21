@@ -24,6 +24,9 @@ public class UserInfoDto {
 	@Schema(description = "회원 식별 아이디", nullable = true)
 	private String identifier;
 	
+	@Schema(description = "회원 식별 아이디 수정 여부 (1번만 수정 가능)", nullable = true)
+	private String flagIdentifier;
+	
 	@Schema(description = "관리자 여부", nullable = false)
 	private int flagAdmin;
 	
@@ -36,7 +39,10 @@ public class UserInfoDto {
 	@Schema(description = "비공개 여부", nullable = false)
 	private int flagPrivate;
 	
-	@Schema(description = "프로필 이미지", nullable = false)
+	@Schema(description = "프로필 이미지 url", nullable = false)
     private String imageUrl;
+	
+	@Schema(description = "프로필 이미지 uuid", nullable = false)
+	private String imageUuid;
 	
 }

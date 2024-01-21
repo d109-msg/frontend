@@ -6,6 +6,8 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
+import com.ssafy.msg.user.exception.FollowException;
+import com.ssafy.msg.user.exception.IdentifierException;
 import com.ssafy.msg.user.exception.PasswordNotMatchException;
 import com.ssafy.msg.user.exception.TokenExpiredException;
 import com.ssafy.msg.user.exception.TokenInvalidException;
@@ -20,8 +22,10 @@ import lombok.extern.slf4j.Slf4j;
 public class UserExceptionHandler {
 	
 	
-	@ExceptionHandler({TokenInvalidException.class, UserUnauthorizedException.class, TokenExpiredException.class, UserNotFoundException.class, PasswordNotMatchException.class, MethodArgumentNotValidException.class, UserDuplicateException.class})
-	public ResponseEntity<?> handleException(RuntimeException e) {
+	@ExceptionHandler({TokenInvalidException.class, UserUnauthorizedException.class, TokenExpiredException.class,
+		UserNotFoundException.class, PasswordNotMatchException.class, MethodArgumentNotValidException.class,
+		UserDuplicateException.class, IdentifierException.class, FollowException.class})
+	public ResponseEntity<?> handleException(Exception e) {
 		
 		HttpStatus httpStatus = null;
 		
@@ -41,6 +45,15 @@ public class UserExceptionHandler {
 			log.error("handleException() -> Exception : {}", e);
 			httpStatus = HttpStatus.BAD_REQUEST;
 		} else if (e instanceof UserDuplicateException) {
+			log.error("handleException() -> Exception : {}", e);
+			httpStatus = HttpStatus.BAD_REQUEST;
+		} else if (e instanceof IdentifierException) {
+			log.error("handleException() -> Exception : {}", e);
+			httpStatus = HttpStatus.BAD_REQUEST;
+		} else if (e instanceof MethodArgumentNotValidException) {
+			log.error("handleException() -> Exception : {}", e);
+			httpStatus = HttpStatus.BAD_REQUEST;
+		} else if (e instanceof FollowException) {
 			log.error("handleException() -> Exception : {}", e);
 			httpStatus = HttpStatus.BAD_REQUEST;
 		} else {

@@ -4,7 +4,10 @@ import java.sql.SQLException;
 
 import org.apache.ibatis.annotations.Mapper;
 
+import com.ssafy.msg.user.model.dto.FollowDetailDto;
+import com.ssafy.msg.user.model.dto.FollowFindDto;
 import com.ssafy.msg.user.model.dto.Oauth2Dto;
+import com.ssafy.msg.user.model.dto.ProfileImageDto;
 import com.ssafy.msg.user.model.dto.SignUpDto;
 import com.ssafy.msg.user.model.dto.UserDto;
 import com.ssafy.msg.user.model.dto.UserInfoDto;
@@ -28,7 +31,17 @@ public interface UserMapper {
 
 	UserInfoDto getUserInfo(String emailId) throws SQLException;
 
-	void updateUserInfo(UserDto userDto) throws SQLException;
+	void updateNickname(UserDto userDto) throws SQLException;
 
-	void resetPassword(UserDto userDto) throws SQLException;
+	void updatePassword(UserDto userDto) throws SQLException;
+
+	void updateIdentifier(UserDto userDto) throws SQLException;
+
+	void updateImage(ProfileImageDto profileImageDto) throws SQLException;
+
+	void follow(FollowDetailDto followDetailDto) throws SQLException;
+
+	FollowFindDto findFollow(FollowDetailDto followDetailDto) throws SQLException;
+
+	void unfollow(FollowDetailDto followDetailDto) throws SQLException;
 }

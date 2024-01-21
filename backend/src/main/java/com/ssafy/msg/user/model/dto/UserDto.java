@@ -20,5 +20,7 @@ public class UserDto {
 	private String signInTime;
 	private String signUpTime;
 	private int flagPrivate;
+	private int flagIdentifier;
 	private String imageUrl;
+	private String imageUuid;
 }

@@ -4,8 +4,8 @@ import java.util.Arrays;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -15,17 +15,27 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
+import com.ssafy.msg.article.util.S3Util;
+import com.ssafy.msg.user.exception.FollowException;
+import com.ssafy.msg.user.exception.IdentifierException;
 import com.ssafy.msg.user.exception.TokenInvalidException;
 import com.ssafy.msg.user.exception.UserDuplicateException;
 import com.ssafy.msg.user.exception.UserNotFoundException;
 import com.ssafy.msg.user.model.dto.AccessTokenDto;
+import com.ssafy.msg.user.model.dto.FollowDetailDto;
+import com.ssafy.msg.user.model.dto.FollowDto;
+import com.ssafy.msg.user.model.dto.FollowFindDto;
+import com.ssafy.msg.user.model.dto.IdentifierDto;
+import com.ssafy.msg.user.model.dto.NicknameDto;
 import com.ssafy.msg.user.model.dto.Oauth2Dto;
+import com.ssafy.msg.user.model.dto.ProfileImageDto;
 import com.ssafy.msg.user.model.dto.ResetPasswordDto;
 import com.ssafy.msg.user.model.dto.SignInDto;
 import com.ssafy.msg.user.model.dto.SignUpDto;
 import com.ssafy.msg.user.model.dto.TokenDto;
-import com.ssafy.msg.user.model.dto.UpdateDto;
+import com.ssafy.msg.user.model.dto.UpdatePasswordDto;
 import com.ssafy.msg.user.model.dto.UserDto;
 import com.ssafy.msg.user.model.dto.UserInfoDto;
 import com.ssafy.msg.user.model.service.UserService;
@@ -75,6 +85,8 @@ public class UserController {
 	private final PasswordUtil passwordUtil;
 
 	private final Oauth2Util[] oauth2Utils;
+	
+	private final S3Util s3Util;
 	
 	private final UserService userService;
 
@@ -317,34 +329,127 @@ public class UserController {
 		}
 	}
 	
-	@Operation(summary = "회원정보 수정", description = "액세스 토큰으로 회원정보 수정")
-	@ApiResponses(value = { @ApiResponse(responseCode = "200", description = "회원정보 수정 성공", content = @Content),
-			@ApiResponse(responseCode = "404", description = "회원정보 수정 실패", content = @Content) })
-	@PatchMapping
-	public ResponseEntity<?> updateUserInfo(HttpServletRequest request, @RequestBody UpdateDto updateDto) {
-		log.info("updateUserInfo() -> Start");
-		log.info("updateUserInfo() -> Receive updateDto : {}", updateDto);
+	@Operation(summary = "닉네임 수정", description = "액세스 토큰으로 닉네임 수정")
+	@ApiResponses(value = { @ApiResponse(responseCode = "200", description = "닉네임 수정 성공", content = @Content),
+			@ApiResponse(responseCode = "404", description = "닉네임 수정 실패", content = @Content) })
+	@PatchMapping("/nickname")
+	public ResponseEntity<?> updateNickname(HttpServletRequest request, @RequestBody NicknameDto nicknameDto) {
+		log.info("updateNickname() -> Start");
+		log.info("updateNickname() -> Receive updateDto : {}", nicknameDto);
 		
 		String emailId = (String) request.getAttribute("emailId");
+		UserDto userDto = UserDto.builder()
+				.emailId(emailId)
+				.nickname(nicknameDto.getNickname())
+				.build();
 
 		try {
-			UserDto userDto = UserDto.builder().emailId(emailId).nickname(updateDto.getNickname()).build();
-			userService.updateUserInfo(userDto);
-			log.info("updateUserInfo() -> Success");
+			userService.updateNickname(userDto);
+			log.info("updateNickname() -> Success");
 			return new ResponseEntity<>(HttpStatus.OK);
 		} catch (Exception e) {
-			log.error("updateUserInfo() -> Exception : {}", e);
+			log.error("updateNickname() -> Exception : {}", e);
 			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 		} finally {
-			log.info("updateUserInfo() -> End");
+			log.info("updateNickname() -> End");
 		}
 	}
 	
-	@Transactional
+	@Operation(summary = "식별자 수정", description = "액세스 토큰으로 식별자 수정")
+	@ApiResponses(value = { @ApiResponse(responseCode = "200", description = "식별자 수정 성공", content = @Content),
+			@ApiResponse(responseCode = "404", description = "식별자 수정 실패", content = @Content) })
+	@PatchMapping("/identifier")
+	public ResponseEntity<?> updateIdentifier(HttpServletRequest request, @RequestBody IdentifierDto identifierDto) {
+		log.info("updateIdentifier() -> Start");
+		log.info("updateIdentifier() -> Receive updateDto : {}", identifierDto);
+
+		String emailId = (String) request.getAttribute("emailId");
+		
+		UserDto userDto = null;
+		try {
+			userDto = userService.findUserByEmailId(emailId);
+		} catch (Exception e) {
+			log.error("updateIdentifier() -> Exception : {}", e);
+			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+		}
+		
+		if (userDto.getFlagIdentifier() == 1) throw new IdentifierException();
+		
+		try {
+			userDto.setIdentifier(identifierDto.getIdentifier());
+			userDto.setFlagIdentifier(1);
+			userService.updateIdentifier(userDto);
+			log.info("updateIdentifier() -> Success");
+			return new ResponseEntity<>(HttpStatus.OK);
+		} catch (Exception e) {
+			log.error("updateIdentifier() -> Exception : {}", e);
+			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+		} finally {
+			log.info("updateIdentifier() -> End");
+		}
+	}
+	
+	@Operation(summary = "비밀번호 수정", description = "액세스 토큰과 현재 비밀번호로 비밀번호 수정")
+	@ApiResponses(value = { @ApiResponse(responseCode = "200", description = "비밀번호 수정 성공", content = @Content),
+			@ApiResponse(responseCode = "404", description = "비밀번호 수정 실패", content = @Content) })
+	@PatchMapping("/password")
+	public ResponseEntity<?> updatePassword(HttpServletRequest request, @RequestBody UpdatePasswordDto updatePasswordDto) {
+		log.info("updatePassword() -> Start");
+		log.info("updatePassword() -> Receive updatePasswordDto : {}", updatePasswordDto);
+
+		String emailId = (String) request.getAttribute("emailId");
+
+		UserDto userDto = null;
+		try {
+			userDto = userService.findUserByEmailId(emailId);
+			userService.updatePassword(updatePasswordDto, userDto);
+			log.info("updatePassword() -> Success");
+			return new ResponseEntity<>(HttpStatus.OK);
+		} catch (Exception e) {
+			log.error("updatePassword() -> Exception : {}", e);
+			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+		} finally {
+			log.info("updatePassword() -> End");
+		}
+	}
+	
+	@Operation(summary = "프로필 이미지 수정", description = "액세스 토큰으로 프로필 이미지 수정")
+	@ApiResponses(value = { @ApiResponse(responseCode = "200", description = "프로필 이미지 수정 성공", content = @Content),
+			@ApiResponse(responseCode = "404", description = "프로필 이미지 수정 실패", content = @Content) })
+	@PatchMapping(value = "/image",
+			consumes = MediaType.MULTIPART_FORM_DATA_VALUE,
+			produces = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<?> updateImage(HttpServletRequest request, @RequestParam("image") MultipartFile imageFile) {
+		log.info("updateImage() -> Start");
+		log.info("updateImage() -> Receive imageFile : {}", imageFile);
+		
+		String emailId = (String) request.getAttribute("emailId");
+		try {
+			String imageUuid = s3Util.saveFile(imageFile);
+			log.info("updateImage() -> Receive imageUuid : {}", imageUuid);
+			String imageUrl = s3Util.getUrl(imageUuid);
+			log.info("updateImage() -> Receive imageUrl : {}", imageUrl);
+			
+			ProfileImageDto profileImageDto = ProfileImageDto.builder()
+					.imageUuid(imageUuid)
+					.imageUrl(imageUrl)
+					.emailId(emailId)
+					.build();
+			userService.updateImage(profileImageDto);
+			log.info("updateImage() -> Success");
+			return new ResponseEntity<>(HttpStatus.OK);
+		} catch (Exception e) {
+			log.error("updateImage() -> Exception : {}", e);
+			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+		} finally {
+			log.info("updateImage() -> End");
+		}
+	}
+	
 	@Operation(summary = "임시 비밀번호 발송", description = "기존 가입된 이메일에 임시 비밀번호 발송")
 	@ApiResponses(value = { @ApiResponse(responseCode = "200", description = "임시 비밀번호 발송 성공", content = @Content),
 			@ApiResponse(responseCode = "404", description = "임시 비밀번호 발송 실패", content = @Content) })
-	@PostMapping("/reset-pw")
+	@PostMapping("/password/reset")
 	public ResponseEntity<?> resetPassword(@RequestBody ResetPasswordDto resetPasswordDto) {
 		log.info("resetPassword() -> Start");
 		log.info("resetPassword() -> Receive emailId : {}", resetPasswordDto.getEmailId());
@@ -360,10 +465,7 @@ public class UserController {
 			
 			userDto.setEmailPassword(randomPassword);
 			
-			emailUtil.sendTempPassword(userDto);
-			log.info("sendTempPassword() -> Success");
-			
-			userService.resetPassword(userDto);
+			userService.resetPassword(userDto, randomPassword);
 			log.info("resetPassword() -> Success");
 			
 			return new ResponseEntity<>(HttpStatus.OK);
@@ -373,5 +475,43 @@ public class UserController {
 		} finally {
 			log.info("resetPassword() -> End");
 		}
+	}
+	
+	@Operation(summary = "회원 팔로우/취소", description = "액세스 토큰과 대상 이메일 아이디로 회원 팔로우/취소")
+	@ApiResponses(value = { @ApiResponse(responseCode = "200", description = "회원 팔로우/취소 성공", content = @Content),
+            @ApiResponse(responseCode = "404", description = "회원 팔로우/취소 실패", content = @Content) })
+	@PostMapping("/follow")
+	public ResponseEntity<?> followOrUnfollow(HttpServletRequest request, @RequestBody FollowDto followDto) {
+		log.info("followOrUnfollow() -> Start");
+        log.info("followOrUnfollow() -> Receive followDto : {}", followDto);
+        
+        String emailId = (String) request.getAttribute("emailId");
+		if (emailId.equals(followDto.getEmailId())) {
+			throw new FollowException();
+		}
+        
+        try {
+			FollowDetailDto followDetailDto = FollowDetailDto.builder()
+					.fromUserEmailId(emailId)
+					.toUserEmailId(followDto.getEmailId())
+					.build();
+			FollowFindDto followFindDto = userService.findFollow(followDetailDto);
+			
+			if (followFindDto == null) {
+				userService.follow(followDetailDto);
+				log.info("follow() -> Success");
+			} else {
+				userService.unfollow(followDetailDto);
+				log.info("unfollow() -> Success");
+			}
+			
+            log.info("followOrUnfollow() -> Success");
+            return new ResponseEntity<>(HttpStatus.OK);
+        } catch (Exception e) {
+            log.error("followOrUnfollow() -> Exception : {}", e);
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        } finally {
+            log.info("followOrUnfollow() -> End");
+        }
 	}
 }

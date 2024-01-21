@@ -8,7 +8,7 @@
 		resultType="UserDto">
 		select email_id, email_password, nickname, provider,
 		identifier, flag_admin, refresh_token, sign_in_time, sign_up_time,
-		flag_private, image_url
+		flag_private, flag_identifier, image_url, image_uuid
 		from users
 		where
 		email_id =
@@ -19,7 +19,9 @@
 		resultType="UserInfoDto">
 		select nickname, email_id, provider,
 		identifier, flag_admin,
-		sign_in_time, sign_up_time, flag_private, image_url
+		sign_in_time, sign_up_time,
+		flag_private, flag_identifier, image_url,
+		image_uuid
 		from users
 		where email_id =
 		#{emailId}
@@ -64,16 +66,52 @@
 		email_id = #{emailId}
 	</delete>
 
-	<update id="updateUserInfo" parameterType="UserDto">
+	<update id="updateNickname" parameterType="UserDto">
 		update users set
 		nickname = #{nickname}
 		where email_id = #{emailId}
 	</update>
 
-	<update id="resetPassword" parameterType="UserDto">
+	<update id="updatePassword" parameterType="UserDto">
 		update users set
 		email_password = #{emailPassword}
 		where email_id = #{emailId}
 	</update>
+
+	<update id="updateIdentifier" parameterType="UserDto">
+		update users set
+		identifier = #{identifier}, flag_identifier = #{flagIdentifier}
+		where
+		email_id = #{emailId}
+	</update>
+
+	<update id="updateImage" parameterType="ProfileImageDto">
+		update users set
+		image_url = #{imageUrl}, image_uuid = #{imageUuid}
+		where email_id =
+		#{emailId}
+	</update>
+
+	<insert id="follow" parameterType="FollowDetailDto">
+		insert into follows
+		(from_user_email_id, to_user_email_id) values
+		(#{fromUserEmailId},
+		#{toUserEmailId})
+	</insert>
+
+	<select id="findFollow" parameterType="FollowDetailDto"
+		resultType="FollowFindDto">
+		select id, from_user_email_id, to_user_email_id
+		from follows
+		where from_user_email_id = #{fromUserEmailId}
+		and to_user_email_id =
+		#{toUserEmailId}
+	</select>
+
+	<delete id="unfollow" parameterType="FollowDetailDto">
+		delete from follows where
+		from_user_email_id = #{fromUserEmailId}
+		and to_user_email_id = #{toUserEmailId}
+	</delete>
 </mapper>
 

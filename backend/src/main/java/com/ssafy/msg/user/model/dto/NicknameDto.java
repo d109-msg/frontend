@@ -8,12 +8,12 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-@Schema(description = "회원정보 수정에 대한 요청 DTO")
+@Schema(description = "닉네임 수정에 대한 요청 DTO")
 @Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class UpdateDto {
+public class NicknameDto {
 	
 	@Schema(description = "닉네임", nullable = false, example = "홍싸피")
 	@NotEmpty(message = "닉네임을 입력해주세요.")

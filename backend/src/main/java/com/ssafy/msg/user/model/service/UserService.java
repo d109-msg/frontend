@@ -1,9 +1,13 @@
 package com.ssafy.msg.user.model.service;
 
 import com.ssafy.msg.user.model.dto.Oauth2Dto;
+import com.ssafy.msg.user.model.dto.ProfileImageDto;
 import com.ssafy.msg.user.model.dto.SignInDto;
 import com.ssafy.msg.user.model.dto.SignUpDto;
-import com.ssafy.msg.user.model.dto.UpdateDto;
+import com.ssafy.msg.user.model.dto.UpdatePasswordDto;
+import com.ssafy.msg.user.model.dto.FollowDetailDto;
+import com.ssafy.msg.user.model.dto.FollowFindDto;
+import com.ssafy.msg.user.model.dto.NicknameDto;
 import com.ssafy.msg.user.model.dto.UserDto;
 import com.ssafy.msg.user.model.dto.UserInfoDto;
 
@@ -25,8 +29,20 @@ public interface UserService {
 
 	UserInfoDto getUserInfo(String emailId) throws Exception;
 
-	void updateUserInfo(UserDto userDto) throws Exception;
+	void updateNickname(UserDto userDto) throws Exception;
 
-	void resetPassword(UserDto userDto) throws Exception;
+	void resetPassword(UserDto userDto, String randomPassword) throws Exception;
+
+	void updateIdentifier(UserDto userDto) throws Exception;
+
+	void updateImage(ProfileImageDto profileImageDto) throws Exception;
+
+	void updatePassword(UpdatePasswordDto updatePasswordDto, UserDto userDto) throws Exception;
+
+	void follow(FollowDetailDto followDetailDto) throws Exception;
+
+	FollowFindDto findFollow(FollowDetailDto followDetailDto) throws Exception;
+
+	void unfollow(FollowDetailDto followDetailDto) throws Exception;
 
 }

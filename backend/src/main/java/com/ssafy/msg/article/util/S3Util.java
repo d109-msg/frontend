@@ -1,18 +1,22 @@
 package com.ssafy.msg.article.util;
 
-import com.amazonaws.services.s3.AmazonS3;
-import com.amazonaws.services.s3.model.DeleteObjectRequest;
-import com.amazonaws.services.s3.model.ObjectMetadata;
-import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Service;
-import org.springframework.web.multipart.MultipartFile;
-
 import java.io.IOException;
 import java.util.UUID;
 
-@Service
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
+import org.springframework.web.multipart.MultipartFile;
+
+import com.amazonaws.services.s3.AmazonS3;
+import com.amazonaws.services.s3.model.DeleteObjectRequest;
+import com.amazonaws.services.s3.model.ObjectMetadata;
+
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+
+@Component
 @RequiredArgsConstructor
+@Slf4j
 public class S3Util {
 
     private final AmazonS3 amazonS3;
@@ -28,7 +32,7 @@ public class S3Util {
      */
     public String saveFile(MultipartFile multipartFile) throws IOException {
         String originalFilename = multipartFile.getOriginalFilename();
-        String fileName = originalFilename + UUID.randomUUID();
+        String fileName = UUID.randomUUID() + originalFilename;
 
         ObjectMetadata metadata = new ObjectMetadata();
         metadata.setContentLength(multipartFile.getSize());
@@ -53,8 +57,32 @@ public class S3Util {
      * @param fileName
      *
      */
-    public void deleteFile(String fileName) {
-        DeleteObjectRequest request = new DeleteObjectRequest(bucket, fileName);
-        amazonS3.deleteObject(request);
+    public String deleteFile(String fileName) {
+        log.info("deleteFile() -> Start");
+        log.info("deleteFile() -> fileName : {}", fileName);
+
+        String result = "";
+
+        if(amazonS3.doesObjectExist(bucket, fileName)) {
+            log.info("deleteFile() -> exist");
+
+            DeleteObjectRequest request = new DeleteObjectRequest(bucket, fileName);
+            amazonS3.deleteObject(request);
+
+            result = "deleted file : ";
+            log.info("deleteFile() -> Success");
+        } else {
+            log.error("deleteFile() -> doesn't exist");
+
+            result = "file doesn't exist : ";
+        }
+
+        log.info("deleteFile() -> End");
+
+        return result + fileName;
+    }
+
+    public Boolean isAvailable(String fileName){
+        return amazonS3.doesObjectExist(bucket, fileName);
     }
 }

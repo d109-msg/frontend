@@ -1,12 +1,14 @@
 package com.ssafy.msg;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration;
 
-import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import com.ssafy.msg.test.model.dto.TestDto;
+import com.ssafy.msg.test.model.repo.TestRepository;
 
 /*
  * Git Commit Message Convention
@@ -90,10 +92,38 @@ import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 
 @EnableAutoConfiguration(exclude={DataSourceAutoConfiguration.class})
 @SpringBootApplication
-public class BackendApplication {
-
+public class BackendApplication implements CommandLineRunner {
+	
 	public static void main(String[] args) {
 		SpringApplication.run(BackendApplication.class, args);
+	}
+	
+	@Autowired
+	private TestRepository testRepository;
+	
+	@Override
+	public void run(String... args) throws Exception {
+		testRepository.deleteAll();
+
+		testRepository.save(new TestDto("1", "Alice", "Smith"));
+		testRepository.save(new TestDto("2", "Bob", "Smith"));
+
+		System.out.println("Customers found with findAll():");
+		System.out.println("-------------------------------");
+		for (TestDto test : testRepository.findAll()) {
+			System.out.println(test);
+		}
+		System.out.println();
+
+		System.out.println("Customer found with findByFirstName('Alice'):");
+		System.out.println("--------------------------------");
+		System.out.println(testRepository.findByFirstName("Alice"));
+
+		System.out.println("Customers found with findByLastName('Smith'):");
+		System.out.println("--------------------------------");
+		for (TestDto test : testRepository.findByLastName("Smith")) {
+			System.out.println(test);
+		}
 	}
 
 }

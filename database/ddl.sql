@@ -27,7 +27,8 @@ CREATE TABLE `first_room_names` (
 CREATE TABLE `jobs` (
   `id` varchar(50) NOT NULL,
   `info` varchar(500) NOT NULL,
-  `image_url` varchar(300) NOT NULL,
+  `image_url` varchar(300) DEFAULT NULL,
+  `image_uuid` varchar(100) DEFAULT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
@@ -61,6 +62,7 @@ CREATE TABLE `missions` (
 -- msg.nickname_images definition
 
 CREATE TABLE `nickname_images` (
+  `uuid` varchar(100) NOT NULL,
   `url` varchar(300) NOT NULL,
   PRIMARY KEY (`url`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
@@ -70,6 +72,7 @@ CREATE TABLE `nickname_images` (
 
 CREATE TABLE `room_images` (
   `url` varchar(300) NOT NULL,
+  `uuid` varchar(100) NOT NULL,
   PRIMARY KEY (`url`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
@@ -82,12 +85,14 @@ CREATE TABLE `users` (
   `nickname` varchar(50) NOT NULL,
   `provider` varchar(10) DEFAULT NULL,
   `identifier` varchar(50) DEFAULT NULL,
+  `flag_identifier` int(11) DEFAULT 0,
   `flag_admin` int(11) NOT NULL DEFAULT 0,
   `refresh_token` varchar(300) DEFAULT NULL,
-  `sign_in_time` datetime DEFAULT NULL,
-  `sign_up_time` datetime NOT NULL DEFAULT current_timestamp(),
-  `flag_private` int(11) NOT NULL DEFAULT 0,
   `image_url` varchar(300) DEFAULT NULL,
+  `image_uuid` varchar(100) DEFAULT NULL,
+  `flag_private` int(11) NOT NULL DEFAULT 0,
+  `sign_up_time` datetime NOT NULL DEFAULT current_timestamp(),
+  `sign_in_time` datetime DEFAULT NULL,
   PRIMARY KEY (`email_id`),
   UNIQUE KEY `users_unique` (`identifier`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
@@ -126,9 +131,9 @@ CREATE TABLE `notifications` (
 CREATE TABLE `article_images` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `article_id` int(11) NOT NULL,
-  `url` varchar(300) DEFAULT NULL,
-  `uuid` varchar(300) DEFAULT NULL,
-  `flag_mission` int(11) DEFAULT NULL,
+  `url` varchar(300) NOT NULL,
+  `uuid` varchar(100) NOT NULL,
+  `flag_mission` int(11) DEFAULT 0,
   PRIMARY KEY (`id`),
   KEY `article_images_articles_FK` (`article_id`),
   CONSTRAINT `article_images_articles_FK` FOREIGN KEY (`article_id`) REFERENCES `articles` (`id`)
@@ -252,10 +257,10 @@ CREATE TABLE `daily_missions` (
 -- msg.message_images definition
 
 CREATE TABLE `message_images` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
   `url` varchar(300) NOT NULL,
   `message_id` int(11) NOT NULL,
-  PRIMARY KEY (`id`),
+  `uuid` varchar(100) NOT NULL,
+  PRIMARY KEY (`url`),
   KEY `message_images_messages_FK` (`message_id`),
   CONSTRAINT `message_images_messages_FK` FOREIGN KEY (`message_id`) REFERENCES `messages` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
@@ -264,10 +269,10 @@ CREATE TABLE `message_images` (
 -- msg.message_texts definition
 
 CREATE TABLE `message_texts` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `message_id` int(11) NOT NULL AUTO_INCREMENT,
   `content` varchar(500) NOT NULL,
-  PRIMARY KEY (`id`),
-  CONSTRAINT `message_texts_messages_FK` FOREIGN KEY (`id`) REFERENCES `messages` (`id`)
+  PRIMARY KEY (`message_id`),
+  CONSTRAINT `message_texts_messages_FK` FOREIGN KEY (`message_id`) REFERENCES `messages` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 
@@ -297,7 +302,7 @@ CREATE TABLE `participants` (
   `flag_die` int(11) NOT NULL DEFAULT 0,
   `flag_win` int(11) NOT NULL DEFAULT 0,
   `job_id` varchar(50) DEFAULT NULL,
-  `image_url` varchar(300) NOT NULL,
+  `image_url` varchar(300) DEFAULT NULL,
   `nickname` varchar(100) NOT NULL,
   PRIMARY KEY (`id`),
   KEY `participants_users_FK` (`user_email_id`),
@@ -321,7 +326,7 @@ CREATE TABLE `rooms` (
   `end_time` datetime DEFAULT NULL,
   `start_time` datetime DEFAULT NULL,
   `title` varchar(100) NOT NULL,
-  `image_url` varchar(300) NOT NULL,
+  `image_url` varchar(300) DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `rooms_messages_FK` (`last_message_id`),
   KEY `rooms_room_images_FK` (`image_url`),
