@@ -9,7 +9,7 @@ SET FOREIGN_KEY_CHECKS=0;
 -- msg.first_nicknames definition
 
 CREATE TABLE `first_nicknames` (
-  `id` varchar(100) NOT NULL,
+  `id` varchar(50) NOT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
@@ -35,7 +35,7 @@ CREATE TABLE `jobs` (
 -- msg.last_nicknames definition
 
 CREATE TABLE `last_nicknames` (
-  `id` varchar(100) NOT NULL,
+  `id` varchar(50) NOT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
@@ -63,14 +63,6 @@ CREATE TABLE `missions` (
 CREATE TABLE `nickname_images` (
   `url` varchar(300) NOT NULL,
   PRIMARY KEY (`url`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
-
--- msg.nicknames definition
-
-CREATE TABLE `nicknames` (
-  `id` varchar(50) NOT NULL,
-  PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 
@@ -305,17 +297,15 @@ CREATE TABLE `participants` (
   `flag_die` int(11) NOT NULL DEFAULT 0,
   `flag_win` int(11) NOT NULL DEFAULT 0,
   `job_id` varchar(50) DEFAULT NULL,
-  `nickname_id` varchar(50) NOT NULL,
   `image_url` varchar(300) NOT NULL,
+  `nickname` varchar(100) NOT NULL,
   PRIMARY KEY (`id`),
   KEY `participants_users_FK` (`user_email_id`),
   KEY `participants_rooms_FK` (`room_id`),
   KEY `participants_jobs_FK` (`job_id`),
-  KEY `participants_nicknames_FK` (`nickname_id`),
   KEY `participants_nickname_images_FK` (`image_url`),
   CONSTRAINT `participants_jobs_FK` FOREIGN KEY (`job_id`) REFERENCES `jobs` (`id`),
   CONSTRAINT `participants_nickname_images_FK` FOREIGN KEY (`image_url`) REFERENCES `nickname_images` (`url`),
-  CONSTRAINT `participants_nicknames_FK` FOREIGN KEY (`nickname_id`) REFERENCES `nicknames` (`id`),
   CONSTRAINT `participants_rooms_FK` FOREIGN KEY (`room_id`) REFERENCES `rooms` (`id`),
   CONSTRAINT `participants_users_FK` FOREIGN KEY (`user_email_id`) REFERENCES `users` (`email_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
