@@ -110,7 +110,7 @@ CREATE TABLE `follows` (
   KEY `follows_users_FK_1` (`to_user_email_id`),
   CONSTRAINT `follows_users_FK` FOREIGN KEY (`from_user_email_id`) REFERENCES `users` (`email_id`),
   CONSTRAINT `follows_users_FK_1` FOREIGN KEY (`to_user_email_id`) REFERENCES `users` (`email_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 
 -- msg.notifications definition
@@ -185,7 +185,7 @@ CREATE TABLE `articles` (
   KEY `articles_rooms_FK` (`room_id`),
   CONSTRAINT `articles_rooms_FK` FOREIGN KEY (`room_id`) REFERENCES `rooms` (`id`),
   CONSTRAINT `articles_users_FK` FOREIGN KEY (`user_email_id`) REFERENCES `users` (`email_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 
 -- msg.comment_likes definition
