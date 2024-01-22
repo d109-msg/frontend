@@ -28,6 +28,27 @@ public class GameController {
 
     private final GameService gameService;
 
+    @GetMapping(value = "/room/list")
+    @Operation(summary = "유저의 진행 중인 게임 리스트를 반환", description = "userEmail을 이용해 user의 room list 반환")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "201", description = "조회 성공", content = {
+                    @Content(mediaType = "application/json", schema = @Schema(implementation = RoomDto.class)) }),
+            @ApiResponse(responseCode = "400", description = "조회 실패", content = @Content) })
+    public ResponseEntity<?> getUserRooms(HttpServletRequest request){
+        String emailId = (String) request.getAttribute("emailId");
+
+        log.info("getUserRooms() -> email : {}", emailId);
+
+        List<RoomDto> list = gameService.getUserRooms(emailId);
+
+        if(list != null && !list.isEmpty()) {
+            return new ResponseEntity<>(list, HttpStatus.OK);
+        } else if(list != null) {
+            return new ResponseEntity<>("데이터가 없습니다.", HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>("잘못된 요청", HttpStatus.BAD_REQUEST);
+        }
+    }
 
     @Operation(summary = "랜덤 게임 참여 신청", description = "랜덤 게임 참여 신청")
     @ApiResponses(value = { @ApiResponse(responseCode = "200", description = "랜덤 게임 참여 신청 성공", content = @Content),

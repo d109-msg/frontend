@@ -24,5 +24,7 @@ public interface GameService {
     List<ParticipantDto> gameStart(RoomStartReceiveDto roomStartReceiveDto);
 
     List<String> getJobs(int num);
+
+    List<RoomDto> getUserRooms(String userEmail);
 }
 

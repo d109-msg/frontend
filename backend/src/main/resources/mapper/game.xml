@@ -5,6 +5,14 @@
 <mapper
 	namespace="com.ssafy.msg.game.model.mapper.GameMapper">
 
+	<select id="getUserRooms" parameterType="String" resultType="RoomDto">
+		SELECT r.*
+		FROM rooms r
+				 JOIN participants p ON r.id = p.room_id
+		WHERE (r.data_type = '랜덤' OR r.data_type = '그룹') AND end_time IS  NULL
+		  AND p.user_email_id = #{userEmail};
+	</select>
+
 	<insert id="insertParticipants" parameterType="ParticipantDto" >
 		INSERT INTO participants
 		(room_id, user_email_id, job_id, nickname, image_url)

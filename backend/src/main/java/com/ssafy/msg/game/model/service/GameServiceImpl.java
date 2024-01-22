@@ -195,5 +195,24 @@ public class GameServiceImpl implements GameService{
         return result;
     }
 
+    /**
+     * user email을 입력받아 user의 rooms 중, type이 "랜덤", "그룹"인 게임방 리스틀 리턴
+     * @param userEmail
+     * @return Rooms list를 반환
+     */
+    @Override
+    public List<RoomDto> getUserRooms(String userEmail) {
+        List<RoomDto> list = null;
+
+        try {
+            log.info("call gameMapper.getUserRooms : email : {}", userEmail);
+            list = gameMapper.getUserRooms(userEmail);
+        } catch (Exception e) {
+            log.error("getRoomList() call mapper : ", e);
+        }
+
+        log.info("getUserRooms() list : {}", list);
+        return list;
+    }
 
 }
