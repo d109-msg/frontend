@@ -1,5 +1,7 @@
 package com.ssafy.msg.user.model.service;
 
+import java.util.List;
+
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -7,6 +9,8 @@ import org.springframework.transaction.annotation.Transactional;
 import com.ssafy.msg.user.exception.PasswordNotMatchException;
 import com.ssafy.msg.user.model.dto.FollowDetailDto;
 import com.ssafy.msg.user.model.dto.FollowFindDto;
+import com.ssafy.msg.user.model.dto.FollowParamDto;
+import com.ssafy.msg.user.model.dto.FollowUserDto;
 import com.ssafy.msg.user.model.dto.Oauth2Dto;
 import com.ssafy.msg.user.model.dto.ProfileImageDto;
 import com.ssafy.msg.user.model.dto.SignInDto;
@@ -122,5 +126,10 @@ public class UserServiceImpl implements UserService {
 	@Override
 	public void unfollow(FollowDetailDto followDetailDto) throws Exception {
 		userMapper.unfollow(followDetailDto);
+	}
+
+	@Override
+	public List<FollowUserDto> getFollowList(FollowParamDto followParamDto) throws Exception {
+		return userMapper.getFollowList(followParamDto);
 	}
 }
