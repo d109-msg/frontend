@@ -35,9 +35,9 @@ INSERT INTO users (email_id, nickname, sign_up_time) VALUES
 ('test9@naver.com', 'test9', NOW()),
 ('test10@naver.com', 'test10', NOW());
 
-insert into nickname_images (url) values ('tmp1'), ('tmp2'), ('tmp4'), ('tmp5'), ('tmp6'), ('tmp7'), ('tmp8'), ('tmp9'), ('tmp10');
-insert into room_images  (url) values ('tmp1'), ('tmp2'), ('tmp4'), ('tmp5'), ('tmp6'), ('tmp7'), ('tmp8'), ('tmp9'), ('tmp10');
+insert into nickname_images (url, uuid) values ('tmp1', 'uuid'), ('tmp2', 'uuid'), ('tmp3', 'uuid'), ('tmp4', 'uuid'), ('tmp5', 'uuid'), ('tmp6', 'uuid'), ('tmp7', 'uuid'), ('tmp8', 'uuid'), ('tmp9', 'uuid'), ('tmp10', 'uuid');
+insert into room_images  (url, uuid) values ('tmp1', 'uuid'), ('tmp2', 'uuid'), ('tmp3', 'uuid'), ('tmp4', 'uuid'), ('tmp5', 'uuid'), ('tmp6', 'uuid'), ('tmp7', 'uuid'), ('tmp8', 'uuid'), ('tmp9', 'uuid'), ('tmp10', 'uuid');
 
 INSERT INTO rooms (id, data_type, create_time, title, image_url) 
-VALUES ('room1', 'text', NOW(), 'Sample Room', 'tmp1');
+VALUES ('room1', '랜덤', NOW(), 'Sample Room1', 'tmp1'), ('room2', '그룹', NOW(), 'Sample Room2', 'tmp2'), ('room3', '개인', NOW(), 'Sample Room3', 'tmp3');
 
