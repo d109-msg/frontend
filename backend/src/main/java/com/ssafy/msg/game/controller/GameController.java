@@ -41,10 +41,8 @@ public class GameController {
 
         List<RoomDto> list = gameService.getUserRooms(emailId);
 
-        if(list != null && !list.isEmpty()) {
+        if(list != null) {
             return new ResponseEntity<>(list, HttpStatus.OK);
-        } else if(list != null) {
-            return new ResponseEntity<>("데이터가 없습니다.", HttpStatus.OK);
         } else {
             return new ResponseEntity<>("잘못된 요청", HttpStatus.BAD_REQUEST);
         }
