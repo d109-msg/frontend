@@ -1,9 +1,8 @@
-.feed-page{
+.feed-container{
     width: 1000px;
-    border: 1px solid black;
     margin: 30px;
     margin-top: 0;
-    margin-left: 0;
+    margin-left: 50px;
 }
 
 .feed-create{
@@ -30,7 +29,6 @@
     width: 60px;
     height: 60px;
     border-radius: 10px;
-    border: 1px solid black;
     margin-right: 17px;
 }
 .create-comment{
@@ -55,3 +53,7 @@
     transition: 0.2s ease ;
     transform: scale(1.1);
 }
+
+
+
+

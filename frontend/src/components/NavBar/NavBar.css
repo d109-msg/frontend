@@ -8,6 +8,7 @@
         background-color: #FFF4E9;
         display: flex;
         align-items: center;
+        justify-content: space-around;
         overflow: hidden;
         z-index: 999;
     }
@@ -37,7 +38,7 @@
     }
 
     .right-bar{
-        margin-left: 30vw;
+        /* margin-left: ; */
         display: flex;
         flex-direction: row;
         align-items: center;
@@ -97,6 +98,14 @@
     }
     .search-icon:hover{
         transform: scale(1.3);
+    }
+
+    .nav-logo{
+        width:300px; 
+        height: 58px; 
+        background: url(../../assets/css/Logo/MSG_logo_blue_sma.png);
+        background-size: contain;
+        background-repeat: no-repeat;
     }
 
 }
