@@ -9,7 +9,9 @@
                     <img class="create-img" src="./example/3.jpg">
                     <div class="create-comment">What are you thinking?</div>
                 </div>
-                <div class="create-btn">Create</div>
+                <div class="create-btn"
+                @click="create=true"
+                >Create</div>
             </div>
             <Feed  v-for="i in arr" :key="i" :img="i"></Feed>
             <!-- <Feed></Feed>
@@ -20,7 +22,7 @@
             <Feed></Feed>
             <Feed></Feed> -->
             </VueFlexWaterfall>
-            <FeedCreate/>
+            <FeedCreate v-if="create" @close="create=false"/>
         </div>
 </template>
 
@@ -35,7 +37,8 @@ export default {
         return{
             col : 2,
             colSapce : 16,
-            arr : [1,2,3]
+            arr : [1,2,3],
+            create : false
         }
     },  
 

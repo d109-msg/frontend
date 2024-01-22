@@ -1,12 +1,14 @@
 <template>
   <div class="image-container disable">
-        
+        <div class="image-editor-cancel"
+        @click="$emit('close')"
+        >X</div>    
         <div class="wrapper">
             <div class="img-wrapper">
                 <div class="save-wrapper">
-                    <img class="first-img" src="">
-                    <img class="second-img selected-img" src="">
-                    <img class="third-img selected-img" src="">
+                    <img class="first-img img-list" src="">
+                    <img class="second-img selected-img img-list" src="">
+                    <img class="third-img selected-img img-list" src="">
                 </div>
                 <div class="preview-img">
                     <img src="image-placeholder.svg" alt="">
@@ -58,12 +60,16 @@ export default {
     data(){
         return{
             imgData : [],
+            
         }
     },
     methods:{
         
     },
     mounted(){
+        let filter = [[100,100,0,0],[100,100,0,0],[100,100,0,0]]
+        let translate = [[0,1,1],[0,1,1],[0,1,1]]
+
         let selected = document.querySelector('.first-img')
         const fileInput = document.querySelector('.file-input'),
         chooseImgBtn = document.querySelector('.choose-img'),
@@ -79,10 +85,40 @@ export default {
 
         selectedImgs.forEach(img=>{
             img.addEventListener("click",(event)=>{
+                let list = document.querySelectorAll('.img-list')
+                for(let i=0; i<list.length;i++){
+                    if(selected === list[i]){
+                        filter[i] = [brigthness,saturation,inversion,grayscale]
+                        translate[i] = [rotate,flipHorizontal,flipVertical]
+                        break
+                    }
+                }
+                list = filterOptions
+                let filterChose = 0
+                for(let i=0; i<list.length;i++){
+                    if(list[i].classList.contains('active')){
+                        filterChose = i
+                    }
+                }
+                list = document.querySelectorAll('.img-list')
                 selected.classList.add('selected-img')
                 event.currentTarget.classList.remove('selected-img')
                 selected = event.currentTarget
                 previewImg.src = selected.src
+                previewImg.style.filter = selected.style.filter
+                previewImg.style.transform = selected.style.transform
+                for(let i=0; i<list.length;i++){
+                    if(selected === list[i]){
+                        console.log(filter[i],i)
+                        filterSlider.value = filter[i][filterChose] 
+                        filterValue.innerText = `${filterSlider.value}%`
+                        brigthness = filter[i][0]
+                        saturation = filter[i][1]
+                        inversion = filter[i][2]
+                        grayscale = filter[i][3]
+                        break
+                    }
+                }
             })
         })
 
@@ -91,6 +127,8 @@ export default {
 
 
         const applyFilters = ()=>{
+            previewImg.style.filter = `brightness(${brigthness}%) saturate(${saturation}%) invert(${inversion}%) grayscale(${grayscale}%)`
+            previewImg.style.transform = `rotate(${rotate}deg) scale(${flipHorizontal}, ${flipVertical})`
             selected.style.filter = `brightness(${brigthness}%) saturate(${saturation}%) invert(${inversion}%) grayscale(${grayscale}%)`
             selected.style.transform = `rotate(${rotate}deg) scale(${flipHorizontal}, ${flipVertical})`
         }
@@ -100,7 +138,7 @@ export default {
             let files = fileInput.files
             let file = files[0] // user가 선택한 파일 1개(가장 처음)
             let saveImg = document.querySelectorAll('.save-wrapper>img')
-            if(!file) return; // user가 파일 선택하지 않았을때 돌아가.
+            if(!file || files.length>3) return; // user가 파일 선택하지 않았을때 돌아가.
             for(let i=0; i<files.length;i++){
                 saveImg[i].src = URL.createObjectURL(files[i])
                 this.imgData.push(files[i])
@@ -203,7 +241,6 @@ export default {
             console.log(fileData)
             this.imgData.push(fileData)
         }
-
         resetFilterBtn.addEventListener("click",resetFilter)
         saveImgBtn.addEventListener("click",saveImage)
         filterSlider.addEventListener('input',updateFilter)
