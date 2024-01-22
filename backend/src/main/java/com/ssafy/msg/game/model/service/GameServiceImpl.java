@@ -1,9 +1,14 @@
 package com.ssafy.msg.game.model.service;
 
+import com.ssafy.msg.chat.model.dto.RoomDto;
+import com.ssafy.msg.chat.model.mapper.ChatMapper;
+import com.ssafy.msg.game.model.dto.EnterGroupRoomDto;
 import com.ssafy.msg.game.model.dto.ParticipantDto;
 import com.ssafy.msg.game.model.dto.RandomNameDto;
 import com.ssafy.msg.game.model.dto.RoomStartReceiveDto;
 import com.ssafy.msg.game.model.mapper.GameMapper;
+import com.ssafy.msg.user.model.dto.UserDto;
+import com.ssafy.msg.user.model.mapper.UserMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -11,6 +16,7 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
@@ -18,6 +24,69 @@ import java.util.List;
 public class GameServiceImpl implements GameService{
 
     private final GameMapper gameMapper;
+    private final ChatMapper chatMapper;
+    private final UserMapper userMapper;
+
+    @Override
+    public void applyRandomGame(String emailId) throws Exception {
+        UserDto user = userMapper.findUserByEmailId(emailId);
+        gameMapper.applyRandomGame(user);
+    }
+
+    @Override
+    public boolean isParticipantInRoom(EnterGroupRoomDto enterGroupRoomDto) throws Exception {
+        boolean isParticipantInRoom = gameMapper.isParticipantInRoom(enterGroupRoomDto);
+        return isParticipantInRoom;
+    }
+
+    @Override
+    public RoomDto createEnterGroupRoom(String emailId) throws Exception {
+        UserDto user = userMapper.findUserByEmailId(emailId);
+
+        String roomId = UUID.randomUUID().toString();
+
+        RandomNameDto randomNameDto = getRandomRoomName();
+
+        RoomDto roomDto = RoomDto.builder()
+                .id(roomId)
+                .dataType("그룹")
+                .title(randomNameDto.getFirstName()+" "+randomNameDto.getLastName())
+                .imageUrl(randomNameDto.getImgUrl())
+                .build();
+
+        chatMapper.createRoom(roomDto);
+
+        ParticipantDto participant = ParticipantDto.builder()
+                .roomId(roomId)
+                .userEmailId(emailId)
+                .imageUrl(user.getImageUrl())
+                .nickname(user.getNickname())
+                .build();
+
+        chatMapper.enterRoom(participant);
+
+        return chatMapper.getRoom(roomId);
+    }
+
+    @Override
+    public RoomDto enterGroupRoom(EnterGroupRoomDto enterGroupRoomDto) throws Exception {
+
+        RoomDto roomDto = chatMapper.getRoom(enterGroupRoomDto.getRoomId());
+
+        if (roomDto != null){
+            UserDto user = userMapper.findUserByEmailId(enterGroupRoomDto.getEmailId());
+
+            ParticipantDto participant = ParticipantDto.builder()
+                    .roomId(enterGroupRoomDto.getRoomId())
+                    .userEmailId(user.getEmailId())
+                    .imageUrl(user.getImageUrl())
+                    .nickname(user.getNickname())
+                    .build();
+
+            chatMapper.enterRoom(participant);
+        }
+        return roomDto;
+    }
 
     @Override
     public List<String> getRandomNicknames(int limit) {
@@ -44,13 +113,12 @@ public class GameServiceImpl implements GameService{
     }
 
     @Override
-    public String getRandomRoomName() {
-        String name = "";
+    public RandomNameDto getRandomRoomName() {
+        RandomNameDto dto = null;
 
         try {
-            RandomNameDto dto = gameMapper.getRandomRoomName();
-            name = dto.getFirstName() + " " + dto.getLastName() + " " + dto.getImgUrl();
-            log.info("getRandomNicknames() -> result : {}", name);
+            dto = gameMapper.getRandomRoomName();
+            log.info("getRandomNicknames() -> result : {}", dto);
 
         } catch (Exception e) {
             log.error("getRandomNicknames() -> error : ", e);
@@ -58,7 +126,7 @@ public class GameServiceImpl implements GameService{
             log.info("getRandomNicknames() -> end");
         }
 
-        return name;
+        return dto;
     }
 
     @Override
@@ -127,5 +195,24 @@ public class GameServiceImpl implements GameService{
         return result;
     }
 
+    /**
+     * user email을 입력받아 user의 rooms 중, type이 "랜덤", "그룹"인 게임방 리스틀 리턴
+     * @param userEmail
+     * @return Rooms list를 반환
+     */
+    @Override
+    public List<RoomDto> getUserRooms(String userEmail) {
+        List<RoomDto> list = null;
+
+        try {
+            log.info("call gameMapper.getUserRooms : email : {}", userEmail);
+            list = gameMapper.getUserRooms(userEmail);
+        } catch (Exception e) {
+            log.error("getRoomList() call mapper : ", e);
+        }
+
+        log.info("getUserRooms() list : {}", list);
+        return list;
+    }
 
 }
