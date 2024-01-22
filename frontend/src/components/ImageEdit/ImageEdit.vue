@@ -1,7 +1,7 @@
 <template>
   <div class="image-container disable">
         <div class="image-editor-cancel"
-        @click="$emit('close')"
+        @click="closeImage"
         >X</div>    
         <div class="wrapper">
             <div class="img-wrapper">
@@ -11,7 +11,7 @@
                     <img class="third-img selected-img img-list" src="">
                 </div>
                 <div class="preview-img">
-                    <img class="preview" src="image-placeholder.svg" alt="">
+                    <img class="preview" src="" alt="">
                 </div>
             </div>
             <div class="editor-panel">
@@ -105,11 +105,13 @@ export default {
         },
         saveImg : function(){
             let list = document.querySelectorAll('.img-list')
+            console.log(list.length)
             for(let i=0; i<list.length;i++){
                 if(i==0 && list[i].src==""){
                     alert("입력된 이미지가 없습니다.")
                     return
                 }else{
+                    if(list[i].getAttribute('src')=="") return
                     const canvas = document.createElement("canvas")
                     const ctx = canvas.getContext("2d")
                     canvas.width = '416' // px 단위 빼고 그냥 숫자만 이렇게 적으면 해당 값 고정으로 사진 생성됨
@@ -122,14 +124,20 @@ export default {
                     ctx.scale(this.translate[i][1], this.translate[i][2] )
                     ctx.drawImage(list[i],-canvas.width /2, -canvas.height /2, canvas.width, canvas.height )
                     let src = canvas.toDataURL();
-                    console.log(src)
                     let fileData = btof(src,'temp.png')
-                    console.log(fileData)
                     this.imgData.push(fileData)
                 }
             }
-            console.log(this.imgData)
-            
+        },
+        closeImage : function(){
+            this.resetFilter()
+            let list = document.querySelectorAll('.img-list')
+            list.forEach(img=>{
+                img.src = ""
+            })
+            let preview = document.querySelector('.preview')
+            preview.src = ""
+            this.$emit('close')
         }
     },
     mounted(){
@@ -185,7 +193,6 @@ export default {
             if(!file || files.length>3) return; // user가 파일 선택하지 않았을때 돌아가.
             for(let i=0; i<files.length;i++){
                 saveImg[i].src = URL.createObjectURL(files[i])
-                this.imgData.push(files[i])
             }
             this.previewImg.src = URL.createObjectURL(file)
             this.previewImg.addEventListener("load",()=>{
@@ -220,7 +227,7 @@ export default {
             
         }
         resetFilterBtn.addEventListener("click",this.resetFilter)
-        saveImgBtn.addEventListener("click",this.saveImage)
+        saveImgBtn.addEventListener("click",this.saveImg)
         brightSlider.addEventListener('input',this.applyFilters)
         saturationSlider.addEventListener('input',this.applyFilters)
         inversionSlider.addEventListener('input',this.applyFilters)
