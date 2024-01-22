@@ -20,18 +20,18 @@ export default {
 
 // 메타데이터 설정(open graph)
 useMeta({
-  title: "SNS 음식 공유 플랫폼",
+  title: "마피아 SNS 게임 - MSG",
   meta: [
   {
     vmid: 'description',
     name: 'description',
     content:
-      'HONEYCOMB로 음식 조합을 공유하고 자랑해보세요',
+      'Mafia sns game',
   },
   {
     vmid: 'keywords',
     name: 'keywords',
-    content: 'Eat, Share, HONEYCOMB',
+    content: 'MSG',
   },
   {
     vmid: 'author',
