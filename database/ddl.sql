@@ -110,7 +110,7 @@ CREATE TABLE `follows` (
   KEY `follows_users_FK_1` (`to_user_email_id`),
   CONSTRAINT `follows_users_FK` FOREIGN KEY (`from_user_email_id`) REFERENCES `users` (`email_id`),
   CONSTRAINT `follows_users_FK_1` FOREIGN KEY (`to_user_email_id`) REFERENCES `users` (`email_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 
 -- msg.notifications definition
@@ -185,7 +185,7 @@ CREATE TABLE `articles` (
   KEY `articles_rooms_FK` (`room_id`),
   CONSTRAINT `articles_rooms_FK` FOREIGN KEY (`room_id`) REFERENCES `rooms` (`id`),
   CONSTRAINT `articles_users_FK` FOREIGN KEY (`user_email_id`) REFERENCES `users` (`email_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 
 -- msg.comment_likes definition
@@ -310,7 +310,6 @@ CREATE TABLE `participants` (
   KEY `participants_jobs_FK` (`job_id`),
   KEY `participants_nickname_images_FK` (`image_url`),
   CONSTRAINT `participants_jobs_FK` FOREIGN KEY (`job_id`) REFERENCES `jobs` (`id`),
-  CONSTRAINT `participants_nickname_images_FK` FOREIGN KEY (`image_url`) REFERENCES `nickname_images` (`url`),
   CONSTRAINT `participants_rooms_FK` FOREIGN KEY (`room_id`) REFERENCES `rooms` (`id`),
   CONSTRAINT `participants_users_FK` FOREIGN KEY (`user_email_id`) REFERENCES `users` (`email_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
@@ -330,8 +329,7 @@ CREATE TABLE `rooms` (
   PRIMARY KEY (`id`),
   KEY `rooms_messages_FK` (`last_message_id`),
   KEY `rooms_room_images_FK` (`image_url`),
-  CONSTRAINT `rooms_messages_FK` FOREIGN KEY (`last_message_id`) REFERENCES `messages` (`id`),
-  CONSTRAINT `rooms_room_images_FK` FOREIGN KEY (`image_url`) REFERENCES `room_images` (`url`)
+  CONSTRAINT `rooms_messages_FK` FOREIGN KEY (`last_message_id`) REFERENCES `messages` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 

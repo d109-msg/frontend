@@ -80,8 +80,6 @@ public class UserController {
 
 	private final JwtUtil jwtUtil;
 	
-	private final EmailUtil emailUtil;
-	
 	private final PasswordUtil passwordUtil;
 
 	private final Oauth2Util[] oauth2Utils;

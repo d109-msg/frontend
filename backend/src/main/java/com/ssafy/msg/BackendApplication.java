@@ -50,7 +50,7 @@ import com.ssafy.msg.test.model.repo.TestRepository;
  * @ResponseEntity: 스프링 MVC에서 Response Entity를 매핑할 때 사용 (HttpStatus, HttpHeader, HttpBody를 포함)
  * @Configuration: 클래스에 대한 설정 파일임을 명시할 때 사용 (@Configration 클래스 내에서 @Bean을 사용하여 Bean을 직접 등록할 수 있음)
  */
- 
+
 /* 
  * Lombok Annotation (Lombok은 자바 코드를 자동으로 생성해주는 라이브러리)
  * https://projectlombok.org/features/all
@@ -90,40 +90,41 @@ import com.ssafy.msg.test.model.repo.TestRepository;
  * N:M 관계에서만 관계가 명시적으로 테이블로 나타남
  */
 
-@EnableAutoConfiguration(exclude={DataSourceAutoConfiguration.class})
+@EnableAutoConfiguration(exclude = { DataSourceAutoConfiguration.class })
 @SpringBootApplication
 public class BackendApplication implements CommandLineRunner {
-	
+
+	@Autowired
+	private TestRepository repository;
+
 	public static void main(String[] args) {
 		SpringApplication.run(BackendApplication.class, args);
 	}
-	
-	@Autowired
-	private TestRepository testRepository;
-	
+
 	@Override
 	public void run(String... args) throws Exception {
-		testRepository.deleteAll();
 
-		testRepository.save(new TestDto("1", "Alice", "Smith"));
-		testRepository.save(new TestDto("2", "Bob", "Smith"));
+		repository.deleteAll();
 
-		System.out.println("Customers found with findAll():");
+		repository.save(TestDto.builder().firstName("Alice").lastName("Smith").build());
+		repository.save(TestDto.builder().firstName("Bob").lastName("Smith").build());
+		
+		System.out.println("TestDtos found with findAll():");
 		System.out.println("-------------------------------");
-		for (TestDto test : testRepository.findAll()) {
-			System.out.println(test);
+		for (TestDto testDto : repository.findAll()) {
+			System.out.println(testDto);
 		}
 		System.out.println();
 
-		System.out.println("Customer found with findByFirstName('Alice'):");
+		System.out.println("TestDto found with findByFirstName('Alice'):");
 		System.out.println("--------------------------------");
-		System.out.println(testRepository.findByFirstName("Alice"));
+		System.out.println(repository.findByFirstName("Alice"));
 
-		System.out.println("Customers found with findByLastName('Smith'):");
+		System.out.println("TestDtos found with findByLastName('Smith'):");
 		System.out.println("--------------------------------");
-		for (TestDto test : testRepository.findByLastName("Smith")) {
-			System.out.println(test);
+		for (TestDto testDto : repository.findByLastName("Smith")) {
+			System.out.println(testDto);
 		}
-	}
 
+	}
 }

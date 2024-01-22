@@ -64,17 +64,17 @@ replay_pid*
 docs/_book
 
 # TODO: where does this rule come from?
-test/
+# test/
 
 # End of https://www.toptal.com/developers/gitignore/api/java,vue
 
 
 HELP.md
-.gradle
-build/
-!gradle/wrapper/gradle-wrapper.jar
-!**/src/main/**/build/
-!**/src/test/**/build/
+backend/.gradle
+backend/build/
+!backend/gradle/wrapper/gradle-wrapper.jar
+!**/backend/src/main/**/build/
+!**/backend/src/test/**/build/
 
 ### STS ###
 .apt_generated
