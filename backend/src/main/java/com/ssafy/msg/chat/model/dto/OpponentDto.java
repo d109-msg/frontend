@@ -1,0 +1,21 @@
+package com.ssafy.msg.chat.model.dto;
+
+import io.swagger.v3.oas.annotations.media.Schema;
+import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.Pattern;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+@Schema(description = "채팅방 생성에 대한 요청 DTO")
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
+public class OpponentDto {
+    @Schema(description = "이메일 아이디", nullable = false, example = "hong@ssafy.com")
+    @NotEmpty(message = "이메일을 입력해주세요.")
+    @Pattern(regexp = "^[a-zA-Z0-9+-\\_.]+@[a-zA-Z0-9-]+\\.[a-zA-Z0-9-.]+$", message = "이메일 형식에 맞지 않습니다.")
+    private String emailId;
+}
