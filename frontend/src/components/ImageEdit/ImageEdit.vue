@@ -4,7 +4,9 @@
         <div class="wrapper">
             <div class="img-wrapper">
                 <div class="save-wrapper">
-                    <img class="first-img" src="" alt="" style="width: 133px; height: 133px; background-repeat: no-repeat; background-size: contain;">
+                    <img class="first-img" src="">
+                    <img class="second-img selected-img" src="">
+                    <img class="third-img selected-img" src="">
                 </div>
                 <div class="preview-img">
                     <img src="image-placeholder.svg" alt="">
@@ -41,7 +43,7 @@
         <div class="controls">
             <button class="reset-filter">Reset Filters</button>
             <div class="row">
-                <input type="file" class="file-input" accept="image/*" hidden>
+                <input type="file" class="file-input" accept="image/*" hidden multiple>
                 <button class="choose-img" style="font-weight: bold;">Choose Image</button>
                 <button class="save-img" style="font-weight: bold;">Save Image</button>
             </div>
@@ -50,14 +52,19 @@
 </template>
 
 <script>
+import btof from './base64ToFile'
 export default {
     name: "ImageEdit",
     data(){
         return{
-
+            imgData : [],
         }
     },
+    methods:{
+        
+    },
     mounted(){
+        let selected = document.querySelector('.first-img')
         const fileInput = document.querySelector('.file-input'),
         chooseImgBtn = document.querySelector('.choose-img'),
         previewImg = document.querySelector('.preview-img img'),
@@ -67,27 +74,43 @@ export default {
         filterValue = document.querySelector(".slider .value"),
         rotateOptions = document.querySelectorAll('.rotate button'),
         resetFilterBtn = document.querySelector('.reset-filter'),
-        saveImgBtn = document.querySelector('.save-img')
+        saveImgBtn = document.querySelector('.save-img'),
+        selectedImgs = document.querySelectorAll('.save-wrapper>img')
+
+        selectedImgs.forEach(img=>{
+            img.addEventListener("click",(event)=>{
+                selected.classList.add('selected-img')
+                event.currentTarget.classList.remove('selected-img')
+                selected = event.currentTarget
+                previewImg.src = selected.src
+            })
+        })
 
         let brigthness = 100, saturation = 100, inversion = 0, grayscale = 0;
         let rotate = 0, flipHorizontal = 1, flipVertical = 1;
 
 
         const applyFilters = ()=>{
-            previewImg.style.filter = `brightness(${brigthness}%) saturate(${saturation}%) invert(${inversion}%) grayscale(${grayscale}%)`
-            previewImg.style.transform = `rotate(${rotate}deg) scale(${flipHorizontal}, ${flipVertical})`
+            selected.style.filter = `brightness(${brigthness}%) saturate(${saturation}%) invert(${inversion}%) grayscale(${grayscale}%)`
+            selected.style.transform = `rotate(${rotate}deg) scale(${flipHorizontal}, ${flipVertical})`
         }
 
 
         const loadImage = ()=>{
-            let file = fileInput.files[0] // user가 선택한 파일 1개(가장 처음)
+            let files = fileInput.files
+            let file = files[0] // user가 선택한 파일 1개(가장 처음)
+            let saveImg = document.querySelectorAll('.save-wrapper>img')
             if(!file) return; // user가 파일 선택하지 않았을때 돌아가.
+            for(let i=0; i<files.length;i++){
+                saveImg[i].src = URL.createObjectURL(files[i])
+                this.imgData.push(files[i])
+            }
             previewImg.src = URL.createObjectURL(file)
             previewImg.addEventListener("load",()=>{
                 const container = document.querySelector(".image-container")
                 container.classList.remove("disable")
-               
             })
+            console.log(this.imgData)
         }
 
         fileInput.addEventListener("change",loadImage)
@@ -174,8 +197,11 @@ export default {
             ctx.drawImage(previewImg,-canvas.width /2, -canvas.height /2, canvas.width, canvas.height )
 
             const link = document.querySelector('.save-img-test')
-            link.src = canvas.toDataURL();
-            
+            let src = canvas.toDataURL();
+            console.log(src)
+            let fileData = btof(src,'temp.png')
+            console.log(fileData)
+            this.imgData.push(fileData)
         }
 
         resetFilterBtn.addEventListener("click",resetFilter)

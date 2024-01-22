@@ -35,19 +35,25 @@ body{
 
 }
 .save-wrapper{
-
+    display: flex;
+    justify-content: space-between;
+    overflow: hidden;
+    margin-left: 20px;
+    margin-bottom: 20px;
 }
 .save-wrapper > img{
     width: 100px; 
     height: 100px; 
     background-repeat: no-repeat; 
     background-size: contain;
+    
 }
 .wrapper .editor-panel{
     border: 1px solid #ccc;
     padding: 15px 20px;
     width: 280px;
     border-radius: 5px;
+    margin-left: 50px;
 }
 
 .editor-panel .title{
@@ -196,4 +202,8 @@ body{
         width: 100%;
     }
     
+}
+
+.selected-img{
+    opacity: 0.3;
 }
