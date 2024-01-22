@@ -1,5 +1,6 @@
 package com.ssafy.msg.game.model.mapper;
 
+import com.ssafy.msg.chat.model.dto.RoomDto;
 import com.ssafy.msg.game.model.dto.EnterGroupRoomDto;
 import com.ssafy.msg.game.model.dto.ParticipantDto;
 import com.ssafy.msg.game.model.dto.RandomNameDto;
@@ -20,4 +21,6 @@ public interface GameMapper {
     RandomNameDto getRandomRoomName() throws SQLException;
 
     int insertParticipants(List<ParticipantDto> participants) throws SQLException;
+
+    List<RoomDto> getUserRooms(String userEmail) throws SQLException;
 }
