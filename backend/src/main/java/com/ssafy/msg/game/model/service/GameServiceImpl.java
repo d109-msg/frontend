@@ -9,6 +9,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 @Service
@@ -120,6 +121,8 @@ public class GameServiceImpl implements GameService{
         for(int i = 0; i < num - 3; i++){
             result.add("시민");
         }
+
+        Collections.shuffle(result);
 
         return result;
     }

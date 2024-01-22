@@ -35,8 +35,9 @@ INSERT INTO users (email_id, nickname, sign_up_time) VALUES
 ('test9@naver.com', 'test9', NOW()),
 ('test10@naver.com', 'test10', NOW());
 
+insert into nickname_images (url) values ('tmp1'), ('tmp2'), ('tmp4'), ('tmp5'), ('tmp6'), ('tmp7'), ('tmp8'), ('tmp9'), ('tmp10');
+insert into room_images  (url) values ('tmp1'), ('tmp2'), ('tmp4'), ('tmp5'), ('tmp6'), ('tmp7'), ('tmp8'), ('tmp9'), ('tmp10');
+
 INSERT INTO rooms (id, data_type, create_time, title, image_url) 
 VALUES ('room1', 'text', NOW(), 'Sample Room', 'tmp1');
 
-insert into nickname_images (url) values ('tmp1'), ('tmp2'), ('tmp4'), ('tmp5'), ('tmp6'), ('tmp7'), ('tmp8'), ('tmp9'), ('tmp10');
-insert into room_images  (url) values ('tmp1'), ('tmp2'), ('tmp4'), ('tmp5'), ('tmp6'), ('tmp7'), ('tmp8'), ('tmp9'), ('tmp10');
