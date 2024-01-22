@@ -47,5 +47,18 @@
 			LIMIT 1;
 	</select>
 
+	<insert id="applyRandomGame" parameterType="UserDto">
+		insert into participants
+			(room_id, user_email_id, image_url, nickname) values ("room1", #{emailId}, #{imageUrl}, #{nickname})
+	</insert>
+
+	<select id="isParticipantInRoom" parameterType="EnterGroupRoomDto" resultType="boolean">
+		SELECT EXISTS(
+			SELECT 1
+			FROM participants
+			WHERE user_email_id = #{emailId}
+			  AND room_id = #{roomId}
+		) AS IsParticipantInRoom;
+	</select>
 </mapper>
 
