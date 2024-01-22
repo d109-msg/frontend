@@ -11,25 +11,32 @@
                     <img class="third-img selected-img img-list" src="">
                 </div>
                 <div class="preview-img">
-                    <img src="image-placeholder.svg" alt="">
+                    <img class="preview" src="image-placeholder.svg" alt="">
                 </div>
             </div>
             <div class="editor-panel">
                 <div class="filter">
                     <label class="title">Filters</label>
-                    <div class="options">
-                        <button id="Brightness" class="active" ><i class="fa-regular fa-sun"></i></button>
-                        <button id="Saturataion"><i class="fa-solid fa-circle-half-stroke"></i></button>
-                        <button id="Inversion">Inversion</button>
-                        <button id="Grayscale">Grayscale</button>
-                    </div>
-                    <div class="slider">
-                        <div class="filter-info">
-                            <p class="name" style="font-weight: bold;">Brightness</p>
-                            <p class="value">100%</p>
+                        <div class="bright-info">
+                            <div id="Brightness" class="brightness"></div>
+                            <p class="bright-value">{{brightness}}%</p>
                         </div>
-                        <input type="range" value="100" min="0" max="200">
-                    </div>
+                        <input class="bright-slider" type="range" value="100" min="0" max="200" v-model="brightness">
+                        <div class="saturation-info">
+                            <div id="Saturataion" class="saturation"></div>
+                            <p class="saturation-value">{{saturation}}%</p>
+                        </div>
+                        <input class="saturation-slider" type="range" value="100" min="0" max="200" v-model="saturation">
+                        <div class="inversion-info">
+                            <div id="Inversion" class="inversion"></div>
+                            <p class="inversion-value">{{inversion}}%</p>
+                        </div>
+                        <input class="inversion-slider" type="range" value="0" min="0" max="100" v-model="inversion">
+                        <div class="grayscale-info">
+                            <div id="Grayscale" class="grayscale"></div>
+                            <p class="grayscale-value">{{grayscale}}%</p>
+                        </div>
+                        <input class="grayscale-slider" type="range" value="0" min="0" max="100" v-model="grayscale">
                 </div>
                 <div class="rotate">
                     <label class="title">Rotate & Flip</label>
@@ -60,78 +67,115 @@ export default {
     data(){
         return{
             imgData : [],
-            
+            brightness : '100',
+            saturation : '100',
+            inversion : '0',
+            grayscale : '0',
+            filter : [['100','100','0','0'],['100','100','0','0'],['100','100','0','0']],
+            translate : [[0,1,1],[0,1,1],[0,1,1]],
+            selected : Object,
+            previewImg : Object,
+            rotate : 0, 
+            flipHorizontal : 1, 
+            flipVertical : 1,
         }
     },
     methods:{
-        
+        resetFilter : function(){
+            this.brightness = '100'
+            this.saturation = '100'
+            this.inversion = '0'
+            this.grayscale = '0'
+            this.rotate = 0, this.flipHorizontal = 1, this.flipVertical = 1;
+            this.applyFilters()
+        },
+        applyFilters : function(){
+            let list = document.querySelectorAll('.img-list')
+            for(let i=0; i<list.length;i++){
+                    if(this.selected === list[i]){
+                        this.filter[i] = [this.brightness.toString(),this.saturation.toString(),this.inversion.toString(),this.grayscale.toString()]
+                        this.translate[i] = [this.rotate,this.flipHorizontal,this.flipVertical]
+                        break
+                    }
+                }
+            this.previewImg.style.filter = `brightness(${this.brightness.toString()}%) saturate(${this.saturation.toString()}%) invert(${this.inversion.toString()}%) grayscale(${this.grayscale.toString()}%)`
+            this.previewImg.style.transform = `rotate(${this.rotate}deg) scale(${this.flipHorizontal}, ${this.flipVertical})`
+            this.selected.style.filter = `brightness(${this.brightness.toString()}%) saturate(${this.saturation.toString()}%) invert(${this.inversion.toString()}%) grayscale(${this.grayscale.toString()}%)`
+            this.selected.style.transform = `rotate(${this.rotate}deg) scale(${this.flipHorizontal}, ${this.flipVertical})`
+        },
+        saveImg : function(){
+            let list = document.querySelectorAll('.img-list')
+            for(let i=0; i<list.length;i++){
+                if(i==0 && list[i].src==""){
+                    alert("입력된 이미지가 없습니다.")
+                    return
+                }else{
+                    const canvas = document.createElement("canvas")
+                    const ctx = canvas.getContext("2d")
+                    canvas.width = '416' // px 단위 빼고 그냥 숫자만 이렇게 적으면 해당 값 고정으로 사진 생성됨
+                    canvas.height = '416' // px 단위 빼고 그냥 숫자만 이렇게 적으면 해당 값 고정으로 사진 생성됨
+                    ctx.filter = `brightness(${this.filter[i][0]}%) saturate(${this.filter[i][1]}%) invert(${this.filter[i][2]}%) grayscale(${this.filter[i][3]}%)`
+                    ctx.translate(canvas.width/2, canvas.height/2)
+                    if(this.translate[i][0] != 0){
+                        ctx.rotate(this.translate[i][0] * Math.PI / 180)
+                    }
+                    ctx.scale(this.translate[i][1], this.translate[i][2] )
+                    ctx.drawImage(list[i],-canvas.width /2, -canvas.height /2, canvas.width, canvas.height )
+                    let src = canvas.toDataURL();
+                    console.log(src)
+                    let fileData = btof(src,'temp.png')
+                    console.log(fileData)
+                    this.imgData.push(fileData)
+                }
+            }
+            console.log(this.imgData)
+            
+        }
     },
     mounted(){
-        let filter = [[100,100,0,0],[100,100,0,0],[100,100,0,0]]
-        let translate = [[0,1,1],[0,1,1],[0,1,1]]
+        this.selected = document.querySelector('.first-img')
+        this.previewImg = document.querySelector('.preview')
 
-        let selected = document.querySelector('.first-img')
         const fileInput = document.querySelector('.file-input'),
         chooseImgBtn = document.querySelector('.choose-img'),
-        previewImg = document.querySelector('.preview-img img'),
-        filterOptions = document.querySelectorAll(".filter button"),
-        filterName = document.querySelector(".filter-info .name"),
-        filterSlider = document.querySelector(".slider input"),
-        filterValue = document.querySelector(".slider .value"),
+        brightSlider = document.querySelector(".bright-slider"),
+        saturationSlider = document.querySelector(".saturation-slider"),
+        inversionSlider = document.querySelector(".inversion-slider"),
+        grayscaleSlider = document.querySelector(".grayscale-slider"),
         rotateOptions = document.querySelectorAll('.rotate button'),
         resetFilterBtn = document.querySelector('.reset-filter'),
         saveImgBtn = document.querySelector('.save-img'),
         selectedImgs = document.querySelectorAll('.save-wrapper>img')
+        let list = document.querySelectorAll('.img-list')
 
         selectedImgs.forEach(img=>{
             img.addEventListener("click",(event)=>{
-                let list = document.querySelectorAll('.img-list')
                 for(let i=0; i<list.length;i++){
-                    if(selected === list[i]){
-                        filter[i] = [brigthness,saturation,inversion,grayscale]
-                        translate[i] = [rotate,flipHorizontal,flipVertical]
+                    if(this.selected === list[i]){
+                        this.filter[i] = [this.brightness.toString(),this.saturation.toString(),this.inversion.toString(),this.grayscale.toString()]
+                        this.translate[i] = [this.rotate,this.flipHorizontal,this.flipVertical]
                         break
                     }
                 }
-                list = filterOptions
-                let filterChose = 0
-                for(let i=0; i<list.length;i++){
-                    if(list[i].classList.contains('active')){
-                        filterChose = i
-                    }
-                }
+                
                 list = document.querySelectorAll('.img-list')
-                selected.classList.add('selected-img')
+                this.selected.classList.add('selected-img')
                 event.currentTarget.classList.remove('selected-img')
-                selected = event.currentTarget
-                previewImg.src = selected.src
-                previewImg.style.filter = selected.style.filter
-                previewImg.style.transform = selected.style.transform
+                this.selected = event.currentTarget
+                this.previewImg.src = this.selected.src
+                this.previewImg.style.filter = this.selected.style.filter
+                this.previewImg.style.transform = this.selected.style.transform
                 for(let i=0; i<list.length;i++){
-                    if(selected === list[i]){
-                        console.log(filter[i],i)
-                        filterSlider.value = filter[i][filterChose] 
-                        filterValue.innerText = `${filterSlider.value}%`
-                        brigthness = filter[i][0]
-                        saturation = filter[i][1]
-                        inversion = filter[i][2]
-                        grayscale = filter[i][3]
-                        break
+                    if(this.selected == list[i]){
+                        this.brightness = this.filter[i][0]
+                        this.saturation = this.filter[i][1]
+                        this.inversion = this.filter[i][2]   
+                        this.grayscale = this.filter[i][3]
                     }
                 }
             })
         })
 
-        let brigthness = 100, saturation = 100, inversion = 0, grayscale = 0;
-        let rotate = 0, flipHorizontal = 1, flipVertical = 1;
-
-
-        const applyFilters = ()=>{
-            previewImg.style.filter = `brightness(${brigthness}%) saturate(${saturation}%) invert(${inversion}%) grayscale(${grayscale}%)`
-            previewImg.style.transform = `rotate(${rotate}deg) scale(${flipHorizontal}, ${flipVertical})`
-            selected.style.filter = `brightness(${brigthness}%) saturate(${saturation}%) invert(${inversion}%) grayscale(${grayscale}%)`
-            selected.style.transform = `rotate(${rotate}deg) scale(${flipHorizontal}, ${flipVertical})`
-        }
 
 
         const loadImage = ()=>{
@@ -143,8 +187,8 @@ export default {
                 saveImg[i].src = URL.createObjectURL(files[i])
                 this.imgData.push(files[i])
             }
-            previewImg.src = URL.createObjectURL(file)
-            previewImg.addEventListener("load",()=>{
+            this.previewImg.src = URL.createObjectURL(file)
+            this.previewImg.addEventListener("load",()=>{
                 const container = document.querySelector(".image-container")
                 container.classList.remove("disable")
             })
@@ -155,95 +199,33 @@ export default {
         chooseImgBtn.addEventListener("click",()=>fileInput.click())
 
 
-        filterOptions.forEach(option =>{
-            console.log(option)
-            option.addEventListener("click",()=>{
-                document.querySelector('.filter .active').classList.remove("active")
-                option.classList.add("active");
-            
-                filterName.innerText = option.id;
-                if(option.id === "Brightness"){
-                    filterSlider.max = "200"
-                    filterSlider.value = brigthness
-                    filterValue.innerText = `${brigthness}%`
-                } else if(option.id ==='Saturataion'){
-                    filterSlider.max = "200"
-                    filterSlider.value = saturation
-                    filterValue.innerText = `${saturation}%`
-                } else if(option.id ==='Inversion'){
-                    filterSlider.max = "100"
-                    filterSlider.value = inversion
-                    filterValue.innerText = `${inversion}%`
-                }else{
-                    filterSlider.max = "100"
-                    filterSlider.value = grayscale
-                    filterValue.innerText = `${grayscale}%`
-                }
-            })
-        })
-
-        const updateFilter = ()=>{
-            filterValue.innerText = `${filterSlider.value}%`
-            const selectedFilter = document.querySelector(".filter .active")
-
-            if(selectedFilter.id === 'Brightness'){
-                brigthness = filterSlider.value;
-            } else if(selectedFilter.id === 'Saturataion'){
-                saturation = filterSlider.value;
-            } else if(selectedFilter.id === 'Inversion'){
-                inversion = filterSlider.value;
-            }else{
-                grayscale = filterSlider.value;
-            }
-            applyFilters()
-        }
-
         rotateOptions.forEach(option => {
             option.addEventListener("click",()=>{
                 if(option.id === "left"){
-                    rotate -= 90  // 90도 돌림
+                    this.rotate -= 90  // 90도 돌림
                 } else if(option.id === "right"){
-                    rotate += 90
+                    this.rotate += 90
                 } else if(option.id === "horizontal"){
-                    flipHorizontal = flipHorizontal === 1 ? -1 : 1
+                    this.flipHorizontal = this.flipHorizontal === 1 ? -1 : 1
                 } else{
-                    flipVertical = flipVertical === 1 ? -1 : 1
+                    this.flipVertical = this.flipVertical === 1 ? -1 : 1
                 }
-                applyFilters()
+                this.applyFilters()
             })
         })
 
-        const resetFilter = ()=>{ // reset it !!
-            brigthness = 100, saturation = 100, inversion = 0, grayscale = 0;
-            rotate = 0, flipHorizontal = 1, flipVertical = 1;
-            filterOptions[0].click(); //디폴트값으로 밝기 조절로 선택되게 하기
-            applyFilters()
-
-        }
+     
 
         const saveImage = ()=>{
-            const canvas = document.createElement("canvas")
-            const ctx = canvas.getContext("2d")
-            canvas.width = '300' // px 단위 빼고 그냥 숫자만 이렇게 적으면 해당 값 고정으로 사진 생성됨
-            canvas.height = '300' // px 단위 빼고 그냥 숫자만 이렇게 적으면 해당 값 고정으로 사진 생성됨
-            ctx.filter = `brightness(${brigthness}%) saturate(${saturation}%) invert(${inversion}%) grayscale(${grayscale}%)`
-            ctx.translate(canvas.width/2, canvas.height/2)
-            if(rotate !== 0){
-                ctx.rotate(rotate * Math.PI / 180)
-            }
-            ctx.scale(flipHorizontal, flipVertical )
-            ctx.drawImage(previewImg,-canvas.width /2, -canvas.height /2, canvas.width, canvas.height )
-
-            const link = document.querySelector('.save-img-test')
-            let src = canvas.toDataURL();
-            console.log(src)
-            let fileData = btof(src,'temp.png')
-            console.log(fileData)
-            this.imgData.push(fileData)
+            
         }
-        resetFilterBtn.addEventListener("click",resetFilter)
-        saveImgBtn.addEventListener("click",saveImage)
-        filterSlider.addEventListener('input',updateFilter)
+        resetFilterBtn.addEventListener("click",this.resetFilter)
+        saveImgBtn.addEventListener("click",this.saveImage)
+        brightSlider.addEventListener('input',this.applyFilters)
+        saturationSlider.addEventListener('input',this.applyFilters)
+        inversionSlider.addEventListener('input',this.applyFilters)
+        grayscaleSlider.addEventListener('input',this.applyFilters)
+
     }
 
 }
