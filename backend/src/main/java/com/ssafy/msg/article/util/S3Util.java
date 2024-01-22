@@ -31,8 +31,8 @@ public class S3Util {
      * @throws IOException
      */
     public String saveFile(MultipartFile multipartFile) throws IOException {
-        String originalFilename = multipartFile.getOriginalFilename();
-        String fileName = UUID.randomUUID() + originalFilename;
+
+        String fileName = UUID.randomUUID().toString();
 
         ObjectMetadata metadata = new ObjectMetadata();
         metadata.setContentLength(multipartFile.getSize());

@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper
+        namespace="com.ssafy.msg.article.model.mapper.ArticleMapper">
+
+    <insert id="createArticle" parameterType="ArticleCreateDto" useGeneratedKeys="true" keyProperty="id">
+        insert into articles
+            (user_email_id, content, create_time, flag_private, modify_time, room_id)
+        values ( #{userEmailId}, #{content}, now(), #{flagPrivate}, now(), #{roomId});
+
+    </insert>
+
+    <insert id="insertArticleImage" parameterType="ArticleImageDto">
+        insert into article_images
+            (article_id, url, uuid, flag_mission)
+        values (#{articleId}, #{url}, #{uuid}, #{flagMission})
+
+    </insert>
+
+
+</mapper>
