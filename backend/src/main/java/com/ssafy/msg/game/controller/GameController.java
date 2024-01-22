@@ -2,6 +2,7 @@ package com.ssafy.msg.game.controller;
 
 import com.ssafy.msg.chat.model.dto.RoomDto;
 import com.ssafy.msg.game.model.dto.*;
+import com.ssafy.msg.game.model.mapper.GameMapper;
 import com.ssafy.msg.game.model.service.GameService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -27,6 +28,26 @@ import java.util.List;
 public class GameController {
 
     private final GameService gameService;
+    private final GameMapper gameMapper;
+
+    @GetMapping("/room/vote")
+    @Operation(summary = "유저 현재 방의 투표 현황 조회", description = "userEmail과 roomId를 이용해 해당 room의 투표 현황 조회")
+    public ResponseEntity<?> getRoomVote(HttpServletRequest request, @RequestParam String roomId) {
+        String emailId = (String) request.getAttribute("emailId");
+
+        log.info("getRoomVote() -> roomId : {}", roomId);
+        List<VoteResultDto> result = null;
+
+        try {
+            log.info("asd : {}", roomId);
+            result = gameMapper.getRoomVote(roomId);
+        } catch (Exception e) {
+            log.error("asd : {}", e);
+        }
+
+
+        return new ResponseEntity<>(result, HttpStatus.OK);
+    }
 
     @GetMapping(value = "/room/list")
     @Operation(summary = "유저의 진행 중인 게임 리스트를 반환", description = "userEmail을 이용해 user의 room list 반환")
