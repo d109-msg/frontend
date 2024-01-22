@@ -1,32 +1,26 @@
 <template>
       <div class="container">
-        <div class="main-img"></div>
+        <div class="main-img">
         <div class="login-box">
-            <p class="login-title">HONEY COMB</p>
+            <p class="login-logo"></p>
             <div class="email-form">
                 <input type="text" class="email-input" required v-model="emailId">
                 <p class="email-label">이메일</p>
-                <img src="@/assets/css/loginformImg/email.png" alt="" class="email-img">
             </div>
+            <div class="another-font"
+                @click="$router.push('/signup')">회원가입</div>
             <div class="password-form">
                 <input type="password" class="password-input" required v-model="emailPassword">
                 <p class="password-label">비밀번호</p>
-                <img src="@/assets/css/loginformImg/password.png" alt="" class="password-img">
             </div>
+            <div class="another-font">비밀번호 찾기</div>
+
+
             <button class="login-btn" @click="login">
                 Login
             </button>
-            <div style="margin-top: 5%; font-size: 0.8rem; color: rgba(0,0,0,0.6);">
-                <span style="cursor: pointer;">아이디 찾기</span>
-                <span> | </span>
-                <span style="cursor: pointer;">비밀번호 찾기</span>
-                <span > | </span>
-                <span style="cursor: pointer;"
-                @click="$router.push('/signup')"
-                >회원가입</span>
 
-            </div>
-            <div style="margin-top: 7%; font-size: 0.9rem; color: rgba(0,0,0,0.6);">or Sign in with</div>
+            <div class="or-sign-in-with" >or Sign in with</div>
             <div style="display: flex; justify-content: center;">
                 <img src="@/assets/css/loginformImg/google.png" alt="" style="  width: 10%; margin: 2%; margin-top: 3%; cursor: pointer;"
                     @click="socialLogin(0)"
@@ -38,6 +32,7 @@
                 >
             </div>
         </div>
+    </div>
 </div>
 
 </template>

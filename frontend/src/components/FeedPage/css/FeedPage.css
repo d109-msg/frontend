@@ -1,28 +1,42 @@
 .feed-container{
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: start;
     width: 1000px;
     margin: 30px;
-    margin-top: 0;
-    margin-left: 50px;
+    margin: 0px;
+}
+.first-col{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    
+}
+
+.second-col{
+    display: flex;
+    flex-direction: column;
+    
 }
 
 .feed-create{
-    width: 417px;
-    height: 201px;
+    display: flex;
+    width: 450px;
+    height: 200px;
     background-color: #FFFDF3;
+    padding: 40px 20px 40px 20px;
     border-radius: 10px;
     box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.25);
     display: flex;
     flex-direction: column;
-    margin-bottom: 37px;
+    margin: 0px 10px 40px 10px;
 }
 
 .create-container{
     display: flex; 
     flex-direction: row;
     align-items: center; 
-    margin-top: 38px;
-    margin-left: 26px;
-    margin-bottom: 35px;
 }
 
 .create-img{
@@ -35,13 +49,17 @@
     font-size: 18px;
     color: #838080;
 }
+.create-btn-box{
+    display: flex;
+    justify-content: end;
+    padding-top: 15px;
+}
 .create-btn{
     display: flex;
     justify-content: center;
     align-items: center;
     font-size: 18px;
     color: #FFFFFF;
-    margin-left: 243px;
     border-radius: 10px;
     width: 141px;
     height: 44px;
