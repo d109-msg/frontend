@@ -1,6 +1,7 @@
 package com.ssafy.msg.user.controller;
 
 import java.util.Arrays;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
@@ -27,6 +28,9 @@ import com.ssafy.msg.user.model.dto.AccessTokenDto;
 import com.ssafy.msg.user.model.dto.FollowDetailDto;
 import com.ssafy.msg.user.model.dto.FollowDto;
 import com.ssafy.msg.user.model.dto.FollowFindDto;
+import com.ssafy.msg.user.model.dto.FollowParamDto;
+import com.ssafy.msg.user.model.dto.FollowResponseDto;
+import com.ssafy.msg.user.model.dto.FollowUserDto;
 import com.ssafy.msg.user.model.dto.IdentifierDto;
 import com.ssafy.msg.user.model.dto.NicknameDto;
 import com.ssafy.msg.user.model.dto.Oauth2Dto;
@@ -39,7 +43,6 @@ import com.ssafy.msg.user.model.dto.UpdatePasswordDto;
 import com.ssafy.msg.user.model.dto.UserDto;
 import com.ssafy.msg.user.model.dto.UserInfoDto;
 import com.ssafy.msg.user.model.service.UserService;
-import com.ssafy.msg.user.util.EmailUtil;
 import com.ssafy.msg.user.util.JwtUtil;
 import com.ssafy.msg.user.util.Oauth2Util;
 import com.ssafy.msg.user.util.PasswordUtil;
@@ -68,63 +71,63 @@ import lombok.extern.slf4j.Slf4j;
 @RequiredArgsConstructor
 @Slf4j
 
-/* 
- * Swagger 설정
- * 1. @Tag로 API를 그룹화 (회원 CRUD API를 User로 그룹화, 게시물 CRUD API를 Article로 그룹화 등)
+/*
+ * Swagger 설정 1. @Tag로 API를 그룹화 (회원 CRUD API를 User로 그룹화, 게시물 CRUD API를 Article로
+ * 그룹화 등)
  */
-@Tag(name="User", description="회원 관련 API")
+@Tag(name = "User", description = "회원 관련 API")
 public class UserController {
-	
+
 	@Value("${header.authorization}")
 	private String authorization;
 
 	private final JwtUtil jwtUtil;
-	
+
 	private final PasswordUtil passwordUtil;
 
 	private final Oauth2Util[] oauth2Utils;
-	
+
 	private final S3Util s3Util;
-	
+
 	private final UserService userService;
 
 	/*
 	 * 요청 처리 메소드 설정
-	 * 1. @GetMapping, @PostMapping, @PatchMapping, @PutMapping, @DeleteMapping으로 HTTP 요청 메소드와 URI 매핑
+	 * 1. @GetMapping, @PostMapping, @PatchMapping, @PutMapping, @DeleteMapping으로
+	 * HTTP 요청 메소드와 URI 매핑
 	 */
 	@GetMapping("/sign-in/oauth2/{provider}")
-	
+
 	/*
-	 * Swagger 설정
-	 * 1. @Operation으로 API 요약과 설명 작성
-	 * 2. @ApiResponses로 ApiResponse 그룹화
-	 * 3. @ApiResponse로 HTTP 응답 코드, 설명, 응답 DTO 작성
-	 * 4. 데이터를 DTO로 받는 것이 아니라 URL의 PathVariable이나 RequestParam으로 받는 경우 @Parameter로 설명 작성
+	 * Swagger 설정 1. @Operation으로 API 요약과 설명 작성 2. @ApiResponses로 ApiResponse 그룹화
+	 * 3. @ApiResponse로 HTTP 응답 코드, 설명, 응답 DTO 작성 4. 데이터를 DTO로 받는 것이 아니라 URL의
+	 * PathVariable이나 RequestParam으로 받는 경우 @Parameter로 설명 작성
 	 */
 	@Operation(summary = "소셜 로그인", description = "기존 회원일 경우 로그인, 신규 회원일 경우 회원가입 후 로그인")
 	@ApiResponses(value = {
 			@ApiResponse(responseCode = "201", description = "로그인 성공", content = {
 					@Content(mediaType = "application/json", schema = @Schema(implementation = TokenDto.class)) }),
 			@ApiResponse(responseCode = "400", description = "로그인 실패", content = @Content) })
-	public ResponseEntity<?> signInWithOauth2(@Parameter(description = "Oauth2 제공자 종류 (google/naver/kakao)") @PathVariable("provider") String provider, @Parameter(description = "Oauth2 제공자로부터 액세스 토큰을 발급받을 때 사용하는 인가 코드") @RequestParam("code") String code) {
+	public ResponseEntity<?> signInWithOauth2(
+			@Parameter(description = "Oauth2 제공자 종류 (google/naver/kakao)") @PathVariable("provider") String provider,
+			@Parameter(description = "Oauth2 제공자로부터 액세스 토큰을 발급받을 때 사용하는 인가 코드") @RequestParam("code") String code) {
 		/*
-		 * 1. 메소드 시작 시 로그 출력
-		 * 2. 받은 파라미터 출력 (Receive code, Receive provider)
+		 * 1. 메소드 시작 시 로그 출력 2. 받은 파라미터 출력 (Receive code, Receive provider)
 		 */
 		log.info("signInWithOauth2() -> Start");
 		log.info("signInWithOauth2() -> Receive provider : {}", provider);
 		log.info("signInWithOauth2() -> Receive code : {}", code);
-		
+
 		/*
-		 * 1. 에러 발생할 수 있을 때 try-catch-finally 구문 사용
-		 * 2. 중간중간 로그 출력은 하면 좋지만 너무 많으면 가독성 떨어지므로 적당히 하는 것이 좋을 듯함 (애매하면 그냥 처음과 끝에만 출력)
-		 * 3. 에러 처리 시에는 중요도에 따라 log.warn, log.error로 나눠서 로그 출력
+		 * 1. 에러 발생할 수 있을 때 try-catch-finally 구문 사용 2. 중간중간 로그 출력은 하면 좋지만 너무 많으면 가독성
+		 * 떨어지므로 적당히 하는 것이 좋을 듯함 (애매하면 그냥 처음과 끝에만 출력) 3. 에러 처리 시에는 중요도에 따라 log.warn,
+		 * log.error로 나눠서 로그 출력
 		 */
 		try {
 			Oauth2Util oauth2Util = Arrays.stream(oauth2Utils)
 					.filter(oauth2 -> oauth2.getClass().getSimpleName().toLowerCase().contains(provider)).findFirst()
 					.orElse(null);
-			
+
 			String oauth2AccessToken = oauth2Util.getAccessToken(code);
 			log.info("signInWithOauth2() -> Receive oauth2AccessToken : {}", oauth2AccessToken);
 			Oauth2Dto oauth2Dto = oauth2Util.getUserInfo(oauth2AccessToken);
@@ -136,7 +139,7 @@ public class UserController {
 			log.info("signInWithOauth2() -> Create refreshToken : {}", refreshToken);
 
 			UserDto userDto = userService.findUserByEmailId(oauth2Dto.getEmailId());
-			
+
 			oauth2Dto.setRefreshToken(refreshToken);
 			if (userDto == null) {
 				userService.signUpWithOauth2(oauth2Dto);
@@ -158,7 +161,7 @@ public class UserController {
 			log.info("signInWithOauth2() -> End");
 		}
 	}
-	
+
 	@Operation(summary = "사이트 자체 회원가입", description = "이메일 아이디, 이메일 비밀번호, 닉네임으로 회원가입")
 	@ApiResponses(value = { @ApiResponse(responseCode = "201", description = "회원가입 성공", content = @Content),
 			@ApiResponse(responseCode = "400", description = "회원가입 실패", content = @Content) })
@@ -178,7 +181,7 @@ public class UserController {
 			log.info("signUp() -> End");
 		}
 	}
-	
+
 	@Operation(summary = "사이트 자체 로그인", description = "이메일 아이디, 이메일 비밀번호로 로그인")
 	@ApiResponses(value = {
 			@ApiResponse(responseCode = "201", description = "로그인 성공", content = {
@@ -196,11 +199,11 @@ public class UserController {
 			log.error("signIn() -> Exception : {}", e);
 			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 		}
-		
+
 		if (userDto == null) {
 			throw new UserNotFoundException();
 		}
-		
+
 		try {
 			String accessToken = jwtUtil.createAccessToken(userDto.getEmailId());
 			log.info("signIn() -> Create accessToken : {}", accessToken);
@@ -221,7 +224,7 @@ public class UserController {
 			log.info("signIn() -> End");
 		}
 	}
-	
+
 	@Operation(summary = "액세스 토큰 재발급", description = "리프레시 토큰으로 액세스 토큰 재발급")
 	@ApiResponses(value = { @ApiResponse(responseCode = "201", description = "액세스 토큰 재발급 성공", content = {
 			@Content(mediaType = "application/json", schema = @Schema(implementation = AccessTokenDto.class)) }),
@@ -229,37 +232,37 @@ public class UserController {
 	@GetMapping("/token")
 	public ResponseEntity<?> reissueAccessToken(HttpServletRequest request) {
 		log.info("reissueAccessToken() -> Start");
-		
+
 		String header = request.getHeader(authorization);
 		if (header == null || !header.startsWith("Bearer ")) {
 			throw new TokenInvalidException();
 		}
-		
+
 		String refreshToken = header.replace("Bearer ", "");
 		jwtUtil.verify(refreshToken, "refresh-token");
-		
+
 		String emailId = jwtUtil.getEmailId(refreshToken);
-		
+
 		UserDto userDto = null;
 		try {
 			userDto = userService.findUserByEmailId(emailId);
 		} catch (Exception e) {
 			throw new UserNotFoundException();
 		}
-		
+
 		String savedRefreshToken = userDto.getRefreshToken();
 		if (!refreshToken.equals(savedRefreshToken)) {
 			throw new TokenInvalidException();
 		}
-		
+
 		String accessToken = jwtUtil.createAccessToken(emailId);
 		AccessTokenDto accessTokenDto = AccessTokenDto.builder().accessToken(accessToken).build();
-		
+
 		log.info("reissueAccessToken() -> Success");
 		log.info("reissueAccessToken() -> End");
 		return new ResponseEntity<>(accessTokenDto, HttpStatus.CREATED);
 	}
-	
+
 	@Operation(summary = "회원정보 조회", description = "액세스 토큰으로 회원정보 조회")
 	@ApiResponses(value = {
 			@ApiResponse(responseCode = "200", description = "회원정보 조회 성공", content = {
@@ -268,7 +271,7 @@ public class UserController {
 	@GetMapping("/info")
 	public ResponseEntity<?> getUserInfo(HttpServletRequest request) {
 		log.info("getUserInfo() -> Start");
-		
+
 		String emailId = (String) request.getAttribute("emailId");
 
 		UserInfoDto userInfoDto = null;
@@ -284,16 +287,16 @@ public class UserController {
 			log.info("getUserInfo() -> End");
 		}
 	}
-	
+
 	@Operation(summary = "로그아웃", description = "액세스 토큰으로 로그아웃")
 	@ApiResponses(value = { @ApiResponse(responseCode = "200", description = "로그아웃 성공", content = @Content),
 			@ApiResponse(responseCode = "404", description = "로그아웃 실패", content = @Content) })
 	@GetMapping("/sign-out")
 	public ResponseEntity<?> signOut(HttpServletRequest request) {
 		log.info("signOut() -> Start");
-		
+
 		String emailId = (String) request.getAttribute("emailId");
-		
+
 		try {
 			userService.signOut(emailId);
 			log.info("signOut() -> Success");
@@ -305,14 +308,14 @@ public class UserController {
 			log.info("signOut() -> End");
 		}
 	}
-	
+
 	@Operation(summary = "회원탈퇴", description = "액세스 토큰으로 회원탈퇴")
 	@ApiResponses(value = { @ApiResponse(responseCode = "200", description = "회원탈퇴 성공", content = @Content),
 			@ApiResponse(responseCode = "404", description = "회원탈퇴 실패", content = @Content) })
 	@DeleteMapping
 	public ResponseEntity<?> withdraw(HttpServletRequest request) {
 		log.info("withdraw() -> Start");
-		
+
 		String emailId = (String) request.getAttribute("emailId");
 
 		try {
@@ -326,7 +329,7 @@ public class UserController {
 			log.info("withdraw() -> End");
 		}
 	}
-	
+
 	@Operation(summary = "닉네임 수정", description = "액세스 토큰으로 닉네임 수정")
 	@ApiResponses(value = { @ApiResponse(responseCode = "200", description = "닉네임 수정 성공", content = @Content),
 			@ApiResponse(responseCode = "404", description = "닉네임 수정 실패", content = @Content) })
@@ -334,12 +337,9 @@ public class UserController {
 	public ResponseEntity<?> updateNickname(HttpServletRequest request, @RequestBody NicknameDto nicknameDto) {
 		log.info("updateNickname() -> Start");
 		log.info("updateNickname() -> Receive updateDto : {}", nicknameDto);
-		
+
 		String emailId = (String) request.getAttribute("emailId");
-		UserDto userDto = UserDto.builder()
-				.emailId(emailId)
-				.nickname(nicknameDto.getNickname())
-				.build();
+		UserDto userDto = UserDto.builder().emailId(emailId).nickname(nicknameDto.getNickname()).build();
 
 		try {
 			userService.updateNickname(userDto);
@@ -352,7 +352,7 @@ public class UserController {
 			log.info("updateNickname() -> End");
 		}
 	}
-	
+
 	@Operation(summary = "식별자 수정", description = "액세스 토큰으로 식별자 수정")
 	@ApiResponses(value = { @ApiResponse(responseCode = "200", description = "식별자 수정 성공", content = @Content),
 			@ApiResponse(responseCode = "404", description = "식별자 수정 실패", content = @Content) })
@@ -362,7 +362,7 @@ public class UserController {
 		log.info("updateIdentifier() -> Receive updateDto : {}", identifierDto);
 
 		String emailId = (String) request.getAttribute("emailId");
-		
+
 		UserDto userDto = null;
 		try {
 			userDto = userService.findUserByEmailId(emailId);
@@ -370,9 +370,10 @@ public class UserController {
 			log.error("updateIdentifier() -> Exception : {}", e);
 			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 		}
-		
-		if (userDto.getFlagIdentifier() == 1) throw new IdentifierException();
-		
+
+		if (userDto.getFlagIdentifier() == 1)
+			throw new IdentifierException();
+
 		try {
 			userDto.setIdentifier(identifierDto.getIdentifier());
 			userDto.setFlagIdentifier(1);
@@ -386,12 +387,13 @@ public class UserController {
 			log.info("updateIdentifier() -> End");
 		}
 	}
-	
+
 	@Operation(summary = "비밀번호 수정", description = "액세스 토큰과 현재 비밀번호로 비밀번호 수정")
 	@ApiResponses(value = { @ApiResponse(responseCode = "200", description = "비밀번호 수정 성공", content = @Content),
 			@ApiResponse(responseCode = "404", description = "비밀번호 수정 실패", content = @Content) })
 	@PatchMapping("/password")
-	public ResponseEntity<?> updatePassword(HttpServletRequest request, @RequestBody UpdatePasswordDto updatePasswordDto) {
+	public ResponseEntity<?> updatePassword(HttpServletRequest request,
+			@RequestBody UpdatePasswordDto updatePasswordDto) {
 		log.info("updatePassword() -> Start");
 		log.info("updatePassword() -> Receive updatePasswordDto : {}", updatePasswordDto);
 
@@ -410,29 +412,24 @@ public class UserController {
 			log.info("updatePassword() -> End");
 		}
 	}
-	
+
 	@Operation(summary = "프로필 이미지 수정", description = "액세스 토큰으로 프로필 이미지 수정")
 	@ApiResponses(value = { @ApiResponse(responseCode = "200", description = "프로필 이미지 수정 성공", content = @Content),
 			@ApiResponse(responseCode = "404", description = "프로필 이미지 수정 실패", content = @Content) })
-	@PatchMapping(value = "/image",
-			consumes = MediaType.MULTIPART_FORM_DATA_VALUE,
-			produces = MediaType.APPLICATION_JSON_VALUE)
+	@PatchMapping(value = "/image", consumes = MediaType.MULTIPART_FORM_DATA_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<?> updateImage(HttpServletRequest request, @RequestParam("image") MultipartFile imageFile) {
 		log.info("updateImage() -> Start");
 		log.info("updateImage() -> Receive imageFile : {}", imageFile);
-		
+
 		String emailId = (String) request.getAttribute("emailId");
 		try {
 			String imageUuid = s3Util.saveFile(imageFile);
 			log.info("updateImage() -> Receive imageUuid : {}", imageUuid);
 			String imageUrl = s3Util.getUrl(imageUuid);
 			log.info("updateImage() -> Receive imageUrl : {}", imageUrl);
-			
-			ProfileImageDto profileImageDto = ProfileImageDto.builder()
-					.imageUuid(imageUuid)
-					.imageUrl(imageUrl)
-					.emailId(emailId)
-					.build();
+
+			ProfileImageDto profileImageDto = ProfileImageDto.builder().imageUuid(imageUuid).imageUrl(imageUrl)
+					.emailId(emailId).build();
 			userService.updateImage(profileImageDto);
 			log.info("updateImage() -> Success");
 			return new ResponseEntity<>(HttpStatus.OK);
@@ -443,7 +440,7 @@ public class UserController {
 			log.info("updateImage() -> End");
 		}
 	}
-	
+
 	@Operation(summary = "임시 비밀번호 발송", description = "기존 가입된 이메일에 임시 비밀번호 발송")
 	@ApiResponses(value = { @ApiResponse(responseCode = "200", description = "임시 비밀번호 발송 성공", content = @Content),
 			@ApiResponse(responseCode = "404", description = "임시 비밀번호 발송 실패", content = @Content) })
@@ -451,21 +448,21 @@ public class UserController {
 	public ResponseEntity<?> resetPassword(@RequestBody ResetPasswordDto resetPasswordDto) {
 		log.info("resetPassword() -> Start");
 		log.info("resetPassword() -> Receive emailId : {}", resetPasswordDto.getEmailId());
-		
+
 		try {
 			UserDto userDto = userService.findUserByEmailId(resetPasswordDto.getEmailId());
 			if (userDto == null || userDto.getProvider() != null) {
 				throw new UserNotFoundException();
 			}
-			
+
 			String randomPassword = passwordUtil.generateRandomPassword();
 			log.info("resetPassword() -> Create randomPassword : {}", randomPassword);
-			
+
 			userDto.setEmailPassword(randomPassword);
-			
+
 			userService.resetPassword(userDto, randomPassword);
 			log.info("resetPassword() -> Success");
-			
+
 			return new ResponseEntity<>(HttpStatus.OK);
 		} catch (Exception e) {
 			log.error("resetPassword() -> Exception : {}", e);
@@ -474,27 +471,25 @@ public class UserController {
 			log.info("resetPassword() -> End");
 		}
 	}
-	
+
 	@Operation(summary = "회원 팔로우/취소", description = "액세스 토큰과 대상 이메일 아이디로 회원 팔로우/취소")
 	@ApiResponses(value = { @ApiResponse(responseCode = "200", description = "회원 팔로우/취소 성공", content = @Content),
-            @ApiResponse(responseCode = "404", description = "회원 팔로우/취소 실패", content = @Content) })
+			@ApiResponse(responseCode = "404", description = "회원 팔로우/취소 실패", content = @Content) })
 	@PostMapping("/follow")
 	public ResponseEntity<?> followOrUnfollow(HttpServletRequest request, @RequestBody FollowDto followDto) {
 		log.info("followOrUnfollow() -> Start");
-        log.info("followOrUnfollow() -> Receive followDto : {}", followDto);
-        
-        String emailId = (String) request.getAttribute("emailId");
+		log.info("followOrUnfollow() -> Receive followDto : {}", followDto);
+
+		String emailId = (String) request.getAttribute("emailId");
 		if (emailId.equals(followDto.getEmailId())) {
 			throw new FollowException();
 		}
-        
-        try {
-			FollowDetailDto followDetailDto = FollowDetailDto.builder()
-					.fromUserEmailId(emailId)
-					.toUserEmailId(followDto.getEmailId())
-					.build();
+
+		try {
+			FollowDetailDto followDetailDto = FollowDetailDto.builder().fromUserEmailId(emailId)
+					.toUserEmailId(followDto.getEmailId()).build();
 			FollowFindDto followFindDto = userService.findFollow(followDetailDto);
-			
+
 			if (followFindDto == null) {
 				userService.follow(followDetailDto);
 				log.info("follow() -> Success");
@@ -502,14 +497,62 @@ public class UserController {
 				userService.unfollow(followDetailDto);
 				log.info("unfollow() -> Success");
 			}
-			
-            log.info("followOrUnfollow() -> Success");
-            return new ResponseEntity<>(HttpStatus.OK);
-        } catch (Exception e) {
-            log.error("followOrUnfollow() -> Exception : {}", e);
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-        } finally {
-            log.info("followOrUnfollow() -> End");
-        }
+
+			log.info("followOrUnfollow() -> Success");
+			return new ResponseEntity<>(HttpStatus.OK);
+		} catch (Exception e) {
+			log.error("followOrUnfollow() -> Exception : {}", e);
+			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+		} finally {
+			log.info("followOrUnfollow() -> End");
+		}
 	}
+
+	@Operation(summary = "회원 팔로워(to)/팔로잉(from) 목록 조회", description = "액세스 토큰으로 회원 팔로워(to)/팔로잉(from) 목록 조회")
+	@ApiResponses(value = { @ApiResponse(responseCode = "200", description = "회원 팔로워(to)/팔로잉(from) 목록 조회 성공", content = {
+			@Content(mediaType = "application/json", schema = @Schema(implementation = FollowUserDto[].class)) }),
+			@ApiResponse(responseCode = "404", description = "회원 팔로우(to)/팔로잉(from) 목록 조회 실패", content = @Content) })
+	@GetMapping("/follow")
+	public ResponseEntity<?> getFollowList(HttpServletRequest request,
+	        @Parameter(description = "키워드") @RequestParam(value = "keyword", required = false, defaultValue = "") String keyword,
+	        @Parameter(description = "마지막으로 로딩한 타겟") @RequestParam(value = "offset", required = false, defaultValue = "0") Integer offset,
+	        @Parameter(description = "페이지당 타겟 개수") @RequestParam(value = "limit", required = false, defaultValue = "10") Integer limit,
+	        @Parameter(description = "팔로워(to)/팔로잉(from) 여부") @RequestParam(value = "type", required = true) String type) {
+	    log.info("getFollowList() -> Start");
+	    log.info("getFollowList() -> Receive keyword : {}", keyword);
+	    log.info("getFollowList() -> Receive offset : {}", offset);
+	    log.info("getFollowList() -> Receive limit : {}", limit);
+	    log.info("getFollowList() -> Receive type (to/from) : {}", type);
+
+	    // Use lastItemId to determine the starting point for the next batch
+	    FollowParamDto followParamDto = FollowParamDto.builder()
+	            .emailId((String) request.getAttribute("emailId"))
+	            .keyword(keyword)
+	            .offset(offset)
+	            .limit(limit)
+	            .type(type)
+	            .build();
+
+	    try {
+	        List<FollowUserDto> followList = userService.getFollowList(followParamDto);
+	        int lastId = followList.get(followList.size() - 1).getId();
+	        
+	        String currentUrl = request.getRequestURL().toString();
+	        String nextUrl = currentUrl + "?offset=" + lastId + "&limit=" + limit+ "&type=" + type + "&keyword=" + keyword;
+
+	        FollowResponseDto followResponseDto = FollowResponseDto.builder()
+	                .followUserList(followList)
+	                .nextUrl(nextUrl)
+	                .build();
+
+	        log.info("getFollowList() -> Success");
+	        return new ResponseEntity<>(followResponseDto, HttpStatus.OK);
+	    } catch (Exception e) {
+	        log.error("getFollowList() -> Exception : {}", e);
+	        return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+	    } finally {
+	        log.info("getFollowList() -> End");
+	    }
+	}
+
 }

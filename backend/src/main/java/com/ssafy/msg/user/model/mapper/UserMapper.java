@@ -1,11 +1,14 @@
 package com.ssafy.msg.user.model.mapper;
 
 import java.sql.SQLException;
+import java.util.List;
 
 import org.apache.ibatis.annotations.Mapper;
 
 import com.ssafy.msg.user.model.dto.FollowDetailDto;
 import com.ssafy.msg.user.model.dto.FollowFindDto;
+import com.ssafy.msg.user.model.dto.FollowParamDto;
+import com.ssafy.msg.user.model.dto.FollowUserDto;
 import com.ssafy.msg.user.model.dto.Oauth2Dto;
 import com.ssafy.msg.user.model.dto.ProfileImageDto;
 import com.ssafy.msg.user.model.dto.SignUpDto;
@@ -44,4 +47,6 @@ public interface UserMapper {
 	FollowFindDto findFollow(FollowDetailDto followDetailDto) throws SQLException;
 
 	void unfollow(FollowDetailDto followDetailDto) throws SQLException;
+
+	List<FollowUserDto> getFollowList(FollowParamDto followParamDto) throws SQLException;
 }
