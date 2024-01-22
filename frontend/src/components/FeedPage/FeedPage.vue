@@ -1,44 +1,53 @@
 <template>
-    <div class="feed-page">
-   <VueFlexWaterfall
-    align-content="center"
-    col="2"
-    col-spacing="70"
-    :break-at="{ 900: 3, 600: 2, 300: 1 }"
-  >
-    <div class="feed-create">
-        <div class="create-container">
-            <div class="create-img"></div>
-            <div class="create-comment">What are you thinking?</div>
+    <div class="feed-container">
+            <VueFlexWaterfall
+                col="2"
+                col-spacing="16"
+            >
+            <div class="feed-create">
+                <div class="create-container">
+                    <img class="create-img" src="./example/3.jpg">
+                    <div class="create-comment">What are you thinking?</div>
+                </div>
+                <div class="create-btn">Create</div>
+            </div>
+            <Feed  v-for="i in arr" :key="i" :img="i"></Feed>
+            <!-- <Feed></Feed>
+            <Feed></Feed>
+
+            <Feed></Feed>       
+
+            <Feed></Feed>
+            <Feed></Feed> -->
+            </VueFlexWaterfall>
         </div>
-        <div class="create-btn">Create</div>
-    </div>
-    <Feed v-for="i in [1,2,3,4,5]" :key="i"/>
-  </VueFlexWaterfall>
-  </div>
 </template>
 
 <script>
-import { VueFlexWaterfall } from 'vue-flex-waterfall';
-import Feed from './Feed.vue';
+    import Feed from './Feed.vue';
+    import { VueFlexWaterfall } from 'vue-flex-waterfall';
 export default {
     name: "FeedPage",
 
     data(){
-        return{}
-    },
+        return{
+            col : 2,
+            colSapce : 16,
+            arr : [1,2,3]
+        }
+    },  
 
     methods: {
-
     },
-
     components: {
         Feed,
         VueFlexWaterfall
-    }
+    },
 }
 </script>
 
 <style scoped src="./FeedPage.css">
-
+.container{
+    width: 1000px;
+}
 </style>

@@ -3,7 +3,7 @@
                 <div class="mini-title">
                     <p class="mini-title-message">My Profile</p>
                 </div>
-                <div class="mini-image"></div>
+                <img class="mini-image" src="../FeedPage/example/9.jpg">
                 <div class="mini-name">user name</div>
                 <div class="mini-comment">fun, daily, mafia game</div>
                 <div class="mini-following-count">
@@ -20,7 +20,7 @@
 
 <script>
 export default {
-
+    
 }
 </script>
 

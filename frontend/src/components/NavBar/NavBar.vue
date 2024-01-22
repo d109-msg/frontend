@@ -1,6 +1,6 @@
 <template>
     <div class="nav-container" >
-        <div style="width:58px; height: 58px; border: 1px dotted; margin-left: 50px;"></div>
+        <div class="nav-logo"></div>
         <div class="right-bar">
             <div class="tag" @click="tagClick('/')" id="/">HOME</div>
             <div class="tag" @click="tagClick('/game')" id="/game">GAME</div>
