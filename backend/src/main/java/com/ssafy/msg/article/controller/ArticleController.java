@@ -46,26 +46,24 @@ public class ArticleController {
             produces = MediaType.APPLICATION_JSON_VALUE)
     @Operation(summary = "게시물 작성", description = "이미지추가와 내용 작성")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "201", description = "게시물 작성 성공", content = {
-                    @Content(mediaType = "application/json", schema = @Schema(implementation = ArticleCreateDto.class)) }),
+            @ApiResponse(responseCode = "201", description = "게시물 작성 성공"),
             @ApiResponse(responseCode = "400", description = "게시물 작성 실패", content = @Content) })
     public ResponseEntity<?> createArticle(@ModelAttribute ArticleCreateDto articleCreateDto, HttpServletRequest request) {
-        log.info("createArticle() -> Start");
-        log.info("createArticle() -> Receive articleDto : {}", articleCreateDto);
-        log.info("createArtcile() -> ImageList : {}", articleCreateDto.getArticleImageList());
+        log.info("(controller) Start");
+        log.info("(controller) 클라이언트에서 받아온 articleCreateDto : {}", articleCreateDto);
+
         String emailId = (String) request.getAttribute("emailId");
         ArticleDto articleDto = ArticleDto.builder().userEmailId(emailId).articleImageList(articleCreateDto.getArticleImageList()).content(articleCreateDto.getContent()).roomId(articleCreateDto.getRoomId()).build();
 
-
         try {
             articleService.createArticle(articleDto); // 클라이언트로부터 받은 정보를 서비스에 입력
-            log.info("createArticle() -> Success");
-            return new ResponseEntity<>(articleDto, HttpStatus.CREATED);
+            log.info("(controller) articleService.createArticle 호출 -> Success");
+            return new ResponseEntity<>(HttpStatus.CREATED);
         } catch (Exception e) {
-            log.error("controller createArticle() -> Exception : {}", e);
+            log.error("(controller) articleService.createArticle 호출 에러", e);
             return new ResponseEntity<>("게시물 작성 실패", HttpStatus.BAD_REQUEST);
         } finally {
-            log.info("createArticle() -> End");
+            log.info("(controller) -> End");
         }
     }
 
