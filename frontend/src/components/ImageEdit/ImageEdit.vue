@@ -1,6 +1,15 @@
 <template>
-  <div class="container disable">
+  <div class="image-container disable">
+        
         <div class="wrapper">
+            <div class="img-wrapper">
+                <div class="save-wrapper">
+                    <img class="first-img" src="" alt="" style="width: 133px; height: 133px; background-repeat: no-repeat; background-size: contain;">
+                </div>
+                <div class="preview-img">
+                    <img src="image-placeholder.svg" alt="">
+                </div>
+            </div>
             <div class="editor-panel">
                 <div class="filter">
                     <label class="title">Filters</label>
@@ -27,10 +36,6 @@
                         <button id="vertical"><i class="bx bx-reflect-horizontal"></i></button>
                     </div>
                 </div>
-
-            </div>
-            <div class="preview-img">
-                <img src="image-placeholder.svg" alt="">
             </div>
         </div>
         <div class="controls">
@@ -79,7 +84,9 @@ export default {
             if(!file) return; // user가 파일 선택하지 않았을때 돌아가.
             previewImg.src = URL.createObjectURL(file)
             previewImg.addEventListener("load",()=>{
-                document.querySelector(".container").classList.remove("disable")
+                const container = document.querySelector(".image-container")
+                container.classList.remove("disable")
+               
             })
         }
 
@@ -88,6 +95,7 @@ export default {
 
 
         filterOptions.forEach(option =>{
+            console.log(option)
             option.addEventListener("click",()=>{
                 document.querySelector('.filter .active').classList.remove("active")
                 option.classList.add("active");
@@ -165,12 +173,9 @@ export default {
             ctx.scale(flipHorizontal, flipVertical )
             ctx.drawImage(previewImg,-canvas.width /2, -canvas.height /2, canvas.width, canvas.height )
 
-            const link = document.createElement("img")
-            
+            const link = document.querySelector('.save-img-test')
             link.src = canvas.toDataURL();
             
-            const body = document.querySelector('body')
-            body.appendChild(link)
         }
 
         resetFilterBtn.addEventListener("click",resetFilter)

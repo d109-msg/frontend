@@ -58,6 +58,6 @@ export default {
 }
 </script>
 
-<style scoped src="./Feed.css">
+<style scoped src="./css/Feed.css">
 
 </style>

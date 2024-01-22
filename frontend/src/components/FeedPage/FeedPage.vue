@@ -20,11 +20,13 @@
             <Feed></Feed>
             <Feed></Feed> -->
             </VueFlexWaterfall>
+            <FeedCreate/>
         </div>
 </template>
 
 <script>
     import Feed from './Feed.vue';
+    import FeedCreate from './FeedCreate.vue';
     import { VueFlexWaterfall } from 'vue-flex-waterfall';
 export default {
     name: "FeedPage",
@@ -41,12 +43,13 @@ export default {
     },
     components: {
         Feed,
-        VueFlexWaterfall
+        VueFlexWaterfall,
+        FeedCreate,
     },
 }
 </script>
 
-<style scoped src="./FeedPage.css">
+<style scoped src="./css/FeedPage.css">
 .container{
     width: 1000px;
 }

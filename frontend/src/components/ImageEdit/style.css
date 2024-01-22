@@ -10,29 +10,38 @@ body{
     min-height: 100vh;
     background: #e3f2fd
 }
-.container{
+.image-container{
     width: 850px;
     background: #fff;
     box-shadow: 0 10px 20px rgba(0,0,0,0.1);
     border-radius: 10px;
     padding: 30px 35px 35px;
 }
-.container.disable :where(.editor-panel, .reset-filter, .save-img){
+.image-container.disable :where(.editor-panel, .reset-filter, .save-img){
     opacity: 0.6;
     pointer-events: none;
 }
-.container h2{
+.image-container h2{
     font-size: 22px;
     font-weight: 500;
 
 }
 
-.container .wrapper{
+.image-container .wrapper{
     display: flex;
     margin: 20px 0;
     min-height: 335px;
 
 
+}
+.save-wrapper{
+
+}
+.save-wrapper > img{
+    width: 100px; 
+    height: 100px; 
+    background-repeat: no-repeat; 
+    background-size: contain;
 }
 .wrapper .editor-panel{
     border: 1px solid #ccc;
@@ -116,12 +125,11 @@ body{
     align-items: center;
     justify-content: center;
     margin-left: 20px;
+   
 }
 .preview-img img{
-    max-width: 490px;
-    max-height: 335px;
-    width: 100%;
-    height: 100%;
+    width: 400px;
+    height: 400px;
     object-fit: contain;
 }
 

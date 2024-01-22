@@ -41,7 +41,7 @@
     position: absolute;
     top: 30px;
     right: 31px;
-    background: url(./list.svg);
+    background: url(../Icon/list.svg);
     width: 30px;
     height: 20px;
     background-repeat:no-repeat;
@@ -74,7 +74,7 @@
     margin-bottom: 17px;
 }
 .heart-icon{
-    background: url(./heart.png);
+    background: url(../Icon/heart.png);
     background-position: 50% 50%;
     width: 28px;
     height: 28px;
@@ -83,7 +83,7 @@
     cursor: pointer;
 }
 .chat-icon{
-    background: url(./chat.png);
+    background: url(../Icon/chat.png);
     background-size: cover;
     background-position: 50% 50%;
     cursor: pointer;
@@ -94,7 +94,7 @@
 .share-icon{
     background-position: 50% 50%;
     cursor: pointer;
-    background: url(./share.png);
+    background: url(../Icon/share.png);
     background-size: cover;
     width: 22px;
     height: 23px;
