@@ -4,7 +4,7 @@
 
 <mapper
 	namespace="com.ssafy.msg.game.model.mapper.GameMapper">
-
+	
 	<select id="getParticipant" resultType="ParticipantDto" parameterType="ParticipantReceiveDto">
 		SELECT * FROM participants WHERE user_email_id = #{userEmail} AND room_id = #{roomId};
 	</select>

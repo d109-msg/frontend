@@ -58,17 +58,24 @@ public class GameController {
     }
 
     @GetMapping("/room/vote")
-    @Operation(summary = "유저 현재 방의 투표 현황 조회", description = "userEmail과 roomId를 이용해 해당 room의 투표 현황 조회")
-    public String getRoomVote(HttpServletRequest request, @RequestParam String roomId) {
-        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("YYYY-MM-DD HH:mm:ss.SSS");
-
+    @Operation(summary = "유저 현재 방의 투표 현황 조회"
+            , description = "userEmail과 roomId를 이용해 해당 room의 투표 현황 조회\n낮과 밤에 따라 볼 수 없는 투표 수는 -1로 표시")
+    public ResponseEntity<?> getRoomVote(HttpServletRequest request, @RequestParam String roomId) {
         String email = (String) request.getAttribute("emailId");
-        String date = simpleDateFormat.format(new Date());
 
-        log.info("getRoomVote() -> roomId : {}, date : {}", roomId, date);
-        List<VoteResultDto> result = null;
+        try {
+            List<VoteResultDto> result = gameService.getRoomVote(email, roomId);
+            log.info("getRoomVote() -> result : {}", result);
 
-        return date;
+            return new ResponseEntity<>(result, HttpStatus.OK);
+        } catch (Exception e) {
+            log.error("getRoomVote() -> error : {}", e.toString());
+
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        } finally {
+            log.info("getRoomVote() -> end");
+        }
+
     }
 
     @GetMapping(value = "/room/list")
@@ -211,7 +218,7 @@ public class GameController {
 
 
     //test
-    @GetMapping("/nickname")
+    @GetMapping("/nicknametest")
     public ResponseEntity<?> randomNicknameTest(@RequestParam("num") int num){
         log.info("randomNicknameTest() -> num : {}", num);
 
