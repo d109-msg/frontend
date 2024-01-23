@@ -1,4 +1,4 @@
-package com.ssafy.msg.chat.model.dto;
+package com.ssafy.msg.message.model.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -11,8 +11,8 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class MessageDto {
     private int id;
-    private int roomId;
-    private int userEmailId;
+    private String roomId;
+    private String userEmailId;
     private String sendTime;
     private String dataType;
 }
