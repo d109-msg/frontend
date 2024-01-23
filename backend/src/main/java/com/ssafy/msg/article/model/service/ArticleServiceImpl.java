@@ -1,8 +1,8 @@
 package com.ssafy.msg.article.model.service;
 
-import com.ssafy.msg.article.model.dto.ArticleCreateDto;
 import com.ssafy.msg.article.model.dto.ArticleDto;
 import com.ssafy.msg.article.model.dto.ArticleImageDto;
+import com.ssafy.msg.article.model.dto.ArticleWithUrlDto;
 import com.ssafy.msg.article.model.mapper.ArticleMapper;
 import com.ssafy.msg.article.util.S3Util;
 import lombok.RequiredArgsConstructor;
@@ -10,11 +10,14 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.List;
+
 @Service
 @RequiredArgsConstructor
 @Slf4j
 public class ArticleServiceImpl implements ArticleService{
     private final ArticleMapper articleMapper;
+
 
     private final S3Util s3Util;
 
@@ -55,4 +58,11 @@ public class ArticleServiceImpl implements ArticleService{
 
     }
 
+    @Override
+    public List<ArticleWithUrlDto> getArticles(String emailId) throws Exception {
+        log.info("(ArticleServiceImpl) 게시물조회 시작");
+        return articleMapper.getArticles(emailId);
+
+
+    }
 }

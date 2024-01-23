@@ -19,5 +19,17 @@
 
     </insert>
 
+    <select id="getArticles" parameterType="string" resultType="ArticleWithUrlDto">
+        select a.*, ai.url
+        from articles a
+        left join (
+            select article_id, MIN(id) as min_id
+            from article_images
+            group by article_id
+        ) as sub_ai on a.id = sub_ai.article_id
+        left join article_images ai on sub_ai.min_id = ai.id
+        where a.user_email_id = #{emailId};
+
+    </select>
 
 </mapper>

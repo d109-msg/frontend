@@ -3,6 +3,7 @@ package com.ssafy.msg.article.controller;
 
 import com.ssafy.msg.article.model.dto.ArticleCreateDto;
 import com.ssafy.msg.article.model.dto.ArticleDto;
+import com.ssafy.msg.article.model.dto.ArticleWithUrlDto;
 import com.ssafy.msg.article.model.service.ArticleService;
 import com.ssafy.msg.article.util.OpenAiUtil;
 import com.ssafy.msg.article.util.S3Util;
@@ -20,6 +21,8 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/article")
@@ -49,7 +52,7 @@ public class ArticleController {
             @ApiResponse(responseCode = "201", description = "게시물 작성 성공"),
             @ApiResponse(responseCode = "400", description = "게시물 작성 실패", content = @Content) })
     public ResponseEntity<?> createArticle(@ModelAttribute ArticleCreateDto articleCreateDto, HttpServletRequest request) {
-        log.info("(controller) Start");
+        log.info("(controller) create Start");
         log.info("(controller) 클라이언트에서 받아온 articleCreateDto : {}", articleCreateDto);
 
         String emailId = (String) request.getAttribute("emailId");
@@ -65,6 +68,29 @@ public class ArticleController {
         } finally {
             log.info("(controller) -> End");
         }
+    }
+
+    @GetMapping(value = "/list")
+    @Operation(summary = "전체 게시물", description = "전체 게시물 조회")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "201", description = "게시물 리스트 조회 성공", content = {
+                    @Content(mediaType = "application/json", schema = @Schema(implementation = ArticleWithUrlDto.class)) }),
+            @ApiResponse(responseCode = "400", description = "게시물 리스트 조회 실패", content = @Content) })
+    public ResponseEntity<?> getArticles(HttpServletRequest request) {
+
+        String emailId = (String) request.getAttribute("emailId");
+
+        try {
+            List<ArticleWithUrlDto> articleWithUrlDtoList = articleService.getArticles(emailId);
+            log.info("(ArticleController) 게시물 조회 성공");
+            return new ResponseEntity<>(articleWithUrlDtoList, HttpStatus.CREATED);
+        } catch (Exception e) {
+            log.error("(Exception) ", e);
+            return new ResponseEntity<>("게시물 작성 실패", HttpStatus.BAD_REQUEST);
+        } finally {
+            log.info("(ArticleController) getArticles -> end");
+        }
+
     }
 
 
