@@ -1,5 +1,6 @@
 package com.ssafy.msg.article.model.service;
 
+import com.ssafy.msg.article.model.dto.ArticleDetailDto;
 import com.ssafy.msg.article.model.dto.ArticleDto;
 import com.ssafy.msg.article.model.dto.ArticleImageDto;
 import com.ssafy.msg.article.model.dto.ArticleWithUrlDto;
@@ -64,5 +65,17 @@ public class ArticleServiceImpl implements ArticleService{
         return articleMapper.getArticles(emailId);
 
 
+    }
+
+    @Override
+    public List<ArticleDetailDto> getArticleDetail(int articleId) throws Exception {
+        log.info("(ArticleServiceImpl) 디테일 조회 시작");
+        List<ArticleDetailDto> articleDetailDtos = articleMapper.getArticleDetail(articleId);
+
+
+        for (ArticleDetailDto articleDetailDto : articleDetailDtos) {
+
+        }
+        return null;
     }
 }

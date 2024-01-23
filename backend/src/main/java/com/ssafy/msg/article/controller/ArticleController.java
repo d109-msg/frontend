@@ -2,6 +2,7 @@ package com.ssafy.msg.article.controller;
 
 
 import com.ssafy.msg.article.model.dto.ArticleCreateDto;
+import com.ssafy.msg.article.model.dto.ArticleDetailDto;
 import com.ssafy.msg.article.model.dto.ArticleDto;
 import com.ssafy.msg.article.model.dto.ArticleWithUrlDto;
 import com.ssafy.msg.article.model.service.ArticleService;
@@ -70,10 +71,10 @@ public class ArticleController {
         }
     }
 
-    @GetMapping(value = "/list")
+    @GetMapping(value = "/myprofile")
     @Operation(summary = "전체 게시물", description = "전체 게시물 조회")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "201", description = "게시물 리스트 조회 성공", content = {
+            @ApiResponse(responseCode = "200", description = "게시물 리스트 조회 성공", content = {
                     @Content(mediaType = "application/json", schema = @Schema(implementation = ArticleWithUrlDto.class)) }),
             @ApiResponse(responseCode = "400", description = "게시물 리스트 조회 실패", content = @Content) })
     public ResponseEntity<?> getArticles(HttpServletRequest request) {
@@ -83,7 +84,7 @@ public class ArticleController {
         try {
             List<ArticleWithUrlDto> articleWithUrlDtoList = articleService.getArticles(emailId);
             log.info("(ArticleController) 게시물 조회 성공");
-            return new ResponseEntity<>(articleWithUrlDtoList, HttpStatus.CREATED);
+            return new ResponseEntity<>(articleWithUrlDtoList, HttpStatus.OK);
         } catch (Exception e) {
             log.error("(Exception) ", e);
             return new ResponseEntity<>("게시물 작성 실패", HttpStatus.BAD_REQUEST);
@@ -92,6 +93,28 @@ public class ArticleController {
         }
 
     }
+
+    @GetMapping(value = "/detail")
+    @Operation(summary = "게시물 상세", description = "게시물 상세 내용 보기")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "게시물 상세 조회 성공", content ={
+                    @Content(mediaType = "application/json", schema = @Schema(implementation = ArticleDetailDto.class)) }),
+            @ApiResponse(responseCode = "400", description = "게시물 상세 조회 실패", content = @Content) })
+    public ResponseEntity<?> getArticleDetail(@RequestParam("articleId") int articleId) {
+        log.info("(ArticleController) 게시물 상세보기 시작");
+
+        try {
+            log.info("(ArticleController) 게시물 상세조회 성공");
+            return new ResponseEntity<>(HttpStatus.OK);
+        } catch (Exception e) {
+            log.error("(ArticleController) 게시물 상세 조회 실패", e);
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        } finally {
+            log.info("(ArticleController) getArticleDetail end");
+        }
+
+    }
+
 
 
 }

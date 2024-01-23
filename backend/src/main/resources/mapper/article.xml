@@ -19,8 +19,8 @@
 
     </insert>
 
-    <select id="getArticles" parameterType="string" resultType="ArticleWithUrlDto">
-        select a.*, ai.url
+    <select id="getArticles" parameterType="string" resultType="ArticleWithUrlDto" >
+        select a.id as article_id, a.user_email_id, a.create_time, a.flag_private, a.modify_time, a.room_id, ai.url
         from articles a
         left join (
             select article_id, MIN(id) as min_id
@@ -31,5 +31,13 @@
         where a.user_email_id = #{emailId};
 
     </select>
+
+    <select id="getArticleDetail" parameterType="int" resultType="ArticleDetailDto">
+        SELECT a.id as article_id, a.user_email_id, a.content, a.create_time, a.flag_private, a.modify_time, a.room_id, ai.url, ai.flag_mission
+        FROM articles a
+            LEFT JOIN article_images ai ON a.id = ai.article_id
+        WHERE a.id = #{articleId};
+    </select>
+
 
 </mapper>

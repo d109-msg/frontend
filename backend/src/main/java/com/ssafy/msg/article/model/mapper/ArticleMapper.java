@@ -1,5 +1,6 @@
 package com.ssafy.msg.article.model.mapper;
 
+import com.ssafy.msg.article.model.dto.ArticleDetailDto;
 import com.ssafy.msg.article.model.dto.ArticleDto;
 import com.ssafy.msg.article.model.dto.ArticleImageDto;
 import com.ssafy.msg.article.model.dto.ArticleWithUrlDto;
@@ -14,5 +15,7 @@ public interface ArticleMapper {
     void insertArticleImage(ArticleImageDto articleImageDto) throws SQLException;
 
     List<ArticleWithUrlDto> getArticles(String emailId) throws SQLException;
+
+    List<ArticleDetailDto> getArticleDetail(int articleId) throws SQLException;
 
 }
