@@ -2,6 +2,7 @@ package com.ssafy.msg.game.controller;
 
 import com.ssafy.msg.chat.model.dto.RoomDto;
 import com.ssafy.msg.game.model.dto.*;
+import com.ssafy.msg.game.model.mapper.GameMapper;
 import com.ssafy.msg.game.model.service.GameService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -27,6 +28,43 @@ import java.util.List;
 public class GameController {
 
     private final GameService gameService;
+
+    @GetMapping("/participant")
+    @Operation(summary = "유저 participant 조회", description = "userEmail과 roomId를 이용해 해당 해당 유저의 participant 조회")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "201", description = "조회 성공", content = {
+                    @Content(mediaType = "application/json", schema = @Schema(implementation = ParticipantDto.class)) }),
+            @ApiResponse(responseCode = "400", description = "조회 실패", content = @Content) })
+    public ResponseEntity<?> getParticipant(HttpServletRequest request, @RequestParam String roomId) {
+        String emailId = (String) request.getAttribute("emailId");
+
+        log.info("getParticipant() -> roomId : {}", roomId);
+
+        ParticipantDto participantDto = gameService.getParticipant(emailId, roomId);
+
+        return new ResponseEntity<>(participantDto, HttpStatus.OK);
+    }
+
+    @GetMapping("/room/vote")
+    @Operation(summary = "유저 현재 방의 투표 현황 조회", description = "userEmail과 roomId를 이용해 해당 room의 투표 현황 조회")
+    public ResponseEntity<?> getRoomVote(HttpServletRequest request, @RequestParam String roomId) {
+        String emailId = (String) request.getAttribute("emailId");
+
+        log.info("getRoomVote() -> roomId : {}", roomId);
+        List<VoteResultDto> result = null;
+
+        try {
+//            result = gameMapper.getRoomVote(roomId);
+            return new ResponseEntity<>(result, HttpStatus.OK);
+        } catch (Exception e) {
+            log.info("getRoomVote() -> error :", e);
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        } finally {
+            log.info("getRoomVote() end");
+        }
+        
+
+    }
 
     @GetMapping(value = "/room/list")
     @Operation(summary = "유저의 진행 중인 게임 리스트를 반환", description = "userEmail을 이용해 user의 room list 반환")

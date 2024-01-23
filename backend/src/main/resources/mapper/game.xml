@@ -5,6 +5,33 @@
 <mapper
 	namespace="com.ssafy.msg.game.model.mapper.GameMapper">
 
+	<select id="getParticipant" resultType="ParticipantDto" parameterType="ParticipantReceiveDto">
+		SELECT * FROM participants WHERE user_email_id = #{userEmail} AND room_id = #{roomId};
+	</select>
+
+	<select id="getRoomVote" resultType="VoteResultDto" parameterType="string">
+		SELECT
+				(SELECT nickname FROM participants WHERE user_email_id = u.email_id) AS nickname,
+				COUNT(CASE WHEN u.email_id = dm.normal_vote THEN 1 END) AS normal_vote_count,
+				COUNT(CASE WHEN u.email_id = dm.mafia_vote THEN 1 END) AS mafia_vote_count,
+				COUNT(CASE WHEN u.email_id = dm.doctor_vote THEN 1 END) AS doctor_vote_count
+		FROM
+			daily_missions dm
+				JOIN
+			participants p ON dm.participant_id = p.id
+				JOIN
+			rooms r ON p.room_id = r.id
+				JOIN
+			users u ON u.email_id IN (dm.normal_vote, dm.mafia_vote, dm.doctor_vote)
+		WHERE
+			r.id = 'room1' AND dm.day = (SELECT MAX(day)
+										 FROM daily_missions
+												  JOIN participants p ON dm.participant_id = p.id
+										 WHERE p.room_id = 'room1')
+		GROUP BY
+			u.email_id;
+	</select>
+
 	<select id="getUserRooms" parameterType="String" resultType="RoomDto">
 		SELECT r.*
 		FROM rooms r

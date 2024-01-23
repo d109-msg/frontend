@@ -41,3 +41,24 @@ insert into room_images  (url, uuid) values ('tmp1', 'uuid'), ('tmp2', 'uuid'), 
 INSERT INTO rooms (id, data_type, create_time, title, image_url) 
 VALUES ('room1', '랜덤', NOW(), 'Sample Room1', 'tmp1'), ('room2', '그룹', NOW(), 'Sample Room2', 'tmp2'), ('room3', '개인', NOW(), 'Sample Room3', 'tmp3');
 
+
+
+
+INSERT INTO daily_missions (participant_id, mission_id, day, try, flag_success, normal_vote, mafia_vote, doctor_vote) VALUES
+(1, 1, 1, 1, 1, 'hong@ssafy.com', 'test1@naver.com', 'test2@naver.com'),
+(2, 1, 1, 1, 0, 'test1@naver.com', 'test2@naver.com', 'test3@naver.com'),
+(3, 1, 1, 1, 1, 'test2@naver.com', 'test3@naver.com', 'test4@naver.com'),
+(4, 1, 1, 1, 0, 'test3@naver.com', 'test4@naver.com', 'test5@naver.com'),
+(5, 1, 1, 1, 1, 'test4@naver.com', 'test5@naver.com', 'test6@naver.com'),
+(6, 1, 1, 1, 0, 'test5@naver.com', 'test6@naver.com', 'hong@ssafy.com');
+
+INSERT INTO daily_missions (participant_id, mission_id, day, try, flag_success, normal_vote, mafia_vote, doctor_vote) VALUES
+(1, 1, 3, 1, 1, 'hong@ssafy.com', 'test1@naver.com', 'test2@naver.com'),
+(2, 1, 3, 1, 0, 'hong@ssafy.com', 'test2@naver.com', 'test3@naver.com'),
+(3, 1, 3, 1, 1, 'hong@ssafy.com', 'test3@naver.com', 'test4@naver.com'),
+(4, 1, 3, 1, 0, 'hong@ssafy.com', 'test4@naver.com', 'test5@naver.com'),
+(5, 1, 3, 1, 1, 'hong@ssafy.com', 'test5@naver.com', 'test6@naver.com'),
+(6, 1, 3, 1, 0, 'hong@ssafy.com', 'test6@naver.com', 'hong@ssafy.com');
+
+
+
