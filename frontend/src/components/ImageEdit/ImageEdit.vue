@@ -1,9 +1,16 @@
 <template>
   <div class="image-container disable">
+        
         <div class="image-editor-cancel"
         @click="closeImage"
-        >X</div>    
+        >X</div>
+        <MissonConfirm v-if="missionConfirm" 
+        @close-modal="missionConfirm=false;"
+        :confirmInfo="[imgData[0], missionSrc, selectRoom]"
+        />
         <div class="wrapper">
+            
+
             <div class="img-wrapper">
                 <div class="save-wrapper">
                     <img class="first-img img-list" src="">
@@ -24,6 +31,7 @@
                         <li class="option-select" v-for="(room,idx) in userRoom" :key="idx" @click.prevent="()=>{selectRoom = room; optionFlag = false}">{{ room }}</li>
                     </ul>
                 </div>
+                
                 <div class="filter">
                     <label class="title">Filters</label>
                         <div class="bright-info">
@@ -56,6 +64,11 @@
                         <button id="vertical"><i class="bx bx-reflect-horizontal"></i></button>
                     </div>
                 </div>
+                <label for="agree" class="chk_box" v-if="selectRoom!=='일상 게시물'">
+                    <span style="margin-right: 5px;">미션 사진 검증</span>
+                    <input type="checkbox" id="agree" v-model="missionCheck"/>
+                    <span class="on"></span>
+                </label>
             </div>
         </div>
         <div class="controls">
@@ -63,7 +76,7 @@
             <div class="row">
                 <input type="file" class="file-input" accept="image/*" hidden multiple>
                 <button class="choose-img" style="font-weight: bold;">Choose Image</button>
-                <button class="save-img" style="font-weight: bold;">Save Image</button>
+                <button class="save-img" style="font-weight: bold;" @click="saveImg">Save Image</button>
             </div>
         </div>
     </div>
@@ -71,10 +84,14 @@
 
 <script>
 import btof from './base64ToFile'
+import MissonConfirm from './MissonConfirm.vue'
+
 export default {
     name: "ImageEdit",
     data(){
         return{
+            missionCheck : false,
+            missionConfirm : false,
             imgData : [],
             brightness : '100',
             saturation : '100',
@@ -89,15 +106,22 @@ export default {
             flipVertical : 1,
             userRoom : ["일상 게시물","미션 게시방"], //차후 유저 방 정보 받을 시 여기에 넣으면 됨
             optionFlag : false,
-            selectRoom : ""
+            selectRoom : "",
+            missionSrc : "",
         }
+    },
+    components:{
+        MissonConfirm,
     },
     methods:{
         openOptions : function(){
-            console.log('hi')
             this.optionFlag = !(this.optionFlag)
         },
+        confirm : function(){
+            if(this.missionCheck == true) this.missionConfirm = true
+            else return
 
+        },
         resetFilter : function(){
             this.brightness = '100'
             this.saturation = '100'
@@ -129,7 +153,10 @@ export default {
                     alert("입력된 이미지가 없습니다.")
                     return
                 }else{
-                    if(list[i].getAttribute('src')=="") return
+                    if(list[i].getAttribute('src')==""){
+                        this.confirm()
+                        return
+                    }
                     const canvas = document.createElement("canvas")
                     const ctx = canvas.getContext("2d")
                     canvas.width = '416' // px 단위 빼고 그냥 숫자만 이렇게 적으면 해당 값 고정으로 사진 생성됨
@@ -142,10 +169,11 @@ export default {
                     ctx.scale(this.translate[i][1], this.translate[i][2] )
                     ctx.drawImage(list[i],-canvas.width /2, -canvas.height /2, canvas.width, canvas.height )
                     let src = canvas.toDataURL();
+                    if(i==0){this.missionSrc = src}
                     let fileData = btof(src,'temp.png')
                     this.imgData.push(fileData)
                 }
-            }
+            }this.confirm()
         },
 
         closeImage : function(){
@@ -242,15 +270,11 @@ export default {
             })
         })
 
-     
-
         resetFilterBtn.addEventListener("click",this.resetFilter)
-        saveImgBtn.addEventListener("click",this.saveImg)
         brightSlider.addEventListener('input',this.applyFilters)
         saturationSlider.addEventListener('input',this.applyFilters)
         inversionSlider.addEventListener('input',this.applyFilters)
         grayscaleSlider.addEventListener('input',this.applyFilters)
-
     }
 
 }

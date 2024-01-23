@@ -285,6 +285,7 @@
 }
 
 .option-box{
+    z-index: 999;
 
     position: absolute;
     width: 180px;
@@ -297,6 +298,7 @@
 }
 
 .option-select{
+    z-index: 999;
     border: none;
     background: #FFFDF3;
     font-style: normal;
@@ -310,3 +312,54 @@
 .option-select:hover{
     background-color: #EEE4DB;
 }
+
+.chk_box { 
+    margin-top: 20px;
+    display: block; 
+    position: relative; 
+    padding-left: 25px; 
+    margin-bottom: 10px; 
+    cursor: pointer; 
+    font-size: 14px; 
+    -webkit-user-select: none; 
+    -moz-user-select: none; 
+    -ms-user-select: none; 
+    user-select: none; }
+
+.chk_box input[type="checkbox"] {
+     display: none; 
+    }
+
+.on {
+     width: 20px; 
+     height: 20px; 
+     background: #ddd; 
+     position: absolute; 
+     top: 0; 
+     left: 1;
+     }
+
+
+.chk_box input[type="checkbox"]:checked + .on {
+     background: #f86480;
+     }
+.on:after {
+     content: ""; 
+     position: absolute; 
+     display: none; 
+    }
+.chk_box input[type="checkbox"]:checked + .on:after { 
+    display: block; 
+}
+.on:after {
+     width: 6px; 
+     height: 10px; 
+     border: solid #fff; 
+     border-width: 0 2px 2px 0; 
+     -webkit-transform: rotate(45deg); 
+     -ms-transform: rotate(45deg); 
+     transform: rotate(45deg); 
+     position: absolute; 
+     left: 6px; 
+     top: 2px;
+     }
