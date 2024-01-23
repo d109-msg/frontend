@@ -14,18 +14,18 @@ public interface GameService {
 
     RoomDto enterGroupRoom(EnterGroupRoomDto enterGroupRoomDto) throws Exception;
 
-    List<String> getRandomNicknames(int limit);
+    List<String> getRandomNicknames(int limit) throws Exception;
 
-    RandomNameDto getRandomRoomName();
+    RandomNameDto getRandomRoomName() throws Exception;
 
-    List<ParticipantDto> gameStart(RoomStartReceiveDto roomStartReceiveDto);
+    List<ParticipantDto> gameStart(RoomStartReceiveDto roomStartReceiveDto) throws Exception;
 
     List<String> getJobs(int num);
 
-    List<RoomDto> getUserRooms(String userEmail);
+    List<RoomDto> getUserRooms(String userEmail) throws Exception;
 
-    List<VoteResultDto> getRoomVote(String userEmail, String roomId);
+    List<VoteResultDto> getRoomVote(String userEmail, String roomId) throws Exception;
 
-    ParticipantDto getParticipant(String userEmail, String roomId);
+    ParticipantDto getParticipant(String userEmail, String roomId) throws Exception;
 }
 

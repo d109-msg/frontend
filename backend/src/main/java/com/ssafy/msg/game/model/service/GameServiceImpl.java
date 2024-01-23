@@ -86,44 +86,23 @@ public class GameServiceImpl implements GameService{
     }
 
     @Override
-    public List<String> getRandomNicknames(int limit) {
+    public List<String> getRandomNicknames(int limit) throws Exception {
         List<String> list = new ArrayList<>();
 
-        try {
-            List<RandomNameDto> result = gameMapper.getRandomNicknames(limit);
-            log.info("getRandomNicknames() -> result : {}", result);
+        List<RandomNameDto> result = gameMapper.getRandomNicknames(limit);
 
-            for(RandomNameDto name : result) {
-                if (name != null) {
-                    list.add(name.getFirstName() + " " + name.getLastName() + " " + name.getImgUrl());
-                }
+        for(RandomNameDto name : result) {
+            if (name != null) {
+                list.add(name.getFirstName() + " " + name.getLastName() + " " + name.getImgUrl());
             }
-
-            log.info("getRandomNicknames() -> list : {}", list);
-        } catch (Exception e) {
-            log.error("getRandomNicknames() -> error : ", e);
-        } finally {
-            log.info("getRandomNicknames() -> end");
         }
 
         return list;
     }
 
     @Override
-    public RandomNameDto getRandomRoomName() {
-        RandomNameDto dto = null;
-
-        try {
-            dto = gameMapper.getRandomRoomName();
-            log.info("getRandomNicknames() -> result : {}", dto);
-
-        } catch (Exception e) {
-            log.error("getRandomNicknames() -> error : ", e);
-        } finally {
-            log.info("getRandomNicknames() -> end");
-        }
-
-        return dto;
+    public RandomNameDto getRandomRoomName() throws Exception{
+        return gameMapper.getRandomRoomName();
     }
 
     /**
@@ -135,7 +114,7 @@ public class GameServiceImpl implements GameService{
      * @return List partcipants를 리턴한다.
      */
     @Override
-    public List<ParticipantDto> gameStart(RoomStartReceiveDto roomStartReceiveDto) {
+    public List<ParticipantDto> gameStart(RoomStartReceiveDto roomStartReceiveDto) throws Exception{
         int numOfPlayers = roomStartReceiveDto.getUserList().size();
         String roomId = roomStartReceiveDto.getRoomId();
         List<RandomNameDto> randomNicknames = null;
@@ -143,11 +122,9 @@ public class GameServiceImpl implements GameService{
 
         log.info("gameStart() -> numOfPlayers : {}", numOfPlayers);
 
-        try {
-             randomNicknames = gameMapper.getRandomNicknames(numOfPlayers);
-        } catch (Exception e) {
-            log.error("gameStart() call mapper error: ", e);
-        }
+
+        randomNicknames = gameMapper.getRandomNicknames(numOfPlayers);
+
 
         List<String> randomJobs = getJobs(numOfPlayers);
 
@@ -162,17 +139,10 @@ public class GameServiceImpl implements GameService{
 
             result.add(participant);
         }
-        log.info("gameStart() -> result : {}", result);
 
-        int resultCnt = -1;
+        int resultCnt = gameMapper.insertParticipants(result);
 
-        try {
-            resultCnt = gameMapper.insertParticipants(result);
-        } catch (Exception e) {
-            log.error("gameStart() call insertParticipants error : ", e);
-        } finally {
-            log.info("gameStart() resultCnt : {}", resultCnt);
-        }
+        log.info("gameStart() resultCnt : {}", resultCnt);
 
         return result;
     }
@@ -206,18 +176,8 @@ public class GameServiceImpl implements GameService{
      * @return Rooms list를 반환
      */
     @Override
-    public List<RoomDto> getUserRooms(String userEmail) {
-        List<RoomDto> list = null;
-
-        try {
-            log.info("call gameMapper.getUserRooms : email : {}", userEmail);
-            list = gameMapper.getUserRooms(userEmail);
-        } catch (Exception e) {
-            log.error("getRoomList() call mapper : ", e);
-        }
-
-        log.info("getUserRooms() list : {}", list);
-        return list;
+    public List<RoomDto> getUserRooms(String userEmail) throws Exception{
+        return gameMapper.getUserRooms(userEmail);
     }
 
     /**
@@ -227,19 +187,8 @@ public class GameServiceImpl implements GameService{
      * @return 모든 유저가 각 몇 표를 받았는지의 정보가 담긴 list return
      */
     @Override
-    public List<VoteResultDto> getRoomVote(String userEmail, String roomId) {
-        List<VoteResultDto> voteResults = null;
-
-        try {
-            log.info("getRoomVote() -> mapper.getRoomVote called");
-            voteResults = gameMapper.getRoomVote(roomId);
-        } catch (Exception e) {
-            log.error("getRoomVote() error : {}", e.toString());
-        } finally {
-            log.info("getRoomVote() -> end");
-        }
-
-        return voteResults;
+    public List<VoteResultDto> getRoomVote(String userEmail, String roomId) throws Exception {
+        return gameMapper.getRoomVote(roomId);
     }
 
     /**
@@ -249,19 +198,7 @@ public class GameServiceImpl implements GameService{
      * @return participant 리턴
      */
     @Override
-    public ParticipantDto getParticipant(String userEmail, String roomId) {
-
-        ParticipantDto participantDto = null;
-
-        try {
-            log.info("getParticipant() -> email : {}, roomId : {}", userEmail, roomId);
-            participantDto = gameMapper.getParticipant(new ParticipantReceiveDto(userEmail, roomId));
-        } catch (Exception e) {
-            log.error("getParticipant() error : {}", e.toString());
-        } finally {
-            log.info("getParticipant() -> end");
-        }
-
-        return participantDto;
+    public ParticipantDto getParticipant(String userEmail, String roomId) throws Exception {
+        return gameMapper.getParticipant(new ParticipantReceiveDto(userEmail, roomId));
     }
 }
