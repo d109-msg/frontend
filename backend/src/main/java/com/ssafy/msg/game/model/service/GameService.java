@@ -1,10 +1,7 @@
 package com.ssafy.msg.game.model.service;
 
 import com.ssafy.msg.chat.model.dto.RoomDto;
-import com.ssafy.msg.game.model.dto.EnterGroupRoomDto;
-import com.ssafy.msg.game.model.dto.ParticipantDto;
-import com.ssafy.msg.game.model.dto.RandomNameDto;
-import com.ssafy.msg.game.model.dto.RoomStartReceiveDto;
+import com.ssafy.msg.game.model.dto.*;
 
 import java.util.List;
 
@@ -26,5 +23,9 @@ public interface GameService {
     List<String> getJobs(int num);
 
     List<RoomDto> getUserRooms(String userEmail);
+
+    List<VoteResultDto> getRoomVote(String userEmail, String roomId);
+
+    ParticipantDto getParticipant(String userEmail, String roomId);
 }
 

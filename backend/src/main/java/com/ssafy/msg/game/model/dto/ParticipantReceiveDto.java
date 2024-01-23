@@ -9,9 +9,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class VoteResultDto {
-    private String nickname;
-    private int normalVoteCount;
-    private int mafiaVoteCount;
-    private int doctorVoteCount;
+public class ParticipantReceiveDto {
+    private String userEmail;
+    private String roomId;
 }

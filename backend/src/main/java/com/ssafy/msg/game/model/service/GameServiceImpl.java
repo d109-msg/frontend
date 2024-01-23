@@ -2,10 +2,7 @@ package com.ssafy.msg.game.model.service;
 
 import com.ssafy.msg.chat.model.dto.RoomDto;
 import com.ssafy.msg.chat.model.mapper.ChatMapper;
-import com.ssafy.msg.game.model.dto.EnterGroupRoomDto;
-import com.ssafy.msg.game.model.dto.ParticipantDto;
-import com.ssafy.msg.game.model.dto.RandomNameDto;
-import com.ssafy.msg.game.model.dto.RoomStartReceiveDto;
+import com.ssafy.msg.game.model.dto.*;
 import com.ssafy.msg.game.model.mapper.GameMapper;
 import com.ssafy.msg.user.model.dto.UserDto;
 import com.ssafy.msg.user.model.mapper.UserMapper;
@@ -129,6 +126,14 @@ public class GameServiceImpl implements GameService{
         return dto;
     }
 
+    /**
+     * dto에 roomId와 userEmail을 담은 리스트를 담아
+     * 해당 유저들을 room의 participants로 만들어 준다
+     * 랜덤 이름과 아이콘을 부여하고 직업을 배정한다.
+     * 인원은 6~7명을 기준으로 한다.
+     * @param roomStartReceiveDto roomId와 userList를 담은 Dto
+     * @return List partcipants를 리턴한다.
+     */
     @Override
     public List<ParticipantDto> gameStart(RoomStartReceiveDto roomStartReceiveDto) {
         int numOfPlayers = roomStartReceiveDto.getUserList().size();
@@ -215,4 +220,48 @@ public class GameServiceImpl implements GameService{
         return list;
     }
 
+    /**
+     * roomId와 userEmail을 입력받아 해당 방의 유저가 지금 볼 수 있는 투표 현황을 리턴한다.
+     * @param userEmail 유저의 email
+     * @param roomId roomId
+     * @return 모든 유저가 각 몇 표를 받았는지의 정보가 담긴 list return
+     */
+    @Override
+    public List<VoteResultDto> getRoomVote(String userEmail, String roomId) {
+        List<VoteResultDto> voteResults = null;
+
+        try {
+            log.info("getRoomVote() -> mapper.getRoomVote called");
+            voteResults = gameMapper.getRoomVote(roomId);
+        } catch (Exception e) {
+            log.error("getRoomVote() error : {}", e.toString());
+        } finally {
+            log.info("getRoomVote() -> end");
+        }
+
+        return voteResults;
+    }
+
+    /**
+     * userEmail과 roomId를 입력받아 해당 유저의 participant를 리턴
+     * @param userEmail
+     * @param roomId
+     * @return participant 리턴
+     */
+    @Override
+    public ParticipantDto getParticipant(String userEmail, String roomId) {
+
+        ParticipantDto participantDto = null;
+
+        try {
+            log.info("getParticipant() -> email : {}, roomId : {}", userEmail, roomId);
+            participantDto = gameMapper.getParticipant(new ParticipantReceiveDto(userEmail, roomId));
+        } catch (Exception e) {
+            log.error("getParticipant() error : {}", e.toString());
+        } finally {
+            log.info("getParticipant() -> end");
+        }
+
+        return participantDto;
+    }
 }
