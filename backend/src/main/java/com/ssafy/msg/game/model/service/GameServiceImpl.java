@@ -193,19 +193,12 @@ public class GameServiceImpl implements GameService{
 
         String job = participantDto.getJobId();
         List<VoteResultDto> list = gameMapper.getRoomVote(roomId);
-        // 서울 표준시 기준으로 현재 시간을 가져옵니다.
-        ZonedDateTime now = ZonedDateTime.now(ZoneId.of("Asia/Seoul"));
 
         log.info("getRoomVote() -> job : {}", job);
         log.info("getRoomVote() -> list : {}", list);
-        log.info("getRoomVote() -> roomId : {}, now : {}", roomId, now);
+        log.info("getRoomVote() -> roomId : {}", roomId);
 
-        // 시작 시간 (08:00)과 종료 시간 (20:00)을 설정합니다.
-        LocalTime startTime = LocalTime.of(8, 0);
-        LocalTime endTime = LocalTime.of(20, 0);
-
-        // 현재 시간이 시작 시간과 종료 시간 사이인지 확인합니다.
-        if (now.toLocalTime().isAfter(startTime) && now.toLocalTime().isBefore(endTime)) {
+        if (getTime()) {
             log.info("getRoomVote() 현재 시간은 08:00과 20:00 사이입니다.");
             for(VoteResultDto vote : list){
                 vote.setDoctorVoteCount(-1);
@@ -215,7 +208,7 @@ public class GameServiceImpl implements GameService{
             log.info("getRoomVote() 현재 시간은 08:00과 20:00 사이가 아닙니다.");
             for(VoteResultDto vote : list){
                 vote.setNormalVoteCount(-1); //밤일 때, 시민 투표 가림
-                
+
                 if(!job.equals("의사")) { //의사가 아니라면, 의사 투표 가림
                     vote.setDoctorVoteCount(-1);
                 }
@@ -240,5 +233,58 @@ public class GameServiceImpl implements GameService{
         return gameMapper.getParticipant(new ParticipantReceiveDto(userEmail, roomId));
     }
 
+    /**
+     * roomId를 입력받아 살아있는 participant 리스트를 리턴
+     * @param roomId
+     * @return list participantList
+     * @throws Exception
+     */
+    @Override
+    public List<ParticipantDto> getAliveParticipant(String roomId) throws Exception {
+        return gameMapper.getAliveParticipants(roomId);
+    }
 
+    @Override
+    public void vote(VoteReceiveDto voteReceiveDto) throws Exception {
+        if(getTime()){
+            //낮 08:00 - 20:00
+            //시민 투표
+            log.info("vote() -> normalVote : {}", voteReceiveDto.getTargetEmail());
+            gameMapper.normalVote(voteReceiveDto.getParticipantId(), voteReceiveDto.getTargetEmail());
+        } else {
+            //밤
+            if (voteReceiveDto.getJobId().equals("마피아")){
+                //마피아 투표
+                log.info("vote() -> mafiaVote : {}", voteReceiveDto.getTargetEmail());
+                gameMapper.mafiaVote(voteReceiveDto.getParticipantId(), voteReceiveDto.getTargetEmail());
+            } else if(voteReceiveDto.getJobId().equals("의사")){
+                //의사 투표
+                log.info("vote() -> doctorVote : {}", voteReceiveDto.getTargetEmail());
+                gameMapper.doctorVote(voteReceiveDto.getParticipantId(), voteReceiveDto.getTargetEmail());
+            }
+        }
+    }
+
+    /**
+     * 현재 시간으로 08:00 - 20:00 사이라면 true, 아니라면 false를 리턴하는 함수
+     * @return 08:00 - 20:00 true, else false
+     */
+    @Override
+    public boolean getTime() {
+        // 서울 표준시 기준으로 현재 시간을 가져옵니다.
+        ZonedDateTime now = ZonedDateTime.now(ZoneId.of("Asia/Seoul"));
+        log.info("getTime() -> now : {}", now);
+        // 시작 시간 (08:00)과 종료 시간 (20:00)을 설정합니다.
+        LocalTime startTime = LocalTime.of(8, 0);
+        LocalTime endTime = LocalTime.of(20, 0);
+
+        // 현재 시간이 시작 시간과 종료 시간 사이인지 확인합니다.
+        if (now.toLocalTime().isAfter(startTime) && now.toLocalTime().isBefore(endTime)) {
+            log.info("getRoomVote() 현재 시간은 08:00과 20:00 사이입니다.");
+            return true;
+        } else {
+            log.info("getRoomVote() 현재 시간은 08:00과 20:00 사이가 아닙니다.");
+            return false;
+        }
+    }
 }
