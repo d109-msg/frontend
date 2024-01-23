@@ -10,15 +10,6 @@
             (user_email_id, content, create_time, flag_private, modify_time, room_id)
         values ( #{userEmailId}, #{content}, now(), #{flagPrivate}, now(), #{roomId});
 
-
-    </insert>
-
-    <insert id="createMissionArticle" parameterType="ArticleCreateDto" useGeneratedKeys="true" keyProperty="id">
-        insert into articles
-        (user_email_id, content, create_time, flag_private, modify_time)
-        values ( #{userEmailId}, #{content}, now(), #{flagPrivate}, now());
-
-
     </insert>
 
     <insert id="insertArticleImage" parameterType="ArticleImageDto">

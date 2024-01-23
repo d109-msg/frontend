@@ -10,7 +10,6 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Builder
 public class ArticleImageDto {
-    private int id;
     private int articleId;
     private String url;
     private String uuid;

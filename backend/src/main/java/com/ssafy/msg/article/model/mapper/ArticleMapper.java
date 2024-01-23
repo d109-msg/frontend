@@ -9,8 +9,6 @@ public interface ArticleMapper {
 
     void createArticle(ArticleDto articleDto) throws SQLException;
 
-    void createMissionArticle(ArticleDto articleDto) throws SQLException;
-
     void insertArticleImage(ArticleImageDto articleImageDto) throws SQLException;
 
 }

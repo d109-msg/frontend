@@ -8,7 +8,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-@Schema(description = "회원 팔로우에 대한 요청 DTO")
+@Schema(description = "회원 팔로우/취소에 대한 요청 DTO")
 @Data
 @NoArgsConstructor	
 @AllArgsConstructor

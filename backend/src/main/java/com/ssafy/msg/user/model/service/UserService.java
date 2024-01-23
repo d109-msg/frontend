@@ -5,8 +5,13 @@ import com.ssafy.msg.user.model.dto.ProfileImageDto;
 import com.ssafy.msg.user.model.dto.SignInDto;
 import com.ssafy.msg.user.model.dto.SignUpDto;
 import com.ssafy.msg.user.model.dto.UpdatePasswordDto;
+
+import java.util.List;
+
 import com.ssafy.msg.user.model.dto.FollowDetailDto;
 import com.ssafy.msg.user.model.dto.FollowFindDto;
+import com.ssafy.msg.user.model.dto.FollowParamDto;
+import com.ssafy.msg.user.model.dto.FollowUserDto;
 import com.ssafy.msg.user.model.dto.NicknameDto;
 import com.ssafy.msg.user.model.dto.UserDto;
 import com.ssafy.msg.user.model.dto.UserInfoDto;
@@ -44,5 +49,7 @@ public interface UserService {
 	FollowFindDto findFollow(FollowDetailDto followDetailDto) throws Exception;
 
 	void unfollow(FollowDetailDto followDetailDto) throws Exception;
+
+	List<FollowUserDto> getFollowList(FollowParamDto followParamDto) throws Exception;
 
 }
