@@ -1,18 +1,7 @@
-*{
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-}
-body{
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    min-height: 100vh;
-    background: #e3f2fd
-}
+
 .image-container{
     width: 850px;
-    background: #fff;
+    background: #FFF8ED;
     box-shadow: 0 10px 20px rgba(0,0,0,0.1);
     border-radius: 10px;
     padding: 30px 35px 35px;
@@ -88,6 +77,9 @@ body{
     background: #bb4b36;
     border-color: #bb4b36;
     color: #fff;
+}
+.filter{
+    margin-top: 20px;
 }
 
 .editor-panel button:hover{
@@ -264,4 +256,57 @@ body{
     display: flex;
     justify-content: space-between;
     align-items: center;
+}
+
+.select-container>button{
+    z-index: 999;
+    width: 180px;
+    height: 40px;
+    flex-shrink: 0;
+    border-radius: 10px;
+    border: 1px solid #838080;
+    background: #FFFDF3;
+    outline: none;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+    color: #3D3C3C;
+    font-size: 18px;
+}
+
+.select-container>button>.down{
+    background: url(./Icon/down.png);
+    width: 15.833px;
+    height: 8.111px;
+    flex-shrink: 0;
+    background-repeat: no-repeat;
+    margin-left: 50px;
+}
+
+.option-box{
+
+    position: absolute;
+    width: 180px;
+    list-style: none;
+    background: #FFFDF3;
+    border: 1px solid #C4C4C4;
+    box-sizing: border-box;
+    box-shadow: 4px 4px 14px rgba(0, 0, 0, 0.15);
+    border-radius: 10px;
+}
+
+.option-select{
+    border: none;
+    background: #FFFDF3;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 15px;
+    padding: 8px 10px;
+    margin: 8px 10px;
+    cursor: pointer;
+}
+
+.option-select:hover{
+    background-color: #EEE4DB;
 }

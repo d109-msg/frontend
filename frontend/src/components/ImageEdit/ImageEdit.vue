@@ -15,6 +15,15 @@
                 </div>
             </div>
             <div class="editor-panel">
+                <div class="select-container">
+                    <button @click.prevent="openOptions">
+                        <span>{{ selectRoom }}</span>
+                        <div class="down"></div>
+                    </button>
+                    <ul class="option-box" v-if="optionFlag">
+                        <li class="option-select" v-for="(room,idx) in userRoom" :key="idx" @click.prevent="()=>{selectRoom = room; optionFlag = false}">{{ room }}</li>
+                    </ul>
+                </div>
                 <div class="filter">
                     <label class="title">Filters</label>
                         <div class="bright-info">
@@ -78,9 +87,17 @@ export default {
             rotate : 0, 
             flipHorizontal : 1, 
             flipVertical : 1,
+            userRoom : ["일상 게시물","미션 게시방"], //차후 유저 방 정보 받을 시 여기에 넣으면 됨
+            optionFlag : false,
+            selectRoom : ""
         }
     },
     methods:{
+        openOptions : function(){
+            console.log('hi')
+            this.optionFlag = !(this.optionFlag)
+        },
+
         resetFilter : function(){
             this.brightness = '100'
             this.saturation = '100'
@@ -103,6 +120,7 @@ export default {
             this.selected.style.filter = `brightness(${this.brightness.toString()}%) saturate(${this.saturation.toString()}%) invert(${this.inversion.toString()}%) grayscale(${this.grayscale.toString()}%)`
             this.selected.style.transform = `rotate(${this.rotate}deg) scale(${this.flipHorizontal}, ${this.flipVertical})`
         },
+
         saveImg : function(){
             let list = document.querySelectorAll('.img-list')
             console.log(list.length)
@@ -129,6 +147,7 @@ export default {
                 }
             }
         },
+
         closeImage : function(){
             this.resetFilter()
             let list = document.querySelectorAll('.img-list')
@@ -138,9 +157,11 @@ export default {
             let preview = document.querySelector('.preview')
             preview.src = ""
             this.$emit('close')
-        }
+        },
+
     },
     mounted(){
+        this.selectRoom = this.userRoom[0]
         this.selected = document.querySelector('.first-img')
         this.previewImg = document.querySelector('.preview')
 
@@ -223,9 +244,6 @@ export default {
 
      
 
-        const saveImage = ()=>{
-            
-        }
         resetFilterBtn.addEventListener("click",this.resetFilter)
         saveImgBtn.addEventListener("click",this.saveImg)
         brightSlider.addEventListener('input',this.applyFilters)
@@ -238,4 +256,4 @@ export default {
 }
 </script>
 
-<style scoped src="./style.css"> </style>
+<style scoped src="./ImageEdit.css"> </style>
