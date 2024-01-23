@@ -1,5 +1,6 @@
 package com.ssafy.msg.game.controller;
 
+import com.amazonaws.services.ec2.model.GetTransitGatewayRouteTablePropagationsRequest;
 import com.ssafy.msg.chat.model.dto.RoomDto;
 import com.ssafy.msg.game.model.dto.*;
 import com.ssafy.msg.game.model.mapper.GameMapper;
@@ -18,6 +19,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 
 @RestController
@@ -39,31 +42,33 @@ public class GameController {
         String emailId = (String) request.getAttribute("emailId");
 
         log.info("getParticipant() -> roomId : {}", roomId);
+        ParticipantDto participantDto = null;
 
-        ParticipantDto participantDto = gameService.getParticipant(emailId, roomId);
+        try {
+            participantDto = gameService.getParticipant(emailId, roomId);
+            log.info("getParticipant() participant : {}", participantDto);
 
-        return new ResponseEntity<>(participantDto, HttpStatus.OK);
+            return new ResponseEntity<>(participantDto, HttpStatus.OK);
+        } catch (Exception e) {
+            log.error("getParticipant() error : {}", e.toString());
+            return new ResponseEntity<>(participantDto, HttpStatus.BAD_REQUEST);
+        } finally {
+            log.info("getParticipant() -> end");
+        }
     }
 
     @GetMapping("/room/vote")
     @Operation(summary = "유저 현재 방의 투표 현황 조회", description = "userEmail과 roomId를 이용해 해당 room의 투표 현황 조회")
-    public ResponseEntity<?> getRoomVote(HttpServletRequest request, @RequestParam String roomId) {
-        String emailId = (String) request.getAttribute("emailId");
+    public String getRoomVote(HttpServletRequest request, @RequestParam String roomId) {
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("YYYY-MM-DD HH:mm:ss.SSS");
 
-        log.info("getRoomVote() -> roomId : {}", roomId);
+        String email = (String) request.getAttribute("emailId");
+        String date = simpleDateFormat.format(new Date());
+
+        log.info("getRoomVote() -> roomId : {}, date : {}", roomId, date);
         List<VoteResultDto> result = null;
 
-        try {
-//            result = gameMapper.getRoomVote(roomId);
-            return new ResponseEntity<>(result, HttpStatus.OK);
-        } catch (Exception e) {
-            log.info("getRoomVote() -> error :", e);
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-        } finally {
-            log.info("getRoomVote() end");
-        }
-        
-
+        return date;
     }
 
     @GetMapping(value = "/room/list")
@@ -76,15 +81,15 @@ public class GameController {
         String emailId = (String) request.getAttribute("emailId");
 
         log.info("getUserRooms() -> email : {}", emailId);
-
-        List<RoomDto> list = gameService.getUserRooms(emailId);
-
-        if(list != null && !list.isEmpty()) {
+        try {
+            List<RoomDto> list = gameService.getUserRooms(emailId);
+            log.info("getUserRooms() list : {}", list);
             return new ResponseEntity<>(list, HttpStatus.OK);
-        } else if(list != null) {
-            return new ResponseEntity<>("데이터가 없습니다.", HttpStatus.OK);
-        } else {
-            return new ResponseEntity<>("잘못된 요청", HttpStatus.BAD_REQUEST);
+        } catch (Exception e){
+            log.error("getUserRooms() -> error : {}", e.toString());
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        } finally {
+            log.info("getUserRooms() -> end");
         }
     }
 
@@ -189,26 +194,55 @@ public class GameController {
         log.info("roomStart() -> start");
         log.info("roomStart() -> dto : {}", roomStartReceiveDto);
 
-        List<ParticipantDto> result = gameService.gameStart(roomStartReceiveDto);
+        try {
+            List<ParticipantDto> result = gameService.gameStart(roomStartReceiveDto);
+            log.info("roomStart() -> result : {}", result);
 
-        return new ResponseEntity<>(result, HttpStatus.OK);
+            return new ResponseEntity<>(result, HttpStatus.OK);
+        } catch (Exception e) {
+            log.error("roomStart() -> error : {}", e.toString());
+
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        } finally {
+            log.info("roomStart() -> end");
+        }
+
     }
-
 
 
     //test
     @GetMapping("/nickname")
     public ResponseEntity<?> randomNicknameTest(@RequestParam("num") int num){
         log.info("randomNicknameTest() -> num : {}", num);
-        List<String> names = gameService.getRandomNicknames(num);
-        return new ResponseEntity<>(names, HttpStatus.OK);
+
+        try {
+            List<String> names = gameService.getRandomNicknames(num);
+            return new ResponseEntity<>(names, HttpStatus.OK);
+        } catch (Exception e) {
+            log.error("randomNicknameTest() -> error : {}", e.toString());
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        } finally {
+            log.info("randomNicknameTest() end");
+        }
+
     }
 
     //test
-    @GetMapping(value = "/room/name", produces = "text/plain;charset=UTF-8")
+    @GetMapping(value = "/room/nametest")
     public ResponseEntity<?> randomRoomNameTest(){
         log.info("randomNicknameTest() -> start");
-        RandomNameDto dto = gameService.getRandomRoomName();
-        return new ResponseEntity<>(dto, HttpStatus.OK);
+        
+        try {
+            RandomNameDto dto = gameService.getRandomRoomName();
+            log.info("randomRoomNameTest() randomName : {}", dto);
+
+            return new ResponseEntity<>(dto.toString(), HttpStatus.OK);
+        } catch (Exception e) {
+            log.error("randomRoomNameTest() -> error : {}", e.toString());
+
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+        
+        
     }
 }
