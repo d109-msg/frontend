@@ -3,22 +3,22 @@
         <div class="main-img">
         <div class="login-box">
             <p class="login-logo"></p>
+            <div class="signup-font">Don't have an acount? <span class="signup-font"
+                @click="$router.push('/signup')">Sign Up</span></div>
             <div class="email-form">
                 <input type="text" class="email-input" required v-model="emailId">
-                <p class="email-label">이메일</p>
+                <p class="email-label">E-mail</p>
             </div>
-            <div class="another-font"
-                @click="$router.push('/signup')">회원가입</div>
+
             <div class="password-form">
                 <input type="password" class="password-input" required v-model="emailPassword">
-                <p class="password-label">비밀번호</p>
+                <p class="password-label">Password</p>
             </div>
-            <div class="another-font">비밀번호 찾기</div>
-
-
+           
             <button class="login-btn" @click="login">
                 Login
-            </button>
+            </button>            
+            <div class="find-password-font">Forget your password?</div>
 
             <div class="or-sign-in-with" >or Sign in with</div>
             <div style="display: flex; justify-content: center;">
