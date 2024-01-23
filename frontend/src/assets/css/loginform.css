@@ -72,6 +72,7 @@
         left: 7%;
         font-size: 0.6rem;
         color: #021633;
+        pointer-events: none;
     }
 
     .email-input{
@@ -117,6 +118,7 @@
         left: 7%;
         font-size: 0.6rem;
         color: #021633;
+        pointer-events: none;
 
     }
     .password-input{
@@ -240,6 +242,7 @@
         left: 7%;
         font-size: 0.6rem;
         color: #021633;
+        pointer-events: none;
     }
 
     .email-input{
@@ -286,7 +289,7 @@
         left: 7%;
         font-size: 0.6rem;
         color: #021633;
-
+        pointer-events: none;
     }
     .password-input{
         width: 85%;
@@ -406,6 +409,7 @@
         left: 7%;
         font-size: 0.6rem;
         color: #021633;
+        pointer-events: none;
     }
 
     .email-input{
@@ -452,7 +456,7 @@
         left: 7%;
         font-size: 0.6rem;
         color: #021633;
-
+        pointer-events: none;
     }
     .password-input{
         width: 85%;
