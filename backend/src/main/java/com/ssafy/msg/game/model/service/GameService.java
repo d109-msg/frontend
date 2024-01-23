@@ -27,5 +27,11 @@ public interface GameService {
     List<VoteResultDto> getRoomVote(String userEmail, String roomId) throws Exception;
 
     ParticipantDto getParticipant(String userEmail, String roomId) throws Exception;
+
+    List<ParticipantDto> getAliveParticipant(String roomId) throws Exception;
+
+    void vote(VoteReceiveDto voteReceiveDto) throws Exception;
+
+    boolean getTime();
 }
 

@@ -4,7 +4,46 @@
 
 <mapper
 	namespace="com.ssafy.msg.game.model.mapper.GameMapper">
-	
+
+	<update id="normalVote" parameterType="Map">
+		UPDATE daily_missions
+		SET normal_vote = #{targetEmail}
+		WHERE participant_id = #{participantId}
+				  AND day = (
+				  SELECT MAX(day)
+				  FROM daily_missions
+				  WHERE participant_id = #{participantId}
+			  );
+	</update>
+
+	<update id="mafiaVote" parameterType="Map">
+		UPDATE daily_missions
+		SET mafia_vote = #{targetEmail}
+		WHERE participant_id = #{participantId}
+				  AND day = (
+				  SELECT MAX(day)
+				  FROM daily_missions
+				  WHERE participant_id = #{participantId}
+			  );
+	</update>
+
+	<update id="doctorVote" parameterType="Map">
+		UPDATE daily_missions
+		SET docotr_vote = #{targetEmail}
+		WHERE participant_id = #{participantId}
+				  AND day = (
+				  SELECT MAX(day)
+				  FROM daily_missions
+				  WHERE participant_id = #{participantId}
+			  );
+	</update>
+
+	<select id="getAliveParticipants" resultType="ParticipantDto" parameterType="string">
+		SELECT *
+		FROM participants
+		WHERE room_id = #{roomId} AND flag_die = 0;
+	</select>
+
 	<select id="getParticipant" resultType="ParticipantDto" parameterType="ParticipantReceiveDto">
 		SELECT * FROM participants WHERE user_email_id = #{userEmail} AND room_id = #{roomId};
 	</select>
