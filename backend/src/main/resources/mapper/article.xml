@@ -8,7 +8,7 @@
     <insert id="createArticle" parameterType="ArticleCreateDto" useGeneratedKeys="true" keyProperty="id">
         insert into articles
             (user_id, content, create_time, flag_private, modify_time, room_id)
-        values ( #{userEmailId}, #{content}, now(), #{flagPrivate}, now(), #{roomId});
+        values ( #{userId}, #{content}, now(), #{flagPrivate}, now(), #{roomId});
 
     </insert>
 
@@ -19,7 +19,7 @@
 
     </insert>
 
-    <select id="getArticles" parameterType="string" resultType="ArticleWithUrlDto" >
+    <select id="getArticles" parameterType="int" resultType="ArticleWithUrlDto" >
         select a.id as article_id, a.user_id, a.create_time, a.flag_private, a.modify_time, a.room_id, ai.url
         from articles a
         left join (
@@ -28,7 +28,7 @@
             group by article_id
         ) as sub_ai on a.id = sub_ai.article_id
         left join article_images ai on sub_ai.min_id = ai.id
-        where a.user_id = #{emailId};
+        where a.user_id = #{userId};
 
     </select>
 
@@ -51,9 +51,9 @@
         from articles a
         left join article_images ai on a.id = ai.article_id
         where a.user_id in (
-            select f.from_user_id
+            select f.to_user_id
             from follows f
-            where f.id = #{userId}
+            where f.from_user_id = #{userId}
             )
         order by a.create_time desc;
 
