@@ -27,7 +27,7 @@ public class SchedulerServiceImpl implements SchedulerService{
     private final SchedulerMapper schedulerMapper;
 
     private final GameService gameService;
-    private final MessageService messageService;
+//    private final MessageService messageService;
 
     @Scheduled(cron = "0 0 8 * * ?")
     @Override
@@ -116,12 +116,12 @@ public class SchedulerServiceImpl implements SchedulerService{
 
     // 게임 시작 알림
     public void noticeGameStart(String roomId) throws SQLException {
-        messageService.sendStartNotice(roomId);
+//        messageService.sendStartNotice(roomId);
     }
 
     // 게임 종료 알림
     public void noticeGameEnd(String roomId) throws SQLException {
-        messageService.sendEndNotice(roomId);
+//        messageService.sendEndNotice(roomId);
     }
 
     // 마피아 지목 결과 (PM 8)

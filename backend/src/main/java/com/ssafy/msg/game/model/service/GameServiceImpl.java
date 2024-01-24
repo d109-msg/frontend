@@ -27,7 +27,7 @@ public class GameServiceImpl implements GameService{
 
     @Override
     public void applyRandomGame(int userId) throws Exception {
-        UserDto user = userMapper.findUserByEmailId(userId);
+        UserDto user = userMapper.findUserById(userId);
         gameMapper.applyRandomGame(user);
     }
 
@@ -39,7 +39,7 @@ public class GameServiceImpl implements GameService{
 
     @Override
     public RoomDto createEnterGroupRoom(int userId) throws Exception {
-        UserDto user = userMapper.findUserByEmailId(userId);
+        UserDto user = userMapper.findUserById(userId);
 
         String roomId = UUID.randomUUID().toString();
 
@@ -72,7 +72,7 @@ public class GameServiceImpl implements GameService{
         RoomDto roomDto = chatMapper.getRoom(enterGroupRoomDto.getRoomId());
 
         if (roomDto != null){
-            UserDto user = userMapper.findUserByEmailId(enterGroupRoomDto.getUserId());
+            UserDto user = userMapper.findUserById(enterGroupRoomDto.getUserId());
 
             ParticipantDto participant = ParticipantDto.builder()
                     .roomId(enterGroupRoomDto.getRoomId())

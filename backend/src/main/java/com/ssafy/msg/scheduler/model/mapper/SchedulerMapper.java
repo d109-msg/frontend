@@ -12,6 +12,6 @@ public interface SchedulerMapper {
     List<Integer> getWaitingUsersId() throws SQLException;
     void createRoom(RoomDto roomDto) throws SQLException;
 
-    List<String> get
+//    List<String> get
 
 }

@@ -157,10 +157,10 @@ public class GameController {
     public ResponseEntity<?> applyRandomGame(@Valid HttpServletRequest request) {
         log.info("applyRandomGame() -> Start");
 
-        String emailId = (String) request.getAttribute("emailId");
+        int userId = (int) request.getAttribute("id");
 
         try {
-            gameService.applyRandomGame(emailId);
+            gameService.applyRandomGame(userId);
             log.info("applyRandomGame() -> Success");
             return new ResponseEntity<>(HttpStatus.OK);
         } catch (Exception e) {
@@ -178,12 +178,12 @@ public class GameController {
     public ResponseEntity<?> createGroupRoom(@Valid HttpServletRequest request) {
         log.info("createGroupRoom() -> Start");
 
-        String emailId = (String) request.getAttribute("emailId");
+        int userId = (int) request.getAttribute("id");
 
         RoomDto roomDto = null;
 
         try {
-            roomDto = gameService.createEnterGroupRoom(emailId);
+            roomDto = gameService.createEnterGroupRoom(userId);
             log.info("createGroupRoom() -> Success");
             return new ResponseEntity<>(roomDto, HttpStatus.CREATED);
         } catch (Exception e) {
@@ -203,12 +203,12 @@ public class GameController {
     @PostMapping("/group/join")
     public ResponseEntity<?> enterGroupRoom(@Valid HttpServletRequest request, @RequestBody ApplyGroupRoomDto applyGroupRoomDto) {
         log.info("enterGroupRoom() -> Start");
-        String emailId = (String) request.getAttribute("emailId");
+        int userId = (int) request.getAttribute("id");
 
         log.info("enterGroupRoom() -> Receive applyGroupRoomDto : {}", applyGroupRoomDto);
 
         EnterGroupRoomDto enterGroupRoomDto = EnterGroupRoomDto.builder()
-                .emailId(emailId)
+                .userId(userId)
                 .roomId(applyGroupRoomDto.getRoomId())
                 .build();
         RoomDto roomDto = null;
