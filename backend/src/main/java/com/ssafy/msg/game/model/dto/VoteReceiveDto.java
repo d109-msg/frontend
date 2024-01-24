@@ -16,6 +16,6 @@ public class VoteReceiveDto {
     @Schema(description = "투표하는 유저의 직업", example = "시민")
     private String jobId;
 
-    @Schema(description = "투표 대상자의 이메일", example = "test1@naver.com")
-    private String targetEmail;
+    @Schema(description = "투표 대상자의 participantId", example = "2")
+    private int targetId;
 }

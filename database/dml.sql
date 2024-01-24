@@ -83,8 +83,11 @@ INSERT INTO daily_missions (participant_id, mission_id, day, try, flag_success, 
 (3, 1, 1, 1, 1, 1, 1, 1),
 (4, 1, 1, 1, 0, 1, 1, 1),
 (5, 1, 1, 1, 1, 1, 1, 1),
-(6, 1, 1, 1, 0, 1, 1, 1);
+(6, 1, 1, 1, 0, 1, 1, 1),
+(7, 1, 1, 1, 0, 2, 3, 4);
 
-
+SELECT * FROM daily_missions dm ;
+SELECT * FROM participants p ;
+SELECT * FROM users;
 
 

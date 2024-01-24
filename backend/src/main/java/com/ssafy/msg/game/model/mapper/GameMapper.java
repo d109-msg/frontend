@@ -20,7 +20,7 @@ public interface GameMapper {
 
     int insertParticipants(List<ParticipantDto> participants) throws SQLException;
 
-    List<RoomDto> getUserRooms(String userEmail) throws SQLException;
+    List<RoomDto> getUserRooms(int userId) throws SQLException;
 
     List<VoteResultDto> getRoomVote(String roomId) throws SQLException;
 
@@ -28,7 +28,7 @@ public interface GameMapper {
 
     List<ParticipantDto> getAliveParticipants(String roomId) throws SQLException;
 
-    void normalVote(int participantId, String targetEmail) throws SQLException;
-    void mafiaVote(int participantId, String targetEmail) throws SQLException;
-    void doctorVote(int participantId, String targetEmail) throws SQLException;
+    void normalVote(int participantId, int targetId) throws SQLException;
+    void mafiaVote(int participantId, int targetId) throws SQLException;
+    void doctorVote(int participantId, int targetId) throws SQLException;
 }
