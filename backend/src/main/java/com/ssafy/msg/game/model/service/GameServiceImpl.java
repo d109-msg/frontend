@@ -10,7 +10,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
-import java.text.SimpleDateFormat;
+import java.sql.SQLException;
 import java.time.LocalTime;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
@@ -29,6 +29,30 @@ public class GameServiceImpl implements GameService{
     public void applyRandomGame(int userId) throws Exception {
         UserDto user = userMapper.findUserById(userId);
         gameMapper.applyRandomGame(user);
+    }
+
+    @Override
+    public String getMyVote(int participantId) throws SQLException {
+        MyVoteDto dto = gameMapper.getMyVote(participantId);
+        String job = gameMapper.getParticipantWithPId(participantId).getJobId();
+        log.info("getMyVote() myVote : {}", dto);
+        log.info("getMyVote() job : {}", job);
+
+        if (getTime()) {
+            //낮
+            log.info("getMyVote() result : {}", dto.getNormalVote());
+            return dto.getNormalVote();
+        } else {
+            if(job.equals("마피아")) {
+                log.info("getMyVote() result : {}", dto.getMafiaVote());
+                return dto.getMafiaVote();
+            } else if(job.equals("의사")) {
+                log.info("getMyVote() result : {}", dto.getDoctorVote());
+                return dto.getDoctorVote();
+            } else {
+                return dto.getNormalVote();
+            }
+        }
     }
 
     @Override
@@ -141,7 +165,7 @@ public class GameServiceImpl implements GameService{
             result.add(participant);
         }
 
-        int resultCnt = gameMapper.insertParticipants(result);
+        int resultCnt = gameMapper.updateParticipants(result);
 
         log.info("gameStart() resultCnt : {}", resultCnt);
 
@@ -199,13 +223,11 @@ public class GameServiceImpl implements GameService{
         log.info("getRoomVote() -> roomId : {}", roomId);
 
         if (getTime()) {
-            log.info("getRoomVote() 현재 시간은 08:00과 20:00 사이입니다.");
             for(VoteResultDto vote : list){
                 vote.setDoctorVoteCount(-1);
                 vote.setMafiaVoteCount(-1);
             }
         } else {
-            log.info("getRoomVote() 현재 시간은 08:00과 20:00 사이가 아닙니다.");
             for(VoteResultDto vote : list){
                 vote.setNormalVoteCount(-1); //밤일 때, 시민 투표 가림
 
@@ -244,6 +266,11 @@ public class GameServiceImpl implements GameService{
         return gameMapper.getAliveParticipants(roomId);
     }
 
+    /**
+     * 직업과 participantID, targetId를 입력받아 시간에 따른 투표를 반영합니다.
+     * @param voteReceiveDto 직업과 participantID, targetId를 입력받아
+     * @throws Exception
+     */
     @Override
     public void vote(VoteReceiveDto voteReceiveDto) throws Exception {
         if(getTime()){
