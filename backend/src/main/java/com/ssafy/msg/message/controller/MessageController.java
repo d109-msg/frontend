@@ -21,15 +21,15 @@
 //    // 텍스트 메시지 전송
 //    @MessageMapping("/message/text")
 //    public void sendMessage(TextMessageDto textMessageDto, Principal principal){
-//        String emailId = principal.getName();
-//        messageService.sendTextMessage(textMessageDto, emailId);
+//        String id = principal.getName();
+//        messageService.sendTextMessage(textMessageDto, id);
 //    }
 //
 //    // 이미지 메시지 전송
 //    @MessageMapping("/message/image")
 //    public void sendImageMessage(ImageMessageDto imageMessageDto, Principal principal) throws IOException {
-//        String emailId = principal.getName();
-//        messageService.sendImageMessage(imageMessageDto, emailId);
+//        String id = principal.getName();
+//        messageService.sendImageMessage(imageMessageDto, id);
 //    }
 //
 //}

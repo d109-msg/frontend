@@ -11,6 +11,6 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Builder
 public class CreateRoomDto {
-    private String userId1;
-    private String userId2;
+    private int userId1;
+    private int userId2;
 }

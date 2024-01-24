@@ -37,8 +37,11 @@
 //        if (StompCommand.CONNECT.equals(headerAccessor.getCommand())){
 //            String token = headerAccessor.getFirstNativeHeader(authorization);
 //            if(jwtUtil.verify(token, "access-token")){
-//                String emailId = jwtUtil.getEmailId(token);
-//                headerAccessor.setUser(StompPrincipalDto.builder().userEmailId(emailId).build());
+//                int id = jwtUtil.getId(token);
+//                headerAccessor.setUser(StompPrincipalDto.builder()
+//                        .userId(id)
+//                        .userStringId(Integer.toString(id))
+//                        .build());
 //            } else{
 //                throw new TokenInvalidException();
 //            }

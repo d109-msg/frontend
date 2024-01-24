@@ -11,6 +11,6 @@ public interface ChatService {
 
     RoomDto getPersonalRoom(CreateRoomDto createRoomDto) throws Exception;
 
-    List<RoomDto> getPersonalRoomsInfoByEmailId(String emailId) throws Exception;
+    List<RoomDto> getPersonalRoomsInfoById(int id) throws Exception;
 
 }

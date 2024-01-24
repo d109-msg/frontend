@@ -24,20 +24,20 @@
 //    private final MessageMapper messageMapper;
 //
 //    @Override
-//    public void sendTextMessage(TextMessageDto textMessageDto, String emailId) {
+//    public void sendTextMessage(TextMessageDto textMessageDto, int id) {
 //        // DB 저장 로직 구현 필요
 //        MessageResponseDto messageResponseDto = MessageResponseDto.builder()
 //                .id(0)
 //                .roomId(textMessageDto.getRoomId())
-//                .userEmailId(emailId)
-//                .sendTime(textMessageDto.getSendTime())
+//                .userId(id)
+//                .sendTime("")
 //                .dataType("text")
 //                .text(textMessageDto.getText()).build();
 //        sendingOperations.convertAndSend("/sub/"+messageResponseDto.getRoomId(), messageResponseDto);
 //    }
 //
 //    @Override
-//    public void sendImageMessage(ImageMessageDto imageMessageDto, String emailId) throws IOException {
+//    public void sendImageMessage(ImageMessageDto imageMessageDto, int id) throws IOException {
 //        String uuid = s3Util.saveFile(imageMessageDto.getImage());
 //        String url = s3Util.getUrl(uuid);
 //
@@ -45,8 +45,8 @@
 //        MessageResponseDto messageResponseDto = MessageResponseDto.builder()
 //                .id(0)
 //                .roomId(imageMessageDto.getRoomId())
-//                .userEmailId(emailId)
-//                .sendTime(imageMessageDto.getSendTime())
+//                .userId(id)
+//                .sendTime("")
 //                .dataType("image")
 //                .url(url)
 //                .uuid(uuid).build();
@@ -60,7 +60,8 @@
 //        MessageResponseDto messageResponseDto = MessageResponseDto.builder()
 //                .id(0)
 //                .roomId(participantDto.getRoomId())
-//                .userEmailId("enterNotice")
+//                .userId(0)
+//                .noticeType("enterNotice")
 //                .sendTime("")
 //                .dataType("text")
 //                .text(participantDto.getNickname()+"님이 입장하였습니다.").build();
@@ -75,10 +76,41 @@
 //        MessageResponseDto messageResponseDto = MessageResponseDto.builder()
 //                .id(0)
 //                .roomId(roomId)
-//                .userEmailId("dayNotice")
+//                .userId(0)
+//                .noticeType("dayNotice")
 //                .sendTime("")
 //                .dataType("text")
 //                .text(day+"일차 " + dayOrNight + "이 되었습니다.").build();
+//        sendingOperations.convertAndSend("/sub/"+messageResponseDto.getRoomId(), messageResponseDto);
+//    }
+//
+//    @Override
+//    public void sendStartNotice(String roomId) throws SQLException {
+//        // DB 저장 로직 구현 필요
+//        // Time 추가 로직 구현 필요
+//        MessageResponseDto messageResponseDto = MessageResponseDto.builder()
+//                .id(0)
+//                .roomId(roomId)
+//                .userId(0)
+//                .noticeType("gameNotice")
+//                .sendTime("")
+//                .dataType("text")
+//                .text("게임이 시작되었습니다.").build();
+//        sendingOperations.convertAndSend("/sub/"+messageResponseDto.getRoomId(), messageResponseDto);
+//    }
+//
+//    @Override
+//    public void sendEndNotice(String roomId) throws SQLException {
+//        // DB 저장 로직 구현 필요
+//        // Time 추가 로직 구현 필요
+//        MessageResponseDto messageResponseDto = MessageResponseDto.builder()
+//                .id(0)
+//                .roomId(roomId)
+//                .userId(0)
+//                .noticeType("gameNotice")
+//                .sendTime("")
+//                .dataType("text")
+//                .text("게임이 종료되었습니다.").build();
 //        sendingOperations.convertAndSend("/sub/"+messageResponseDto.getRoomId(), messageResponseDto);
 //    }
 //}

@@ -24,7 +24,7 @@ public interface ChatMapper {
 	RoomDto getRoom(String roomId) throws SQLException;
 
 	// 사용자별 일대일 채팅방 목록 조회
-	List<RoomDto> getPersonalRoomsInfoByEmailId(String emailId) throws SQLException;
+	List<RoomDto> getPersonalRoomsInfoById(int id) throws SQLException;
 
 
 }
