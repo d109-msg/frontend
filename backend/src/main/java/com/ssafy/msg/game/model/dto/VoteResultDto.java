@@ -10,6 +10,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Builder
 public class VoteResultDto {
+    private int id;
     private String nickname;
     private int normalVoteCount;
     private int mafiaVoteCount;
