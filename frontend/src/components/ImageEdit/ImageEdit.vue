@@ -1,16 +1,24 @@
 <template>
   <div class="image-container disable">
-        
+    <div class="image-header">
+        <div class="image-title">Create Feed</div>
         <div class="image-editor-cancel"
         @click="closeImage"
         >X</div>
+    </div>
+        <hr class="image-line">
+
         <MissonConfirm v-if="missionConfirm" 
         @close-modal="missionConfirm=false;"
+        @mission-true="missionTrue"
+        @mission-false="missionFalse"
         :confirmInfo="[imgData[0], missionSrc, selectRoom]"
         />
-        <div class="wrapper">
-            
-
+        <WriteContent v-if="writeFlag"
+        :dataInfo="{imgData,imgSrc,selectRoom}"
+        @close-write="writeFlag=false"
+        />
+        <div class="wrapper" v-show="!writeFlag">
             <div class="img-wrapper">
                 <div class="save-wrapper">
                     <img class="first-img img-list" src="">
@@ -64,14 +72,9 @@
                         <button id="vertical"><i class="bx bx-reflect-horizontal"></i></button>
                     </div>
                 </div>
-                <label for="agree" class="chk_box" v-if="selectRoom!=='일상 게시물'">
-                    <span style="margin-right: 5px;">미션 사진 검증</span>
-                    <input type="checkbox" id="agree" v-model="missionCheck"/>
-                    <span class="on"></span>
-                </label>
             </div>
         </div>
-        <div class="controls">
+        <div class="controls" v-show="!writeFlag">
             <button class="reset-filter">Reset Filters</button>
             <div class="row">
                 <input type="file" class="file-input" accept="image/*" hidden multiple>
@@ -85,14 +88,15 @@
 <script>
 import btof from './base64ToFile'
 import MissonConfirm from './MissonConfirm.vue'
+import WriteContent from './WriteContent.vue'
 
 export default {
     name: "ImageEdit",
     data(){
         return{
-            missionCheck : false,
             missionConfirm : false,
             imgData : [],
+            imgSrc : [],
             brightness : '100',
             saturation : '100',
             inversion : '0',
@@ -108,19 +112,24 @@ export default {
             optionFlag : false,
             selectRoom : "",
             missionSrc : "",
+            writeFlag : false,
         }
     },
     components:{
         MissonConfirm,
+        WriteContent,
     },
     methods:{
         openOptions : function(){
             this.optionFlag = !(this.optionFlag)
         },
         confirm : function(){
-            if(this.missionCheck == true) this.missionConfirm = true
-            else return
-
+            if(this.selectRoom=="일상 게시물"){
+                this.missionConfirm = false
+                this.writeFlag = true
+            } else{
+                this.missionConfirm = true
+            }
         },
         resetFilter : function(){
             this.brightness = '100'
@@ -146,6 +155,8 @@ export default {
         },
 
         saveImg : function(){
+            this.imgData = []
+            this.imgSrc = []
             let list = document.querySelectorAll('.img-list')
             console.log(list.length)
             for(let i=0; i<list.length;i++){
@@ -171,6 +182,7 @@ export default {
                     let src = canvas.toDataURL();
                     if(i==0){this.missionSrc = src}
                     let fileData = btof(src,'temp.png')
+                    this.imgSrc.push(src)
                     this.imgData.push(fileData)
                 }
             }this.confirm()
@@ -186,7 +198,15 @@ export default {
             preview.src = ""
             this.$emit('close')
         },
-
+        missionTrue : function(){
+            this.missionConfirm = false
+            this.writeFlag = true
+            alert("미션에 성공하였습니다 !!!!")
+        },
+        missionFalse : function(){
+            this.missionConfirm=false
+            alert("미션에 성공하지 못했습니다. 이미지를 수정하거나 교체 후 다시 시도하십시오.")
+        }
     },
     mounted(){
         this.selectRoom = this.userRoom[0]
@@ -280,4 +300,4 @@ export default {
 }
 </script>
 
-<style scoped src="./ImageEdit.css"> </style>
+<style scoped src="./css/ImageEdit.css"> </style>
