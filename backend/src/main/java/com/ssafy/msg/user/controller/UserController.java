@@ -135,25 +135,28 @@ public class UserController {
 
 			UserDto userDto = userService.findUserByEmailId(oauth2Dto.getEmailId());
 			
-			int newFlag = 0;
+			boolean flag = false;
 			if (userDto == null) {
 				userDto = UserDto.builder().nickname(oauth2Dto.getNickname()).emailId(oauth2Dto.getEmailId())
 						.provider(provider).build();
-				newFlag = 1;			
+				flag = true;			
 			} else {
 				if (!provider.equals(userDto.getProvider())) {
 					throw new UserDuplicateException();
 				}
 			}
-			userDto.setFlagNew(newFlag);
 			
 			String accessToken = jwtUtil.createAccessToken(userDto.getId());
 			log.info("signInWithOauth2() -> Create accessToken : {}", accessToken);
 			String refreshToken = jwtUtil.createRefreshToken(userDto.getId());
 			log.info("signInWithOauth2() -> Create refreshToken : {}", refreshToken);
 			userDto.setRefreshToken(refreshToken);
-			System.out.println(userDto);
-			userService.signInWithOauth2(userDto);
+			
+			if (flag) {
+				userService.signUpWithOauth2(userDto);
+			} else {
+				userService.signInWithOauth2(userDto);
+			}
 
 			TokenDto tokenDto = TokenDto.builder().accessToken(accessToken).refreshToken(refreshToken).build();
 			HttpStatus httpStauts = HttpStatus.CREATED;
@@ -176,6 +179,10 @@ public class UserController {
 		log.info("signUp() -> Receive signUpDto : {}", signUpDto);
 
 		try {
+			if (userService.findUserByEmailId(signUpDto.getEmailId()) != null) {
+				throw new UserDuplicateException();
+			}
+			
 			userService.signUp(signUpDto);
 			log.info("signUp() -> Success");
 			return new ResponseEntity<>(HttpStatus.CREATED);

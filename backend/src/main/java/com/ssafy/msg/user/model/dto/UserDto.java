@@ -24,5 +24,4 @@ public class UserDto {
 	private int flagIdentifier;
 	private String imageUrl;
 	private String imageUuid;
-	private int flagNew;
 }

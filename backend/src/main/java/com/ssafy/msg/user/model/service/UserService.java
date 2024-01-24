@@ -50,4 +50,6 @@ public interface UserService {
 
 	UserDto findUserById(int id) throws Exception;
 
+	void signUpWithOauth2(UserDto userDto) throws Exception;
+
 }

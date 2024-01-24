@@ -132,4 +132,9 @@ public class UserServiceImpl implements UserService {
 	public UserDto findUserById(int id) throws Exception {
 		return userMapper.findUserById(id);
 	}
+
+	@Override
+	public void signUpWithOauth2(UserDto userDto) throws Exception {
+		userMapper.signUpWithOauth2(userDto);
+	}
 }

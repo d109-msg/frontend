@@ -48,4 +48,6 @@ public interface UserMapper {
 	List<FollowUserDto> getFollowList(FollowParamDto followParamDto) throws SQLException;
 
 	UserDto findUserById(int id) throws SQLException;
+
+	void signUpWithOauth2(UserDto userDto) throws SQLException;
 }

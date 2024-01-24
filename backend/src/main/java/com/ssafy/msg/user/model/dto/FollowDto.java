@@ -15,6 +15,6 @@ import lombok.NoArgsConstructor;
 @Builder
 public class FollowDto {
 
-	@Schema(description = "아이디 번호", nullable = false, example = "1")
+	@Schema(description = "아이디 번호", nullable = false)
 	private int id;
 }

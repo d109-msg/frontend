@@ -81,7 +81,7 @@ CREATE TABLE `room_images` (
 
 CREATE TABLE `users` (
   `id` int(11) not null auto_increment,
-  `email_id` varchar(100) NOT NULL,
+  `email_id` varchar(100) NOT null unique,
   `email_password` varchar(100) DEFAULT NULL,
   `nickname` varchar(50) NOT NULL,
   `provider` varchar(10) DEFAULT NULL,

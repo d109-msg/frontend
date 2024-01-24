@@ -16,7 +16,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class FollowUserDto {
 	@Schema(description = "팔로우 테이블 번호", nullable = false)
-	private int Id;
+	private int id;
 	
 	@Schema(description = "닉네임", nullable = false)
 	private String nickname;

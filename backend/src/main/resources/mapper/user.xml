@@ -133,7 +133,7 @@
 		resultType="FollowUserDto">
 		<choose>
 			<when test="type == 'to'">
-				select u.email_id, u.nickname, u.image_url,
+				select u.id, u.email_id, u.nickname, u.image_url,
 				u.image_uuid, u.identifier,
 				f.id
 				from follows f
@@ -148,7 +148,7 @@
 				limit #{limit}
 			</when>
 			<when test="type == 'from'">
-				select u.email_id, u.nickname, u.image_url,
+				select u.id, u.email_id, u.nickname, u.image_url,
 				u.image_uuid, u.identifier,
 				f.id
 				from follows f
