@@ -72,11 +72,13 @@ public class ArticleServiceImpl implements ArticleService{
         log.info("(ArticleServiceImpl) getArticleDetail 시작(이미지 제외)");
         ArticleDetailDto articleDetailDto = articleMapper.getArticleDetail(articleId);
         List<String> urls = new ArrayList<>();
+        log.info("(ArticleServiceImpl) 여기까지는 됐을까 articleDetailDto(): {}", articleDetailDto);
         for (ArticleImageDto ai : articleMapper.getArticleImages(articleId)) {
             urls.add(ai.getUrl());
         }
         articleDetailDto.setUrls(urls);
 
+        log.info("(ArticleServiceImpl) 게시물 상세보기 끝");
         return articleDetailDto;
 
     }
