@@ -13,12 +13,12 @@ import java.util.List;
 @AllArgsConstructor
 public class ArticleDetailDto {
     private int articleId;
-    private String userEmailId;
+    private int userId;
     private String content;
     private String createTime;
     private int flagPrivate;
     private String modifyTime;
     private String roomId;
-    private List<String> imageUrls;
+    private List<String> urls;
 
 }

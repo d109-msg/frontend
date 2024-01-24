@@ -11,6 +11,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -60,22 +61,24 @@ public class ArticleServiceImpl implements ArticleService{
     }
 
     @Override
-    public List<ArticleWithUrlDto> getArticles(String emailId) throws Exception {
+    public List<ArticleWithUrlDto> getArticles(int userId) throws Exception {
         log.info("(ArticleServiceImpl) 게시물조회 시작");
-        return articleMapper.getArticles(emailId);
-
+        return articleMapper.getArticles(userId);
 
     }
 
     @Override
-    public List<ArticleDetailDto> getArticleDetail(int articleId) throws Exception {
-        log.info("(ArticleServiceImpl) 디테일 조회 시작");
-        List<ArticleDetailDto> articleDetailDtos = articleMapper.getArticleDetail(articleId);
-
-
-        for (ArticleDetailDto articleDetailDto : articleDetailDtos) {
-
+    public ArticleDetailDto getArticleDetail(int articleId) throws Exception {
+        log.info("(ArticleServiceImpl) getArticleDetail 시작(이미지 제외)");
+        ArticleDetailDto articleDetailDto = articleMapper.getArticleDetail(articleId);
+        List<String> urls = new ArrayList<>();
+        for (ArticleImageDto ai : articleMapper.getArticleImages(articleId)) {
+            urls.add(ai.getUrl());
         }
-        return null;
+        articleDetailDto.setUrls(urls);
+
+        return articleDetailDto;
+
     }
+
 }

@@ -56,8 +56,8 @@ public class ArticleController {
         log.info("(controller) create Start");
         log.info("(controller) 클라이언트에서 받아온 articleCreateDto : {}", articleCreateDto);
 
-        String emailId = (String) request.getAttribute("emailId");
-        ArticleDto articleDto = ArticleDto.builder().userEmailId(emailId).articleImageList(articleCreateDto.getArticleImageList()).content(articleCreateDto.getContent()).roomId(articleCreateDto.getRoomId()).build();
+        int id = (Integer) request.getAttribute("id");
+        ArticleDto articleDto = ArticleDto.builder().userId(id).articleImageList(articleCreateDto.getArticleImageList()).content(articleCreateDto.getContent()).roomId(articleCreateDto.getRoomId()).build();
 
         try {
             articleService.createArticle(articleDto); // 클라이언트로부터 받은 정보를 서비스에 입력
@@ -71,18 +71,16 @@ public class ArticleController {
         }
     }
 
-    @GetMapping(value = "/myprofile")
-    @Operation(summary = "전체 게시물", description = "전체 게시물 조회")
+    @GetMapping(value = "/profile")
+    @Operation(summary = "프로필 게시물", description = "프로필 게시물 조회")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "게시물 리스트 조회 성공", content = {
                     @Content(mediaType = "application/json", schema = @Schema(implementation = ArticleWithUrlDto.class)) }),
             @ApiResponse(responseCode = "400", description = "게시물 리스트 조회 실패", content = @Content) })
-    public ResponseEntity<?> getArticles(HttpServletRequest request) {
-
-        String emailId = (String) request.getAttribute("emailId");
+    public ResponseEntity<?> getArticles(@RequestParam("userId") int userId) {
 
         try {
-            List<ArticleWithUrlDto> articleWithUrlDtoList = articleService.getArticles(emailId);
+            List<ArticleWithUrlDto> articleWithUrlDtoList = articleService.getArticles(userId);
             log.info("(ArticleController) 게시물 조회 성공");
             return new ResponseEntity<>(articleWithUrlDtoList, HttpStatus.OK);
         } catch (Exception e) {
@@ -104,8 +102,9 @@ public class ArticleController {
         log.info("(ArticleController) 게시물 상세보기 시작");
 
         try {
+            ArticleDetailDto articleDetailDto = articleService.getArticleDetail(articleId);
             log.info("(ArticleController) 게시물 상세조회 성공");
-            return new ResponseEntity<>(HttpStatus.OK);
+            return new ResponseEntity<>(articleDetailDto, HttpStatus.OK);
         } catch (Exception e) {
             log.error("(ArticleController) 게시물 상세 조회 실패", e);
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
@@ -115,6 +114,24 @@ public class ArticleController {
 
     }
 
+    @GetMapping(value = "/feed")
+    @Operation(summary = "피드 게시물 리스트", description = "피드에 보여줄 게시물 리스트")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "피드 게시물 조회 성공", content ={
+                    @Content(mediaType = "application/json", schema = @Schema(implementation = ArticleDetailDto.class)) }),
+            @ApiResponse(responseCode = "400", description = "피드 게시물 조회 실패", content = @Content) })
+    public ResponseEntity<?> getFeedArticleList(HttpServletRequest request) {
 
+        int id = (Integer) request.getAttribute("id");
+
+        try {
+            return new ResponseEntity<>(HttpStatus.OK);
+        } catch (Exception e) {
+            log.error("(ArticleController) 피드 게시물 조회 실패", e);
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        } finally {
+            log.info("(ArticleController) getFeedArticleList end");
+        }
+    }
 
 }

@@ -14,8 +14,10 @@ public interface ArticleMapper {
 
     void insertArticleImage(ArticleImageDto articleImageDto) throws SQLException;
 
-    List<ArticleWithUrlDto> getArticles(String emailId) throws SQLException;
+    List<ArticleImageDto> getArticleImages(int articleId) throws SQLException;
 
-    List<ArticleDetailDto> getArticleDetail(int articleId) throws SQLException;
+    List<ArticleWithUrlDto> getArticles(int userId) throws SQLException;
+
+    ArticleDetailDto getArticleDetail(int articleId) throws SQLException;
 
 }
