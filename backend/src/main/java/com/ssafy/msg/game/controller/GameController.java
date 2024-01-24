@@ -57,18 +57,72 @@ public class GameController {
         }
     }
 
+    @GetMapping("/room/alive")
+    @Operation(summary = "살아있는 참가자 리스트", description = "roomId를 입력받아 게임방 내의 살아있는 참가자만 리턴")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "201", description = "조회 성공", content = {
+                    @Content(mediaType = "application/json", schema = @Schema(implementation = ParticipantDto.class)) }),
+            @ApiResponse(responseCode = "400", description = "조회 실패", content = @Content) })
+    public ResponseEntity<?> getAliveParticipants(@RequestParam("roomId") String roomId){
+        log.info("getAliveParticipants() -> roomId : {}", roomId);
+
+        try {
+            List<ParticipantDto> list = gameService.getAliveParticipant(roomId);
+            log.info("getAliveParticipants() -> list : {}", list);
+
+            return new ResponseEntity<>(list, HttpStatus.OK);
+        } catch (Exception e) {
+            log.error("getAliveParticipants() -> error : {}", e.toString());
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        } finally {
+            log.info("getAliveParticipants() -> end");
+        }
+
+    }
+
     @GetMapping("/room/vote")
-    @Operation(summary = "유저 현재 방의 투표 현황 조회", description = "userEmail과 roomId를 이용해 해당 room의 투표 현황 조회")
-    public String getRoomVote(HttpServletRequest request, @RequestParam String roomId) {
-        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("YYYY-MM-DD HH:mm:ss.SSS");
-
+    @Operation(summary = "유저 현재 방의 투표 현황 조회"
+            , description = "userEmail과 roomId를 이용해 해당 room의 투표 현황 조회\n낮과 밤에 따라 볼 수 없는 투표 수는 -1로 표시")
+    public ResponseEntity<?> getRoomVote(HttpServletRequest request, @RequestParam String roomId) {
         String email = (String) request.getAttribute("emailId");
-        String date = simpleDateFormat.format(new Date());
 
-        log.info("getRoomVote() -> roomId : {}, date : {}", roomId, date);
-        List<VoteResultDto> result = null;
+        try {
+            List<VoteResultDto> result = gameService.getRoomVote(email, roomId);
+            log.info("getRoomVote() -> result : {}", result);
 
-        return date;
+            return new ResponseEntity<>(result, HttpStatus.OK);
+        } catch (Exception e) {
+            log.error("getRoomVote() -> error : {}", e.toString());
+
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        } finally {
+            log.info("getRoomVote() -> end");
+        }
+
+    }
+
+    @PatchMapping("/vote")
+    @Operation(summary = "투표 api", description = "유저의 participantId, 직업, targetEmail을 입력받아 투표를 수정합니다.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "투표 성공", content = @Content),
+            @ApiResponse(responseCode = "400", description = "투표 실패", content = @Content)})
+    public ResponseEntity<?> submitVote(@RequestBody VoteReceiveDto voteReceiveDto) {
+        log.info("submitVote() -> participant : {}", voteReceiveDto.getParticipantId());
+        log.info("submitVote() -> target : {}", voteReceiveDto.getTargetEmail());
+        log.info("submitVote() -> job : {}", voteReceiveDto.getJobId());
+
+        try {
+            gameService.vote(voteReceiveDto);
+            log.info("submitVote() -> done");
+            return new ResponseEntity<>(HttpStatus.OK);
+        } catch (Exception e) {
+            log.error("submitVote() -> error : {}", e.toString());
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        } finally {
+            log.info("submitVote() -> end");
+        }
+        
+
     }
 
     @GetMapping(value = "/room/list")
@@ -211,7 +265,7 @@ public class GameController {
 
 
     //test
-    @GetMapping("/nickname")
+    @GetMapping("/nicknametest")
     public ResponseEntity<?> randomNicknameTest(@RequestParam("num") int num){
         log.info("randomNicknameTest() -> num : {}", num);
 
@@ -242,7 +296,7 @@ public class GameController {
 
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
-        
+
         
     }
 }

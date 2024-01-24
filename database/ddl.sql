@@ -80,6 +80,7 @@ CREATE TABLE `room_images` (
 -- msg.users definition
 
 CREATE TABLE `users` (
+  `id` int(11) not null auto_increment,
   `email_id` varchar(100) NOT NULL,
   `email_password` varchar(100) DEFAULT NULL,
   `nickname` varchar(50) NOT NULL,
@@ -93,7 +94,7 @@ CREATE TABLE `users` (
   `flag_private` int(11) NOT NULL DEFAULT 0,
   `sign_up_time` datetime NOT NULL DEFAULT current_timestamp(),
   `sign_in_time` datetime DEFAULT NULL,
-  PRIMARY KEY (`email_id`),
+  PRIMARY KEY (`id`),
   UNIQUE KEY `users_unique` (`identifier`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
@@ -102,14 +103,14 @@ CREATE TABLE `users` (
 
 CREATE TABLE `follows` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `from_user_email_id` varchar(100) NOT NULL,
-  `to_user_email_id` varchar(100) NOT NULL,
+  `from_user_id` int(11) NOT NULL,
+  `to_user_id` int(11) NOT NULL,
   `create_time` datetime NOT NULL DEFAULT current_timestamp(),
   PRIMARY KEY (`id`),
-  KEY `follows_users_FK` (`from_user_email_id`),
-  KEY `follows_users_FK_1` (`to_user_email_id`),
-  CONSTRAINT `follows_users_FK` FOREIGN KEY (`from_user_email_id`) REFERENCES `users` (`email_id`),
-  CONSTRAINT `follows_users_FK_1` FOREIGN KEY (`to_user_email_id`) REFERENCES `users` (`email_id`)
+  KEY `follows_users_FK` (`from_user_id`),
+  KEY `follows_users_FK_1` (`to_user_id`),
+  CONSTRAINT `follows_users_FK` FOREIGN KEY (`from_user_id`) REFERENCES `users` (`id`),
+  CONSTRAINT `follows_users_FK_1` FOREIGN KEY (`to_user_id`) REFERENCES `users` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 
@@ -117,12 +118,12 @@ CREATE TABLE `follows` (
 
 CREATE TABLE `notifications` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `user_email_id` varchar(100) NOT NULL,
+  `user_id` int(11) NOT NULL,
   `content` varchar(300) NOT NULL,
   `create_time` datetime DEFAULT current_timestamp(),
   PRIMARY KEY (`id`),
-  KEY `notifications_users_FK` (`user_email_id`),
-  CONSTRAINT `notifications_users_FK` FOREIGN KEY (`user_email_id`) REFERENCES `users` (`email_id`)
+  KEY `notifications_users_FK` (`user_id`),
+  CONSTRAINT `notifications_users_FK` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 
@@ -145,13 +146,13 @@ CREATE TABLE `article_images` (
 CREATE TABLE `article_likes` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `article_id` int(11) NOT NULL,
-  `user_email_id` varchar(100) NOT NULL,
+  `user_id` int(11) NOT NULL,
   `create_time` datetime NOT NULL DEFAULT current_timestamp(),
   PRIMARY KEY (`id`),
   KEY `article_likes_articles_FK` (`article_id`),
-  KEY `article_likes_users_FK` (`user_email_id`),
+  KEY `article_likes_users_FK` (`user_id`),
   CONSTRAINT `article_likes_articles_FK` FOREIGN KEY (`article_id`) REFERENCES `articles` (`id`),
-  CONSTRAINT `article_likes_users_FK` FOREIGN KEY (`user_email_id`) REFERENCES `users` (`email_id`)
+  CONSTRAINT `article_likes_users_FK` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 
@@ -160,13 +161,13 @@ CREATE TABLE `article_likes` (
 CREATE TABLE `article_reports` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `article_id` int(11) NOT NULL,
-  `from_user_email_id` varchar(100) NOT NULL,
+  `from_user_id` int(11) NOT NULL,
   `create_time` datetime NOT NULL DEFAULT current_timestamp(),
   PRIMARY KEY (`id`),
   KEY `article_reports_articles_FK` (`article_id`),
-  KEY `article_reports_users_FK` (`from_user_email_id`),
+  KEY `article_reports_users_FK` (`from_user_id`),
   CONSTRAINT `article_reports_articles_FK` FOREIGN KEY (`article_id`) REFERENCES `articles` (`id`),
-  CONSTRAINT `article_reports_users_FK` FOREIGN KEY (`from_user_email_id`) REFERENCES `users` (`email_id`)
+  CONSTRAINT `article_reports_users_FK` FOREIGN KEY (`from_user_id`) REFERENCES `users` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 
@@ -174,17 +175,17 @@ CREATE TABLE `article_reports` (
 
 CREATE TABLE `articles` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `user_email_id` varchar(100) NOT NULL,
+  `user_id` int(11) NOT NULL,
   `content` varchar(50) DEFAULT NULL,
   `create_time` datetime NOT NULL DEFAULT current_timestamp(),
   `flag_private` int(11) DEFAULT NULL,
   `modify_time` datetime NOT NULL DEFAULT current_timestamp(),
   `room_id` varchar(100) DEFAULT NULL,
   PRIMARY KEY (`id`),
-  KEY `articles_users_FK` (`user_email_id`),
+  KEY `articles_users_FK` (`user_id`),
   KEY `articles_rooms_FK` (`room_id`),
   CONSTRAINT `articles_rooms_FK` FOREIGN KEY (`room_id`) REFERENCES `rooms` (`id`),
-  CONSTRAINT `articles_users_FK` FOREIGN KEY (`user_email_id`) REFERENCES `users` (`email_id`)
+  CONSTRAINT `articles_users_FK` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 
@@ -193,13 +194,13 @@ CREATE TABLE `articles` (
 CREATE TABLE `comment_likes` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `comment_id` int(11) NOT NULL,
-  `user_email_id` varchar(100) NOT NULL,
+  `user_id` int(11) NOT NULL,
   `create_time` datetime NOT NULL DEFAULT current_timestamp(),
   PRIMARY KEY (`id`),
   KEY `comment_likes_comments_FK` (`comment_id`),
-  KEY `comment_likes_users_FK` (`user_email_id`),
+  KEY `comment_likes_users_FK` (`user_id`),
   CONSTRAINT `comment_likes_comments_FK` FOREIGN KEY (`comment_id`) REFERENCES `comments` (`id`),
-  CONSTRAINT `comment_likes_users_FK` FOREIGN KEY (`user_email_id`) REFERENCES `users` (`email_id`)
+  CONSTRAINT `comment_likes_users_FK` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 
@@ -208,20 +209,20 @@ CREATE TABLE `comment_likes` (
 CREATE TABLE `comments` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `article_id` int(11) NOT NULL,
-  `user_email_id` varchar(100) NOT NULL,
+  `user_id` int(11) NOT NULL,
   `comment_id` int(11) DEFAULT NULL,
   `parent_comment_id` int(11) DEFAULT NULL,
   `content` varchar(500) NOT NULL,
   `create_time` datetime NOT NULL DEFAULT current_timestamp(),
   PRIMARY KEY (`id`),
   KEY `comments_articles_FK` (`article_id`),
-  KEY `comments_users_FK` (`user_email_id`),
+  KEY `comments_users_FK` (`user_id`),
   KEY `comments_comments_FK` (`comment_id`),
   KEY `comments_comments_FK_1` (`parent_comment_id`),
   CONSTRAINT `comments_articles_FK` FOREIGN KEY (`article_id`) REFERENCES `articles` (`id`),
   CONSTRAINT `comments_comments_FK` FOREIGN KEY (`comment_id`) REFERENCES `comments` (`id`),
   CONSTRAINT `comments_comments_FK_1` FOREIGN KEY (`parent_comment_id`) REFERENCES `comments` (`id`),
-  CONSTRAINT `comments_users_FK` FOREIGN KEY (`user_email_id`) REFERENCES `users` (`email_id`)
+  CONSTRAINT `comments_users_FK` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 
@@ -234,10 +235,10 @@ CREATE TABLE `daily_missions` (
   `day` int(11) DEFAULT NULL,
   `try` int(11) DEFAULT NULL,
   `flag_success` int(11) DEFAULT NULL,
-  `normal_vote` varchar(100) DEFAULT NULL,
-  `mafia_vote` varchar(100) DEFAULT NULL,
-  `doctor_vote` varchar(100) DEFAULT NULL,
-  `article_id` int(11) NOT NULL,
+  `normal_vote` int(11) DEFAULT NULL,
+  `mafia_vote` int(11) DEFAULT NULL,
+  `doctor_vote` int(11) DEFAULT NULL,
+  `article_id` int(11) default NULL,
   PRIMARY KEY (`id`),
   KEY `daily_missions_users_FK` (`normal_vote`),
   KEY `daily_missions_users_FK_1` (`mafia_vote`),
@@ -248,9 +249,9 @@ CREATE TABLE `daily_missions` (
   CONSTRAINT `daily_missions_articles_FK` FOREIGN KEY (`article_id`) REFERENCES `articles` (`id`),
   CONSTRAINT `daily_missions_missions_FK` FOREIGN KEY (`mission_id`) REFERENCES `missions` (`id`),
   CONSTRAINT `daily_missions_participants_FK` FOREIGN KEY (`participant_id`) REFERENCES `participants` (`id`),
-  CONSTRAINT `daily_missions_users_FK` FOREIGN KEY (`normal_vote`) REFERENCES `users` (`email_id`),
-  CONSTRAINT `daily_missions_users_FK_1` FOREIGN KEY (`mafia_vote`) REFERENCES `users` (`email_id`),
-  CONSTRAINT `daily_missions_users_FK_2` FOREIGN KEY (`doctor_vote`) REFERENCES `users` (`email_id`)
+  CONSTRAINT `daily_missions_users_FK` FOREIGN KEY (`normal_vote`) REFERENCES `users` (`id`),
+  CONSTRAINT `daily_missions_users_FK_1` FOREIGN KEY (`mafia_vote`) REFERENCES `users` (`id`),
+  CONSTRAINT `daily_missions_users_FK_2` FOREIGN KEY (`doctor_vote`) REFERENCES `users` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 
@@ -281,14 +282,14 @@ CREATE TABLE `message_texts` (
 CREATE TABLE `messages` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `room_id` varchar(100) NOT NULL,
-  `user_email_id` varchar(100) NOT NULL,
+  `user_id` int(11) NOT NULL,
   `create_time` datetime NOT NULL DEFAULT current_timestamp(),
   `data_type` varchar(100) NOT NULL,
   PRIMARY KEY (`id`),
-  KEY `messages_users_FK` (`user_email_id`),
+  KEY `messages_users_FK` (`user_id`),
   KEY `messages_rooms_FK` (`room_id`),
   CONSTRAINT `messages_rooms_FK` FOREIGN KEY (`room_id`) REFERENCES `rooms` (`id`),
-  CONSTRAINT `messages_users_FK` FOREIGN KEY (`user_email_id`) REFERENCES `users` (`email_id`)
+  CONSTRAINT `messages_users_FK` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 
@@ -297,7 +298,7 @@ CREATE TABLE `messages` (
 CREATE TABLE `participants` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `room_id` varchar(100) NOT NULL,
-  `user_email_id` varchar(100) NOT NULL,
+  `user_id` int(11) NOT NULL,
   `last_message_id` int(11) DEFAULT NULL,
   `flag_die` int(11) NOT NULL DEFAULT 0,
   `flag_win` int(11) NOT NULL DEFAULT 0,
@@ -305,13 +306,13 @@ CREATE TABLE `participants` (
   `image_url` varchar(300) DEFAULT NULL,
   `nickname` varchar(100) NOT NULL,
   PRIMARY KEY (`id`),
-  KEY `participants_users_FK` (`user_email_id`),
+  KEY `participants_users_FK` (`user_id`),
   KEY `participants_rooms_FK` (`room_id`),
   KEY `participants_jobs_FK` (`job_id`),
   KEY `participants_nickname_images_FK` (`image_url`),
   CONSTRAINT `participants_jobs_FK` FOREIGN KEY (`job_id`) REFERENCES `jobs` (`id`),
   CONSTRAINT `participants_rooms_FK` FOREIGN KEY (`room_id`) REFERENCES `rooms` (`id`),
-  CONSTRAINT `participants_users_FK` FOREIGN KEY (`user_email_id`) REFERENCES `users` (`email_id`)
+  CONSTRAINT `participants_users_FK` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 
@@ -338,13 +339,13 @@ CREATE TABLE `rooms` (
 CREATE TABLE `user_reports` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `participant_id` int(11) NOT NULL,
-  `to_user_email_id` varchar(100) NOT NULL,
+  `to_user_id` int(11) NOT NULL,
   `create_time` datetime NOT NULL DEFAULT current_timestamp(),
   PRIMARY KEY (`id`),
   KEY `reports_participants_FK` (`participant_id`),
-  KEY `reports_users_FK` (`to_user_email_id`),
+  KEY `reports_users_FK` (`to_user_id`),
   CONSTRAINT `reports_participants_FK` FOREIGN KEY (`participant_id`) REFERENCES `participants` (`id`),
-  CONSTRAINT `reports_users_FK` FOREIGN KEY (`to_user_email_id`) REFERENCES `users` (`email_id`)
+  CONSTRAINT `reports_users_FK` FOREIGN KEY (`to_user_id`) REFERENCES `users` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 SET FOREIGN_KEY_CHECKS=1;
