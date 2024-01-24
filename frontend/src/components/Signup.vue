@@ -54,6 +54,7 @@
 
 <script>
 import axios from 'axios'
+import router from '@/router'
 
 
 export default {
@@ -135,6 +136,7 @@ export default {
             })
             .then(result=>{
                 console.log(result,"성공")
+                router.push('/login')
             })
             .catch(err => {
                 console.log(err)
