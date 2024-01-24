@@ -66,10 +66,10 @@ public class ChatController {
 
     private final ChatService chatService;
 
-    @Operation(summary = "일대일 채팅방 단 건 조회", description = "일대일 채팅방 단 건 조회")
+    @Operation(summary = "일대일 채팅방 생성 및 조회", description = "일대일 채팅방 생성 및 조회")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "일대일 채팅방 단 건 조회 성공", content = @Content),
-            @ApiResponse(responseCode = "400", description = "일대일 채팅방 단 건 조회 실패", content = @Content) })
+            @ApiResponse(responseCode = "200", description = "일대일 채팅방 생성 및 조회 성공", content = @Content),
+            @ApiResponse(responseCode = "400", description = "일대일 채팅방 생성 및 조회 실패", content = @Content) })
     @PostMapping("/personal")
     public ResponseEntity<?> getPersonalRoom(@Valid HttpServletRequest request, @RequestBody OpponentDto opponentDto) {
         log.info("getPersonalRoom() -> Start");
