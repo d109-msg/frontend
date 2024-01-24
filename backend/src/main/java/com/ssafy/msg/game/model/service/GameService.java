@@ -6,11 +6,11 @@ import com.ssafy.msg.game.model.dto.*;
 import java.util.List;
 
 public interface GameService {
-    void applyRandomGame(String emailId) throws Exception;
+    void applyRandomGame(int userId) throws Exception;
 
     boolean isParticipantInRoom(EnterGroupRoomDto enterGroupRoomDto) throws Exception;
 
-    RoomDto createEnterGroupRoom(String emailId) throws Exception;
+    RoomDto createEnterGroupRoom(int userId) throws Exception;
 
     RoomDto enterGroupRoom(EnterGroupRoomDto enterGroupRoomDto) throws Exception;
 
@@ -22,11 +22,11 @@ public interface GameService {
 
     List<String> getJobs(int num);
 
-    List<RoomDto> getUserRooms(String userEmail) throws Exception;
+    List<RoomDto> getUserRooms(int userId) throws Exception;
 
-    List<VoteResultDto> getRoomVote(String userEmail, String roomId) throws Exception;
+    List<VoteResultDto> getRoomVote(int userId, String roomId) throws Exception;
 
-    ParticipantDto getParticipant(String userEmail, String roomId) throws Exception;
+    ParticipantDto getParticipant(int userId, String roomId) throws Exception;
 
     List<ParticipantDto> getAliveParticipant(String roomId) throws Exception;
 

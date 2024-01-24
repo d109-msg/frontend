@@ -133,22 +133,27 @@ public class UserController {
 			Oauth2Dto oauth2Dto = oauth2Util.getUserInfo(oauth2AccessToken);
 			log.info("signInWithOauth2() -> Receive oauth2Dto : {}", oauth2Dto);
 
-			String accessToken = jwtUtil.createAccessToken(oauth2Dto.getEmailId());
-			log.info("signInWithOauth2() -> Create accessToken : {}", accessToken);
-			String refreshToken = jwtUtil.createRefreshToken(oauth2Dto.getEmailId());
-			log.info("signInWithOauth2() -> Create refreshToken : {}", refreshToken);
-
 			UserDto userDto = userService.findUserByEmailId(oauth2Dto.getEmailId());
-
-			oauth2Dto.setRefreshToken(refreshToken);
+			
+			int newFlag = 0;
 			if (userDto == null) {
-				userService.signUpWithOauth2(oauth2Dto);
+				userDto = UserDto.builder().nickname(oauth2Dto.getNickname()).emailId(oauth2Dto.getEmailId())
+						.provider(provider).build();
+				newFlag = 1;			
 			} else {
 				if (!provider.equals(userDto.getProvider())) {
 					throw new UserDuplicateException();
 				}
-				userService.signInWithOauth2(oauth2Dto);
 			}
+			userDto.setFlagNew(newFlag);
+			
+			String accessToken = jwtUtil.createAccessToken(userDto.getId());
+			log.info("signInWithOauth2() -> Create accessToken : {}", accessToken);
+			String refreshToken = jwtUtil.createRefreshToken(userDto.getId());
+			log.info("signInWithOauth2() -> Create refreshToken : {}", refreshToken);
+			userDto.setRefreshToken(refreshToken);
+			System.out.println(userDto);
+			userService.signInWithOauth2(userDto);
 
 			TokenDto tokenDto = TokenDto.builder().accessToken(accessToken).refreshToken(refreshToken).build();
 			HttpStatus httpStauts = HttpStatus.CREATED;
@@ -205,9 +210,9 @@ public class UserController {
 		}
 
 		try {
-			String accessToken = jwtUtil.createAccessToken(userDto.getEmailId());
+			String accessToken = jwtUtil.createAccessToken(userDto.getId());
 			log.info("signIn() -> Create accessToken : {}", accessToken);
-			String refreshToken = jwtUtil.createRefreshToken(userDto.getEmailId());
+			String refreshToken = jwtUtil.createRefreshToken(userDto.getId());
 			log.info("signIn() -> Create refreshToken : {}", refreshToken);
 
 			userDto.setRefreshToken(refreshToken);
@@ -241,11 +246,11 @@ public class UserController {
 		String refreshToken = header.replace("Bearer ", "");
 		jwtUtil.verify(refreshToken, "refresh-token");
 
-		String emailId = jwtUtil.getEmailId(refreshToken);
+		int id = jwtUtil.getId(refreshToken);
 
 		UserDto userDto = null;
 		try {
-			userDto = userService.findUserByEmailId(emailId);
+			userDto = userService.findUserById(id);
 		} catch (Exception e) {
 			throw new UserNotFoundException();
 		}
@@ -255,7 +260,7 @@ public class UserController {
 			throw new TokenInvalidException();
 		}
 
-		String accessToken = jwtUtil.createAccessToken(emailId);
+		String accessToken = jwtUtil.createAccessToken(id);
 		AccessTokenDto accessTokenDto = AccessTokenDto.builder().accessToken(accessToken).build();
 
 		log.info("reissueAccessToken() -> Success");
@@ -272,11 +277,11 @@ public class UserController {
 	public ResponseEntity<?> getUserInfo(HttpServletRequest request) {
 		log.info("getUserInfo() -> Start");
 
-		String emailId = (String) request.getAttribute("emailId");
+		int id = (int) request.getAttribute("id");
 
 		UserInfoDto userInfoDto = null;
 		try {
-			userInfoDto = userService.getUserInfo(emailId);
+			userInfoDto = userService.getUserInfo(id);
 			System.out.println(userInfoDto);
 			log.info("getUserInfo() -> Success");
 			return new ResponseEntity<>(userInfoDto, HttpStatus.OK);
@@ -295,10 +300,10 @@ public class UserController {
 	public ResponseEntity<?> signOut(HttpServletRequest request) {
 		log.info("signOut() -> Start");
 
-		String emailId = (String) request.getAttribute("emailId");
+		int id = (int) request.getAttribute("id");
 
 		try {
-			userService.signOut(emailId);
+			userService.signOut(id);
 			log.info("signOut() -> Success");
 			return new ResponseEntity<>(HttpStatus.OK);
 		} catch (Exception e) {
@@ -316,10 +321,10 @@ public class UserController {
 	public ResponseEntity<?> withdraw(HttpServletRequest request) {
 		log.info("withdraw() -> Start");
 
-		String emailId = (String) request.getAttribute("emailId");
+		int id = (int) request.getAttribute("id");
 
 		try {
-			userService.withdraw(emailId);
+			userService.withdraw(id);
 			log.info("withdraw() -> Success");
 			return new ResponseEntity<>(HttpStatus.OK);
 		} catch (Exception e) {
@@ -338,8 +343,8 @@ public class UserController {
 		log.info("updateNickname() -> Start");
 		log.info("updateNickname() -> Receive updateDto : {}", nicknameDto);
 
-		String emailId = (String) request.getAttribute("emailId");
-		UserDto userDto = UserDto.builder().emailId(emailId).nickname(nicknameDto.getNickname()).build();
+		int id = (int) request.getAttribute("id");
+		UserDto userDto = UserDto.builder().id(id).nickname(nicknameDto.getNickname()).build();
 
 		try {
 			userService.updateNickname(userDto);
@@ -361,11 +366,11 @@ public class UserController {
 		log.info("updateIdentifier() -> Start");
 		log.info("updateIdentifier() -> Receive updateDto : {}", identifierDto);
 
-		String emailId = (String) request.getAttribute("emailId");
+		int id = (int) request.getAttribute("id");
 
 		UserDto userDto = null;
 		try {
-			userDto = userService.findUserByEmailId(emailId);
+			userDto = userService.findUserById(id);
 		} catch (Exception e) {
 			log.error("updateIdentifier() -> Exception : {}", e);
 			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
@@ -397,11 +402,11 @@ public class UserController {
 		log.info("updatePassword() -> Start");
 		log.info("updatePassword() -> Receive updatePasswordDto : {}", updatePasswordDto);
 
-		String emailId = (String) request.getAttribute("emailId");
+		int id = (int) request.getAttribute("id");
 
 		UserDto userDto = null;
 		try {
-			userDto = userService.findUserByEmailId(emailId);
+			userDto = userService.findUserById(id);
 			userService.updatePassword(updatePasswordDto, userDto);
 			log.info("updatePassword() -> Success");
 			return new ResponseEntity<>(HttpStatus.OK);
@@ -421,7 +426,7 @@ public class UserController {
 		log.info("updateImage() -> Start");
 		log.info("updateImage() -> Receive imageFile : {}", imageFile);
 
-		String emailId = (String) request.getAttribute("emailId");
+		int id = (int) request.getAttribute("id");
 		try {
 			String imageUuid = s3Util.saveFile(imageFile);
 			log.info("updateImage() -> Receive imageUuid : {}", imageUuid);
@@ -429,7 +434,7 @@ public class UserController {
 			log.info("updateImage() -> Receive imageUrl : {}", imageUrl);
 
 			ProfileImageDto profileImageDto = ProfileImageDto.builder().imageUuid(imageUuid).imageUrl(imageUrl)
-					.emailId(emailId).build();
+					.id(id).build();
 			userService.updateImage(profileImageDto);
 			log.info("updateImage() -> Success");
 			return new ResponseEntity<>(HttpStatus.OK);
@@ -447,7 +452,7 @@ public class UserController {
 	@PostMapping("/password/reset")
 	public ResponseEntity<?> resetPassword(@RequestBody ResetPasswordDto resetPasswordDto) {
 		log.info("resetPassword() -> Start");
-		log.info("resetPassword() -> Receive emailId : {}", resetPasswordDto.getEmailId());
+		log.info("resetPassword() -> Receive getId : {}", resetPasswordDto.getEmailId());
 
 		try {
 			UserDto userDto = userService.findUserByEmailId(resetPasswordDto.getEmailId());
@@ -480,14 +485,14 @@ public class UserController {
 		log.info("followOrUnfollow() -> Start");
 		log.info("followOrUnfollow() -> Receive followDto : {}", followDto);
 
-		String emailId = (String) request.getAttribute("emailId");
-		if (emailId.equals(followDto.getEmailId())) {
+		int id = (int) request.getAttribute("id");
+		if (id == followDto.getId()) {
 			throw new FollowException();
 		}
 
 		try {
-			FollowDetailDto followDetailDto = FollowDetailDto.builder().fromUserEmailId(emailId)
-					.toUserEmailId(followDto.getEmailId()).build();
+			FollowDetailDto followDetailDto = FollowDetailDto.builder().fromUserId(id)
+					.toUserId(followDto.getId()).build();
 			FollowFindDto followFindDto = userService.findFollow(followDetailDto);
 
 			if (followFindDto == null) {
@@ -526,7 +531,7 @@ public class UserController {
 
 	    // Use lastItemId to determine the starting point for the next batch
 	    FollowParamDto followParamDto = FollowParamDto.builder()
-	            .emailId((String) request.getAttribute("emailId"))
+	            .id((int) request.getAttribute("id"))
 	            .keyword(keyword)
 	            .offset(offset)
 	            .limit(limit)

@@ -249,9 +249,9 @@ CREATE TABLE `daily_missions` (
   CONSTRAINT `daily_missions_articles_FK` FOREIGN KEY (`article_id`) REFERENCES `articles` (`id`),
   CONSTRAINT `daily_missions_missions_FK` FOREIGN KEY (`mission_id`) REFERENCES `missions` (`id`),
   CONSTRAINT `daily_missions_participants_FK` FOREIGN KEY (`participant_id`) REFERENCES `participants` (`id`),
-  CONSTRAINT `daily_missions_users_FK` FOREIGN KEY (`normal_vote`) REFERENCES `users` (`id`),
-  CONSTRAINT `daily_missions_users_FK_1` FOREIGN KEY (`mafia_vote`) REFERENCES `users` (`id`),
-  CONSTRAINT `daily_missions_users_FK_2` FOREIGN KEY (`doctor_vote`) REFERENCES `users` (`id`)
+  CONSTRAINT `daily_missions_users_FK` FOREIGN KEY (`normal_vote`) REFERENCES `participants` (`id`),
+  CONSTRAINT `daily_missions_users_FK_1` FOREIGN KEY (`mafia_vote`) REFERENCES `participants` (`id`),
+  CONSTRAINT `daily_missions_users_FK_2` FOREIGN KEY (`doctor_vote`) REFERENCES `participants` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 

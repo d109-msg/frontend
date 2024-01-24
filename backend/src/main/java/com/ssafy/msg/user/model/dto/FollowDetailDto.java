@@ -10,6 +10,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class FollowDetailDto {
-	private String fromUserEmailId;
-	private String toUserEmailId;
+	private int fromUserId;
+	private int toUserId;
 }

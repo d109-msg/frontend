@@ -15,8 +15,8 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class FollowParamDto {
 	
-	@Schema(description = "회원 아이디")
-	private String emailId;
+	@Schema(description = "아이디 번호")
+	private int id;
 
 	@Schema(description = "키워드")
 	private String keyword;

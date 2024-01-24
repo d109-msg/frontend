@@ -1,6 +1,5 @@
 package com.ssafy.msg.user.interceptor;
 
-import java.util.Enumeration;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
@@ -39,8 +38,8 @@ public class UserInterceptor implements HandlerInterceptor {
 		String accessToken = header.replace("Bearer ", "");
 		jwtUtil.verify(accessToken, "access-token");
 		
-		String emailId = jwtUtil.getEmailId(accessToken);
-		request.setAttribute("emailId", emailId);
+		int id = jwtUtil.getId(accessToken);
+		request.setAttribute("id", id);
 		log.info("preHandle() -> End");
 		return true;
 	}
