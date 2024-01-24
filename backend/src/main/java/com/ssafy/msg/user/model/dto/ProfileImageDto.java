@@ -21,6 +21,6 @@ public class ProfileImageDto {
 	@Schema(description = "프로필 이미지 url", nullable = false)
 	private String imageUrl;
 	
-	@Schema(description = "이메일 아이디", nullable = false)
-	private String emailId;
+	@Schema(description = "아이디 번호", nullable = false)
+	private int id;
 }

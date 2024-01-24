@@ -1,8 +1,9 @@
 package com.ssafy.msg.article.model.service;
 
-import com.ssafy.msg.article.model.dto.ArticleCreateDto;
+import com.ssafy.msg.article.model.dto.ArticleDetailDto;
 import com.ssafy.msg.article.model.dto.ArticleDto;
 import com.ssafy.msg.article.model.dto.ArticleImageDto;
+import com.ssafy.msg.article.model.dto.ArticleWithUrlDto;
 import com.ssafy.msg.article.model.mapper.ArticleMapper;
 import com.ssafy.msg.article.util.S3Util;
 import lombok.RequiredArgsConstructor;
@@ -10,11 +11,15 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Service
 @RequiredArgsConstructor
 @Slf4j
 public class ArticleServiceImpl implements ArticleService{
     private final ArticleMapper articleMapper;
+
 
     private final S3Util s3Util;
 
@@ -55,4 +60,31 @@ public class ArticleServiceImpl implements ArticleService{
 
     }
 
+    @Override
+    public List<ArticleWithUrlDto> getArticles(int userId) throws Exception {
+        log.info("(ArticleServiceImpl) 게시물조회 시작");
+        return articleMapper.getArticles(userId);
+
+    }
+
+    @Override
+    public ArticleDetailDto getArticleDetail(int articleId) throws Exception {
+        log.info("(ArticleServiceImpl) getArticleDetail 시작(이미지 제외)");
+        ArticleDetailDto articleDetailDto = articleMapper.getArticleDetail(articleId);
+        List<String> urls = new ArrayList<>();
+        for (ArticleImageDto ai : articleMapper.getArticleImages(articleId)) {
+            urls.add(ai.getUrl());
+        }
+        articleDetailDto.setUrls(urls);
+
+        return articleDetailDto;
+
+    }
+
+    @Override
+    public List<ArticleDetailDto> getFeedArticleList(int userId) throws Exception {
+        log.info("(ArticleServiceImpl) 피드 게시물 리스트 조회 시작");
+        return articleMapper.getFeedArticleList(userId);
+
+    }
 }

@@ -6,7 +6,7 @@
 
 	<select id="findUserByEmailId" parameterType="string"
 		resultType="UserDto">
-		select email_id, email_password, nickname, provider,
+		select id, email_id, email_password, nickname, provider,
 		identifier, flag_admin, refresh_token, sign_in_time, sign_up_time,
 		flag_private, flag_identifier, image_url, image_uuid
 		from users
@@ -15,31 +15,45 @@
 		#{emailId}
 	</select>
 
-	<select id="getUserInfo" parameterType="string"
-		resultType="UserInfoDto">
-		select nickname, email_id, provider,
-		identifier, flag_admin,
-		sign_in_time, sign_up_time,
-		flag_private, flag_identifier, image_url,
-		image_uuid
+	<select id="findUserById" parameterType="int"
+		resultType="UserDto">
+		select id, email_id, email_password, nickname, provider,
+		identifier, flag_admin, refresh_token, sign_in_time, sign_up_time,
+		flag_private, flag_identifier, image_url, image_uuid
 		from users
-		where email_id =
-		#{emailId}
+		where
+		id
+		=
+		#{id}
 	</select>
 
-	<insert id="signUpWithOauth2" parameterType="Oauth2Dto">
+	<select id="getUserInfo" parameterType="int"
+		resultType="UserInfoDto">
+		select id, nickname, email_id, provider,
+		identifier,
+		flag_admin,
+		sign_in_time, sign_up_time,
+		flag_private, flag_identifier,
+		image_url,
+		image_uuid
+		from users
+		where id =
+		#{id}
+	</select>
+
+	<insert id="signUpWithOauth2" parameterType="UserDto">
 		insert into users
-		(nickname, email_id, provider, refresh_token, sign_in_time) values
-		(#{nickname},
-		#{emailId},
-		#{provider}, #{refreshToken}, now())
+		(nickname, email_id, provider, refresh_token, sign_in_time, sign_up_time)
+		values
+		(#{nickname}, #{emailId}, #{provider}, #{refreshToken}, now(), now())
 	</insert>
 
-	<update id="signInWithOauth2" parameterType="map">
+	<update id="signInWithOauth2" parameterType="UserDto">
 		update users set
-		refresh_token = #{refreshToken}, sign_in_time = now()
-		where email_id =
-		#{emailId}
+		refresh_token = #{refreshToken},
+		sign_in_time = now()
+		where id =
+		#{id}
 	</update>
 
 	<insert id="signUp" parameterType="SignUpDto">
@@ -56,63 +70,63 @@
 		where email_id = #{emailId}
 	</update>
 
-	<update id="signOut" parameterType="string">
+	<update id="signOut" parameterType="int">
 		update users set
-		refresh_token = null where email_id = #{emailId}
+		refresh_token = null where id = #{id}
 	</update>
 
-	<delete id="withdraw" parameterType="string">
+	<delete id="withdraw" parameterType="int">
 		delete from users where
-		email_id = #{emailId}
+		id =
+		#{id}
 	</delete>
 
 	<update id="updateNickname" parameterType="UserDto">
 		update users set
 		nickname = #{nickname}
-		where email_id = #{emailId}
+		where id = #{id}
 	</update>
 
 	<update id="updatePassword" parameterType="UserDto">
 		update users set
 		email_password = #{emailPassword}
-		where email_id = #{emailId}
+		where id = #{id}
 	</update>
 
 	<update id="updateIdentifier" parameterType="UserDto">
 		update users set
 		identifier = #{identifier}, flag_identifier = #{flagIdentifier}
 		where
-		email_id = #{emailId}
+		id = #{id}
 	</update>
 
 	<update id="updateImage" parameterType="ProfileImageDto">
 		update users set
 		image_url = #{imageUrl}, image_uuid = #{imageUuid}
-		where email_id =
-		#{emailId}
+		where id = #{id}
 	</update>
 
 	<insert id="follow" parameterType="FollowDetailDto">
 		insert into follows
-		(from_user_email_id, to_user_email_id) values
-		(#{fromUserEmailId},
-		#{toUserEmailId})
+		(from_user_id, to_user_id) values
+		(#{fromUserId},
+		#{toUserId})
 	</insert>
 
 	<select id="findFollow" parameterType="FollowDetailDto"
 		resultType="FollowFindDto">
-		select id, from_user_email_id, to_user_email_id
+		select id, from_user_id, to_user_id
 		from follows
-		where from_user_email_id = #{fromUserEmailId}
-		and to_user_email_id =
-		#{toUserEmailId}
+		where
+		from_user_id = #{fromUserId}
+		and to_user_id = #{toUserId}
 	</select>
 
 	<delete id="unfollow" parameterType="FollowDetailDto">
 		delete from follows where
-		from_user_email_id = #{fromUserEmailId}
-		and to_user_email_id =
-		#{toUserEmailId}
+		from_user_id = #{fromUserId}
+		and to_user_id =
+		#{toUserId}
 	</delete>
 
 	<select id="getFollowList" parameterType="FollowParamDto"
@@ -124,11 +138,12 @@
 				f.id
 				from follows f
 				join users u on
-				f.from_user_email_id = u.email_id
-				where f.to_user_email_id =
-				#{emailId}
+				f.from_user_id = u.id
+				where f.to_user_id =
+				#{id}
 				and f.id > #{offset}
-				and u.nickname like concat('%', #{keyword}, '%')
+				and u.nickname like concat('%',
+				#{keyword}, '%')
 				order by f.id asc
 				limit #{limit}
 			</when>
@@ -138,11 +153,12 @@
 				f.id
 				from follows f
 				join users u on
-				f.to_user_email_id = u.email_id
-				where f.from_user_email_id =
-				#{emailId}
+				f.to_user_id = u.id
+				where f.from_user_id =
+				#{id}
 				and f.id > #{offset}
-				and u.nickname like concat('%', #{keyword}, '%')
+				and u.nickname like concat('%',
+				#{keyword}, '%')
 				order by f.id asc
 				limit #{limit}
 			</when>

@@ -26,8 +26,8 @@ public class GameServiceImpl implements GameService{
     private final UserMapper userMapper;
 
     @Override
-    public void applyRandomGame(String emailId) throws Exception {
-        UserDto user = userMapper.findUserByEmailId(emailId);
+    public void applyRandomGame(int userId) throws Exception {
+        UserDto user = userMapper.findUserByEmailId(userId);
         gameMapper.applyRandomGame(user);
     }
 
@@ -38,8 +38,8 @@ public class GameServiceImpl implements GameService{
     }
 
     @Override
-    public RoomDto createEnterGroupRoom(String emailId) throws Exception {
-        UserDto user = userMapper.findUserByEmailId(emailId);
+    public RoomDto createEnterGroupRoom(int userId) throws Exception {
+        UserDto user = userMapper.findUserByEmailId(userId);
 
         String roomId = UUID.randomUUID().toString();
 
@@ -56,7 +56,7 @@ public class GameServiceImpl implements GameService{
 
         ParticipantDto participant = ParticipantDto.builder()
                 .roomId(roomId)
-                .userEmailId(emailId)
+                .userId(userId)
                 .imageUrl(user.getImageUrl())
                 .nickname(user.getNickname())
                 .build();
@@ -72,11 +72,11 @@ public class GameServiceImpl implements GameService{
         RoomDto roomDto = chatMapper.getRoom(enterGroupRoomDto.getRoomId());
 
         if (roomDto != null){
-            UserDto user = userMapper.findUserByEmailId(enterGroupRoomDto.getEmailId());
+            UserDto user = userMapper.findUserByEmailId(enterGroupRoomDto.getUserId());
 
             ParticipantDto participant = ParticipantDto.builder()
                     .roomId(enterGroupRoomDto.getRoomId())
-                    .userEmailId(user.getEmailId())
+                    .userId(user.getId())
                     .imageUrl(user.getImageUrl())
                     .nickname(user.getNickname())
                     .build();
@@ -132,7 +132,7 @@ public class GameServiceImpl implements GameService{
         for(int i = 0; i  < numOfPlayers; i++) {
             ParticipantDto participant = ParticipantDto.builder()
                     .roomId(roomId)
-                    .userEmailId(roomStartReceiveDto.getUserList().get(i))
+                    .userId(roomStartReceiveDto.getUserList().get(i))
                     .nickname(randomNicknames.get(i).getFirstName() + " " + randomNicknames.get(i).getLastName())
                     .jobId(randomJobs.get(i))
                     .imageUrl(randomNicknames.get(i).getImgUrl())
@@ -173,23 +173,23 @@ public class GameServiceImpl implements GameService{
 
     /**
      * user email을 입력받아 user의 rooms 중, type이 "랜덤", "그룹"인 게임방 리스틀 리턴
-     * @param userEmail
+     * @param userId 유저 id
      * @return Rooms list를 반환
      */
     @Override
-    public List<RoomDto> getUserRooms(String userEmail) throws Exception{
-        return gameMapper.getUserRooms(userEmail);
+    public List<RoomDto> getUserRooms(int userId) throws Exception{
+        return gameMapper.getUserRooms(userId);
     }
 
     /**
      * roomId와 userEmail을 입력받아 해당 방의 유저가 지금 볼 수 있는 투표 현황을 리턴한다.
-     * @param userEmail 유저의 email
+     * @param userId 유저의 id
      * @param roomId roomId
      * @return 모든 유저가 각 몇 표를 받았는지의 정보가 담긴 list return
      */
     @Override
-    public List<VoteResultDto> getRoomVote(String userEmail, String roomId) throws Exception {
-        ParticipantDto participantDto = gameMapper.getParticipant(new ParticipantReceiveDto(userEmail, roomId));
+    public List<VoteResultDto> getRoomVote(int userId, String roomId) throws Exception {
+        ParticipantDto participantDto = gameMapper.getParticipant(new ParticipantReceiveDto(userId, roomId));
 
         String job = participantDto.getJobId();
         List<VoteResultDto> list = gameMapper.getRoomVote(roomId);
@@ -224,18 +224,18 @@ public class GameServiceImpl implements GameService{
 
     /**
      * userEmail과 roomId를 입력받아 해당 유저의 participant를 리턴
-     * @param userEmail
-     * @param roomId
+     * @param userId 유저  id
+     * @param roomId 룸 id
      * @return participant 리턴
      */
     @Override
-    public ParticipantDto getParticipant(String userEmail, String roomId) throws Exception {
-        return gameMapper.getParticipant(new ParticipantReceiveDto(userEmail, roomId));
+    public ParticipantDto getParticipant(int userId, String roomId) throws Exception {
+        return gameMapper.getParticipant(new ParticipantReceiveDto(userId, roomId));
     }
 
     /**
      * roomId를 입력받아 살아있는 participant 리스트를 리턴
-     * @param roomId
+     * @param roomId roomId
      * @return list participantList
      * @throws Exception
      */
@@ -249,18 +249,18 @@ public class GameServiceImpl implements GameService{
         if(getTime()){
             //낮 08:00 - 20:00
             //시민 투표
-            log.info("vote() -> normalVote : {}", voteReceiveDto.getTargetEmail());
-            gameMapper.normalVote(voteReceiveDto.getParticipantId(), voteReceiveDto.getTargetEmail());
+            log.info("vote() -> normalVote : {}", voteReceiveDto.getTargetId());
+            gameMapper.normalVote(voteReceiveDto.getParticipantId(), voteReceiveDto.getTargetId());
         } else {
             //밤
             if (voteReceiveDto.getJobId().equals("마피아")){
                 //마피아 투표
-                log.info("vote() -> mafiaVote : {}", voteReceiveDto.getTargetEmail());
-                gameMapper.mafiaVote(voteReceiveDto.getParticipantId(), voteReceiveDto.getTargetEmail());
+                log.info("vote() -> mafiaVote : {}", voteReceiveDto.getTargetId());
+                gameMapper.mafiaVote(voteReceiveDto.getParticipantId(), voteReceiveDto.getTargetId());
             } else if(voteReceiveDto.getJobId().equals("의사")){
                 //의사 투표
-                log.info("vote() -> doctorVote : {}", voteReceiveDto.getTargetEmail());
-                gameMapper.doctorVote(voteReceiveDto.getParticipantId(), voteReceiveDto.getTargetEmail());
+                log.info("vote() -> doctorVote : {}", voteReceiveDto.getTargetId());
+                gameMapper.doctorVote(voteReceiveDto.getParticipantId(), voteReceiveDto.getTargetId());
             }
         }
     }

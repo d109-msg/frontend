@@ -12,7 +12,7 @@ import lombok.NoArgsConstructor;
 public class ParticipantDto {
     private Integer id;
     private String roomId;
-    private String userEmailId;
+    private Integer userId;
     private Integer lastMessageId;
     private Integer flagDie;
     private Integer flagWin;

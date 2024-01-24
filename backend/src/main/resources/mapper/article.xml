@@ -7,7 +7,7 @@
 
     <insert id="createArticle" parameterType="ArticleCreateDto" useGeneratedKeys="true" keyProperty="id">
         insert into articles
-            (user_email_id, content, create_time, flag_private, modify_time, room_id)
+            (user_id, content, create_time, flag_private, modify_time, room_id)
         values ( #{userEmailId}, #{content}, now(), #{flagPrivate}, now(), #{roomId});
 
     </insert>
@@ -19,5 +19,44 @@
 
     </insert>
 
+    <select id="getArticles" parameterType="string" resultType="ArticleWithUrlDto" >
+        select a.id as article_id, a.user_id, a.create_time, a.flag_private, a.modify_time, a.room_id, ai.url
+        from articles a
+        left join (
+            select article_id, MIN(id) as min_id
+            from article_images
+            group by article_id
+        ) as sub_ai on a.id = sub_ai.article_id
+        left join article_images ai on sub_ai.min_id = ai.id
+        where a.user_id = #{emailId};
+
+    </select>
+
+    <select id="getArticleDetail" parameterType="int" resultType="ArticleDetailDto">
+        select a.id as article_id, a.user_id, a.content, a.create_time, a.flag_private, a.modify_time, a.room_id
+        from articles a
+        where a.id = #{articleId};
+    </select>
+
+    <select id="getArticleImages" parameterType="int" resultType="ArticleImageDto">
+        select *
+        from article_images
+        where article_id = #{articleId}
+        order by id;
+
+    </select>
+
+    <select id="getFeedArticleList" parameterType="int" resultType="ArticleDetailDto">
+        select *
+        from articles a
+        left join article_images ai on a.id = ai.article_id
+        where a.user_id in (
+            select f.from_user_id
+            from follows f
+            where f.id = #{userId}
+            )
+        order by a.create_time desc;
+
+    </select>
 
 </mapper>

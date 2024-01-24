@@ -10,6 +10,6 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Builder
 public class ParticipantReceiveDto {
-    private String userEmail;
+    private int userId;
     private String roomId;
 }
