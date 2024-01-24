@@ -2,6 +2,7 @@ package com.ssafy.msg.user.interceptor;
 
 
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpMethod;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.HandlerInterceptor;
 
@@ -28,6 +29,11 @@ public class UserInterceptor implements HandlerInterceptor {
 			throws Exception {
 		
 		log.info("preHandle() -> Start");
+		
+		// CORS preflight 요청은 통과
+		if (HttpMethod.OPTIONS.matches(request.getMethod())) {
+		    return true;
+		}
 		
 		String header = request.getHeader(authorization);
 		if (header == null || !header.startsWith("Bearer ")) {
