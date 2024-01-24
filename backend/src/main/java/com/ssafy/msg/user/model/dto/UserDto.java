@@ -10,6 +10,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class UserDto {
+	private int id;
 	private String emailId;
 	private String emailPassword;
 	private String nickname;
@@ -23,4 +24,5 @@ public class UserDto {
 	private int flagIdentifier;
 	private String imageUrl;
 	private String imageUuid;
+	private int flagNew;
 }

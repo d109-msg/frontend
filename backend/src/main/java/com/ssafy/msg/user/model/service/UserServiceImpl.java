@@ -38,13 +38,8 @@ public class UserServiceImpl implements UserService {
 	}
 
 	@Override
-	public void signUpWithOauth2(Oauth2Dto oauth2Dto) throws Exception {
-		userMapper.signUpWithOauth2(oauth2Dto);
-	}
-
-	@Override
-	public void signInWithOauth2(Oauth2Dto oauth2Dto) throws Exception {
-		userMapper.signInWithOauth2(oauth2Dto);
+	public void signInWithOauth2(UserDto userDto) throws Exception {
+		userMapper.signInWithOauth2(userDto);
 	}
 
 	@Override
@@ -64,18 +59,18 @@ public class UserServiceImpl implements UserService {
 	}
 
 	@Override
-	public void signOut(String emailId) throws Exception {
-		userMapper.signOut(emailId);
+	public void signOut(int id) throws Exception {
+		userMapper.signOut(id);
 	}
 
 	@Override
-	public void withdraw(String emailId) throws Exception {
-		userMapper.withdraw(emailId);
+	public void withdraw(int id) throws Exception {
+		userMapper.withdraw(id);
 	}
 
 	@Override
-	public UserInfoDto getUserInfo(String emailId) throws Exception {
-		return userMapper.getUserInfo(emailId);
+	public UserInfoDto getUserInfo(int id) throws Exception {
+		return userMapper.getUserInfo(id);
 	}
 
 	@Override
@@ -131,5 +126,10 @@ public class UserServiceImpl implements UserService {
 	@Override
 	public List<FollowUserDto> getFollowList(FollowParamDto followParamDto) throws Exception {
 		return userMapper.getFollowList(followParamDto);
+	}
+
+	@Override
+	public UserDto findUserById(int id) throws Exception {
+		return userMapper.findUserById(id);
 	}
 }

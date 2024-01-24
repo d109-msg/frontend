@@ -9,7 +9,6 @@ import com.ssafy.msg.user.model.dto.FollowDetailDto;
 import com.ssafy.msg.user.model.dto.FollowFindDto;
 import com.ssafy.msg.user.model.dto.FollowParamDto;
 import com.ssafy.msg.user.model.dto.FollowUserDto;
-import com.ssafy.msg.user.model.dto.Oauth2Dto;
 import com.ssafy.msg.user.model.dto.ProfileImageDto;
 import com.ssafy.msg.user.model.dto.SignUpDto;
 import com.ssafy.msg.user.model.dto.UserDto;
@@ -20,19 +19,17 @@ public interface UserMapper {
 
 	UserDto findUserByEmailId(String emailId) throws SQLException;
 
-	void signUpWithOauth2(Oauth2Dto oauth2Dto) throws SQLException;
-
-	void signInWithOauth2(Oauth2Dto oauth2Dto) throws SQLException;
+	void signInWithOauth2(UserDto userDto) throws SQLException;
 
 	void signUp(SignUpDto signUpDto) throws SQLException;
 
 	void signIn(UserDto userDto) throws SQLException;
 
-	void signOut(String emailId) throws SQLException;
+	void signOut(int id) throws SQLException;
 
-	void withdraw(String emailId) throws SQLException;
+	void withdraw(int id) throws SQLException;
 
-	UserInfoDto getUserInfo(String emailId) throws SQLException;
+	UserInfoDto getUserInfo(int id) throws SQLException;
 
 	void updateNickname(UserDto userDto) throws SQLException;
 
@@ -49,4 +46,6 @@ public interface UserMapper {
 	void unfollow(FollowDetailDto followDetailDto) throws SQLException;
 
 	List<FollowUserDto> getFollowList(FollowParamDto followParamDto) throws SQLException;
+
+	UserDto findUserById(int id) throws SQLException;
 }
