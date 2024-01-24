@@ -12,7 +12,7 @@ import lombok.NoArgsConstructor;
 public class MessageDto {
     private int id;
     private String roomId;
-    private String userId;
+    private int userId;
     private String noticeType;
     private String sendTime;
     private String dataType;
