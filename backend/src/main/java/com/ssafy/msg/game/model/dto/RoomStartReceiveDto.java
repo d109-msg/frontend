@@ -11,5 +11,5 @@ import java.util.List;
 @AllArgsConstructor
 public class RoomStartReceiveDto {
     private String roomId;
-    private List<String> userList;
+    private List<Integer> userList;
 }

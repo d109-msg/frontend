@@ -12,6 +12,6 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Builder
 public class EnterGroupRoomDto {
-    private String emailId;
+    private int userId;
     private String roomId;
 }
