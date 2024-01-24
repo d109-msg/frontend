@@ -5,6 +5,17 @@
 <mapper
 	namespace="com.ssafy.msg.game.model.mapper.GameMapper">
 
+	<select id="getMyVote" parameterType="int" resultType="myVoteDto">
+		SELECT
+				(SELECT nickname FROM participants WHERE id = dm.normal_vote) AS normal_vote,
+				(SELECT nickname FROM participants WHERE id = dm.mafia_vote) AS mafia_vote,
+				(SELECT nickname FROM participants WHERE id = dm.doctor_vote) AS doctor_vote
+		FROM
+			daily_missions dm
+		WHERE
+			dm.participant_id = #{userId};
+	</select>
+
 	<update id="normalVote" parameterType="Map">
 		UPDATE daily_missions
 		SET normal_vote = #{targetId}
@@ -42,6 +53,10 @@
 		SELECT *
 		FROM participants
 		WHERE room_id = #{roomId} AND flag_die = 0;
+	</select>
+
+	<select id="getParticipantWithPId" resultType="ParticipantDto" parameterType="int">
+		SELECT * FROM participants WHERE id = #{participantId};
 	</select>
 
 	<select id="getParticipant" resultType="ParticipantDto" parameterType="ParticipantReceiveDto">

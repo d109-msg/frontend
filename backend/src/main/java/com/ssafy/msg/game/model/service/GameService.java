@@ -3,6 +3,7 @@ package com.ssafy.msg.game.model.service;
 import com.ssafy.msg.chat.model.dto.RoomDto;
 import com.ssafy.msg.game.model.dto.*;
 
+import java.sql.SQLException;
 import java.util.List;
 
 public interface GameService {
@@ -33,5 +34,7 @@ public interface GameService {
     void vote(VoteReceiveDto voteReceiveDto) throws Exception;
 
     boolean getTime();
+
+    String getMyVote(int participantId) throws SQLException;
 }
 
