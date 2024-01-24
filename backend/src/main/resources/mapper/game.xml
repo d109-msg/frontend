@@ -79,14 +79,17 @@
 		  AND p.user_id = #{userId};
 	</select>
 
-	<insert id="zParticipants" parameterType="ParticipantDto" >
-		INSERT INTO participants
-		(room_id, user_id, job_id, nickname, image_url)
-		VALUES
+	<update id="updateParticipants" parameterType="ParticipantDto">
 		<foreach collection="list" item="participant" separator=",">
-			(#{participant.roomId}, #{participant.userId}, #{participant.jobId}, #{participant.nickname}, #{participant.imageUrl})
+			UPDATE participants
+			SET
+			room_id = #{participant.roomId},
+			job_id = #{participant.jobId},
+			nickname = #{participant.nickname},
+			image_url = #{participant.imageUrl}
+			WHERE id = #{participant.id}
 		</foreach>
-	</insert>
+	</update>
 
 	<select id="getRandomNicknames" parameterType="int"
 			resultType="RandomNameDto">

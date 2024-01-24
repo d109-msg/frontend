@@ -9,9 +9,9 @@ import java.sql.SQLException;
 
 public interface MessageService {
 
-    void sendTextMessage(TextMessageDto textMessageDto, int id);
+    void sendTextMessage(TextMessageDto textMessageDto, int userId);
 
-    void sendImageMessage(ImageMessageDto imageMessageDto, int id) throws IOException;
+    void sendImageMessage(ImageMessageDto imageMessageDto, int userId) throws IOException;
 
     // 사용자 설정 게임 입장 메시지 전송
     void sendEnterNotice(ParticipantDto participantDto);
