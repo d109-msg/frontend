@@ -11,10 +11,11 @@ import java.security.Principal;
 @NoArgsConstructor
 @AllArgsConstructor
 public class StompPrincipalDto implements Principal {
-    private String userEmailId;
+    private String userStringId;
+    private int userId;
 
     @Override
     public String getName() {
-        return userEmailId;
+        return userStringId;
     }
 }

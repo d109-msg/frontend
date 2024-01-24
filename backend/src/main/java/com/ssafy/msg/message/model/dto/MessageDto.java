@@ -12,7 +12,8 @@ import lombok.NoArgsConstructor;
 public class MessageDto {
     private int id;
     private String roomId;
-    private String userEmailId;
+    private String userId;
+    private String noticeType;
     private String sendTime;
     private String dataType;
 }

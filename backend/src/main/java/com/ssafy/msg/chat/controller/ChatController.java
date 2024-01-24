@@ -75,10 +75,10 @@ public class ChatController {
         log.info("getPersonalRoom() -> Start");
         log.info("getPersonalRoom() -> Receive opponentDto : {}", opponentDto);
 
-        String emailId = (String) request.getAttribute("emailId");
+        int id = (int) request.getAttribute("id");
         CreateRoomDto createRoomDto = CreateRoomDto.builder()
-                .userId1(emailId)
-                .userId2(opponentDto.getEmailId()).build();
+                .userId1(id)
+                .userId2(opponentDto.getId()).build();
 
         RoomDto roomDto = null;
 
@@ -100,19 +100,19 @@ public class ChatController {
             @ApiResponse(responseCode = "200", description = "일대일 채팅방 목록 조회 성공", content = @Content),
             @ApiResponse(responseCode = "404", description = "일대일 채팅방 목록 조회 실패", content = @Content) })
     @GetMapping("/personal")
-    public ResponseEntity<?> getPersonalRoomsInfoByEmailId(HttpServletRequest request) {
-        log.info("getPersonalRoomsInfoByEmailId() -> Start");
+    public ResponseEntity<?> getPersonalRoomsInfoById(HttpServletRequest request) {
+        log.info("getPersonalRoomsInfoById() -> Start");
 
-        String emailId = (String) request.getAttribute("emailId");
-        log.info("getPersonalRoomsInfoByEmailId() -> Receive emailId : {}", emailId);
+        int id = (int) request.getAttribute("id");
+        log.info("getPersonalRoomsInfoById() -> Receive id : {}", id);
 
         List<RoomDto> roomDtoList = null;
         try {
-            roomDtoList = chatService.getPersonalRoomsInfoByEmailId(emailId);
-            log.info("getPersonalRoomsInfoByEmailId() -> Success");
+            roomDtoList = chatService.getPersonalRoomsInfoById(id);
+            log.info("getPersonalRoomsInfoById() -> Success");
             return new ResponseEntity<>(roomDtoList, HttpStatus.OK);
         } catch (Exception e) {
-            log.error("getPersonalRoomsInfoByEmailId() -> Exception : {}", e);
+            log.error("getPersonalRoomsInfoById() -> Exception : {}", e);
             return new ResponseEntity<>(roomDtoList, HttpStatus.BAD_REQUEST);
         }
 

@@ -9,6 +9,7 @@ import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration;
 
 import com.ssafy.msg.test.model.dto.TestDto;
 import com.ssafy.msg.test.model.repo.TestRepository;
+import org.springframework.scheduling.annotation.EnableScheduling;
 
 /*
  * Git Commit Message Convention
@@ -90,6 +91,7 @@ import com.ssafy.msg.test.model.repo.TestRepository;
  * N:M 관계에서만 관계가 명시적으로 테이블로 나타남
  */
 
+@EnableScheduling
 @EnableAutoConfiguration(exclude = { DataSourceAutoConfiguration.class })
 @SpringBootApplication
 public class BackendApplication implements CommandLineRunner {

@@ -14,6 +14,5 @@ import org.springframework.web.multipart.MultipartFile;
 @AllArgsConstructor
 public class ImageMessageDto {
     private String roomId;
-    private String sendTime;
     private MultipartFile image;
 }

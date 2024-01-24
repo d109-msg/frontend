@@ -14,6 +14,5 @@ import org.springframework.web.multipart.MultipartFile;
 @AllArgsConstructor
 public class TextMessageDto {
     private String roomId;
-    private String sendTime;
     private String text;
 }

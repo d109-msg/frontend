@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper
+        namespace="com.ssafy.msg.message.scheduler.mapper.SchedulerMapper">
+
+    <select id="getWaitingUsers"
+            resultType="int">
+        SELECT user_id
+        FROM participants
+        WHERE room_id = 'room1'
+        ORDER BY id;
+    </select>
+
+    <insert id="createRoom" parameterType="RoomDto">
+        insert into rooms
+            (id, data_type, create_time, start_time, title, image_url) values (#{id}, #{dataType}, now(), now(), #{title}, #{imageUrl})
+    </insert>
+
+
+</mapper>
+

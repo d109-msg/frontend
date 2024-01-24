@@ -35,8 +35,8 @@ public class ChatServiceImpl implements  ChatService{
 
     // 상대방과의 채팅방 생성
     public RoomDto createEnterPersonalRoom(CreateRoomDto createRoomDto) throws Exception {
-        UserDto user1 = userMapper.findUserByEmailId(createRoomDto.getUserId1());
-        UserDto user2 = userMapper.findUserByEmailId(createRoomDto.getUserId2());
+        UserDto user1 = userMapper.findUserById(createRoomDto.getUserId1());
+        UserDto user2 = userMapper.findUserById(createRoomDto.getUserId2());
 
         String roomId = UUID.randomUUID().toString();
         RoomDto roomDto = RoomDto.builder()
@@ -49,13 +49,13 @@ public class ChatServiceImpl implements  ChatService{
 
         ParticipantDto participant1 = ParticipantDto.builder()
                 .roomId(roomId)
-                .userEmailId(createRoomDto.getUserId1())
+                .userId(createRoomDto.getUserId1())
                 .imageUrl(user1.getImageUrl())
                 .nickname(user1.getNickname())
                 .build();
         ParticipantDto participant2 = ParticipantDto.builder()
                 .roomId(roomId)
-                .userEmailId(createRoomDto.getUserId2())
+                .userId(createRoomDto.getUserId2())
                 .imageUrl(user2.getImageUrl())
                 .nickname(user2.getNickname())
                 .build();
@@ -68,8 +68,8 @@ public class ChatServiceImpl implements  ChatService{
 
     // 유저 이메일 아이디에 따른 일대일 채팅방 목록 조회
     @Override
-    public List<RoomDto> getPersonalRoomsInfoByEmailId(String emailId) throws Exception {
-        List<RoomDto> personalRoomList = chatMapper.getPersonalRoomsInfoByEmailId(emailId);
+    public List<RoomDto> getPersonalRoomsInfoById(int id) throws Exception {
+        List<RoomDto> personalRoomList = chatMapper.getPersonalRoomsInfoById(id);
 
         return personalRoomList;
     }

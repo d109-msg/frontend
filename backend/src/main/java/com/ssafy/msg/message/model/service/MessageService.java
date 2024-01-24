@@ -9,13 +9,15 @@ import java.sql.SQLException;
 
 public interface MessageService {
 
-    void sendTextMessage(TextMessageDto textMessageDto, String emailId);
+    void sendTextMessage(TextMessageDto textMessageDto, int id);
 
-    void sendImageMessage(ImageMessageDto imageMessageDto, String emailId) throws IOException;
+    void sendImageMessage(ImageMessageDto imageMessageDto, int id) throws IOException;
 
     // 사용자 설정 게임 입장 메시지 전송
     void sendEnterNotice(ParticipantDto participantDto);
 
     // 게임
     void sendDayNotice(String time, String roomId) throws SQLException;
+    void sendStartNotice(String roomId) throws  SQLException;
+    void sendEndNotice(String roomId) throws  SQLException;
 }

@@ -79,7 +79,7 @@
 		  AND p.user_email_id = #{userEmail};
 	</select>
 
-	<insert id="insertParticipants" parameterType="ParticipantDto" >
+	<insert id="zParticipants" parameterType="ParticipantDto" >
 		INSERT INTO participants
 		(room_id, user_email_id, job_id, nickname, image_url)
 		VALUES
