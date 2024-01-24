@@ -5,12 +5,12 @@
 <mapper
         namespace="com.ssafy.msg.chat.model.mapper.ChatMapper">
 
-    <select id="getPersonalRoomsInfoById" parameterType="string"
+    <select id="getPersonalRoomsInfoById" parameterType="int"
             resultType="RoomDto">
         select r.*
         from rooms r
                  join participants p on r.id  = p.room_id
-        where p.user_id =  #{userId} and r.data_type = "개인";
+        where p.user_id =  #{id} and r.data_type = "개인";
     </select>
 
     <select id="findRoom" parameterType="CreateRoomDto"
