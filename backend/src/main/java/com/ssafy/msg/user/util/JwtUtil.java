@@ -38,21 +38,21 @@ public class JwtUtil {
 		this.secretKey = Keys.hmacShaKeyFor(Decoders.BASE64URL.decode(secretKey));
 	}
     
-	public String createAccessToken(String emailId) {
-		return create(emailId, "access-token", accessExpiration);
+	public String createAccessToken(int id) {
+		return create(id, "access-token", accessExpiration);
 	}
 	
-	public String createRefreshToken(String emailId) {
-		return create(emailId, "refresh-token", refreshExpiration);
+	public String createRefreshToken(int id) {
+		return create(id, "refresh-token", refreshExpiration);
 	}
 
-	private String create(String emailId, String subject, long expiration) {
+	private String create(int id, String subject, long expiration) {
 		return Jwts.builder()
 				.header().add("typ", "JWT")
 				.and()
 				.subject(subject)
 				.issuer(issuer)
-				.claim("emailId", emailId)
+				.claim("id", id)
 				.issuedAt(new Date())
 				.expiration(new Date(System.currentTimeMillis() + expiration))
 				.signWith(secretKey)
@@ -98,8 +98,8 @@ public class JwtUtil {
 		}
 	}
 	
-	public String getEmailId(String token) {
-		log.info("getEmailId() -> Start");
+	public int getId(String token) {
+		log.info("getId() -> Start");
 		try {
 			Jws<Claims> jwsClaims = Jwts.parser()/*
 					 * Copyright 2024 the original author or authors.
@@ -119,16 +119,17 @@ public class JwtUtil {
 						.verifyWith(secretKey)
 						.build()
 						.parseSignedClaims(token);
-			Map<String, Object> value = jwsClaims.getPayload();
-			String emailId = value.get("emailId").toString();
-			log.info("getEmailId() -> Success");
-			return emailId;
+
+			Claims claims = jwsClaims.getPayload();
+	        int id = ((Double) claims.get("id")).intValue();
+	        log.info("getId() -> Success	");
+	        return id;
 		} catch (ExpiredJwtException e) {
 			throw new TokenExpiredException();
 		} catch (Exception e) {
 			throw new TokenInvalidException();
 		} finally {
-			log.info("getEmailId() -> End");
+			log.info("getId() -> End");
 		}
 	}
 }
