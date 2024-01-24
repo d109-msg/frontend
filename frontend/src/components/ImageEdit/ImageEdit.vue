@@ -7,7 +7,6 @@
         >X</div>
     </div>
         <hr class="image-line">
-
         <MissonConfirm v-if="missionConfirm" 
         @close-modal="missionConfirm=false;"
         @mission-true="missionTrue"
