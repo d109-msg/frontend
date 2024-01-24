@@ -20,4 +20,6 @@ public interface ArticleMapper {
 
     ArticleDetailDto getArticleDetail(int articleId) throws SQLException;
 
+    List<ArticleDetailDto> getFeedArticleList(int articleId) throws SQLException;
+
 }

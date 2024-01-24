@@ -81,4 +81,10 @@ public class ArticleServiceImpl implements ArticleService{
 
     }
 
+    @Override
+    public List<ArticleDetailDto> getFeedArticleList(int userId) throws Exception {
+        log.info("(ArticleServiceImpl) 피드 게시물 리스트 조회 시작");
+        return articleMapper.getFeedArticleList(userId);
+
+    }
 }

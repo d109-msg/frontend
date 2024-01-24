@@ -14,4 +14,5 @@ public interface ArticleService {
 
     ArticleDetailDto getArticleDetail(int articleId) throws Exception; // 게시물 하나 조회
 
+    List<ArticleDetailDto> getFeedArticleList(int userId) throws Exception;
 }

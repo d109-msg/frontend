@@ -46,4 +46,17 @@
 
     </select>
 
+    <select id="getFeedArticleList" parameterType="int" resultType="ArticleDetailDto">
+        select *
+        from articles a
+        left join article_images ai on a.id = ai.article_id
+        where a.user_id in (
+            select f.from_user_id
+            from follows f
+            where f.id = #{userId}
+            )
+        order by a.create_time desc;
+
+    </select>
+
 </mapper>

@@ -56,7 +56,7 @@ public class ArticleController {
         log.info("(controller) create Start");
         log.info("(controller) 클라이언트에서 받아온 articleCreateDto : {}", articleCreateDto);
 
-        int id = (Integer) request.getAttribute("id");
+        int id = (int) request.getAttribute("id");
         ArticleDto articleDto = ArticleDto.builder().userId(id).articleImageList(articleCreateDto.getArticleImageList()).content(articleCreateDto.getContent()).roomId(articleCreateDto.getRoomId()).build();
 
         try {
@@ -122,10 +122,11 @@ public class ArticleController {
             @ApiResponse(responseCode = "400", description = "피드 게시물 조회 실패", content = @Content) })
     public ResponseEntity<?> getFeedArticleList(HttpServletRequest request) {
 
-        int id = (Integer) request.getAttribute("id");
+        int userId = (Integer) request.getAttribute("id");
 
         try {
-            return new ResponseEntity<>(HttpStatus.OK);
+            List<ArticleDetailDto> articleDetailDtos = articleService.getFeedArticleList(userId);
+            return new ResponseEntity<>(articleDetailDtos, HttpStatus.OK);
         } catch (Exception e) {
             log.error("(ArticleController) 피드 게시물 조회 실패", e);
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
