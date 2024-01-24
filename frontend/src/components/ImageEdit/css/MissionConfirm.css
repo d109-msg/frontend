@@ -12,7 +12,7 @@
 }
 
 .mission-container{
-    width: 35%;
+    width: 50%;
     height: 383px;
     border-radius: 10px;
     background: #FFF8ED;
@@ -96,6 +96,7 @@
     line-height: normal;
 }
 .check-style-room{
+    margin-top: 10px;
     margin-left: 10px;
     margin-bottom: 10px;
     color: #999393;

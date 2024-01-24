@@ -1,5 +1,8 @@
 <template>
-    <div class="mission-gray">
+    <div>
+    <LoadingSpinner v-if="spinnerFlag"/>
+        <div class="mission-gray">
+        
         <div class="mission-container">
             
                 <div class="confirm-box">
@@ -14,6 +17,7 @@
                             <p class="">해당 사진으로 등록하시겠습니까?</p>
                             <div class="is-picture">
                                 <input type="checkbox" name="" id="" class="check"
+                                v-model="checkFlag"
                                 @click="axiosAi"
                                 >
                                 <span>미션 성공여부 확인하기</span>
@@ -25,11 +29,13 @@
                 <span class="cancel" @click="closeImage">X</span>
         </div>
     </div>  
+</div>
 </template>
 
 <script>
 import btof from './base64ToFile'
 import axios from 'axios'
+import LoadingSpinner from '../LoadingSpinner/LoadingSpinner.vue'
 export default {
     name: "MissionConfirm",
     data(){
@@ -38,21 +44,40 @@ export default {
             previewImg : "",
             roomName : "",
             missionInfo : "",
+            spinnerFlag : false,
+            checkFlag : false,
+            answer : Object,
         }
+    },
+    components:{
+        LoadingSpinner,
     },
     methods:{
         closeImage : function(){
             this.$emit("closeModal")
         },
         axiosAi : function(){
+            this.spinnerFlag = true
             let formData = new FormData()
             formData.append('image',this.dataImg)
-            axios.post(`http://localhost:8080/article/analyze?condition=${"강아지"}`,formData,{
+            axios.post(`http://localhost:8080/article/analyze?condition=${"와인"}`,formData,{
             headers:{"Content-Type": `multipart/form-data`}
             }).then(res=>{
-                console.log(res)
+                this.answer = res.data.choices[0].message.content
+                this.spinnerFlag = false
+                this.checkFlag = false
+                
+                if(this.answer.includes("True")){
+                    this.$emit("missionTrue")
+                } else{
+                    this.$emit("missionFalse")
+                }
             })
             .catch(err=>{
+                this.spinnerFlag = false
+                this.checkFlag = false
+                alert("서버에 오류가 발생했습니다.")
+                this.$emit("closeModal")
                 console.log(err)
             })
         }
@@ -68,6 +93,6 @@ export default {
 }
 </script>
 
-<style scoped src="./MissionConfirm.css">
+<style scoped src="./css/MissionConfirm.css">
 
 </style>
