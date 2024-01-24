@@ -4,7 +4,6 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -12,14 +11,14 @@ import java.util.List;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class ArticleDto {
-    private int id;
+public class ArticleDetailDto {
+    private int articleId;
     private int userId;
     private String content;
     private String createTime;
     private int flagPrivate;
     private String modifyTime;
     private String roomId;
-    private List<MultipartFile> articleImageList;
+    private List<String> urls;
 
 }

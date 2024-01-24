@@ -12,14 +12,13 @@ import java.util.List;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class ArticleDto {
-    private int id;
+public class ArticleWithUrlDto {
+    private int articleId;
     private int userId;
-    private String content;
     private String createTime;
     private int flagPrivate;
     private String modifyTime;
     private String roomId;
-    private List<MultipartFile> articleImageList;
+    private String url;
 
 }
