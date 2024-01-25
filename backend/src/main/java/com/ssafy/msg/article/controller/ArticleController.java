@@ -60,9 +60,9 @@ public class ArticleController {
         ArticleDto articleDto = ArticleDto.builder().userId(id).articleImageList(articleCreateDto.getArticleImageList()).content(articleCreateDto.getContent()).roomId(articleCreateDto.getRoomId()).build();
 
         try {
-            articleService.createArticle(articleDto); // 클라이언트로부터 받은 정보를 서비스에 입력
+            ArticleDetailDto articleDetailDto = articleService.createArticle(articleDto); // 클라이언트로부터 받은 정보를 서비스에 입력
             log.info("(controller) articleService.createArticle 호출 -> Success");
-            return new ResponseEntity<>(HttpStatus.CREATED);
+            return new ResponseEntity<>(articleDetailDto, HttpStatus.CREATED);
         } catch (Exception e) {
             log.error("(controller) articleService.createArticle 호출 에러", e);
             return new ResponseEntity<>("게시물 작성 실패", HttpStatus.BAD_REQUEST);
@@ -92,7 +92,7 @@ public class ArticleController {
 
     }
 
-    @GetMapping(value = "/detail")
+    @GetMapping(value = "")
     @Operation(summary = "게시물 상세", description = "게시물 상세 내용 보기")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "게시물 상세 조회 성공", content ={
@@ -126,6 +126,9 @@ public class ArticleController {
 
         try {
             List<ArticleDetailDto> articleDetailDtos = articleService.getFeedArticleList(userId);
+            log.info("(ArticleController) 피드 게시물 성공 articleDeatilDtos:{}", articleDetailDtos);
+            log.info("(ArticleController) 피드 게시물 성공 articleDeatilDtos:{}", articleService.getFeedArticleList(userId));
+
             return new ResponseEntity<>(articleDetailDtos, HttpStatus.OK);
         } catch (Exception e) {
             log.error("(ArticleController) 피드 게시물 조회 실패", e);
