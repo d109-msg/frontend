@@ -16,6 +16,7 @@
         <WriteContent v-if="writeFlag"
         :dataInfo="{imgData,imgSrc,selectRoom}"
         @close-write="writeFlag=false"
+        @create-feed="closeImage"
         />
         <div class="wrapper" v-show="!writeFlag">
             <div class="img-wrapper">
