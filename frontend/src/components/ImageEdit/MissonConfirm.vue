@@ -60,13 +60,17 @@ export default {
             this.spinnerFlag = true
             let formData = new FormData()
             formData.append('image',this.dataImg)
-            axios.post(`http://localhost:8080/article/analyze?condition=${"와인"}`,formData,{
-            headers:{"Content-Type": `multipart/form-data`}
+            let item = "와인"
+            let token = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhY2Nlc3MtdG9rZW4iLCJpc3MiOiJNU0ciLCJpZCI6MTEsImlhdCI6MTcwNjE0MTYwOCwiZXhwIjoxNzA2MTUzNjA4fQ.Omu9Z9NDFYcSW-Dr4HKBj_D9x6sPlR_h6q0-lSN49BY"
+            axios.post(`http://localhost:8080/article/analyze?condition=${item}`,formData,{
+            headers:{
+                "Content-Type": `multipart/form-data`,
+                Authorization : `Bearer ${token}`
+            }
             }).then(res=>{
                 this.answer = res.data.choices[0].message.content
                 this.spinnerFlag = false
                 this.checkFlag = false
-                
                 if(this.answer.includes("True")){
                     this.$emit("missionTrue")
                 } else{

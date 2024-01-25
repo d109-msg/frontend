@@ -27,27 +27,12 @@
 
             <div  v-if="step==1">
                 <div  class="find-password-form">
-                    <img src="@/assets/css/Icon/key.png" alt="" style="height: 90%;">
-                    <p class="find-password-title2">임시 비밀번호를 발송했습니다.</p>
+                    <p class="find-password-title2">새로운 비밀번호를 설정해주세요.</p>
                     <div class="find-password-content-box">
                         <div class="temp-password-form">
                            <input class="temp-password-input" required v-model="tempPassword">
                             <p class="temp-password-label">Password</p>
                         </div>
-                    </div>
-
-                    
-                    <button class="next-btn" @click="resetPassword">
-                        비밀번호 재설정
-                    </button>                
-                </div>
-            </div>
-            
-
-            <div  v-if="step==2">
-                <div  class="find-password-form">
-                    <p class="find-password-title">비밀번호 재설정</p>
-                    <div class="find-password-content-box" style="margin-top: 20px;">
                         <div class="password-form">
                            <input type="password" class="password-input" required v-model="password">
                             <p class="password-label">New Password</p>
@@ -59,12 +44,16 @@
                             <p class="validation-label">Confirm New Password</p>
                             <p class="validation-warn" v-if="validationCheck">비밀번호가 일치하지 않습니다.</p>
                         </div>
-                    <button class="reset-password-btn" @click="signUp">
-                        Join
-                    </button>          
                     </div>
+
+                    
+                    <button class="next-btn" @click="resetPassword">
+                        비밀번호 재설정
+                    </button>                
                 </div>
-            </div> 
+            </div>
+            
+
         </div>
     </div>
 
@@ -115,7 +104,24 @@ export default {
                 "emailId": this.email,
                 "emailPassword": this.tempPassword
             }
-            this.step++
+
+            axios.post("http://localhost:8080/user/",JSON.stringify(passwordData),
+            {
+                    headers : {"Content-Type": `application/json`},
+            }).then(res=>{
+                console.log(res)
+                axios.post(
+
+                ).then(res=>{
+                    console.log(res)
+                    this.step++
+                }).catch(err=>{
+                    console.log(err)
+                })
+            }).catch(err=>{
+                console.log(err)
+                tempPasswordInput.focus()
+            })
         },
         checkEmail : function(){
             const valid = /^[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*.[a-zA-Z]{2,3}$/i;
