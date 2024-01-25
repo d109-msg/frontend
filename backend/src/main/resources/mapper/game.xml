@@ -94,17 +94,20 @@
 		  AND p.user_id = #{userId};
 	</select>
 
-	<update id="updateParticipants" parameterType="ParticipantDto">
-		<foreach collection="list" item="participant" separator=",">
-			UPDATE participants
-			SET
-			room_id = #{participant.roomId},
-			job_id = #{participant.jobId},
-			nickname = #{participant.nickname},
-			image_url = #{participant.imageUrl}
-			WHERE id = #{participant.id}
-		</foreach>
-	</update>
+	<insert id="insertParticipants" parameterType="ParticipantDto">
+		INSERT INTO participants
+		(room_id, user_id, job_id, nickname, image_url)
+		VALUES
+			<foreach collection="list" item="participant" separator=",">
+				(#{participant.roomId}, #{participant.userId}, #{participant.jobId}, #{participant.nickname}, #{participant.imageUrl})
+			</foreach>
+	</insert>
+
+	<delete id="deleteParticipant" parameterType="int">
+		DELETE
+		FROM participants
+		WHERE room_id = 'room1' AND user_id = #{userId}
+	</delete>
 
 	<select id="getRandomNicknames" parameterType="int"
 			resultType="RandomNameDto">
@@ -137,6 +140,15 @@
 			(SELECT url, ROW_NUMBER() OVER () AS rownum FROM room_images ORDER BY RAND()) as img
 			ON ln.rownum = img.rownum
 			LIMIT 1;
+	</select>
+
+	<select id="getRandomGameApplyStatus" parameterType="int" resultType="boolean">
+		SELECT EXISTS(
+			SELECT 1
+			FROM participants
+			WHERE user_id = #{userId}
+			  AND room_id = 'room1'
+		) AS RandomGameApplyStatus;
 	</select>
 
 	<insert id="applyRandomGame" parameterType="UserDto">

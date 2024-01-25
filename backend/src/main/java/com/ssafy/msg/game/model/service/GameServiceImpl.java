@@ -26,9 +26,32 @@ public class GameServiceImpl implements GameService{
     private final UserMapper userMapper;
 
     @Override
-    public void applyRandomGame(int userId) throws Exception {
-        UserDto user = userMapper.findUserById(userId);
-        gameMapper.applyRandomGame(user);
+    public boolean getRandomGameApplyStatus(int userId) throws Exception {
+        boolean randomGameApplyStatus = gameMapper.getRandomGameApplyStatus(userId);
+        return randomGameApplyStatus;
+    }
+
+    @Override
+    public boolean applyRandomGame(int userId) throws Exception {
+        boolean randomGameApplyStatus = gameMapper.getRandomGameApplyStatus(userId);
+        if (randomGameApplyStatus == true){
+            return false;
+        }else{
+            UserDto user = userMapper.findUserById(userId);
+            gameMapper.applyRandomGame(user);
+            return true;
+        }
+    }
+
+    @Override
+    public boolean cancelRandomGame(int userId) throws Exception {
+        boolean randomGameApplyStatus = gameMapper.getRandomGameApplyStatus(userId);
+        if (randomGameApplyStatus == true){
+            gameMapper.deleteParticipant(userId);
+            return true;
+        }else{
+            return false;
+        }
     }
 
     @Override
@@ -165,7 +188,11 @@ public class GameServiceImpl implements GameService{
             result.add(participant);
         }
 
-        int resultCnt = gameMapper.updateParticipants(result);
+        int resultCnt = gameMapper.insertParticipants(result);
+
+        for(int userId: roomStartReceiveDto.getUserList()){
+            gameMapper.deleteParticipant(userId);
+        }
 
         log.info("gameStart() resultCnt : {}", resultCnt);
 
