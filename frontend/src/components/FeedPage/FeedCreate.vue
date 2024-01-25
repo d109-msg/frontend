@@ -1,6 +1,6 @@
 <template>
     <div class="feed-modal">
-            <ImageEdit/>
+            <ImageEdit @close="$emit('close')"/>
     </div>
 </template>
 

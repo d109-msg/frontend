@@ -3,15 +3,16 @@
     position: sticky;
     width: 344px;
     height: 380px;
-    margin: 30px;
-    margin-top: 0;
-    margin-right: 0;
+    margin: 0px 10px 0px 10px;
     border-radius: 10px;
     background-color: #FFFDF3;
     box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.25);
     top: 110px;
 }
 
+.my-mini-content{
+    padding: 30px 40px 20px 40px;
+}
 .mini-title{
     width: 100%;
     height: 48px;
@@ -28,25 +29,21 @@
 }
 
 .mini-image{
-    margin-top: 20px;
-    margin-left: 40px;
-    margin-bottom: 26px;
+    margin-bottom: 20px;
     width: 100px;
     height: 100px;
     border-radius: 20px;
 }
 
 .mini-name{
-    margin-left: 40px;
-    margin-bottom: 20px;
     color: #545454;
     font-size: 20px;
+    margin-bottom: 10px;
     /* 폰트 스타일, 굵기 조절 필요함 */
 }
 
 .mini-comment{
     font-size: 15px;
-    margin-left: 40px;
     color: #999494;
     margin-bottom: 20px;
 
@@ -54,7 +51,6 @@
 }
 
 .mini-following-count{
-    margin-left: 40px;
     margin-bottom: 20px;
 }
 .mini-following-count > .following{

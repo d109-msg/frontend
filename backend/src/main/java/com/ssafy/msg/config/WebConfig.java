@@ -18,6 +18,8 @@ public class WebConfig implements WebMvcConfigurer {
 	
 	private final UserInterceptor userInterceptor;
 	
+	// CORS 설정
+	// 나중에 와일드 타입 대신 front-end 주소 명시적으로 적기
 	@Override
 	public void addCorsMappings(CorsRegistry registry) {
 		registry.addMapping("/**").allowedOrigins("*").allowedMethods(HttpMethod.GET.name(), HttpMethod.POST.name(), HttpMethod.PUT.name(),
@@ -25,7 +27,8 @@ public class WebConfig implements WebMvcConfigurer {
 				HttpMethod.PATCH.name()).allowedHeaders("*")
 				.maxAge(1800);
 	}
-	
+
+	// 인터셉터 등록
 	@Override
 	public void addInterceptors(InterceptorRegistry registry) {
 		registry.addInterceptor(userInterceptor)

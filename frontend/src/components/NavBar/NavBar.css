@@ -2,19 +2,19 @@
 @media screen and (min-width:990px) {
     .nav-container{
         width: 100%;
-        height: 97px;
+        height: 80px;
         position: fixed;
         top: 0;
         background-color: #FFF4E9;
         display: flex;
         align-items: center;
-        justify-content: space-around;
+        justify-content: space-between;
         overflow: hidden;
         z-index: 999;
     }
     @keyframes nav-down {
         0%{
-            height: 97px;
+            height: 80px;
         }
         100%{
             height: 0px;
@@ -26,7 +26,7 @@
             height: 0px;
         }
         100%{
-            height: 97px;
+            height: 80px;
         }
         
     }
@@ -66,9 +66,10 @@
     .search-container{
         position: relative;
         margin-left: 50px;
+        margin-right: 30px;
         width: 309px;
         flex-shrink: 0;
-        height: 63px;
+        height: 50px;
         border-radius: 30px;
         background: rgba(169, 165, 165, 0.20);
         padding-left: 25px;
@@ -102,7 +103,8 @@
 
     .nav-logo{
         width:300px; 
-        height: 58px; 
+        height: 50px; 
+        margin-left: 30px;
         background: url(../../assets/css/Logo/MSG_logo_blue_sma.png);
         background-size: contain;
         background-repeat: no-repeat;

@@ -1,55 +1,60 @@
 <template>
     <div class="container">
-      <div class="main-img"></div>
+      <div class="main-img">
       <div class="login-box">
           <p class="login-title">WELCOME!!</p>
+          <div class="login-font">Already have an acount? <span style="cursor: pointer;"
+              @click="$router.push('/login')"
+              >Log In</span></div>
+
           <div class="name-form">
               <input type="text" class="name-input" required v-model="name">
-              <p class="name-label">이름</p>
-              <img src="@/assets/css/HomepageImg/icon/user_grey_icon.png" alt="" class="email-img">
+              <p class="name-label">Name</p>
               <p class="name-warn" v-if="nameCheck">올바른 형식의 이름을 기입해주세요.</p>
           </div>
           <div class="email-form">
               <input type="text" class="email-input" required v-model="email">
-              <p class="email-label">이메일</p>
-              <img src="@/assets/css/loginformImg/email.png" alt="" class="email-img">
+              <p class="email-label">E-mail</p>
               <p class="email-warn" v-if="emailCheck">올바른 형식의 이메일을 기입해주세요.</p>
           </div>
           <div class="password-form">
               <input type="password" class="password-input" required v-model="password">
-              <p class="password-label">비밀번호</p>
-              <img src="@/assets/css/loginformImg/password.png" alt="" class="password-img">
+              <p class="password-label">Password</p>
               <p class="password-warn" v-if="passwordCheck">특수문자를 포함한 비밀번호(8~15 글자)를 입력해주세요.</p>
           </div>
           <div class="validation-form">
               <input type="password" class="validation-input" required v-model="validation">
-              <p class="validation-label">비밀번호 확인</p>
-              <img src="@/assets/css/SignupImg/check_icon.png" alt="" class="password-img">
+              <p class="validation-label">Confirm Password</p>
               <p class="validation-warn" v-if="validationCheck">비밀번호가 일치하지 않습니다.</p>
           </div>
           <button class="login-btn" @click="signUp">
-              가입하기
+              Join
           </button>
-          <div style="margin-top: 5%; font-size: 0.8rem; color: rgba(0,0,0,0.6);">
-              <span style="cursor: pointer;">아이디 찾기</span>
-              <span> | </span>
-              <span style="cursor: pointer;">비밀번호 찾기</span>
-              <span > | </span>
-              <span style="cursor: pointer;"
-              @click="$router.push('/login')"
-              >로그인</span>
 
-          </div>
+          <div class="or-sign-in-with" >or Sign in with</div>
+            <div style="display: flex; justify-content: center;">
+                <img src="@/assets/css/loginformImg/google.png" alt="" style="  width: 10%; margin: 2%; margin-top: 3%; cursor: pointer;"
+                    @click="socialLogin(0)"
+                >
+                <img src="@/assets/css/loginformImg/naver.png" alt="" style="width: 10%; margin: 2%; margin-top: 3%; cursor: pointer;"
+                    @click="socialLogin(2)">
+                <img src="@/assets/css/loginformImg/kakao.png" alt="" style="width: 10%; margin: 2%; margin-top: 3%; cursor: pointer;"
+                    @click="socialLogin(1)"
+                >
+            </div>
+
           <div style="display: flex; justify-content: center;">
           
           </div>
       </div>
+    </div>
 </div>
 
 </template>
 
 <script>
 import axios from 'axios'
+import router from '@/router'
 
 
 export default {
@@ -131,6 +136,7 @@ export default {
             })
             .then(result=>{
                 console.log(result,"성공")
+                router.push('/login')
             })
             .catch(err => {
                 console.log(err)
