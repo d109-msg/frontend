@@ -2,6 +2,7 @@ package com.ssafy.msg.game.model.service;
 
 import com.ssafy.msg.chat.model.dto.RoomDto;
 import com.ssafy.msg.game.model.dto.*;
+import org.apache.ibatis.jdbc.SQL;
 
 import java.sql.SQLException;
 import java.util.List;
@@ -39,6 +40,8 @@ public interface GameService {
 
     boolean getTime();
 
-    String getMyVote(int participantId) throws SQLException;
+    String getMyVote(int participantId) throws Exception;
+
+    void createNewMission(String roomId, int day) throws Exception;
 }
 

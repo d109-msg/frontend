@@ -318,6 +318,19 @@ public class GameController {
     }
 
     //test
+    @PostMapping("/mission/test")
+    public ResponseEntity<?> insertRandomMission(@RequestBody NewMissionDto dto) {
+        try {
+            gameService.createNewMission(dto.getRoomId(), dto.getDay());
+            return new ResponseEntity<>(HttpStatus.OK);
+        } catch (Exception e) {
+            log.error("insertRandomMission() -> error : {}", e);
+            return null;
+        }
+
+    }
+
+    //test
     @GetMapping("/nicknametest")
     public ResponseEntity<?> randomNicknameTest(@RequestParam("num") int num){
         log.info("randomNicknameTest() -> num : {}", num);

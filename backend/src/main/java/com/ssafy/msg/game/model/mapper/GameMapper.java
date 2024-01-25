@@ -39,4 +39,8 @@ public interface GameMapper {
     ParticipantDto getParticipantWithPId(int participantId) throws SQLException;
 
     MyVoteDto getMyVote(int participantId) throws SQLException;
+
+    int getRandomMission(String roomId) throws SQLException;
+
+    void createNewMission(NewMissionDto newMissionDto) throws SQLException;
 }
