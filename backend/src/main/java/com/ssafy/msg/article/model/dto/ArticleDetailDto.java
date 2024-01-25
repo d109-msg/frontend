@@ -20,5 +20,6 @@ public class ArticleDetailDto {
     private String modifyTime;
     private String roomId;
     private List<String> urls;
+    private String imageUrls;
 
 }
