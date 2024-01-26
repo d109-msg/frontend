@@ -7,8 +7,8 @@
 
     <insert id="createArticle" parameterType="ArticleCreateDto" useGeneratedKeys="true" keyProperty="id">
         insert into articles
-            (user_id, content, create_time, flag_private, modify_time, room_id)
-        values ( #{userId}, #{content}, now(), #{flagPrivate}, now(), #{roomId});
+            (user_id, content, create_time, flag_private, room_id)
+        values ( #{userId}, #{content}, now(), #{flagPrivate}, #{roomId});
 
     </insert>
 
@@ -47,15 +47,26 @@
     </select>
 
     <select id="getFeedArticleList" parameterType="int" resultType="ArticleDetailDto">
-        select *
+        select a.id as article_id, a.user_id, a.content, a.create_time, a.flag_private, a.modify_time, a.room_id
         from articles a
-        left join article_images ai on a.id = ai.article_id
         where a.user_id in (
             select f.to_user_id
             from follows f
             where f.from_user_id = #{userId}
             )
+        or a.user_id = #{userId}
         order by a.create_time desc;
+
+--         select *
+--         from articles a
+--                  left join article_images ai on a.id = ai.article_id
+--         where a.user_id in (
+--             select f.to_user_id
+--             from follows f
+--             where f.from_user_id = #{userId}
+--         )
+--            or a.user_id = #{userId}
+--         order by a.create_time desc;
 
     </select>
 

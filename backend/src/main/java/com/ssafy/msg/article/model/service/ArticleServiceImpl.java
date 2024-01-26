@@ -24,7 +24,7 @@ public class ArticleServiceImpl implements ArticleService{
     private final S3Util s3Util;
 
     @Override
-    public void createArticle(ArticleDto articleDto) throws Exception {
+    public ArticleDetailDto createArticle(ArticleDto articleDto) throws Exception {
         log.info("(service) Start");
 
         if (articleDto.getRoomId().isEmpty()) { // 일반 게시물 작성 (room_id 가 비어있을 때)
@@ -36,6 +36,7 @@ public class ArticleServiceImpl implements ArticleService{
             for (MultipartFile multipartFile: articleDto.getArticleImageList()) {
                 String uuid = s3Util.saveFile(multipartFile);
                 String url = s3Util.getUrl(uuid);
+
 
                 // articleImage table 에 사진 정보 저장
                 articleMapper.insertArticleImage(new ArticleImageDto(articleDto.getId(), url, uuid, 0));
@@ -57,7 +58,7 @@ public class ArticleServiceImpl implements ArticleService{
             }
         }
         log.info("(service) end");
-
+        return getArticleDetail(articleDto.getId());
     }
 
     @Override
@@ -73,6 +74,7 @@ public class ArticleServiceImpl implements ArticleService{
         ArticleDetailDto articleDetailDto = articleMapper.getArticleDetail(articleId);
         List<String> urls = new ArrayList<>();
         log.info("(ArticleServiceImpl) 여기까지는 됐을까 articleDetailDto(): {}", articleDetailDto);
+
         for (ArticleImageDto ai : articleMapper.getArticleImages(articleId)) {
             urls.add(ai.getUrl());
         }
@@ -85,8 +87,17 @@ public class ArticleServiceImpl implements ArticleService{
 
     @Override
     public List<ArticleDetailDto> getFeedArticleList(int userId) throws Exception {
-        log.info("(ArticleServiceImpl) 피드 게시물 리스트 조회 시작");
-        return articleMapper.getFeedArticleList(userId);
+        log.info("(ArticleServiceImpl) getFeed 피드 게시물 리스트 조회 시작");
+        List<ArticleDetailDto> articleList = articleMapper.getFeedArticleList(userId);
+
+        List<ArticleDetailDto> feedArticleList = new ArrayList<>();
+
+        for (ArticleDetailDto at : articleList) { // 받아온 팔로우하는 사람들의 게시물 리스트를 받아서 돌린다
+            ArticleDetailDto articleDetail = getArticleDetail(at.getArticleId());
+            at.setUrls(articleDetail.getUrls());
+            feedArticleList.add(at);
+        }
+        return feedArticleList;
 
     }
 }
