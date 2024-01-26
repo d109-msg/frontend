@@ -2,6 +2,7 @@ import { createRouter, createWebHistory } from "vue-router";
 import HomePage from './components/HomePage/HomePage.vue'
 import Signup from './components/Signup.vue'
 import Login from './components/Login.vue'
+import FindPassword from './components/FindPasswordPage/FindPassword.vue'
 import MyPage from './components/MyPage/MyPage.vue'
 import CategoryPage from './components/CategoryPage/CategoryPage.vue'
 import MessagePage from './components/MessagePage/MessagePage.vue'
@@ -51,6 +52,11 @@ const routes = [
     {
         path: "/signup",
         component : Signup,
+    },
+
+    {
+        path: "/findpassword",
+        component : FindPassword,
     },
 
     {

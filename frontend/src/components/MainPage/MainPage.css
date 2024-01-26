@@ -4,7 +4,7 @@
     background-size:cover ;
     height: 494px;
     width: 100%;
-    margin-top: 97px;
+    margin-top: 80px;
 }
 
 @keyframe banner-up{
@@ -12,14 +12,14 @@
         margin-top: 0px;
     }
     100%{
-        margin-top: 97px;
+        margin-top: 80px;
     
     }
 }
 
 @keyframe banner-down{
     0%{
-        margin-top: 97px;
+        margin-top: 80px;
     }
     100%{
         margin-top: 0px;
@@ -34,13 +34,8 @@
 }
 
 .main-container{
-    margin-top: 40px;
-    margin-left: 64px;
-    margin-right: 64px;
+    margin: 50px 100px 100px 100px;
     display: flex;
-    /* grid-template-columns: 2.5fr 1fr; */
-    /* flex-direction: row; */
-    margin-bottom: 100px;
 }
 
 /* .feed-page{

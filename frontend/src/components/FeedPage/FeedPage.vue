@@ -1,26 +1,28 @@
 <template>
     <div class="feed-container">
-            <VueFlexWaterfall
-                col="2"
-                col-spacing="16"
-            >
+        <div class="first-col">
             <div class="feed-create">
                 <div class="create-container">
                     <img class="create-img" src="./example/3.jpg">
                     <div class="create-comment">What are you thinking?</div>
                 </div>
-                <div class="create-btn">Create</div>
+                <div class="create-btn-box">
+                    <div class="create-btn"
+                    @click="create=true"
+                    >Create</div>
+                </div>
             </div>
-            <Feed  v-for="i in arr" :key="i" :img="i"></Feed>
-            <!-- <Feed></Feed>
-            <Feed></Feed>
+            <template  v-for="(feed,idx) in arr" :key="idx" >
+                <Feed v-if="idx%2==1" :img="feed" :feedIdx="idx"></Feed>                    
+            </template>
+        </div>
+        <div class="second-col">
+            <template  v-for="(feed,idx) in arr" :key="idx" >
+                <Feed v-if="idx%2==0" :img="feed" :feedIdx="idx"></Feed>                    
+            </template>            <FeedCreate v-if="create" @close="create=false"/>
+        </div>
 
-            <Feed></Feed>       
 
-            <Feed></Feed>
-            <Feed></Feed> -->
-            </VueFlexWaterfall>
-            <FeedCreate/>
         </div>
 </template>
 
@@ -35,7 +37,8 @@ export default {
         return{
             col : 2,
             colSapce : 16,
-            arr : [1,2,3]
+            arr : [1,2,3],
+            create : false
         }
     },  
 

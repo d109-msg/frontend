@@ -18,7 +18,7 @@ public interface GameMapper {
 
     RandomNameDto getRandomRoomName() throws SQLException;
 
-    int insertParticipants(List<ParticipantDto> participants) throws SQLException;
+    int updateParticipants(List<ParticipantDto> participants) throws SQLException;
 
     List<RoomDto> getUserRooms(int userId) throws SQLException;
 
@@ -31,4 +31,8 @@ public interface GameMapper {
     void normalVote(int participantId, int targetId) throws SQLException;
     void mafiaVote(int participantId, int targetId) throws SQLException;
     void doctorVote(int participantId, int targetId) throws SQLException;
+
+    ParticipantDto getParticipantWithPId(int participantId) throws SQLException;
+
+    MyVoteDto getMyVote(int participantId) throws SQLException;
 }
