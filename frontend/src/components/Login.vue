@@ -18,7 +18,7 @@
             <button class="login-btn" @click="login">
                 Login
             </button>            
-            <div class="find-password-font">Forget your password?</div>
+            <div class="find-password-font" @click="FindPassword">Forget your password?</div>
 
             <div class="or-sign-in-with" >or Sign in with</div>
             <div style="display: flex; justify-content: center;">
@@ -40,6 +40,7 @@
 <script>
 import axios from 'axios'
 import dotenv from 'dotenv'
+import router from '@/router'
 dotenv.config()
 
 export default {
@@ -77,6 +78,9 @@ export default {
             window.location.href = server
             
 
+        },
+        FindPassword(){
+            router.push('/findpassword')
         }
     }
 }

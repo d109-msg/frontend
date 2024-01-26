@@ -2,7 +2,7 @@ import { createApp } from 'vue'
 import App from './App.vue'
 import router from './router'
 import { createMetaManager } from 'vue-meta'
-import store from './store.js'
+import store from './vuex/store.js'
 
 createApp(App)
     .use(router)
