@@ -41,6 +41,8 @@
 import axios from 'axios'
 import dotenv from 'dotenv'
 import router from '@/router'
+import store from '@/store/modules/loginStore'
+
 dotenv.config()
 
 export default {
@@ -60,7 +62,12 @@ export default {
             axios.post("http://localhost:8080/user/sign-in",JSON.stringify(data),{
                 headers:{"Content-Type": `application/json`}
             }).then((res)=>{
-                console.log(res,"성공")
+                const access = res.data.accessToken
+                const refresh = res.data.refreshToken
+                store.commit('setAccessToken',access)
+                store.commit('setRefreshToken',refresh)
+
+                router.push('/')
             }).catch((err)=>{
                 console.log(err)
             })

@@ -23,6 +23,7 @@
 
 <script>
 import axios from 'axios'
+import store from '@/store/modules/loginStore'
 export default {
     name : "WriteContent",
     data(){
@@ -50,7 +51,8 @@ export default {
             const data = new FormData()
             data.append('content',this.content)
             data.append('roomId',"") //차후에 추가
-            let token = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhY2Nlc3MtdG9rZW4iLCJpc3MiOiJNU0ciLCJpZCI6MTEsImlhdCI6MTcwNjE0MTYwOCwiZXhwIjoxNzA2MTUzNjA4fQ.Omu9Z9NDFYcSW-Dr4HKBj_D9x6sPlR_h6q0-lSN49BY"
+            let accessToken = store.getters.accessToken
+            console.log(accessToken)
             //토큰도 차후 vuex에서 다룰 것
             this.imgData.forEach(img=>{
                 data.append('articleImageList',img)
@@ -58,7 +60,7 @@ export default {
             axios.post('http://localhost:8080/article/create',data,{
                 headers: {
                     'Content-Type' : 'multipart/form-data',
-                    Authorization : `Bearer ${token}`
+                    Authorization : `Bearer ${accessToken}`
                 }
             }).then(res=>{
                 this.$emit('createFeed')

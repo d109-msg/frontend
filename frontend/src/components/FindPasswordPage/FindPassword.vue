@@ -62,7 +62,7 @@
 
 <script>
 import axios from 'axios'
-import store from '@/vuex/store'
+import store from '@/store/modules/loginStore'
 import router from '@/router'
 export default {
     name : 'FindPassword',
@@ -115,7 +115,7 @@ export default {
                 console.log(res.data)
                 const access = res.data.accessToken
                 const refresh = res.data.refreshToken
-                store.commit('setAccessToekn',access)
+                store.commit('setAccessToken',access)
                 store.commit('setRefreshToken',refresh)
                 const newPasswordInput = document.querySelector(".password-input")
                 const newPasswordData = {
