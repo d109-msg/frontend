@@ -41,7 +41,7 @@
 import axios from 'axios'
 import dotenv from 'dotenv'
 import router from '@/router'
-import store from '@/store/modules/loginStore'
+import { useAuthStore } from '@/store/authStore'
 
 dotenv.config()
 
@@ -64,9 +64,9 @@ export default {
             }).then((res)=>{
                 const access = res.data.accessToken
                 const refresh = res.data.refreshToken
-                store.commit('setAccessToken',access)
-                store.commit('setRefreshToken',refresh)
-
+                const authStore = useAuthStore()
+                authStore.setRefresh(refresh)
+                authStore.setAccess(access)
                 router.push('/')
             }).catch((err)=>{
                 console.log(err)

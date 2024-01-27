@@ -62,7 +62,6 @@
 
 <script>
 import axios from 'axios'
-import store from '@/store/modules/loginStore'
 import router from '@/router'
 export default {
     name : 'FindPassword',
