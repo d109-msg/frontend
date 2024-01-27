@@ -27,7 +27,8 @@
 
             <div  v-if="step==1">
                 <div  class="find-password-form">
-                    <p class="find-password-title2">새로운 비밀번호를 설정해주세요.</p>
+                    <p class="find-password-title2">
+                        발송된 <span>임시 비밀번호</span>를 확인 후, 새로운 비밀번호를 설정해주세요.</p>
                     <div class="find-password-content-box">
                         <div class="temp-password-form">
                            <input class="temp-password-input" required v-model="tempPassword">
@@ -61,11 +62,12 @@
 
 <script>
 import axios from 'axios'
+import router from '@/router'
 export default {
     name : 'FindPassword',
     data(){
         return{
-            step:1,
+            step:0,
             email : "",
             emailCheck : true,
             tempPassword : "",
@@ -105,18 +107,34 @@ export default {
                 "emailPassword": this.tempPassword
             }
 
-            axios.post("http://localhost:8080/user/",JSON.stringify(passwordData),
+            axios.post("http://localhost:8080/user/sign-in",JSON.stringify(passwordData),
             {
                     headers : {"Content-Type": `application/json`},
             }).then(res=>{
+                console.log(res.data)
+                const access = res.data.accessToken
+                const refresh = res.data.refreshToken
+                store.commit('setAccessToken',access)
+                store.commit('setRefreshToken',refresh)
+                const newPasswordInput = document.querySelector(".password-input")
+                const newPasswordData = {
+                    "oldEmailPassword": this.tempPassword,
+                    "newEmailPassword": this.password
+                    
+                }
                 console.log(res)
-                axios.post(
-
+                axios.patch("http://localhost:8080/user/password",JSON.stringify(newPasswordData),
+                    {
+                        headers : {"Content-Type": `application/json`,
+                                    Authorization : `Bearer ${access}`,
+                    },
+                    }
                 ).then(res=>{
                     console.log(res)
-                    this.step++
+                    this.step == 0
+                    router.push('/')
                 }).catch(err=>{
-                    console.log(err)
+                    console.log(err)    
                 })
             }).catch(err=>{
                 console.log(err)
