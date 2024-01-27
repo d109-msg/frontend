@@ -1,3 +1,8 @@
+@font-face {
+    font-family: "dohyeon";
+    src: url(@/fonts/BMDOHYEON_ttf.ttf);
+  }
+
 .mypage-banner{
     position: relative;
     background: url('./Img/background_mypage_light.png');
@@ -8,13 +13,21 @@
 
 }
 
+.mypage-box{
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    position: absolute;
+    top: 300px;
+    left: 50%;
+    margin-left: -600px;
+    height: 400px;
+    width: 1200px;
+}
+
 .profile-box{
     display: flex;
     justify-content: center;
-    position: absolute;
-    top: 200px;
-    left: 50%;
-    margin-left: -600px;
     height: 400px;
     background-color: white;
     width: 1200px;
@@ -38,7 +51,6 @@
     flex-direction: row;
     justify-content: center;
     align-items: center;
-    border: 1px blue solid;
     grid-template-rows: 1fr 3fr ;
     width: 100%;
     padding: 70PX 150px;
@@ -74,3 +86,49 @@
     width: 100%;
     
 }
+.feed-game-box{
+    display: flex;
+    flex-direction: row;
+    margin-top: 50px;
+    justify-content: space-between;
+}
+
+.myfeed-box{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    height: 400px;
+    background-color: white;
+    width: 70%;
+    border-radius: 20px;
+    box-shadow: 2px 2px 2px rgba(0, 0, 0, 0.2);
+    padding: 30px;
+}
+
+.mygame-box{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    height: 400px;
+    background-color: white;
+    width: 28%;
+    border-radius: 20px;
+    box-shadow: 2px 2px 2px rgba(0, 0, 0, 0.2);
+    padding: 30px;
+
+}
+
+.myfeed-title, .mygame-title {
+    display: flex;
+    align-items: center;
+    height: 30px;
+    width: 100%;
+    justify-content: flex-start;
+
+}
+.myfeed-title>img, .mygame-title>img{
+    height: 25px;
+    width: 25px;
+    margin-right: 5px;
+}
+
