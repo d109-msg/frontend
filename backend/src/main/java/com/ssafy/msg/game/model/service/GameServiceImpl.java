@@ -10,7 +10,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
-import java.sql.SQLException;
 import java.time.LocalTime;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
@@ -26,13 +25,36 @@ public class GameServiceImpl implements GameService{
     private final UserMapper userMapper;
 
     @Override
-    public void applyRandomGame(int userId) throws Exception {
-        UserDto user = userMapper.findUserById(userId);
-        gameMapper.applyRandomGame(user);
+    public boolean getRandomGameApplyStatus(int userId) throws Exception {
+        boolean randomGameApplyStatus = gameMapper.getRandomGameApplyStatus(userId);
+        return randomGameApplyStatus;
     }
 
     @Override
-    public String getMyVote(int participantId) throws SQLException {
+    public boolean applyRandomGame(int userId) throws Exception {
+        boolean randomGameApplyStatus = gameMapper.getRandomGameApplyStatus(userId);
+        if (randomGameApplyStatus == true){
+            return false;
+        }else{
+            UserDto user = userMapper.findUserById(userId);
+            gameMapper.applyRandomGame(user);
+            return true;
+        }
+    }
+
+    @Override
+    public boolean cancelRandomGame(int userId) throws Exception {
+        boolean randomGameApplyStatus = gameMapper.getRandomGameApplyStatus(userId);
+        if (randomGameApplyStatus == true){
+            gameMapper.deleteParticipant(userId);
+            return true;
+        }else{
+            return false;
+        }
+    }
+
+    @Override
+    public String getMyVote(int participantId) throws Exception {
         MyVoteDto dto = gameMapper.getMyVote(participantId);
         String job = gameMapper.getParticipantWithPId(participantId).getJobId();
         log.info("getMyVote() myVote : {}", dto);
@@ -165,7 +187,11 @@ public class GameServiceImpl implements GameService{
             result.add(participant);
         }
 
-        int resultCnt = gameMapper.updateParticipants(result);
+        int resultCnt = gameMapper.insertParticipants(result);
+
+        for(int userId: roomStartReceiveDto.getUserList()){
+            gameMapper.deleteParticipant(userId);
+        }
 
         log.info("gameStart() resultCnt : {}", resultCnt);
 
@@ -313,5 +339,28 @@ public class GameServiceImpl implements GameService{
             log.info("getRoomVote() 현재 시간은 08:00과 20:00 사이가 아닙니다.");
             return false;
         }
+    }
+
+    /**
+     * roomId와 day를 입력받아 해당 room에서 수행한적 없는 미션을 랜덤으로 골라
+     * 모든 participant에게 새로운 daily미션을 입력받은 day로 만든다.
+     * @param roomId 새로운 미션을 분배할 roomId 입력
+     * @param day   새로 만들 미션의 날짜
+     * @throws Exception
+     */
+    @Override
+    public void createNewMission(String roomId, int day) throws Exception {
+        log.info("createNewMission() -> roomId : {}", roomId);
+        log.info("createNewMission() -> day : {}", day);
+
+        //입력받은 게임방에서 나온적 없는 미션 중 하나를 랜덤으로 고릅니다.
+        int randMission = gameMapper.getRandomMission(roomId);
+        log.info("createNewMission() randMissing : {}", randMission);
+
+        //선택된 랜덤 게임을 입력받은 roomId의 모든 participant에게 보내준다.
+        NewMissionDto newMissionDto = NewMissionDto.builder().roomId(roomId).missionId(randMission).day(day).build();
+        gameMapper.createNewMission(newMissionDto);
+
+        log.info("createNewMission() -> new mission created");
     }
 }

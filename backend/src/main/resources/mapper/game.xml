@@ -5,6 +5,34 @@
 <mapper
 	namespace="com.ssafy.msg.game.model.mapper.GameMapper">
 
+	<insert id="createNewMission" parameterType="NewMissionDto">
+		INSERT INTO daily_missions (participant_id, try, flag_success, mission_id, day)
+		SELECT p.id, 0, 0, #{missionId}, #{day}
+		FROM participants p
+		WHERE p.room_id = #{roomId};
+	</insert>
+
+	<select id="getRandomMission" parameterType="string" resultType="int">
+		SELECT
+			m.id
+		FROM
+			missions m
+		WHERE
+			m.id NOT IN (
+				SELECT
+					dm.mission_id
+				FROM
+					daily_missions dm
+						JOIN
+					participants p ON dm.participant_id = p.id
+				WHERE
+					p.room_id = #{roomId}
+			)
+		ORDER BY
+			RAND()
+			LIMIT 1;
+	</select>
+
 	<select id="getMyVote" parameterType="int" resultType="myVoteDto">
 		SELECT
 				(SELECT nickname FROM participants WHERE id = dm.normal_vote) AS normal_vote,
@@ -76,12 +104,12 @@
 			daily_missions dm ON p.id IN (dm.normal_vote, dm.mafia_vote, dm.doctor_vote) AND dm.day = (
 				SELECT MAX(day) FROM daily_missions
 										 JOIN participants ON daily_missions.participant_id = participants.id
-				WHERE participants.room_id = 'room1'
+				WHERE participants.room_id = #{roomId}
 			)
 				JOIN
 			rooms r ON p.room_id = r.id
 		WHERE
-			r.id = 'room1'
+			r.id = #{roomId}
 		GROUP BY
 			p.id;
 	</select>
@@ -94,17 +122,20 @@
 		  AND p.user_id = #{userId};
 	</select>
 
-	<update id="updateParticipants" parameterType="ParticipantDto">
-		<foreach collection="list" item="participant" separator=",">
-			UPDATE participants
-			SET
-			room_id = #{participant.roomId},
-			job_id = #{participant.jobId},
-			nickname = #{participant.nickname},
-			image_url = #{participant.imageUrl}
-			WHERE id = #{participant.id}
-		</foreach>
-	</update>
+	<insert id="insertParticipants" parameterType="ParticipantDto">
+		INSERT INTO participants
+		(room_id, user_id, job_id, nickname, image_url)
+		VALUES
+			<foreach collection="list" item="participant" separator=",">
+				(#{participant.roomId}, #{participant.userId}, #{participant.jobId}, #{participant.nickname}, #{participant.imageUrl})
+			</foreach>
+	</insert>
+
+	<delete id="deleteParticipant" parameterType="int">
+		DELETE
+		FROM participants
+		WHERE room_id = 'room1' AND user_id = #{userId}
+	</delete>
 
 	<select id="getRandomNicknames" parameterType="int"
 			resultType="RandomNameDto">
@@ -137,6 +168,15 @@
 			(SELECT url, ROW_NUMBER() OVER () AS rownum FROM room_images ORDER BY RAND()) as img
 			ON ln.rownum = img.rownum
 			LIMIT 1;
+	</select>
+
+	<select id="getRandomGameApplyStatus" parameterType="int" resultType="boolean">
+		SELECT EXISTS(
+			SELECT 1
+			FROM participants
+			WHERE user_id = #{userId}
+			  AND room_id = 'room1'
+		) AS RandomGameApplyStatus;
 	</select>
 
 	<insert id="applyRandomGame" parameterType="UserDto">

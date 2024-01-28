@@ -22,12 +22,12 @@
     <select id="getArticles" parameterType="int" resultType="ArticleWithUrlDto" >
         select a.id as article_id, a.user_id, a.create_time, a.flag_private, a.modify_time, a.room_id, ai.url
         from articles a
-        left join (
+                 left join (
             select article_id, MIN(id) as min_id
             from article_images
             group by article_id
         ) as sub_ai on a.id = sub_ai.article_id
-        left join article_images ai on sub_ai.min_id = ai.id
+                 left join article_images ai on sub_ai.min_id = ai.id
         where a.user_id = #{userId};
 
     </select>
