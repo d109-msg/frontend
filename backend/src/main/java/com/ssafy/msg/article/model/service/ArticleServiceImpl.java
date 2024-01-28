@@ -125,9 +125,6 @@ public class ArticleServiceImpl implements ArticleService{
     public CommentDto createComment(CommentDto commentDto) throws Exception {
         log.info("(ArticleServiceImpl) 댓글 작성 서비스 시작");
 
-        if (commentDto.getParentCommentId() == 0){
-            commentDto.setParentCommentId(null);
-        }
         return articleMapper.createComment(commentDto);
 
     }
