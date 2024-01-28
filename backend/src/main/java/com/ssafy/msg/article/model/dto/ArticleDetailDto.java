@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -12,6 +13,7 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 public class ArticleDetailDto {
+    //게시글 관련
     private int articleId;
     private int userId;
     private String content;
@@ -21,5 +23,12 @@ public class ArticleDetailDto {
     private String roomId;
     private List<String> urls;
     private String imageUrls;
+
+    // 좋아요
+    private int likeCount;
+
+    // 댓글 관련
+    private List<CommentDto> commentList;
+    private List<MultipartFile> articleImageList;
 
 }

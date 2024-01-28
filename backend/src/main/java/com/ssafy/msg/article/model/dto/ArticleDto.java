@@ -13,6 +13,7 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 public class ArticleDto {
+    // 게시글 관련
     private int id;
     private int userId;
     private String content;
@@ -20,6 +21,12 @@ public class ArticleDto {
     private int flagPrivate;
     private String modifyTime;
     private String roomId;
+
+    // 좋아요
+    private int likeCount;
+
+    // 댓글 관련
+    private List<CommentDto> commentList;
     private List<MultipartFile> articleImageList;
 
 }
