@@ -298,7 +298,7 @@ public class GameServiceImpl implements GameService{
      * @throws Exception
      */
     @Override
-    public List<ParticipantDto> getAliveParticipant(String roomId) throws Exception {
+    public List<AliveParticipantDto> getAliveParticipant(String roomId) throws Exception {
         return gameMapper.getAliveParticipants(roomId);
     }
 

@@ -58,16 +58,16 @@ public class GameController {
     }
 
     @GetMapping("/room/alive")
-    @Operation(summary = "살아있는 참가자 리스트", description = "roomId를 입력받아 게임방 내의 살아있는 참가자만 리턴")
+    @Operation(summary = "살아있는 참가자 리스트와 데일리 미션 성공 여부", description = "roomId를 입력받아 게임방 내의 살아있는 참가자만 데일리 미션 성공 여부와 함께 리턴")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "조회 성공", content = {
-                    @Content(mediaType = "application/json", schema = @Schema(implementation = ParticipantDto.class)) }),
+                    @Content(mediaType = "application/json", schema = @Schema(implementation = AliveParticipantDto.class)) }),
             @ApiResponse(responseCode = "400", description = "조회 실패", content = @Content) })
     public ResponseEntity<?> getAliveParticipants(@RequestParam("roomId") String roomId){
         log.info("getAliveParticipants() -> roomId : {}", roomId);
 
         try {
-            List<ParticipantDto> list = gameService.getAliveParticipant(roomId);
+            List<AliveParticipantDto> list = gameService.getAliveParticipant(roomId);
             log.info("getAliveParticipants() -> list : {}", list);
 
             return new ResponseEntity<>(list, HttpStatus.OK);
