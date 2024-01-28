@@ -55,6 +55,11 @@ public class GameServiceImpl implements GameService{
 
     @Override
     public String getMyVote(int participantId) throws Exception {
+        if(gameMapper.isAlive(participantId) != 0) { //죽었다면
+            log.info("getMyVote() player is dead");
+            return "participant is dead";
+        }
+
         MyVoteDto dto = gameMapper.getMyVote(participantId);
         String job = gameMapper.getParticipantWithPId(participantId).getJobId();
         log.info("getMyVote() myVote : {}", dto);
@@ -298,12 +303,33 @@ public class GameServiceImpl implements GameService{
     }
 
     /**
+     * participantId를 입력받아 현재 진행 중인 미션을 리턴
+     * @param participantId
+     * @return MissionResultDto 현재 진행 중인 미션 (일반, 마피아)
+     * @throws Exception
+     */
+    @Override
+    public MissionResultDto getMyMission(int participantId) throws Exception {
+        if(gameMapper.isAlive(participantId) != 0) {
+            log.info("getMyMission() participant is dead");
+            return null;
+        } else {
+            return gameMapper.getMyMission(participantId);
+        }
+    }
+
+    /**
      * 직업과 participantID, targetId를 입력받아 시간에 따른 투표를 반영합니다.
      * @param voteReceiveDto 직업과 participantID, targetId를 입력받아
      * @throws Exception
      */
     @Override
     public void vote(VoteReceiveDto voteReceiveDto) throws Exception {
+        if(gameMapper.isAlive(voteReceiveDto.getParticipantId()) != 0) {
+            log.info("vote() participant is dead");
+            return;
+        }
+
         if(getTime()){
             //낮 08:00 - 20:00
             //시민 투표

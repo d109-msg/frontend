@@ -105,32 +105,6 @@ public class GameController {
 
     }
 
-    @PatchMapping("/vote")
-    @Operation(summary = "투표 api", description = "유저의 participantId, 직업, targetParticipantId를 입력받아 투표를 수정합니다.")
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "투표 성공", content = @Content),
-            @ApiResponse(responseCode = "400", description = "투표 실패", content = @Content)})
-    public ResponseEntity<?> submitVote(@RequestBody VoteReceiveDto voteReceiveDto) {
-        log.info("submitVote() -> participant : {}", voteReceiveDto.getParticipantId());
-        log.info("submitVote() -> target : {}", voteReceiveDto.getTargetId());
-        log.info("submitVote() -> job : {}", voteReceiveDto.getJobId());
-
-        try {
-            gameService.vote(voteReceiveDto);
-            log.info("submitVote() -> done");
-
-            return new ResponseEntity<>(HttpStatus.OK);
-        } catch (Exception e) {
-            log.error("submitVote() -> error : {}", e.toString());
-
-            return new ResponseEntity<>(e.toString(), HttpStatus.BAD_REQUEST);
-        } finally {
-            log.info("submitVote() -> end");
-        }
-        
-
-    }
-
     @GetMapping(value = "/room/list")
     @Operation(summary = "유저의 진행 중인 게임 리스트를 반환", description = "userId을 이용해 user의 room list 반환")
     @ApiResponses(value = {
@@ -153,9 +127,58 @@ public class GameController {
         }
     }
 
+    @GetMapping("/room/mission")
+    @Operation(summary = "유저 현재 방의 미션 조회"
+            , description = "participantId를 입력받아 진행 중인 미션을 리턴합니다.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "조회 성공", content = {
+                    @Content(mediaType = "application/json", schema = @Schema(implementation = MissionResultDto.class)) }),
+            @ApiResponse(responseCode = "400", description = "조회 실패", content = @Content) })
+    public ResponseEntity<?> getMyMission(@RequestParam("participantId") int participantId){
+        log.info("getMyMission() participantId : {}", participantId);
+
+        try {
+            MissionResultDto missionResultDto = gameService.getMyMission(participantId);
+            log.info("getMyMission() missionResultDto : {}", missionResultDto);
+
+            return new ResponseEntity<>(missionResultDto, HttpStatus.OK);
+        } catch (Exception e) {
+            log.error("getMyMission() -> error : {}", e);
+
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        } finally {
+            log.info("getMyMission() end");
+        }
+    }
+
+    @PatchMapping("/vote")
+    @Operation(summary = "투표 api", description = "유저의 participantId, 직업, targetParticipantId를 입력받아 투표를 수정합니다.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "투표 성공", content = @Content),
+            @ApiResponse(responseCode = "400", description = "투표 실패", content = @Content)})
+    public ResponseEntity<?> submitVote(@RequestBody VoteReceiveDto voteReceiveDto) {
+        log.info("submitVote() -> participant : {}", voteReceiveDto.getParticipantId());
+        log.info("submitVote() -> target : {}", voteReceiveDto.getTargetId());
+        log.info("submitVote() -> job : {}", voteReceiveDto.getJobId());
+
+        try {
+            gameService.vote(voteReceiveDto);
+            log.info("submitVote() -> done");
+
+            return new ResponseEntity<>(HttpStatus.OK);
+        } catch (Exception e) {
+            log.error("submitVote() -> error : {}", e.toString());
+
+            return new ResponseEntity<>(e.toString(), HttpStatus.BAD_REQUEST);
+        } finally {
+            log.info("submitVote() -> end");
+        }
+
+    }
+
     @GetMapping(value = "/vote/pick", produces = "text/pain;charset=utf-8")
     @PatchMapping("/vote")
-    @Operation(summary = "내 투표현황 api", description = "유저의 participantId, 직업을 입력받아 리턴합니다.")
+    @Operation(summary = "내 투표현황 api", description = "유저의 participantId를 입력받아 리턴합니다. 유저가 죽었다면 participant is dead 를 리턴합니다")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "조회 성공", content = @Content),
             @ApiResponse(responseCode = "400", description = "조회 실패", content = @Content)})
@@ -319,6 +342,7 @@ public class GameController {
         }
 
     }
+
 
     //test
     @PostMapping("/mission/test")
