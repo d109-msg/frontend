@@ -2,17 +2,12 @@ package com.ssafy.msg.game.model.service;
 
 import com.ssafy.msg.chat.model.dto.RoomDto;
 import com.ssafy.msg.game.model.dto.*;
-import org.apache.ibatis.jdbc.SQL;
 
 import java.sql.SQLException;
 import java.util.List;
 
 public interface GameService {
-    boolean getRandomGameApplyStatus(int userId) throws Exception;
-
-    boolean applyRandomGame(int userId) throws Exception;
-
-    boolean cancelRandomGame(int userId) throws Exception;
+    void applyRandomGame(int userId) throws Exception;
 
     boolean isParticipantInRoom(EnterGroupRoomDto enterGroupRoomDto) throws Exception;
 
@@ -40,8 +35,6 @@ public interface GameService {
 
     boolean getTime();
 
-    String getMyVote(int participantId) throws Exception;
-
-    void createNewMission(String roomId, int day) throws Exception;
+    String getMyVote(int participantId) throws SQLException;
 }
 
