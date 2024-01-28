@@ -11,6 +11,7 @@ import lombok.NoArgsConstructor;
 @Builder
 public class VoteResultDto {
     private int id;
+    private String imageUrl;
     private String nickname;
     private int normalVoteCount;
     private int mafiaVoteCount;

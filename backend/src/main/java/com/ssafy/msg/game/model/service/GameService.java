@@ -30,7 +30,7 @@ public interface GameService {
 
     List<RoomDto> getUserRooms(int userId) throws Exception;
 
-    List<VoteResultDto> getRoomVote(int userId, String roomId) throws Exception;
+    List<VoteResponseDto> getRoomVote(int userId, String roomId) throws Exception;
 
     ParticipantDto getParticipant(int userId, String roomId) throws Exception;
 
