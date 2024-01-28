@@ -10,6 +10,8 @@ import java.util.List;
 
 @Mapper
 public interface GameMapper {
+    boolean getRandomGameApplyStatus(int userId) throws  SQLException;
+
     void applyRandomGame(UserDto userDto) throws SQLException;
 
     boolean isParticipantInRoom(EnterGroupRoomDto enterGroupRoomDto) throws SQLException;
@@ -18,7 +20,9 @@ public interface GameMapper {
 
     RandomNameDto getRandomRoomName() throws SQLException;
 
-    int updateParticipants(List<ParticipantDto> participants) throws SQLException;
+    int insertParticipants(List<ParticipantDto> participants) throws SQLException;
+
+    void deleteParticipant(int userId) throws SQLException;
 
     List<RoomDto> getUserRooms(int userId) throws SQLException;
 
@@ -35,4 +39,8 @@ public interface GameMapper {
     ParticipantDto getParticipantWithPId(int participantId) throws SQLException;
 
     MyVoteDto getMyVote(int participantId) throws SQLException;
+
+    int getRandomMission(String roomId) throws SQLException;
+
+    void createNewMission(NewMissionDto newMissionDto) throws SQLException;
 }

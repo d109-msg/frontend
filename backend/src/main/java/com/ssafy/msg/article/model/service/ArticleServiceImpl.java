@@ -1,18 +1,17 @@
 package com.ssafy.msg.article.model.service;
 
-import com.ssafy.msg.article.model.dto.ArticleDetailDto;
-import com.ssafy.msg.article.model.dto.ArticleDto;
-import com.ssafy.msg.article.model.dto.ArticleImageDto;
-import com.ssafy.msg.article.model.dto.ArticleWithUrlDto;
+import com.ssafy.msg.article.model.dto.*;
 import com.ssafy.msg.article.model.mapper.ArticleMapper;
 import com.ssafy.msg.article.util.S3Util;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -24,7 +23,7 @@ public class ArticleServiceImpl implements ArticleService{
     private final S3Util s3Util;
 
     @Override
-    public void createArticle(ArticleDto articleDto) throws Exception {
+    public ArticleDetailDto createArticle(ArticleDto articleDto) throws Exception {
         log.info("(service) Start");
 
         if (articleDto.getRoomId().isEmpty()) { // 일반 게시물 작성 (room_id 가 비어있을 때)
@@ -36,6 +35,7 @@ public class ArticleServiceImpl implements ArticleService{
             for (MultipartFile multipartFile: articleDto.getArticleImageList()) {
                 String uuid = s3Util.saveFile(multipartFile);
                 String url = s3Util.getUrl(uuid);
+
 
                 // articleImage table 에 사진 정보 저장
                 articleMapper.insertArticleImage(new ArticleImageDto(articleDto.getId(), url, uuid, 0));
@@ -57,7 +57,7 @@ public class ArticleServiceImpl implements ArticleService{
             }
         }
         log.info("(service) end");
-
+        return getArticleDetail(articleDto.getId());
     }
 
     @Override
@@ -73,6 +73,7 @@ public class ArticleServiceImpl implements ArticleService{
         ArticleDetailDto articleDetailDto = articleMapper.getArticleDetail(articleId);
         List<String> urls = new ArrayList<>();
         log.info("(ArticleServiceImpl) 여기까지는 됐을까 articleDetailDto(): {}", articleDetailDto);
+
         for (ArticleImageDto ai : articleMapper.getArticleImages(articleId)) {
             urls.add(ai.getUrl());
         }
@@ -84,9 +85,50 @@ public class ArticleServiceImpl implements ArticleService{
     }
 
     @Override
-    public List<ArticleDetailDto> getFeedArticleList(int userId) throws Exception {
-        log.info("(ArticleServiceImpl) 피드 게시물 리스트 조회 시작");
-        return articleMapper.getFeedArticleList(userId);
+    public List<ArticleDetailDto> getFeedArticleList(FeedParamDto feedParamDto) throws Exception {
+        log.info("(ArticleServiceImpl) getFeed 피드 게시물 리스트 조회 시작");
+        List<ArticleDetailDto> articleList = articleMapper.getFeedArticleList(feedParamDto);
+
+        List<ArticleDetailDto> feedArticleList = new ArrayList<>();
+
+        for (ArticleDetailDto at : articleList) { // 받아온 팔로우하는 사람들의 게시물 리스트를 받아서 돌린다
+            ArticleDetailDto articleDetail = getArticleDetail(at.getArticleId());
+            at.setUrls(articleDetail.getUrls());
+            feedArticleList.add(at);
+        }
+        return feedArticleList;
+
+    }
+
+    @Override
+    @Transactional
+    public void articleLike(ArticleLikeDto articleLikeDto) throws Exception {
+        log.info("(ArticleServiceImpl) 게시물 좋아요 시작");
+        /*
+        좋아요 목록을 조회 해서 지금 유저의 id 가 목록에 있으면 삭제하고 없으면 넣어줌
+         */
+
+        if (articleMapper.selectArticleLike(articleLikeDto)) {
+            articleMapper.deleteArticleLike(articleLikeDto);
+            log.info("(ArticleServiceImpl) 좋아요 삭제");
+
+        } else {
+            articleMapper.insertArticleLike(articleLikeDto);
+            log.info("(ArticleServiceImpl) 좋아요 추가");
+        }
+
+        articleMapper.updateLikeCount(articleLikeDto);
+
+    }
+
+    @Override
+    public CommentDto createComment(CommentDto commentDto) throws Exception {
+        log.info("(ArticleServiceImpl) 댓글 작성 서비스 시작");
+
+        if (commentDto.getParentCommentId() == 0){
+            commentDto.setParentCommentId(null);
+        }
+        return articleMapper.createComment(commentDto);
 
     }
 }
