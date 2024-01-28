@@ -71,8 +71,10 @@ public class ArticleServiceImpl implements ArticleService{
     public ArticleDetailDto getArticleDetail(int articleId) throws Exception {
         log.info("(ArticleServiceImpl) getArticleDetail 시작(이미지 제외)");
         ArticleDetailDto articleDetailDto = articleMapper.getArticleDetail(articleId);
+
+        articleDetailDto.setLikeCount(articleMapper.getLikeCount(articleId));
+
         List<String> urls = new ArrayList<>();
-        log.info("(ArticleServiceImpl) 여기까지는 됐을까 articleDetailDto(): {}", articleDetailDto);
 
         for (ArticleImageDto ai : articleMapper.getArticleImages(articleId)) {
             urls.add(ai.getUrl());
@@ -117,15 +119,15 @@ public class ArticleServiceImpl implements ArticleService{
             log.info("(ArticleServiceImpl) 좋아요 추가");
         }
 
-        articleMapper.updateLikeCount(articleLikeDto);
+//        articleMapper.updateLikeCount(articleLikeDto);
 
     }
 
     @Override
     public CommentDto createComment(CommentDto commentDto) throws Exception {
         log.info("(ArticleServiceImpl) 댓글 작성 서비스 시작");
+        articleMapper.createComment(commentDto);
 
-        return articleMapper.createComment(commentDto);
-
+        return commentDto;
     }
 }

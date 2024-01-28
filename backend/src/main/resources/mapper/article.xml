@@ -39,6 +39,13 @@
 
     </select>
 
+    <select id="getLikeCount" parameterType="int" resultType="int">
+        select count(*) as like_count
+        from article_likes
+        where article_id = #{articleId};
+
+    </select>
+
     <select id="getArticleImages" parameterType="int" resultType="ArticleImageDto">
         select *
         from article_images
@@ -63,7 +70,7 @@
     </select>
 
 
-<!--    좋아요 관련 쿼리문 시작 -->
+    <!--    좋아요 관련 쿼리문 시작 -->
     <select id="selectArticleLike" parameterType="articleLikeDto" resultType="Boolean">
         select case
             when count(*) > 0 then true else false
@@ -84,13 +91,6 @@
         where article_id = #{articleId} and user_id = #{userId};
     </delete>
 
-    <update id="updateLikeCount" parameterType="int">
-        update articles
-        set like_count = (select count(*)
-                          from article_likes
-                          where article_id = #{articleId})
-        where id = #{articleId}
-    </update>
 
 <!--    좋아요 관련 쿼리문 끝 -->
 
