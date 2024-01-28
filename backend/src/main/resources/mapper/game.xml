@@ -101,10 +101,25 @@
 			  );
 	</update>
 
-	<select id="getAliveParticipants" resultType="ParticipantDto" parameterType="string">
-		SELECT *
-		FROM participants
-		WHERE room_id = #{roomId} AND flag_die = 0;
+	<select id="getAliveParticipants" resultType="AliveParticipantDto" parameterType="string">
+		SELECT
+			p.*,
+			dm.flag_success
+		FROM
+			participants p
+				JOIN
+			daily_missions dm ON p.id = dm.participant_id
+				JOIN
+			(SELECT
+				 participant_id,
+				 MAX(day) AS max_day
+			 FROM
+				 daily_missions
+			 GROUP BY
+				 participant_id
+			) max_dm ON dm.participant_id = max_dm.participant_id AND dm.day = max_dm.max_day
+		WHERE
+			p.room_id = #{roomId} AND p.flag_die = 0;
 	</select>
 
 	<select id="getParticipantWithPId" resultType="ParticipantDto" parameterType="int">

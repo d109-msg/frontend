@@ -34,7 +34,7 @@ public interface GameService {
 
     ParticipantDto getParticipant(int userId, String roomId) throws Exception;
 
-    List<ParticipantDto> getAliveParticipant(String roomId) throws Exception;
+    List<AliveParticipantDto> getAliveParticipant(String roomId) throws Exception;
 
     void vote(VoteReceiveDto voteReceiveDto) throws Exception;
 

@@ -30,7 +30,7 @@ public interface GameMapper {
 
     ParticipantDto getParticipant(ParticipantReceiveDto participantReceiveDto) throws SQLException;
 
-    List<ParticipantDto> getAliveParticipants(String roomId) throws SQLException;
+    List<AliveParticipantDto> getAliveParticipants(String roomId) throws SQLException;
 
     void normalVote(int participantId, int targetId) throws SQLException;
     void mafiaVote(int participantId, int targetId) throws SQLException;
