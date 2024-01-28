@@ -55,6 +55,11 @@ public class GameServiceImpl implements GameService{
 
     @Override
     public String getMyVote(int participantId) throws Exception {
+        if(gameMapper.isAlive(participantId) != 0) { //죽었다면
+            log.info("getMyVote() player is dead");
+            return "participant is dead";
+        }
+
         MyVoteDto dto = gameMapper.getMyVote(participantId);
         String job = gameMapper.getParticipantWithPId(participantId).getJobId();
         log.info("getMyVote() myVote : {}", dto);
@@ -238,7 +243,7 @@ public class GameServiceImpl implements GameService{
      * @return 모든 유저가 각 몇 표를 받았는지의 정보가 담긴 list return
      */
     @Override
-    public List<VoteResultDto> getRoomVote(int userId, String roomId) throws Exception {
+    public List<VoteResponseDto> getRoomVote(int userId, String roomId) throws Exception {
         ParticipantDto participantDto = gameMapper.getParticipant(new ParticipantReceiveDto(userId, roomId));
 
         String job = participantDto.getJobId();
@@ -248,26 +253,31 @@ public class GameServiceImpl implements GameService{
         log.info("getRoomVote() -> list : {}", list);
         log.info("getRoomVote() -> roomId : {}", roomId);
 
-        if (getTime()) {
-            for(VoteResultDto vote : list){
-                vote.setDoctorVoteCount(-1);
-                vote.setMafiaVoteCount(-1);
-            }
-        } else {
-            for(VoteResultDto vote : list){
-                vote.setNormalVoteCount(-1); //밤일 때, 시민 투표 가림
+        List<VoteResponseDto> responseList = new ArrayList<>();
 
-                if(!job.equals("의사")) { //의사가 아니라면, 의사 투표 가림
-                    vote.setDoctorVoteCount(-1);
-                }
-                if(!job.equals("마피아")) { //마피아가 아니라면, 마피아 투표 가림
-                    vote.setMafiaVoteCount(-1);
+        for(VoteResultDto vote : list){
+            VoteResponseDto voteResult = VoteResponseDto.builder()
+                    .id(vote.getId())
+                    .nickname(vote.getNickname())
+                    .imageUrl(vote.getImageUrl())
+                    .build();
+            if (getTime()) { // 낮일 때
+                voteResult.setVoteCount(vote.getNormalVoteCount());
+            } else { //밤일 때
+                if (job.equals("의사")) { //의사일 때
+                    voteResult.setVoteCount(vote.getDoctorVoteCount());
+                } else if (job.equals("마피아")) { //마피아일 때
+                    voteResult.setVoteCount(vote.getMafiaVoteCount());
                 }
             }
+
+            responseList.add(voteResult);
         }
-        log.info("getRoomVote() changed list : {}", list);
 
-        return list;
+
+        log.info("getRoomVote() resultList : {}", responseList);
+
+        return responseList;
     }
 
     /**
@@ -293,12 +303,33 @@ public class GameServiceImpl implements GameService{
     }
 
     /**
+     * participantId를 입력받아 현재 진행 중인 미션을 리턴
+     * @param participantId
+     * @return MissionResultDto 현재 진행 중인 미션 (일반, 마피아)
+     * @throws Exception
+     */
+    @Override
+    public MissionResultDto getMyMission(int participantId) throws Exception {
+        if(gameMapper.isAlive(participantId) != 0) {
+            log.info("getMyMission() participant is dead");
+            return null;
+        } else {
+            return gameMapper.getMyMission(participantId);
+        }
+    }
+
+    /**
      * 직업과 participantID, targetId를 입력받아 시간에 따른 투표를 반영합니다.
      * @param voteReceiveDto 직업과 participantID, targetId를 입력받아
      * @throws Exception
      */
     @Override
     public void vote(VoteReceiveDto voteReceiveDto) throws Exception {
+        if(gameMapper.isAlive(voteReceiveDto.getParticipantId()) != 0) {
+            log.info("vote() participant is dead");
+            return;
+        }
+
         if(getTime()){
             //낮 08:00 - 20:00
             //시민 투표
