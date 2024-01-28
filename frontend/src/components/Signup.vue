@@ -55,6 +55,7 @@
 <script>
 import axios from 'axios'
 import router from '@/router'
+import { useAuthStore } from '@/store/authStore'
 
 
 export default {
@@ -123,24 +124,15 @@ export default {
             })
         },
 
-
-        signUp : function(){
-            const data = {
-                nickname : this.name,
-                emailId : this.email,
-                emailPassword : this.password,
-
-            }
-            axios.post("http://localhost:8080/user/sign-up", JSON.stringify(data),{
-                headers: {"Content-Type": `application/json`}
-            })
-            .then(result=>{
-                console.log(result,"성공")
+        signUp : async function(){
+            try{
+                const auth = useAuthStore()
+                await auth.signUp(this.name, this.email, this.password)
                 router.push('/login')
-            })
-            .catch(err => {
-                console.log(err)
-            })
+                alert(`${this.name}님 회원가입에 축하드립니다.`)
+            } catch(err){
+                alert('예기치 못한 오류가 발생했습니다.')
+            }
         }
 
     },

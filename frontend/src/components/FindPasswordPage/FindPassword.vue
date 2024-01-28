@@ -63,6 +63,7 @@
 <script>
 import axios from 'axios'
 import router from '@/router'
+import { useAuthStore } from '@/store/authStore'
 export default {
     name : 'FindPassword',
     data(){
@@ -79,67 +80,37 @@ export default {
         }
     },
     methods:{
-        next(){
+        async next(){
+            const emailInput = document.querySelector(".email-input")
             if (this.emailCheck == false){
-                const emailInput = document.querySelector(".email-input")
-                const emailData = {
-                    "emailId": this.email
-                }
-                axios.post("http://localhost:8080/user/password/reset", JSON.stringify(emailData),
-                {
-                    headers : {"Content-Type": `application/json`},
-                }
-                ).then(res=>{
-                    console.log(res)
-                    this.step++
-                }).catch(err=>{
-                    console.log(err)
+                try{
+                const auth = useAuthStore()
+                await auth.resetPassword(this.email)
+                this.step++
+                } catch(err) {
+                    alert('존재하지 않는 이메일입니다. 다시 이메일을 확인해주세요.')
                     emailInput.focus()
-                })
-            }else{
+                }
+            } else {
                 emailInput.focus()
             }
         },
-        resetPassword(){
+        async resetPassword(){
             const tempPasswordInput = document.querySelector(".temp-password-input")
-            const passwordData = {
-                "emailId": this.email,
-                "emailPassword": this.tempPassword
-            }
-
-            axios.post("http://localhost:8080/user/sign-in",JSON.stringify(passwordData),
-            {
-                    headers : {"Content-Type": `application/json`},
-            }).then(res=>{
-                console.log(res.data)
-                const access = res.data.accessToken
-                const refresh = res.data.refreshToken
-                store.commit('setAccessToken',access)
-                store.commit('setRefreshToken',refresh)
-                const newPasswordInput = document.querySelector(".password-input")
-                const newPasswordData = {
-                    "oldEmailPassword": this.tempPassword,
-                    "newEmailPassword": this.password
-                    
-                }
-                console.log(res)
-                axios.patch("http://localhost:8080/user/password",JSON.stringify(newPasswordData),
-                    {
-                        headers : {"Content-Type": `application/json`,
-                                    Authorization : `Bearer ${access}`,
-                    },
-                    }
-                ).then(res=>{
-                    console.log(res)
-                    this.step == 0
-                    router.push('/')
-                }).catch(err=>{
-                    console.log(err)    
-                })
-            }).catch(err=>{
-                console.log(err)
+            try{
+                const auth = useAuthStore()
+                let value = await auth.login(this.email,this.tempPassword)
+                auth.setAccess(value.data.accessToken)
+                auth.setRefresh(value.data.refreshToken)
+                await auth.changePassword(this.tempPassword,this.password)
+                this.step = 0
+                router.push('/')
+            } catch(error){
+                console.log(error)
                 tempPasswordInput.focus()
-            })
+                alert('잘못된 비밀번호입니다.')
+            }
+            
         },
         checkEmail : function(){
             const valid = /^[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*.[a-zA-Z]{2,3}$/i;

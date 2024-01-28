@@ -54,23 +54,18 @@ export default {
         }
     },
     methods: {
-        login : function(){
-            const data = {
-                emailId : this.emailId,
-                emailPassword : this.emailPassword
-            }
-            axios.post("http://localhost:8080/user/sign-in",JSON.stringify(data),{
-                headers:{"Content-Type": `application/json`}
-            }).then((res)=>{
-                const access = res.data.accessToken
-                const refresh = res.data.refreshToken
-                const authStore = useAuthStore()
-                authStore.setRefresh(refresh)
-                authStore.setAccess(access)
+        login : async function(){
+            try{
+                const auth = useAuthStore()
+                let value = await auth.login(this.emailId,this.emailPassword)
+                auth.setAccess(value.data.accessToken)
+                auth.setRefresh(value.data.refreshToken)
                 router.push('/')
-            }).catch((err)=>{
-                console.log(err)
-            })
+            } catch(error) {
+                console.log(error)
+                alert('로그인에 실패하였습니다.')
+                document.querySelector('input').focus()
+            }
         },
         
         socialLogin : function(num){
@@ -83,8 +78,6 @@ export default {
                 server = process.env.VUE_APP_naver
             }
             window.location.href = server
-            
-
         },
         FindPassword(){
             router.push('/findpassword')
