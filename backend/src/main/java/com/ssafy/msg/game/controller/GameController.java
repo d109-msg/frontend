@@ -82,13 +82,16 @@ public class GameController {
 
     @GetMapping("/vote/room")
     @Operation(summary = "유저 현재 방의 투표 현황 조회"
-            , description = "userEmail과 roomId를 이용해 해당 room의 투표 현황 조회\n낮과 밤에 따라 볼 수 없는 투표 수는 -1로 표시")
-
+            , description = "userId와 roomId를 이용해 해당 room의 투표 현황 조회\n현재 볼 수 있는 투표만 리턴합니다.\n 죽은 사람의 투표는 반영하지 않고, 죽은 사람이 받은 투표 수도 보여주지 않습니다.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "조회 성공", content = {
+                    @Content(mediaType = "application/json", schema = @Schema(implementation = VoteResponseDto.class)) }),
+            @ApiResponse(responseCode = "400", description = "조회 실패", content = @Content) })
     public ResponseEntity<?> getRoomVote(HttpServletRequest request, @RequestParam String roomId) {
         int userId = (int) request.getAttribute("id");
 
         try {
-            List<VoteResultDto> result = gameService.getRoomVote(userId, roomId);
+            List<VoteResponseDto> result = gameService.getRoomVote(userId, roomId);
             log.info("getRoomVote() -> result : {}", result);
 
             return new ResponseEntity<>(result, HttpStatus.OK);

@@ -238,7 +238,7 @@ public class GameServiceImpl implements GameService{
      * @return 모든 유저가 각 몇 표를 받았는지의 정보가 담긴 list return
      */
     @Override
-    public List<VoteResultDto> getRoomVote(int userId, String roomId) throws Exception {
+    public List<VoteResponseDto> getRoomVote(int userId, String roomId) throws Exception {
         ParticipantDto participantDto = gameMapper.getParticipant(new ParticipantReceiveDto(userId, roomId));
 
         String job = participantDto.getJobId();
@@ -248,26 +248,31 @@ public class GameServiceImpl implements GameService{
         log.info("getRoomVote() -> list : {}", list);
         log.info("getRoomVote() -> roomId : {}", roomId);
 
-        if (getTime()) {
-            for(VoteResultDto vote : list){
-                vote.setDoctorVoteCount(-1);
-                vote.setMafiaVoteCount(-1);
-            }
-        } else {
-            for(VoteResultDto vote : list){
-                vote.setNormalVoteCount(-1); //밤일 때, 시민 투표 가림
+        List<VoteResponseDto> responseList = new ArrayList<>();
 
-                if(!job.equals("의사")) { //의사가 아니라면, 의사 투표 가림
-                    vote.setDoctorVoteCount(-1);
-                }
-                if(!job.equals("마피아")) { //마피아가 아니라면, 마피아 투표 가림
-                    vote.setMafiaVoteCount(-1);
+        for(VoteResultDto vote : list){
+            VoteResponseDto voteResult = VoteResponseDto.builder()
+                    .id(vote.getId())
+                    .nickname(vote.getNickname())
+                    .imageUrl(vote.getImageUrl())
+                    .build();
+            if (getTime()) { // 낮일 때
+                voteResult.setVoteCount(vote.getNormalVoteCount());
+            } else { //밤일 때
+                if (job.equals("의사")) { //의사일 때
+                    voteResult.setVoteCount(vote.getDoctorVoteCount());
+                } else if (job.equals("마피아")) { //마피아일 때
+                    voteResult.setVoteCount(vote.getMafiaVoteCount());
                 }
             }
+
+            responseList.add(voteResult);
         }
-        log.info("getRoomVote() changed list : {}", list);
 
-        return list;
+
+        log.info("getRoomVote() resultList : {}", responseList);
+
+        return responseList;
     }
 
     /**
