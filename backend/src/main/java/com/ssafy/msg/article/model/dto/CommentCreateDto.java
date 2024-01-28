@@ -9,13 +9,8 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class CommentDto {
-    private int id;
-    private int userId;
+public class CommentCreateDto {
     private int articleId;
-    private int commentId;
     private int parentCommentId;
     private String content;
-    private String createTime;
-
 }
