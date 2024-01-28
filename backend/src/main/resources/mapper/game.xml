@@ -5,6 +5,30 @@
 <mapper
 	namespace="com.ssafy.msg.game.model.mapper.GameMapper">
 
+	<select id="getMyMission" resultType="MissionResultDto" parameterType="int">
+		SELECT
+			m.normal AS normal_mission,
+			m.mafia AS mafia_mission
+		FROM
+			missions m
+				JOIN
+			(SELECT
+				 mission_id
+			 FROM
+				 daily_missions
+			 WHERE
+				 participant_id = #{participantId}
+			 ORDER BY
+				 day DESC
+				 LIMIT 1) AS latest_mission
+			ON
+				m.id = latest_mission.mission_id;
+	</select>
+
+	<select id="isAlive" resultType="int" parameterType="int">
+		SELECT flag_die FROM participants p WHERE p.id = #{particiapntId};
+	</select>
+
 	<insert id="createNewMission" parameterType="NewMissionDto">
 		INSERT INTO daily_missions (participant_id, try, flag_success, mission_id, day)
 		SELECT p.id, 0, 0, #{missionId}, #{day}

@@ -43,5 +43,7 @@ public interface GameService {
     String getMyVote(int participantId) throws Exception;
 
     void createNewMission(String roomId, int day) throws Exception;
+
+    MissionResultDto getMyMission(int participantId) throws Exception;
 }
 
