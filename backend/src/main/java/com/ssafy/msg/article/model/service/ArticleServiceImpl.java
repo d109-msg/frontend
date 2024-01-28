@@ -1,18 +1,17 @@
 package com.ssafy.msg.article.model.service;
 
-import com.ssafy.msg.article.model.dto.ArticleDetailDto;
-import com.ssafy.msg.article.model.dto.ArticleDto;
-import com.ssafy.msg.article.model.dto.ArticleImageDto;
-import com.ssafy.msg.article.model.dto.ArticleWithUrlDto;
+import com.ssafy.msg.article.model.dto.*;
 import com.ssafy.msg.article.model.mapper.ArticleMapper;
 import com.ssafy.msg.article.util.S3Util;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -72,8 +71,10 @@ public class ArticleServiceImpl implements ArticleService{
     public ArticleDetailDto getArticleDetail(int articleId) throws Exception {
         log.info("(ArticleServiceImpl) getArticleDetail 시작(이미지 제외)");
         ArticleDetailDto articleDetailDto = articleMapper.getArticleDetail(articleId);
+
+        articleDetailDto.setLikeCount(articleMapper.getLikeCount(articleId));
+
         List<String> urls = new ArrayList<>();
-        log.info("(ArticleServiceImpl) 여기까지는 됐을까 articleDetailDto(): {}", articleDetailDto);
 
         for (ArticleImageDto ai : articleMapper.getArticleImages(articleId)) {
             urls.add(ai.getUrl());
@@ -86,9 +87,9 @@ public class ArticleServiceImpl implements ArticleService{
     }
 
     @Override
-    public List<ArticleDetailDto> getFeedArticleList(int userId) throws Exception {
+    public List<ArticleDetailDto> getFeedArticleList(FeedParamDto feedParamDto) throws Exception {
         log.info("(ArticleServiceImpl) getFeed 피드 게시물 리스트 조회 시작");
-        List<ArticleDetailDto> articleList = articleMapper.getFeedArticleList(userId);
+        List<ArticleDetailDto> articleList = articleMapper.getFeedArticleList(feedParamDto);
 
         List<ArticleDetailDto> feedArticleList = new ArrayList<>();
 
@@ -99,5 +100,34 @@ public class ArticleServiceImpl implements ArticleService{
         }
         return feedArticleList;
 
+    }
+
+    @Override
+    @Transactional
+    public void articleLike(ArticleLikeDto articleLikeDto) throws Exception {
+        log.info("(ArticleServiceImpl) 게시물 좋아요 시작");
+        /*
+        좋아요 목록을 조회 해서 지금 유저의 id 가 목록에 있으면 삭제하고 없으면 넣어줌
+         */
+
+        if (articleMapper.selectArticleLike(articleLikeDto)) {
+            articleMapper.deleteArticleLike(articleLikeDto);
+            log.info("(ArticleServiceImpl) 좋아요 삭제");
+
+        } else {
+            articleMapper.insertArticleLike(articleLikeDto);
+            log.info("(ArticleServiceImpl) 좋아요 추가");
+        }
+
+//        articleMapper.updateLikeCount(articleLikeDto);
+
+    }
+
+    @Override
+    public CommentDto createComment(CommentDto commentDto) throws Exception {
+        log.info("(ArticleServiceImpl) 댓글 작성 서비스 시작");
+        articleMapper.createComment(commentDto);
+
+        return commentDto;
     }
 }

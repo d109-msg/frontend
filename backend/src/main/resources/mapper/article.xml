@@ -33,9 +33,17 @@
     </select>
 
     <select id="getArticleDetail" parameterType="int" resultType="ArticleDetailDto">
-        select a.id as article_id, a.user_id, a.content, a.create_time, a.flag_private, a.modify_time, a.room_id
+        select a.id as article_id, a.user_id, a.content, a.create_time, a.flag_private, a.modify_time, a.room_id, a.like_count
         from articles a
         where a.id = #{articleId};
+
+    </select>
+
+    <select id="getLikeCount" parameterType="int" resultType="int">
+        select count(*) as like_count
+        from article_likes
+        where article_id = #{articleId};
+
     </select>
 
     <select id="getArticleImages" parameterType="int" resultType="ArticleImageDto">
@@ -46,28 +54,53 @@
 
     </select>
 
-    <select id="getFeedArticleList" parameterType="int" resultType="ArticleDetailDto">
-        select a.id as article_id, a.user_id, a.content, a.create_time, a.flag_private, a.modify_time, a.room_id
+    <select id="getFeedArticleList" parameterType="FeedParamDto" resultType="ArticleDetailDto">
+        select a.id as article_id, a.user_id, a.content, a.create_time, a.flag_private, a.modify_time, a.room_id, a.like_count
         from articles a
-        where a.user_id in (
+        where (a.user_id in (
             select f.to_user_id
             from follows f
             where f.from_user_id = #{userId}
-        )
-           or a.user_id = #{userId}
-        order by a.create_time desc;
-
-        --         select *
---         from articles a
---                  left join article_images ai on a.id = ai.article_id
---         where a.user_id in (
---             select f.to_user_id
---             from follows f
---             where f.from_user_id = #{userId}
---         )
---            or a.user_id = #{userId}
---         order by a.create_time desc;
+            )
+        or a.user_id = #{userId})
+        and a.id &lt; coalesce(#{offset}, (select max(id) from articles))
+        order by a.create_time desc
+        limit #{limit};
 
     </select>
+
+
+    <!--    좋아요 관련 쿼리문 시작 -->
+    <select id="selectArticleLike" parameterType="articleLikeDto" resultType="Boolean">
+        select case
+            when count(*) > 0 then true else false
+        end
+        from article_likes
+        where article_id = #{articleId} and user_id = #{userId}
+
+    </select>
+
+    <insert id="insertArticleLike" parameterType="articleLikeDto">
+        insert into article_likes (article_id, user_id, create_time)
+        values (#{articleId}, #{userId}, now());
+
+    </insert>
+
+    <delete id="deleteArticleLike" parameterType="articleLikeDto">
+        delete from article_likes
+        where article_id = #{articleId} and user_id = #{userId};
+    </delete>
+
+
+<!--    좋아요 관련 쿼리문 끝 -->
+
+<!--    댓글 관련 쿼리문 시작-->
+    <insert id="createComment" parameterType="CommentDto" useGeneratedKeys="true" keyProperty="id">
+        insert into comments
+            (article_id, user_id, parent_comment_id, content, create_time)
+        values (#{articleId}, #{userId}, #{parentCommentId}, #{content}, now());
+
+    </insert>
+
 
 </mapper>

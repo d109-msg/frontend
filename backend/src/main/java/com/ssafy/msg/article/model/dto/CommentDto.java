@@ -4,23 +4,18 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.springframework.web.multipart.MultipartFile;
-
-import java.util.List;
 
 @Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class ArticleDto {
-    // 게시글 관련
+public class CommentDto {
     private int id;
     private int userId;
+    private int articleId;
+    private int commentId;
+    private Integer parentCommentId;
     private String content;
     private String createTime;
-    private int flagPrivate;
-    private String modifyTime;
-    private String roomId;
-    private List<MultipartFile> articleImageList;
 
 }
