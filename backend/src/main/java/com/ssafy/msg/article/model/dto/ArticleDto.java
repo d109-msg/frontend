@@ -23,11 +23,4 @@ public class ArticleDto {
     private String roomId;
     private List<MultipartFile> articleImageList;
 
-    // 좋아요
-    private int likeCount;
-    private List<Integer> articleLikes;
-
-    // 댓글 관련
-    private List<CommentDto> commentList;
-
 }

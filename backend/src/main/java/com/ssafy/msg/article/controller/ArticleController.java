@@ -191,24 +191,27 @@ public class ArticleController {
     @Operation(summary = "댓글 작성", description = "댓글 작성하기")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "201", description = "댓글 작성 성공" , content ={
-                    @Content(mediaType = "application/json", schema = @Schema(implementation = CommentCreateDto.class)) }),
+                    @Content(mediaType = "application/json", schema = @Schema(implementation = CommentDto.class)) }),
             @ApiResponse(responseCode = "400", description = "댓글 작성 실패", content = @Content) })
-    public ResponseEntity<?> createComment(@RequestBody CommentCreateDto commentCreateDto, HttpServletRequest request) {
-        log.info("(controller) createComment() 댓글 작성 시작");
+    public ResponseEntity<?> createComment(HttpServletRequest request,
+                                           @RequestParam("articleId") int articleId,
+                                           @RequestParam("content") String content,
+                                           @RequestParam("parentCommentId") Integer parentCommentId ) {
 
         CommentDto commentDto = CommentDto.builder()
                 .userId((Integer) request.getAttribute("id"))
-                .articleId(commentCreateDto.getArticleId())
-                .content(commentCreateDto.getContent())
-                .parentCommentId(commentCreateDto.getParentCommentId())
+                .articleId(articleId)
+                .content(content)
+                .parentCommentId(parentCommentId > 0 ? parentCommentId : null) // 유효한 ID가 아니라면 null을 할당
                 .build();
+        log.info("(controller) createComment() 댓글 작성 시작 {}", commentDto);
 
         try {
             articleService.createComment(commentDto);
             return new ResponseEntity<>(HttpStatus.CREATED);
         } catch (Exception e) {
             log.error("(controller) 댓글 작성 실패", e);
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(commentDto, HttpStatus.BAD_REQUEST);
         } finally {
             log.info("(ArticleController) 끝");
         }
