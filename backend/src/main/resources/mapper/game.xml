@@ -8,18 +8,24 @@
 	<select id="getMyMission" resultType="MissionResultDto" parameterType="int">
 		SELECT
 			m.normal AS normal_mission,
-			m.mafia AS mafia_mission
+			m.mafia AS mafia_mission,
+			latest_mission.day,
+			latest_mission.flag_success,
+			latest_mission.try AS cnt_try
 		FROM
 			missions m
 				JOIN
 			(SELECT
-				 mission_id
+				 dm.mission_id,
+				 dm.day,
+				 dm.flag_success,
+				 dm.try
 			 FROM
-				 daily_missions
+				 daily_missions dm
 			 WHERE
-				 participant_id = #{participantId}
+				 dm.participant_id = 1
 			 ORDER BY
-				 day DESC
+				 dm.day DESC
 				 LIMIT 1) AS latest_mission
 			ON
 				m.id = latest_mission.mission_id;
@@ -30,10 +36,26 @@
 	</select>
 
 	<insert id="createNewMission" parameterType="NewMissionDto">
-		INSERT INTO daily_missions (participant_id, try, flag_success, mission_id, day)
-		SELECT p.id, 0, 0, #{missionId}, #{day}
-		FROM participants p
-		WHERE p.room_id = #{roomId} AND p.flag_die = 0;
+		INSERT INTO daily_missions (participant_id, try, flag_success, mission_id, day, normal_vote, mafia_vote, doctor_vote)
+		SELECT
+			p.id,
+			0,
+			0,
+			#{missionId},
+			#{day},
+			p.id,
+			CASE
+				WHEN p.job_id = '마피아' THEN p.id
+				ELSE NULL
+				END AS mafia_vote,
+			CASE
+				WHEN p.job_id = '의사' THEN p.id
+				ELSE NULL
+				END AS doctor_vote
+		FROM
+			participants p
+		WHERE
+			p.room_id = #{roomId} AND p.flag_die = 0;
 	</insert>
 
 	<select id="getRandomMission" parameterType="string" resultType="int">
@@ -101,10 +123,25 @@
 			  );
 	</update>
 
-	<select id="getAliveParticipants" resultType="ParticipantDto" parameterType="string">
-		SELECT *
-		FROM participants
-		WHERE room_id = #{roomId} AND flag_die = 0;
+	<select id="getAliveParticipants" resultType="AliveParticipantDto" parameterType="string">
+		SELECT
+			p.*,
+			dm.flag_success
+		FROM
+			participants p
+				JOIN
+			daily_missions dm ON p.id = dm.participant_id
+				JOIN
+			(SELECT
+				 participant_id,
+				 MAX(day) AS max_day
+			 FROM
+				 daily_missions
+			 GROUP BY
+				 participant_id
+			) max_dm ON dm.participant_id = max_dm.participant_id AND dm.day = max_dm.max_day
+		WHERE
+			p.room_id = #{roomId} AND p.flag_die = 0;
 	</select>
 
 	<select id="getParticipantWithPId" resultType="ParticipantDto" parameterType="int">

@@ -1,9 +1,7 @@
 package com.ssafy.msg.game.controller;
 
-import com.amazonaws.services.ec2.model.GetTransitGatewayRouteTablePropagationsRequest;
 import com.ssafy.msg.chat.model.dto.RoomDto;
 import com.ssafy.msg.game.model.dto.*;
-import com.ssafy.msg.game.model.mapper.GameMapper;
 import com.ssafy.msg.game.model.service.GameService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -16,11 +14,11 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.List;
 
 @RestController
@@ -31,6 +29,30 @@ import java.util.List;
 public class GameController {
 
     private final GameService gameService;
+
+    @PostMapping(value = "/analyze",
+            consumes = MediaType.MULTIPART_FORM_DATA_VALUE,
+            produces = MediaType.APPLICATION_JSON_VALUE)
+    @Operation(summary = "사진 검증 api", description = "사진이 해당 조건에 부함하면 true 아니면 false를 이유와 함께 리턴합니다.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "요청 성공", content = {
+                    @Content(mediaType = "application/json", schema = @Schema(implementation = AiResultDto.class)) }),
+            @ApiResponse(responseCode = "400", description = "조회 실패", content = @Content) })
+    public ResponseEntity<?> analyzeImage(@RequestParam("image") MultipartFile imageFile, @RequestParam("condition") String condition) throws Exception{
+        log.info("analyzeImage() start");
+        try {
+            AiResultDto result = gameService.analyzeImage(imageFile, condition);
+
+            return new ResponseEntity<>(result, HttpStatus.OK);
+        } catch (Exception e) {
+            log.error("analyzeImage() -> error : {}", e);
+
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        } finally {
+            log.info("analyzeImage() e");
+        }
+
+    }
 
     @GetMapping("/participant")
     @Operation(summary = "유저 participant 조회", description = "userEmail과 roomId를 이용해 해당 해당 유저의 participant 조회")
@@ -58,16 +80,16 @@ public class GameController {
     }
 
     @GetMapping("/room/alive")
-    @Operation(summary = "살아있는 참가자 리스트", description = "roomId를 입력받아 게임방 내의 살아있는 참가자만 리턴")
+    @Operation(summary = "살아있는 참가자 리스트와 데일리 미션 성공 여부", description = "roomId를 입력받아 게임방 내의 살아있는 참가자만 데일리 미션 성공 여부와 함께 리턴")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "조회 성공", content = {
-                    @Content(mediaType = "application/json", schema = @Schema(implementation = ParticipantDto.class)) }),
+                    @Content(mediaType = "application/json", schema = @Schema(implementation = AliveParticipantDto.class)) }),
             @ApiResponse(responseCode = "400", description = "조회 실패", content = @Content) })
     public ResponseEntity<?> getAliveParticipants(@RequestParam("roomId") String roomId){
         log.info("getAliveParticipants() -> roomId : {}", roomId);
 
         try {
-            List<ParticipantDto> list = gameService.getAliveParticipant(roomId);
+            List<AliveParticipantDto> list = gameService.getAliveParticipant(roomId);
             log.info("getAliveParticipants() -> list : {}", list);
 
             return new ResponseEntity<>(list, HttpStatus.OK);
@@ -108,8 +130,7 @@ public class GameController {
     @GetMapping(value = "/room/list")
     @Operation(summary = "유저의 진행 중인 게임 리스트를 반환", description = "userId을 이용해 user의 room list 반환")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "조회 성공", content = {
-                    @Content(mediaType = "application/json", schema = @Schema(implementation = RoomDto.class)) }),
+            @ApiResponse(responseCode = "200", description = "조회 성공"),
             @ApiResponse(responseCode = "400", description = "조회 실패", content = @Content) })
     public ResponseEntity<?> getUserRooms(HttpServletRequest request){
         int userId = (int) request.getAttribute("id");

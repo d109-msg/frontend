@@ -2,9 +2,9 @@ package com.ssafy.msg.game.model.service;
 
 import com.ssafy.msg.chat.model.dto.RoomDto;
 import com.ssafy.msg.game.model.dto.*;
-import org.apache.ibatis.jdbc.SQL;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.multipart.MultipartFile;
 
-import java.sql.SQLException;
 import java.util.List;
 
 public interface GameService {
@@ -34,7 +34,7 @@ public interface GameService {
 
     ParticipantDto getParticipant(int userId, String roomId) throws Exception;
 
-    List<ParticipantDto> getAliveParticipant(String roomId) throws Exception;
+    List<AliveParticipantDto> getAliveParticipant(String roomId) throws Exception;
 
     void vote(VoteReceiveDto voteReceiveDto) throws Exception;
 
@@ -45,5 +45,7 @@ public interface GameService {
     void createNewMission(String roomId, int day) throws Exception;
 
     MissionResultDto getMyMission(int participantId) throws Exception;
+
+    AiResultDto analyzeImage(MultipartFile imageFile, String condition) throws Exception;
 }
 

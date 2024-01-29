@@ -1,5 +1,6 @@
 package com.ssafy.msg.game.model.service;
 
+import com.ssafy.msg.article.util.OpenAiUtil;
 import com.ssafy.msg.chat.model.dto.RoomDto;
 import com.ssafy.msg.chat.model.mapper.ChatMapper;
 import com.ssafy.msg.game.model.dto.*;
@@ -9,6 +10,7 @@ import com.ssafy.msg.user.model.mapper.UserMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalTime;
 import java.time.ZoneId;
@@ -23,6 +25,8 @@ public class GameServiceImpl implements GameService{
     private final GameMapper gameMapper;
     private final ChatMapper chatMapper;
     private final UserMapper userMapper;
+
+    private final OpenAiUtil openAiUtil;
 
     @Override
     public boolean getRandomGameApplyStatus(int userId) throws Exception {
@@ -51,6 +55,60 @@ public class GameServiceImpl implements GameService{
         }else{
             return false;
         }
+    }
+
+    /**
+     * 이미지와 조건을 입력받아 해당 이미지가 조건에 부합하는지 gpt에게 요청을 보냅니다.
+     * json내에 content의 내용을 체크하여 dto로 만들어 리턴합니다.
+     * @param imageFile 검사할 사진
+     * @param condition 조건
+     * @return AiResultDto 합격 여부와 이유를 담아 리턴합니다.
+     * @throws Exception
+     */
+    @Override
+    public AiResultDto analyzeImage(MultipartFile imageFile, String condition) throws Exception {
+        log.info("analyzeImage() condition : {}", condition);
+
+        OpenAiApiResponseDto result = openAiUtil.analyzeImage(imageFile, condition);
+        AiResultDto aiResult = new AiResultDto();
+
+        if(result != null) {
+            //응답이 비어있지 않다면
+
+            String content = result.getChoices().get(0).getMessage().getContent();
+            log.info("analyzeImage() result : {}", content);
+
+            if(content.contains("true") || content.contains("True")) {
+                //응답이 true일 때
+                log.info("analyzeImage() true");
+                aiResult.setResult(true);
+            } else if(content.contains("false") || content.contains("False")) {
+                //응답이 false일 때
+                log.info("analyzeImage() false");
+                aiResult.setResult(false);
+            } else {
+                //응답이 잘못 됨
+                log.info("analyzeImage() ai 형식 오류");
+                aiResult.setResult(false);
+            }
+
+            //content 내에 이유: 뒤 부터 자르기 위해 index를 가져온다.
+            String keyString = "이유:";
+            int keyIndex = content.indexOf(keyString);
+
+            if (keyIndex != -1) {
+                // 정상적으로 이유: 가 포함되어 있다면 뒷 부분을 잘라 dto에 담습니다.
+                String reason = content.substring(keyIndex + keyString.length()).trim();
+                log.info("analyzeImage() 이유 : {}", reason);
+
+                aiResult.setReason(reason);
+            } else {
+                log.info("analyzeImage() 이유: 가 포함되지 않음");
+                aiResult.setReason("오류");
+            }
+        }
+
+        return aiResult;
     }
 
     @Override
@@ -298,7 +356,7 @@ public class GameServiceImpl implements GameService{
      * @throws Exception
      */
     @Override
-    public List<ParticipantDto> getAliveParticipant(String roomId) throws Exception {
+    public List<AliveParticipantDto> getAliveParticipant(String roomId) throws Exception {
         return gameMapper.getAliveParticipants(roomId);
     }
 
@@ -375,6 +433,8 @@ public class GameServiceImpl implements GameService{
     /**
      * roomId와 day를 입력받아 해당 room에서 수행한적 없는 미션을 랜덤으로 골라
      * 모든 participant에게 새로운 daily미션을 입력받은 day로 만든다.
+     * 모든 dailyMission은 생성될 때 기본적으로 각 보트가 본인을 찍음
+     * 마피아나 의사가 아니라면 해당 vote는 null로 처리
      * @param roomId 새로운 미션을 분배할 roomId 입력
      * @param day   새로 만들 미션의 날짜
      * @throws Exception
