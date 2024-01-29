@@ -30,10 +30,26 @@
 	</select>
 
 	<insert id="createNewMission" parameterType="NewMissionDto">
-		INSERT INTO daily_missions (participant_id, try, flag_success, mission_id, day)
-		SELECT p.id, 0, 0, #{missionId}, #{day}
-		FROM participants p
-		WHERE p.room_id = #{roomId} AND p.flag_die = 0;
+		INSERT INTO daily_missions (participant_id, try, flag_success, mission_id, day, normal_vote, mafia_vote, doctor_vote)
+		SELECT
+			p.id,
+			0,
+			0,
+			#{missionId},
+			#{day},
+			p.id,
+			CASE
+				WHEN p.job_id = '마피아' THEN p.id
+				ELSE NULL
+				END AS mafia_vote,
+			CASE
+				WHEN p.job_id = '의사' THEN p.id
+				ELSE NULL
+				END AS doctor_vote
+		FROM
+			participants p
+		WHERE
+			p.room_id = #{roomId} AND p.flag_die = 0;
 	</insert>
 
 	<select id="getRandomMission" parameterType="string" resultType="int">
