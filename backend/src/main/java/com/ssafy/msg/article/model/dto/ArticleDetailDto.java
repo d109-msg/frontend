@@ -26,6 +26,7 @@ public class ArticleDetailDto {
 
     // 좋아요
     private int likeCount;
+    private int isLike;
 
     // 댓글 관련
     private List<CommentDto> commentList;

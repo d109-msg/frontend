@@ -16,15 +16,15 @@ public interface ArticleMapper {
 
     List<ArticleWithUrlDto> getArticles(int userId) throws SQLException;
 
-    ArticleDetailDto getArticleDetail(int articleId) throws SQLException;
+    ArticleDetailDto getArticleDetail(ArticleDto articleDto) throws SQLException;
 
     List<ArticleDetailDto> getFeedArticleList(FeedParamDto feedParamDto) throws SQLException;
 
-    Boolean selectArticleLike(ArticleLikeDto articleDto) throws SQLException;
+    Boolean selectArticleLike(ArticleDto articleDto) throws SQLException;
 
-    void insertArticleLike(ArticleLikeDto articleLikeDto) throws SQLException;
+    void insertArticleLike(ArticleDto articleDto) throws SQLException;
 
-    void deleteArticleLike(ArticleLikeDto articleLikeDto) throws SQLException;
+    void deleteArticleLike(ArticleDto articleDto) throws SQLException;
 
     int getLikeCount(int articleId) throws SQLException;
 

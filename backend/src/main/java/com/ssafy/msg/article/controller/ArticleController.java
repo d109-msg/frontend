@@ -32,17 +32,6 @@ import java.util.List;
 public class ArticleController {
     private final ArticleService articleService;
 
-    private final OpenAiUtil openAiUtil;
-
-    private final S3Util s3Util;
-
-    @PostMapping(value = "/analyze",
-            consumes = MediaType.MULTIPART_FORM_DATA_VALUE,
-            produces = MediaType.APPLICATION_JSON_VALUE)
-    public String analyzeImageTest(@RequestParam("image") MultipartFile imageFile, @RequestParam("condition") String condition) throws Exception{
-        return openAiUtil.analyzeImage(imageFile, condition);
-    }
-
     @PostMapping(value = "/create",
             consumes = MediaType.MULTIPART_FORM_DATA_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE)
@@ -58,9 +47,9 @@ public class ArticleController {
         ArticleDto articleDto = ArticleDto.builder().userId(id).articleImageList(articleCreateDto.getArticleImageList()).content(articleCreateDto.getContent()).roomId(articleCreateDto.getRoomId()).build();
 
         try {
-            ArticleDetailDto articleDetailDto = articleService.createArticle(articleDto); // 클라이언트로부터 받은 정보를 서비스에 입력
+            articleService.createArticle(articleDto); // 클라이언트로부터 받은 정보를 서비스에 입력
             log.info("(controller) articleService.createArticle 호출 -> Success");
-            return new ResponseEntity<>(articleDetailDto, HttpStatus.CREATED);
+            return new ResponseEntity<>(HttpStatus.CREATED);
         } catch (Exception e) {
             log.error("(controller) articleService.createArticle 호출 에러", e);
             return new ResponseEntity<>("게시물 작성 실패", HttpStatus.BAD_REQUEST);
@@ -96,17 +85,28 @@ public class ArticleController {
             @ApiResponse(responseCode = "200", description = "게시물 상세 조회 성공", content ={
                     @Content(mediaType = "application/json", schema = @Schema(implementation = ArticleDetailDto.class)) }),
             @ApiResponse(responseCode = "400", description = "게시물 상세 조회 실패", content = @Content) })
-    public ResponseEntity<?> getArticleDetail(@RequestParam("articleId") int articleId) {
+    public ResponseEntity<?> getArticleDetail(@RequestParam("articleId") int articleId, HttpServletRequest request) {
         log.info("(ArticleController) 게시물 상세보기 시작");
 
+        int userId = (Integer) request.getAttribute("id");
+
+        ArticleDto articleDto = ArticleDto.builder()
+                .id(articleId)
+                .userId(userId)
+                .build();
+
         try {
-            ArticleDetailDto articleDetailDto = articleService.getArticleDetail(articleId);
+            ArticleDetailDto articleDetailDto = articleService.getArticleDetail(articleDto); // 게시물 상세 내용 가져오기
+
             log.info("(ArticleController) 게시물 상세조회 성공");
+
             return new ResponseEntity<>(articleDetailDto, HttpStatus.OK);
         } catch (Exception e) {
             log.error("(ArticleController) 게시물 상세 조회 실패", e);
+
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         } finally {
+
             log.info("(ArticleController) getArticleDetail end");
         }
 
@@ -158,7 +158,7 @@ public class ArticleController {
         }
     }
 
-    @PostMapping(value = "like")
+    @PostMapping(value = "/like")
     @Operation(summary = "게시물 좋아요", description = "게시물 좋아요")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "좋아요 성공", content ={
@@ -167,17 +167,17 @@ public class ArticleController {
     public ResponseEntity<?> articleLike(@RequestParam("articleId") int articleId, HttpServletRequest request) {
         log.info("(ArticleController) articleLike() -> 게시물 좋아요 시작");
 
-
         int userId = (Integer) request.getAttribute("id");
-        ArticleLikeDto articleLikeDto = ArticleLikeDto.builder().
+
+        ArticleDto articleDto = ArticleDto.builder().
                 userId(userId).
-                articleId(articleId).
+                id(articleId).
                 build();
 
         try {
-            articleService.articleLike(articleLikeDto);
+            articleService.articleLike(articleDto);
             log.info("(ArticleController) 좋아요 누르기 성공");
-            return new ResponseEntity<>(articleLikeDto, HttpStatus.OK);
+            return new ResponseEntity<>(articleDto, HttpStatus.OK);
         } catch (Exception e) {
             log.error("(ArticleController) 좋아요 누르기 실패", e);
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
