@@ -10,7 +10,8 @@ import TodayPage from './components/TodayPage/TodayPage.vue'
 import SocialSign from './components/SocialSign.vue'
 import Mainpage from './components/MainPage/MainPage.vue'
 import GamePage from './components/GamePage/GamePage.vue'
-
+import ChangePassword from './components/ChangePassword/ChangePassword.vue'
+import { useAuthStore } from "./store/authStore";
 
 
 const routes = [
@@ -74,8 +75,20 @@ const routes = [
         component : SocialSign,
     },
 
-
-
+    {
+        path: "/change-password",
+        component: ChangePassword,
+        beforeEnter: (to, from, next) => {
+            const auth = useAuthStore()
+            console.log(auth.getAccess)
+            if(auth.getAccess==""){
+                alert('로그인이 필요한 페이지입니다.')
+                next('/login')
+            }else{
+                return next()
+            }
+        }
+    },
 
     { //없는 URL 매핑시키는 로직 맨 마지막에 넣으면 됩니다.
         name: "NotFoundPage",
