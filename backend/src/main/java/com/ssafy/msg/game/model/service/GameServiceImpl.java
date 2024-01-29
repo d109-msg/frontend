@@ -375,6 +375,8 @@ public class GameServiceImpl implements GameService{
     /**
      * roomId와 day를 입력받아 해당 room에서 수행한적 없는 미션을 랜덤으로 골라
      * 모든 participant에게 새로운 daily미션을 입력받은 day로 만든다.
+     * 모든 dailyMission은 생성될 때 기본적으로 각 보트가 본인을 찍음
+     * 마피아나 의사가 아니라면 해당 vote는 null로 처리
      * @param roomId 새로운 미션을 분배할 roomId 입력
      * @param day   새로 만들 미션의 날짜
      * @throws Exception
