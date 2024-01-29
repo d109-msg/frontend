@@ -32,17 +32,6 @@ import java.util.List;
 public class ArticleController {
     private final ArticleService articleService;
 
-    private final OpenAiUtil openAiUtil;
-
-    private final S3Util s3Util;
-
-    @PostMapping(value = "/analyze",
-            consumes = MediaType.MULTIPART_FORM_DATA_VALUE,
-            produces = MediaType.APPLICATION_JSON_VALUE)
-    public String analyzeImageTest(@RequestParam("image") MultipartFile imageFile, @RequestParam("condition") String condition) throws Exception{
-        return openAiUtil.analyzeImage(imageFile, condition);
-    }
-
     @PostMapping(value = "/create",
             consumes = MediaType.MULTIPART_FORM_DATA_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE)
