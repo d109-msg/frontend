@@ -62,10 +62,10 @@ public class ArticleServiceImpl implements ArticleService{
     }
 
     @Override
-    public List<ArticleWithUrlDto> getArticles(String emailId) throws Exception {
+    public List<ArticleWithUrlDto> getArticles(Integer userId) throws Exception {
         log.info("(ArticleServiceImpl) 게시물조회 시작");
 
-        Integer userId = articleMapper.getUserId(emailId);
+        userId = articleMapper.getUserId(userId);
 
         if (userId != null) {
             return articleMapper.getArticles(userId);
@@ -136,8 +136,13 @@ public class ArticleServiceImpl implements ArticleService{
             log.info("(ArticleServiceImpl) 좋아요 추가");
         }
 
-//        articleMapper.updateLikeCount(articleLikeDto);
+    }
 
+    @Override
+    public List<LikeUserListDto> getLikeUserList(int articleId) throws Exception {
+        log.info("(ArticleServiceImpl) 좋아요 유저 리스트 조회 시작");
+
+        return articleMapper.getLikeUserList(articleId);
     }
 
     @Override

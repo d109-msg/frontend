@@ -3,6 +3,7 @@ package com.ssafy.msg.article.controller;
 
 import com.ssafy.msg.article.model.dto.*;
 import com.ssafy.msg.article.model.service.ArticleService;
+import com.ssafy.msg.user.exception.UserNotFoundException;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -61,13 +62,15 @@ public class ArticleController {
             @ApiResponse(responseCode = "200", description = "게시물 리스트 조회 성공", content = {
                     @Content(mediaType = "application/json", schema = @Schema(implementation = ArticleWithUrlDto.class)) }),
             @ApiResponse(responseCode = "400", description = "게시물 리스트 조회 실패", content = @Content) })
-    public ResponseEntity<?> getArticles(@RequestParam("emailId") String emailId) {
+    public ResponseEntity<?> getArticles(@RequestParam("userId") int userId) {
 
         try {
-            List<ArticleWithUrlDto> articleWithUrlDtoList = articleService.getArticles(emailId);
+            List<ArticleWithUrlDto> articleWithUrlDtoList = articleService.getArticles(userId);
 
             log.info("(ArticleController) 프로필 조회 성공");
             return new ResponseEntity<>(articleWithUrlDtoList, HttpStatus.OK);
+        } catch (UserNotFoundException e) {
+            return new ResponseEntity<>("회원 정보가 없습니다.", HttpStatus.BAD_REQUEST);
         } catch (Exception e) {
             log.error("(Exception) ", e);
             return new ResponseEntity<>("프로필 조회 실패", HttpStatus.BAD_REQUEST);
@@ -183,6 +186,26 @@ public class ArticleController {
             log.info("(ArticleController) 좋아요 누르기 끝");
         }
 
+    }
+
+    @GetMapping(value = "/likeUserList")
+    @Operation(summary = "좋아요 유저 리스트", description = "좋아요 누른 유저 리스트를 조회")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "좋아요 리스트 조회 성공" , content ={
+                    @Content(mediaType = "application/json", schema = @Schema(implementation = LikeUserListDto.class)) }),
+            @ApiResponse(responseCode = "400", description = "좋아요 리스트 조회 실패", content = @Content) })
+    public ResponseEntity<?> getLikeUserList(@RequestParam("articleId") int articleId ) {
+        log.info("(ArticleController) likeUserList 조회 시작");
+
+        try {
+            articleService.getLikeUserList(articleId);
+            return new ResponseEntity<>(articleService.getLikeUserList(articleId), HttpStatus.OK);
+        } catch (Exception e) {
+            log.error("(ArticleController) 좋아요 유저 리스트 조회 실패", e);
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        } finally {
+            log.info("(ArticleController) getLikeUserList end");
+        }
     }
 
     @PostMapping(value = "/comment")
