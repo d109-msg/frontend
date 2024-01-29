@@ -106,6 +106,9 @@ public class ArticleServiceImpl implements ArticleService{
             ArticleDto articleDto = ArticleDto.builder().id(at.getArticleId()).userId(at.getUserId()).build();
             ArticleDetailDto articleDetail = getArticleDetail(articleDto);
             at.setUrls(articleDetail.getUrls());
+//            log.info("(ArticleServiceImpl) at isLike {} ", at.getIsLike());
+//            at.setIsLike(isLike(articleDto));
+//            log.info("(ArticleServiceImpl) at isLike2 {} ", at.getIsLike());
 
             feedArticleList.add(at);
 
