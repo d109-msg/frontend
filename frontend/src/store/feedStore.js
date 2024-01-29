@@ -39,6 +39,9 @@ export const useFeedStore = defineStore('feed',{
                 Authorization : `Bearer ${accessToken}`
             }
             return axios.post(`http://localhost:8080/article/analyze?condition=${item}`,formData,{ headers })
+        },
+        getUserProfile : async function(email){
+            return axios.get(`http://localhost:8080/article/profile?userId=${1}`)
         }
     },
     persist: [
