@@ -8,18 +8,24 @@
 	<select id="getMyMission" resultType="MissionResultDto" parameterType="int">
 		SELECT
 			m.normal AS normal_mission,
-			m.mafia AS mafia_mission
+			m.mafia AS mafia_mission,
+			latest_mission.day,
+			latest_mission.flag_success,
+			latest_mission.try AS cnt_try
 		FROM
 			missions m
 				JOIN
 			(SELECT
-				 mission_id
+				 dm.mission_id,
+				 dm.day,
+				 dm.flag_success,
+				 dm.try
 			 FROM
-				 daily_missions
+				 daily_missions dm
 			 WHERE
-				 participant_id = #{participantId}
+				 dm.participant_id = 1
 			 ORDER BY
-				 day DESC
+				 dm.day DESC
 				 LIMIT 1) AS latest_mission
 			ON
 				m.id = latest_mission.mission_id;
