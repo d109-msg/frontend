@@ -87,8 +87,69 @@ public class SchedulerController {
             log.error("testAM8() -> Exception : {}", e);
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
+    }
 
+    @Operation(summary = "오후 6시 미션 미수행자 알림 테스트", description = "오후 6시 미션 미수행자 알림 테스트")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "랜덤 게임 배정 성공", content = @Content),
+            @ApiResponse(responseCode = "404", description = "랜덤 게임 배정 실패", content = @Content) })
+    @GetMapping("/6pm")
+    public ResponseEntity<?> testPM6(HttpServletRequest request) {
+        log.info("testPM6() -> Start");
 
+        int id = (int) request.getAttribute("id");
+        log.info("testPM6() -> Receive id : {}", id);
+
+        try {
+            schedulerService.gamePM6();
+            log.info("testPM6() -> Success");
+            return new ResponseEntity<>(HttpStatus.OK);
+        } catch (Exception e) {
+            log.error("testPM6() -> Exception : {}", e);
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    @Operation(summary = "오후 8시 랜덤 게임 투표 결과 테스트", description = "오후 8시 랜덤 게임 투표 결과 테스트")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "랜덤 게임 배정 성공", content = @Content),
+            @ApiResponse(responseCode = "404", description = "랜덤 게임 배정 실패", content = @Content) })
+    @GetMapping("/8pm")
+    public ResponseEntity<?> testPM8(HttpServletRequest request) {
+        log.info("testPM8() -> Start");
+
+        int id = (int) request.getAttribute("id");
+        log.info("testPM8() -> Receive id : {}", id);
+
+        try {
+            schedulerService.gamePM8();
+            log.info("testPM8() -> Success");
+            return new ResponseEntity<>(HttpStatus.OK);
+        } catch (Exception e) {
+            log.error("testPM8() -> Exception : {}", e);
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    @Operation(summary = "미션 미이행자 flag_die 수정 테스트", description = "미션 미이행자 flag_die 수정 테스트")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "랜덤 게임 배정 성공", content = @Content),
+            @ApiResponse(responseCode = "404", description = "랜덤 게임 배정 실패", content = @Content) })
+    @GetMapping("/nonCompleter")
+    public ResponseEntity<?> testNonCompleter(HttpServletRequest request) {
+        log.info("testNonCompleter() -> Start");
+
+        int id = (int) request.getAttribute("id");
+        log.info("testNonCompleter() -> Receive id : {}", id);
+
+        try {
+            schedulerService.manageNonCompleter("71a7d310-fe99-4c5d-b886-dce4bbcfe27a");
+            log.info("testNonCompleter() -> Success");
+            return new ResponseEntity<>(HttpStatus.OK);
+        } catch (Exception e) {
+            log.error("testNonCompleter() -> Exception : {}", e);
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
     }
 
 
