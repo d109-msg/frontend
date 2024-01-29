@@ -38,7 +38,8 @@ export default {
             selectRoom : String,
             step : 0,
             content : "",
-            feedStore : useFeedStore()
+            feedStore : useFeedStore(),
+            authStore : useAuthStore()
         }
     },
     props:{
@@ -53,17 +54,20 @@ export default {
             this.step++
             if(this.step==this.imgSrc.length) this.step = 0
         },
-        addFeed : function(){
-            this.feedStore.createFeed(this.content,this.roomId,this.imgData)
+        addFeed : async function(){
+            try{
+                await this.feedStore.axiosFeed(this.content,this.roomId,this.imgData)
+            } catch {
+                await this.authStore.useRefresh()
+                await this.feedStore.axiosFeed(this.content,this.roomId,this.imgData)
+                }
             this.$emit('createFeed')
-        }
+        },
             },
     mounted(){
         this.imgData = this.$props.dataInfo['imgData']
         this.imgSrc = this.$props.dataInfo['imgSrc']
         this.selectRoom= this.$props.dataInfo['selectRoom']
-        
-        
     }
 }
 </script>

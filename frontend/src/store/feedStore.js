@@ -15,7 +15,7 @@ export const useFeedStore = defineStore('feed',{
 
     },
     actions: {
-        createFeed : function(content,roomId,imgData){
+        axiosFeed : async function(content,roomId,imgData){
             const authStore = useAuthStore()
             const data = new FormData()
             data.append('content',content)
@@ -24,36 +24,21 @@ export const useFeedStore = defineStore('feed',{
             imgData.forEach(img=>{
                 data.append('articleImageList',img)
             })
-            axios.post('http://localhost:8080/article/create',data,{
-                headers: {
-                    'Content-Type' : 'multipart/form-data',
-                    Authorization : `Bearer ${accessToken}`
-                }
-            }).catch(err=>{
-                const cookies = useCookies().cookies
-                const refresh = cookies.get('msgRefresh')
-                axios.get('http://localhost:8080/user/token',{
-                    headers: {Authorization: `Bearer ${refresh}`}
-                    //header에 refresh 담아서 access 요청
-                }).then(res=>{
-                    accessToken = res.data.accessToken
-                    authStore.setAccess(accessToken)
-                    axios.post('http://localhost:8080/article/create',data,{
-                        headers: {
-                            'Content-Type' : 'multipart/form-data',
-                            Authorization : `Bearer ${accessToken}`
-                        }
-                    })
-                    .catch((err)=>{
-                        console.log(err)
-                    })
-                }).catch(()=>{
-                    router.push('/login')
-                })
-            })
+            const headers = {
+                'Content-Type' : 'multipart/form-data',
+                Authorization : `Bearer ${accessToken}`
+            }
+            return axios.post('http://localhost:8080/article/create',data,{ headers })
         },
-        missionConfirm : function(){
-            
+        missionConfirm : async function(dataImg,item){
+            const formData = new FormData()
+            formData.append('image',dataImg)
+            let accessToken = useAuthStore().getAccess
+            const headers = {
+                "Content-Type": `multipart/form-data`,
+                Authorization : `Bearer ${accessToken}`
+            }
+            return axios.post(`http://localhost:8080/article/analyze?condition=${item}`,formData,{ headers })
         }
     },
     persist: [
