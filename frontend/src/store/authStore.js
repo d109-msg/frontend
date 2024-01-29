@@ -89,6 +89,13 @@ export const useAuthStore = defineStore('auth',{
                 console.log(headers)
                 return axios.post("http://localhost:8080/user/password",JSON.stringify(data),{ headers })
         },
+        async getUser(){
+            const token = this.getAccess
+            const headers = {
+                Authorization : `Bearer ${token}`
+            }
+            return axios.get("http://localhost:8080/user/info",{ headers })
+        },
     },
     persist: [
         {
