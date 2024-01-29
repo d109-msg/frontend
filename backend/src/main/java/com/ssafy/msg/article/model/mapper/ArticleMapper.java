@@ -30,4 +30,6 @@ public interface ArticleMapper {
 
     void createComment(CommentDto commentDto) throws SQLException;
 
+    Integer getUserId(String emailId) throws SQLException;
+
 }

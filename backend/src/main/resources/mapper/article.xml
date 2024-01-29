@@ -102,5 +102,12 @@
 
     </insert>
 
+<!--    유저 email 여부 확인 후 userId 반환 -->
+    <select id="getUserId" parameterType="String" resultType="Integer">
+        select u.id
+        from users u
+        where email_id = #{emailId}
+    </select>
+
 
 </mapper>

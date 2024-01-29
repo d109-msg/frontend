@@ -3,8 +3,6 @@ package com.ssafy.msg.article.controller;
 
 import com.ssafy.msg.article.model.dto.*;
 import com.ssafy.msg.article.model.service.ArticleService;
-import com.ssafy.msg.article.util.OpenAiUtil;
-import com.ssafy.msg.article.util.S3Util;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -19,7 +17,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -64,15 +61,16 @@ public class ArticleController {
             @ApiResponse(responseCode = "200", description = "게시물 리스트 조회 성공", content = {
                     @Content(mediaType = "application/json", schema = @Schema(implementation = ArticleWithUrlDto.class)) }),
             @ApiResponse(responseCode = "400", description = "게시물 리스트 조회 실패", content = @Content) })
-    public ResponseEntity<?> getArticles(@RequestParam("userId") int userId) {
+    public ResponseEntity<?> getArticles(@RequestParam("emailId") String emailId) {
 
         try {
-            List<ArticleWithUrlDto> articleWithUrlDtoList = articleService.getArticles(userId);
-            log.info("(ArticleController) 게시물 조회 성공");
+            List<ArticleWithUrlDto> articleWithUrlDtoList = articleService.getArticles(emailId);
+
+            log.info("(ArticleController) 프로필 조회 성공");
             return new ResponseEntity<>(articleWithUrlDtoList, HttpStatus.OK);
         } catch (Exception e) {
             log.error("(Exception) ", e);
-            return new ResponseEntity<>("게시물 작성 실패", HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>("프로필 조회 실패", HttpStatus.BAD_REQUEST);
         } finally {
             log.info("(ArticleController) getArticles -> end");
         }
