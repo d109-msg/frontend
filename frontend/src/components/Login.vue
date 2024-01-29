@@ -65,7 +65,7 @@ export default {
                 console.log(error)
                 alert('로그인에 실패하였습니다.')
                 document.querySelector('input').focus()
-            }
+            }   
         },
         
         socialLogin : function(num){

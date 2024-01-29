@@ -22,7 +22,7 @@ export const useAuthStore = defineStore('auth',{
             this.access = token
         },
         setRefresh(token){
-            cookies.set("msgRefresh",token, (60*60*24),null,null,true)
+            cookies.set("msgRefresh",token, (60*60*24))
             //refresh 토큰의 갱신기간 하루(24시간)로 설정
         },
         async useRefresh(){
@@ -79,12 +79,15 @@ export const useAuthStore = defineStore('auth',{
                     "oldEmailPassword": temp,
                     "newEmailPassword": password 
                 }
+                const token = this.getAccess
                 const headers = {
                     "Content-Type": `application/json`,
-                    Authorization : `Bearer ${this.getAccess}`
+                    Authorization : `Bearer ${token}`
                 }
                 console.log(this.getAccess)
-                return axios.patch("http://localhost:8080/user/password",JSON.stringify(data),{ headers })
+                console.log(JSON.stringify(data))
+                console.log(headers)
+                return axios.post("http://localhost:8080/user/password",JSON.stringify(data),{ headers })
         },
     },
     persist: [

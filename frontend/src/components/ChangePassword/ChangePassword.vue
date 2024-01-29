@@ -1,35 +1,10 @@
 <template>
     <div class="container">
-        <LoadingSpinner v-if="spinFlag"/>
         <div class="main-img">
-
-            <div  v-if="step==0">
-                <div  class="find-password-form">
-                    <p class="find-password-title">비밀번호 찾기</p>
-                    <div class="find-password-content-box">
-                        <p class="find-password-content">
-                            가입한 이메일 주소를 입력해주세요.
-                        </p>
-                        <p class="find-password-content">
-                            비밀번호 재설정을 위한 임시 비밀번호를 보내드리겠습니다.
-                        </p>
-                    </div>
-                    <div class="email-form">
-                        <input type="text" class="email-input" required v-model="email">
-                        <p class="email-label">E-mail</p>
-                        <p class="email-warn" v-if="emailCheck">올바른 형식의 이메일을 기입해주세요.</p>
-                    </div>
-                    
-                    <button class="next-btn" @click="next()">
-                        Next
-                    </button>            
-                </div>
-            </div>
-
-            <div  v-if="step==1">
+            <div>
                 <div  class="find-password-form">
                     <p class="find-password-title2">
-                        발송된 <span>임시 비밀번호</span>를 확인 후, 새로운 비밀번호를 설정해주세요.</p>
+                        새로운 비밀번호를 설정해주세요.</p>
                     <div class="find-password-content-box">
                         <div class="temp-password-form">
                            <input class="temp-password-input" required v-model="tempPassword">
@@ -70,9 +45,6 @@ export default {
     name : 'FindPassword',
     data(){
         return{
-            step:0,
-            email : "",
-            emailCheck : true,
             tempPassword : "",
             tempPasswordCheck : false,
             password : "",
@@ -83,53 +55,16 @@ export default {
         }
     },
     methods:{
-        async next(){
-            const emailInput = document.querySelector(".email-input")
-            if (this.emailCheck == false){
-                try{
-                this.spinFlag = true
-                const auth = useAuthStore()
-                await auth.resetPassword(this.email)
-                alert('임시비밀번호가 발송되었습니다.')
-                this.spinFlag = false
-                router.push('/login')
-                } catch(err) {
-                    alert('존재하지 않는 이메일입니다. 다시 이메일을 확인해주세요.')
-                    emailInput.focus()
-                }
-            } else {
-                emailInput.focus()
-            }
-        },
-
         async resetPassword(){
-            const tempPasswordInput = document.querySelector(".temp-password-input")
             try{
                 const auth = useAuthStore()
-                let value = await auth.login(this.email,this.tempPassword)
-                auth.setAccess(value.data.accessToken)
-                auth.setRefresh(value.data.refreshToken)
                 await auth.changePassword(this.tempPassword,this.password)
-                this.step = 0
                 router.push('/')
             } catch(error){
                 console.log(error)
-                tempPasswordInput.focus()
-                alert('잘못된 비밀번호입니다.')
+                // alert('로그인 세션이 만료되었습니다.')
+                // router.push('/login')
             }
-            
-        },
-
-        checkEmail : function(){
-            const valid = /^[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*.[a-zA-Z]{2,3}$/i;
-            if(!valid.test(this.email)|| !this.email) {
-                this.emailCheck = true
-                return
-            }
-            this.emailCheck = false
-        },
-        checkTempPassword :function(){
-
         },
         checkPassword : function(){
             const valid = /^(?=.*[a-zA-Z])(?=.*[!@#$%^*+=-])(?=.*[0-9]).{8,15}$/; 
@@ -151,18 +86,10 @@ export default {
         },
     },
     watch:{
-        email(){
-            this.checkEmail()
-        },
-
-        tempPassword(){
-            
-        },
         password(){
             this.checkValidation()
             this.checkPassword()
         },
-        
         validation(){
             this.checkValidation()
         },
