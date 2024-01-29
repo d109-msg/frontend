@@ -32,10 +32,10 @@
 
     </select>
 
-    <select id="getArticleDetail" parameterType="int" resultType="ArticleDetailDto">
-        select a.id as article_id, a.user_id, a.content, a.create_time, a.flag_private, a.modify_time, a.room_id, a.like_count
+    <select id="getArticleDetail" parameterType="ArticleDto" resultType="ArticleDetailDto">
+        select a.id as article_id, a.user_id, a.content, a.create_time, a.flag_private, a.modify_time, a.room_id
         from articles a
-        where a.id = #{articleId};
+        where a.id = #{id};
 
     </select>
 
@@ -71,24 +71,24 @@
 
 
     <!--    좋아요 관련 쿼리문 시작 -->
-    <select id="selectArticleLike" parameterType="articleLikeDto" resultType="Boolean">
+    <select id="selectArticleLike" parameterType="articleDto" resultType="Boolean">
         select case
             when count(*) > 0 then true else false
         end
         from article_likes
-        where article_id = #{articleId} and user_id = #{userId}
+        where article_id = #{id} and user_id = #{userId}
 
     </select>
 
-    <insert id="insertArticleLike" parameterType="articleLikeDto">
+    <insert id="insertArticleLike" parameterType="articleDto">
         insert into article_likes (article_id, user_id, create_time)
-        values (#{articleId}, #{userId}, now());
+        values (#{id}, #{userId}, now());
 
     </insert>
 
-    <delete id="deleteArticleLike" parameterType="articleLikeDto">
+    <delete id="deleteArticleLike" parameterType="articleDto">
         delete from article_likes
-        where article_id = #{articleId} and user_id = #{userId};
+        where article_id = #{id} and user_id = #{userId};
     </delete>
 
 
