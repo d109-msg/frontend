@@ -326,6 +326,9 @@ public class GameServiceImpl implements GameService{
                     voteResult.setVoteCount(vote.getDoctorVoteCount());
                 } else if (job.equals("마피아")) { //마피아일 때
                     voteResult.setVoteCount(vote.getMafiaVoteCount());
+                } else if (job.equals("시민")) {
+                    log.info("getRoomVote() 시민에게 보여줄 투표가 없음");
+                    return null;
                 }
             }
 
@@ -422,10 +425,10 @@ public class GameServiceImpl implements GameService{
 
         // 현재 시간이 시작 시간과 종료 시간 사이인지 확인합니다.
         if (now.toLocalTime().isAfter(startTime) && now.toLocalTime().isBefore(endTime)) {
-            log.info("getRoomVote() 현재 시간은 08:00과 20:00 사이입니다.");
+            log.info("getRoomTime() 현재 시간은 08:00과 20:00 사이입니다.");
             return true;
         } else {
-            log.info("getRoomVote() 현재 시간은 08:00과 20:00 사이가 아닙니다.");
+            log.info("getRoomTime() 현재 시간은 08:00과 20:00 사이가 아닙니다.");
             return false;
         }
     }
