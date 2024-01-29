@@ -20,6 +20,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 /*
  * Controller 설정
@@ -66,9 +67,10 @@ public class ChatController {
 
     private final ChatService chatService;
 
-    @Operation(summary = "일대일 채팅방 생성 및 조회", description = "일대일 채팅방 생성 및 조회")
+    @Operation(summary = "일대일 채팅방 생성 및 조회", description = "상대방 아이디를 통해 일대일 채팅방 생성 또는 조회")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "일대일 채팅방 생성 및 조회 성공", content = @Content),
+            @ApiResponse(responseCode = "200", description = "기존 일대일 채팅방 조회 성공", content = @Content),
+            @ApiResponse(responseCode = "201", description = "신규 일대일 채팅방 생성 및 조회 성공", content = @Content),
             @ApiResponse(responseCode = "400", description = "일대일 채팅방 생성 및 조회 실패", content = @Content) })
     @PostMapping("/personal")
     public ResponseEntity<?> getPersonalRoom(@Valid HttpServletRequest request, @RequestBody OpponentDto opponentDto) {
@@ -80,25 +82,27 @@ public class ChatController {
                 .userId1(id)
                 .userId2(opponentDto.getId()).build();
 
-        RoomDto roomDto = null;
-
         try {
-            roomDto = chatService.getPersonalRoom(createRoomDto);
+            Map map = chatService.getPersonalRoom(createRoomDto);
             log.info("getPersonalRoom() -> Success");
-            return new ResponseEntity<>(roomDto, HttpStatus.OK);
+            if ((boolean) map.get("isNew")){
+                return new ResponseEntity<>((RoomDto) map.get("roomDto"), HttpStatus.CREATED);
+            }else{
+                return new ResponseEntity<>((RoomDto) map.get("roomDto"), HttpStatus.OK);
+            }
         } catch (Exception e) {
             log.error("getPersonalRoom() -> Exception : {}", e);
-            return new ResponseEntity<>(roomDto, HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         } finally {
             log.info("getPersonalRoom() -> End");
         }
     }
 
 
-    @Operation(summary = "일대일 채팅방 목록 조회", description = "회원 이메일에 따른 일대일 채팅방 목록 조회")
+    @Operation(summary = "일대일 채팅방 목록 조회", description = "회원 아이디에 따른 일대일 채팅방 목록 조회")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "일대일 채팅방 목록 조회 성공", content = @Content),
-            @ApiResponse(responseCode = "404", description = "일대일 채팅방 목록 조회 실패", content = @Content) })
+            @ApiResponse(responseCode = "400", description = "일대일 채팅방 목록 조회 실패", content = @Content) })
     @GetMapping("/personal")
     public ResponseEntity<?> getPersonalRoomsInfoById(HttpServletRequest request) {
         log.info("getPersonalRoomsInfoById() -> Start");
