@@ -18,7 +18,7 @@
             <button class="login-btn" @click="login">
                 Login
             </button>            
-            <div class="find-password-font">Forget your password?</div>
+            <div class="find-password-font" @click="FindPassword">Forget your password?</div>
 
             <div class="or-sign-in-with" >or Sign in with</div>
             <div style="display: flex; justify-content: center;">
@@ -40,6 +40,9 @@
 <script>
 import axios from 'axios'
 import dotenv from 'dotenv'
+import router from '@/router'
+import { useAuthStore } from '@/store/authStore'
+
 dotenv.config()
 
 export default {
@@ -51,18 +54,18 @@ export default {
         }
     },
     methods: {
-        login : function(){
-            const data = {
-                emailId : this.emailId,
-                emailPassword : this.emailPassword
-            }
-            axios.post("http://localhost:8080/user/sign-in",JSON.stringify(data),{
-                headers:{"Content-Type": `application/json`}
-            }).then((res)=>{
-                console.log(res,"성공")
-            }).catch((err)=>{
-                console.log(err)
-            })
+        login : async function(){
+            try{
+                const auth = useAuthStore()
+                let value = await auth.login(this.emailId,this.emailPassword)
+                auth.setAccess(value.data.accessToken)
+                auth.setRefresh(value.data.refreshToken)
+                router.push('/')
+            } catch(error) {
+                console.log(error)
+                alert('로그인에 실패하였습니다.')
+                document.querySelector('input').focus()
+            }   
         },
         
         socialLogin : function(num){
@@ -75,8 +78,9 @@ export default {
                 server = process.env.VUE_APP_naver
             }
             window.location.href = server
-            
-
+        },
+        FindPassword(){
+            router.push('/findpassword')
         }
     }
 }
