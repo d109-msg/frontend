@@ -12,6 +12,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.sql.SQLException;
 import java.time.LocalTime;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
@@ -29,9 +30,9 @@ public class GameServiceImpl implements GameService{
     private final OpenAiUtil openAiUtil;
 
     @Override
-    public boolean getRandomGameApplyStatus(int userId) throws Exception {
-        boolean randomGameApplyStatus = gameMapper.getRandomGameApplyStatus(userId);
-        return randomGameApplyStatus;
+    public void applyRandomGame(int userId) throws Exception {
+        UserDto user = userMapper.findUserById(userId);
+        gameMapper.applyRandomGame(user);
     }
 
     @Override
@@ -250,11 +251,7 @@ public class GameServiceImpl implements GameService{
             result.add(participant);
         }
 
-        int resultCnt = gameMapper.insertParticipants(result);
-
-        for(int userId: roomStartReceiveDto.getUserList()){
-            gameMapper.deleteParticipant(userId);
-        }
+        int resultCnt = gameMapper.updateParticipants(result);
 
         log.info("gameStart() resultCnt : {}", resultCnt);
 

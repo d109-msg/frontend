@@ -1,12 +1,14 @@
 package com.ssafy.msg.article.controller;
 
 
-import com.ssafy.msg.article.model.dto.*;
+import com.ssafy.msg.article.model.dto.ArticleCreateDto;
+import com.ssafy.msg.article.model.dto.ArticleDetailDto;
+import com.ssafy.msg.article.model.dto.ArticleDto;
+import com.ssafy.msg.article.model.dto.ArticleWithUrlDto;
 import com.ssafy.msg.article.model.service.ArticleService;
 import com.ssafy.msg.article.util.OpenAiUtil;
 import com.ssafy.msg.article.util.S3Util;
 import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -79,7 +81,7 @@ public class ArticleController {
 
     }
 
-    @GetMapping(value = "")
+    @GetMapping(value = "/detail")
     @Operation(summary = "게시물 상세", description = "게시물 상세 내용 보기")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "게시물 상세 조회 성공", content ={
@@ -118,38 +120,13 @@ public class ArticleController {
             @ApiResponse(responseCode = "200", description = "피드 게시물 조회 성공", content ={
                     @Content(mediaType = "application/json", schema = @Schema(implementation = ArticleDetailDto.class)) }),
             @ApiResponse(responseCode = "400", description = "피드 게시물 조회 실패", content = @Content) })
-    public ResponseEntity<?> getFeedArticleList(HttpServletRequest request,
-            @Parameter(description = "마지막으로 로딩한 타겟") @RequestParam(value = "offset", required = false) Integer offset,
-            @Parameter(description = "페이지당 타겟 개수") @RequestParam(value = "limit", required = false, defaultValue = "5") Integer limit) {
-        log.info("getFollowList() -> Start");
-        log.info("getFollowList() -> Receive offset : {}", offset);
-        log.info("getFollowList() -> Receive limit : {}", limit);
+    public ResponseEntity<?> getFeedArticleList(HttpServletRequest request) {
 
         int userId = (Integer) request.getAttribute("id");
-        if (offset == null) {
-            offset = Integer.MAX_VALUE;
-        }
-
-        FeedParamDto feedParamDto = FeedParamDto.builder()
-                .userId(userId)
-                .offset(offset)
-                .limit(limit)
-                .build();
 
         try {
-            List<ArticleDetailDto> articleDetailDtos = articleService.getFeedArticleList(feedParamDto);
-            int lastId = articleDetailDtos.get(articleDetailDtos.size() -1).getArticleId();
-
-            String currentUrl = request.getRequestURL().toString();
-            String nextUrl = currentUrl + "?offset=" + lastId + "&limit=" + limit ;
-
-            FeedResponseDto feedResponseDto = FeedResponseDto.builder()
-                    .articleDetailDtos(articleDetailDtos)
-                    .nextUrl(nextUrl)
-                    .build();
-            log.info("(ArticleController) getFeedArticleList() 성공");
-
-            return new ResponseEntity<>(feedResponseDto, HttpStatus.OK);
+            List<ArticleDetailDto> articleDetailDtos = articleService.getFeedArticleList(userId);
+            return new ResponseEntity<>(articleDetailDtos, HttpStatus.OK);
         } catch (Exception e) {
             log.error("(ArticleController) 피드 게시물 조회 실패", e);
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);

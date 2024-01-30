@@ -3,9 +3,9 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper
-        namespace="com.ssafy.msg.scheduler.model.mapper.SchedulerMapper">
+        namespace="com.ssafy.msg.message.scheduler.mapper.SchedulerMapper">
 
-    <select id="getWaitingUsersId"
+    <select id="getWaitingUsers"
             resultType="int">
         SELECT user_id
         FROM participants

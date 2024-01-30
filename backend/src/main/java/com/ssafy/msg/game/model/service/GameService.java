@@ -8,11 +8,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.util.List;
 
 public interface GameService {
-    boolean getRandomGameApplyStatus(int userId) throws Exception;
-
-    boolean applyRandomGame(int userId) throws Exception;
-
-    boolean cancelRandomGame(int userId) throws Exception;
+    void applyRandomGame(int userId) throws Exception;
 
     boolean isParticipantInRoom(EnterGroupRoomDto enterGroupRoomDto) throws Exception;
 

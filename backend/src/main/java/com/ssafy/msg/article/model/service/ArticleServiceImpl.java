@@ -1,12 +1,14 @@
 package com.ssafy.msg.article.model.service;
 
-import com.ssafy.msg.article.model.dto.*;
+import com.ssafy.msg.article.model.dto.ArticleDetailDto;
+import com.ssafy.msg.article.model.dto.ArticleDto;
+import com.ssafy.msg.article.model.dto.ArticleImageDto;
+import com.ssafy.msg.article.model.dto.ArticleWithUrlDto;
 import com.ssafy.msg.article.model.mapper.ArticleMapper;
 import com.ssafy.msg.article.util.S3Util;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.ArrayList;
@@ -34,7 +36,6 @@ public class ArticleServiceImpl implements ArticleService{
             for (MultipartFile multipartFile: articleDto.getArticleImageList()) {
                 String uuid = s3Util.saveFile(multipartFile);
                 String url = s3Util.getUrl(uuid);
-
 
                 // articleImage table 에 사진 정보 저장
                 articleMapper.insertArticleImage(new ArticleImageDto(articleDto.getId(), url, uuid, 0));
