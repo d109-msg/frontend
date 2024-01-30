@@ -21,7 +21,6 @@ export default {
         this.prevScrollY = window.scrollY
         window.addEventListener('scroll',()=>{
             let nowScrollY = window.scrollY
-            console.log('hi')
             if(this.prevScrollY < nowScrollY){
                 banner.classList.remove('banner-up-event')
                 banner.classList.add('banner-down-event')
