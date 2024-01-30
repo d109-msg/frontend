@@ -6,8 +6,6 @@ import com.ssafy.msg.article.util.S3Util;
 import com.ssafy.msg.user.exception.UserNotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -117,7 +115,7 @@ public class ArticleServiceImpl implements ArticleService{
 
     }
 
-
+    // 게시물 좋아요 시작
     @Override
     @Transactional
     public void articleLike(ArticleDto articleDto) throws Exception {
@@ -146,13 +144,49 @@ public class ArticleServiceImpl implements ArticleService{
         return articleMapper.getLikeUserList(articleId);
     }
 
+    // 게시물 좋아요 끝
+
+    // 댓글 좋아요 서비스
     @Override
-    public CommentDto createComment(CommentDto commentDto) throws Exception {
+    @Transactional
+    public void commentLike(CommentLikeDto commentLikeDto) throws Exception {
+        log.info("(ArticleServiceImpl) 댓글 좋아요 시작");
+
+        if (articleMapper.selectCommentLike(commentLikeDto)) {
+            articleMapper.deleteCommentLike(commentLikeDto);
+
+            log.info("(ArticleServiceImpl) 댓글 좋아요 삭제");
+
+        } else {
+            articleMapper.insertCommentLike(commentLikeDto);
+
+            log.info("(ArticleServiceImpl) 댓글 좋아요 추가");
+        }
+
+    }
+
+
+    // 댓글 crud 시작
+    @Override
+    public void createComment(CommentDto commentDto) throws Exception {
         log.info("(ArticleServiceImpl) 댓글 작성 서비스 시작");
         articleMapper.createComment(commentDto);
 
-        return commentDto;
     }
+
+    @Override
+    public List<CommentDto> getComments(CommentDto commentDto) throws Exception {
+        List<CommentDto> commentDtos = articleMapper.getComments(commentDto);
+
+        for (CommentDto cd : commentDtos) {
+            cd.setCommentLikeCount(articleMapper.getCommentLikeCount(cd.getId()));
+        }
+
+        return commentDtos;
+
+    }
+
+    // 댓글 crud 끝
 
     @Override
     public int isLike(ArticleDto articleDto) throws Exception {
