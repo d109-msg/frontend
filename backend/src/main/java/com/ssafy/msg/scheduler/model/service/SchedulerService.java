@@ -10,9 +10,8 @@ import java.sql.SQLException;
 public interface SchedulerService {
     void gameAM8() throws Exception;
     void gamePM6() throws SQLException;
-    void gamePM7() throws Exception;
     void gamePM8() throws Exception;
-    void gameAM12();
+    void gameAM12() throws SQLException;
 
 
 

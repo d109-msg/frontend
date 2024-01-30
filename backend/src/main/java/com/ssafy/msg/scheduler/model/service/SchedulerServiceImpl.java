@@ -70,11 +70,6 @@ public class SchedulerServiceImpl implements SchedulerService{
         }
     }
 
-    @Override
-    public void gamePM7() throws Exception {
-
-    }
-
     @Scheduled(cron = "0 0 20 * * ?")
     @Override
     public void gamePM8() throws Exception {
@@ -83,9 +78,7 @@ public class SchedulerServiceImpl implements SchedulerService{
         List<String> unendRoom = schedulerMapper.getUnendRoom();
 
         for (String roomId: unendRoom) {
-            //미션 미이행자 관리
-            manageNonCompleter(roomId);
-            // 투표 결과 처리
+            // 투표 결과 처리 및 미션 미수행자 관리
             manageNormalVote(roomId);
         }
 
@@ -93,9 +86,10 @@ public class SchedulerServiceImpl implements SchedulerService{
 
     @Scheduled(cron = "0 0 0 * * ?")
     @Override
-    public void gameAM12() {
-        // end_time이 전날인 roomId
-        // [DB] available change
+    public void gameAM12() throws SQLException {
+        // end_time이 전날인 roomId의 available change
+        schedulerMapper.updateFlagAvailable();
+
     }
 
 
@@ -199,6 +193,9 @@ public class SchedulerServiceImpl implements SchedulerService{
                 messageService.sendGameNotice(roomId, "선량한 시민 " +participantDto.getNickname()+"님이 처형당했습니다.");
             }
 
+            // 미션 미수행자 kill
+            manageNonCompleter(roomId);
+
             manageGameEnd(roomId, true);
 
         }
@@ -241,25 +238,31 @@ public class SchedulerServiceImpl implements SchedulerService{
      * @throws SQLException
      */
     public void manageGameEnd(String roomId, boolean isNight) throws Exception {
-        // 죽지 않은 마피아 수가 0이라면 => 시민 승리
-        int aliveMafia = schedulerMapper.getAliveMafia(roomId);
-        if (aliveMafia == 0){
-            endGame(0, roomId);
+        // 모두 동시에 죽는다면 => 무승부
+        int aliveParticipant = schedulerMapper.getAliveParticipant(roomId);
+        if (aliveParticipant == 0){
+            endGame(-1, roomId);
         }else{
-            int isMafiaWin = schedulerMapper.isMafiaWin(roomId);
-            if (isMafiaWin == 1){
-                // 죽지 않은 마피아 수 >= 죽지 않은 시민 수 => 마피아 승리
-                endGame(1, roomId);
+            // 죽지 않은 마피아 수가 0이라면 => 시민 승리
+            int aliveMafia = schedulerMapper.getAliveMafia(roomId);
+            if (aliveMafia == 0){
+                endGame(0, roomId);
             }else{
-                // 죽지 않은 마피아 수 < 죽지 않은 시민 수 => 게임 진행
-                if (isNight == true){
-                    // [알림] n일차 밤이 되었습니다.
-                    // PM 마피아와 의사 투표 알림
-                    messageService.sendDayNotice("밤", roomId);
-                    messageService.sendGameNotice(roomId, "타겟을 지정해주세요.");
-                    messageService.sendGameNotice(roomId, "살릴 사람을 선택해주세요.");
-                }else {
-                    newDayMission(roomId);
+                int isMafiaWin = schedulerMapper.isMafiaWin(roomId);
+                if (isMafiaWin == 1){
+                    // 죽지 않은 마피아 수 >= 죽지 않은 시민 수 => 마피아 승리
+                    endGame(1, roomId);
+                }else{
+                    // 죽지 않은 마피아 수 < 죽지 않은 시민 수 => 게임 진행
+                    if (isNight == true){
+                        // [알림] n일차 밤이 되었습니다.
+                        // PM 마피아와 의사 투표 알림
+                        messageService.sendDayNotice("밤", roomId);
+                        messageService.sendGameNotice(roomId, "타겟을 지정해주세요.");
+                        messageService.sendGameNotice(roomId, "살릴 사람을 선택해주세요.");
+                    }else {
+                        newDayMission(roomId);
+                    }
                 }
             }
         }
@@ -272,20 +275,26 @@ public class SchedulerServiceImpl implements SchedulerService{
      * @throws SQLException
      */
     public void endGame(int isMafiaWin, String roomId) throws SQLException {
-        // 해당 roomId의 participant들의 flag_win 변경
-        schedulerMapper.updateWinFlag(UpdateWinFlagDto.builder()
-                .isMafiaWin(isMafiaWin)
-                .roomId(roomId).build());
-        // 해당 roomId의 end_time 변경
-        schedulerMapper.updateEndTime(roomId);
-        // 게임 종료 메시지 전달
-        if (isMafiaWin == 1){
-            messageService.sendGameNotice(roomId, "마피아가 승리하였습니다.");
-        }else {
-            messageService.sendGameNotice(roomId, "시민이 승리하였습니다.");
+        if (isMafiaWin == -1){
+            // 무승부 -> flag_win 변경할 필요 X
+            // 해당 roomId의 end_time 변경
+            schedulerMapper.updateEndTime(roomId);
+            // 게임 종료 메시지 전달
+            messageService.sendGameNotice(roomId, "모두 패배하였습니다.");
+        }else{
+            // 해당 roomId의 participant들의 flag_win 변경
+            schedulerMapper.updateWinFlag(UpdateWinFlagDto.builder()
+                    .isMafiaWin(isMafiaWin)
+                    .roomId(roomId).build());
+            // 해당 roomId의 end_time 변경
+            schedulerMapper.updateEndTime(roomId);
+            // 게임 종료 메시지 전달
+            if (isMafiaWin == 1){
+                messageService.sendGameNotice(roomId, "마피아가 승리하였습니다.");
+            }else {
+                messageService.sendGameNotice(roomId, "시민이 승리하였습니다.");
+            }
         }
         messageService.sendEndNotice(roomId);
-
-        // roomId available change
     }
 }

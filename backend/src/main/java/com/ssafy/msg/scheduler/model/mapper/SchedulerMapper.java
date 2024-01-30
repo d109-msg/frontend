@@ -17,6 +17,8 @@ public interface SchedulerMapper {
 
     List<String> getUnendRoom() throws SQLException;
 
+    void updateFlagAvailable() throws SQLException;
+
     List<Integer> getNormalVoteResult(String roomId) throws SQLException;
 
     List<Integer> getMafiaVoteResult(String roomId) throws SQLException;
@@ -26,6 +28,8 @@ public interface SchedulerMapper {
     void killParticipant(int id) throws SQLException;
 
     ParticipantDto getParticipant(int id) throws  SQLException;
+
+    int getAliveParticipant(String roomId) throws SQLException;
 
     int getAliveMafia(String roomId) throws SQLException;
 

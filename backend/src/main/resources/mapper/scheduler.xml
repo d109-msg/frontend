@@ -25,6 +25,12 @@
         where start_time is not null and end_time is null and (data_type='랜덤' or  data_type='그룹');
     </select>
 
+    <update id="updateFlagAvailable">
+        update rooms
+        set flag_available = 0
+        where DATEDIFF(NOW(), end_time) = 1 and (data_type = '랜덤' or data_type  = '그룹');
+    </update>
+
     <select id="getNormalVoteResult" resultType="int" parameterType="string">
         SELECT dm.normal_vote
         FROM daily_missions dm
@@ -104,6 +110,14 @@
         where id = #{id}
     </select>
 
+    <select id="getAliveParticipant" parameterType="string"
+            resultType="int">
+        SELECT
+            COUNT(id)
+        FROM participants
+        WHERE room_id = #{roomId} and flag_die = 0;
+    </select>
+
     <select id="getAliveMafia" parameterType="string"
             resultType="int">
         SELECT
@@ -145,7 +159,7 @@
     </update>
 
     <select id="getNonCompleter" parameterType="string"
-        resultType="NonCompleterDto">
+            resultType="NonCompleterDto">
         SELECT
             p.id AS participantId, p.nickname, p.job_id, p.image_url
         FROM
