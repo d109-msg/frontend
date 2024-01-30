@@ -20,4 +20,5 @@ public interface MessageService {
     void sendDayNotice(String time, String roomId) throws SQLException;
     void sendStartNotice(String roomId) throws  SQLException;
     void sendEndNotice(String roomId) throws  SQLException;
+    void sendGameNotice(String room_id, String text) throws  SQLException;
 }

@@ -157,27 +157,29 @@
 			p.id,
 			p.image_url,
 			p.nickname,
-			COUNT(CASE WHEN dm.normal_vote = p.id THEN 1 ELSE NULL END) AS normal_vote_count,
-			COUNT(CASE WHEN dm.mafia_vote = p.id THEN 1 ELSE NULL END) AS mafia_vote_count,
-			COUNT(CASE WHEN dm.doctor_vote = p.id THEN 1 ELSE NULL END) AS doctor_vote_count
+			(SELECT COUNT(*) FROM daily_missions dm_normal WHERE dm_normal.normal_vote = p.id AND dm_normal.day = max_day) AS normal_vote_count,
+			(SELECT COUNT(*) FROM daily_missions dm_mafia WHERE dm_mafia.mafia_vote = p.id AND dm_mafia.day = max_day) AS mafia_vote_count,
+			(SELECT COUNT(*) FROM daily_missions dm_doctor WHERE dm_doctor.doctor_vote = p.id AND dm_doctor.day = max_day) AS doctor_vote_count
 		FROM
 			participants p
-				LEFT JOIN
-			daily_missions dm ON p.id IN (dm.normal_vote, dm.mafia_vote, dm.doctor_vote)
+				JOIN rooms r ON p.room_id = r.id
+				LEFT JOIN daily_missions dm ON p.id IN (dm.normal_vote, dm.mafia_vote, dm.doctor_vote)
 				AND dm.day = (
-					SELECT MAX(day) FROM daily_missions
-											 JOIN participants ON daily_missions.participant_id = participants.id
-					WHERE participants.room_id = #{roomId}
+					SELECT MAX(day) FROM daily_missions dm_max_day
+											 JOIN participants ON dm_max_day.participant_id = participants.id
+					WHERE participants.room_id = 'room1'
 				)
-				LEFT JOIN
-			participants p_vote ON p_vote.id IN (dm.normal_vote, dm.mafia_vote, dm.doctor_vote)
-				JOIN
-			rooms r ON p.room_id = r.id
+				LEFT JOIN participants p_vote ON p_vote.id IN (dm.normal_vote, dm.mafia_vote, dm.doctor_vote)
+				CROSS JOIN (
+				SELECT MAX(day) AS max_day FROM daily_missions dm_max
+													JOIN participants ON dm_max.participant_id = participants.id
+				WHERE participants.room_id = 'room1'
+			) AS max_day_subquery
 		WHERE
-			r.id = #{roomId} AND (p_vote.flag_die IS NULL OR p_vote.flag_die = 0)
+			r.id = 'room1' AND (p_vote.flag_die IS NULL OR p_vote.flag_die = 0)
 		  AND p.flag_die = 0
 		GROUP BY
-			p.id;
+			p.id, p.image_url, p.nickname;
 	</select>
 
 	<select id="getUserRooms" parameterType="integer" resultType="RoomDto">

@@ -10,7 +10,9 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 @Slf4j
 @Service
@@ -21,16 +23,20 @@ public class ChatServiceImpl implements  ChatService{
     private final UserMapper userMapper;
 
     // 상대방과의 채팅방이 있으면 roomDto return
-    // 상대방과의 채팅방이 생성 후 return
+    // 상대방과의 채팅방이 없으면 생성 후 return
     @Override
-    public RoomDto getPersonalRoom(CreateRoomDto createRoomDto) throws Exception {
+    public Map getPersonalRoom(CreateRoomDto createRoomDto) throws Exception {
         RoomDto roomDto = chatMapper.findRoom(createRoomDto);
 
+        Map<String, Object> map = new HashMap<String,Object>();
         if (roomDto == null) {
-            return createEnterPersonalRoom(createRoomDto);
+            map.put("isNew", true);
+            map.put("roomDto", createEnterPersonalRoom(createRoomDto));
         }else{
-            return roomDto;
+            map.put("isNew", false);
+            map.put("roomDto", roomDto);
         }
+        return map;
     }
 
     // 상대방과의 채팅방 생성

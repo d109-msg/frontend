@@ -80,8 +80,8 @@ CREATE TABLE `room_images` (
 -- msg.users definition
 
 CREATE TABLE `users` (
-  `id` int(11) not null auto_increment,
-  `email_id` varchar(100) NOT null unique,
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `email_id` varchar(100) NOT NULL,
   `email_password` varchar(100) DEFAULT NULL,
   `nickname` varchar(50) NOT NULL,
   `provider` varchar(10) DEFAULT NULL,
@@ -95,6 +95,7 @@ CREATE TABLE `users` (
   `sign_up_time` datetime NOT NULL DEFAULT current_timestamp(),
   `sign_in_time` datetime DEFAULT NULL,
   PRIMARY KEY (`id`),
+  UNIQUE KEY `email_id` (`email_id`),
   UNIQUE KEY `users_unique` (`identifier`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
@@ -210,17 +211,14 @@ CREATE TABLE `comments` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `article_id` int(11) NOT NULL,
   `user_id` int(11) NOT NULL,
-  `comment_id` int(11) DEFAULT NULL,
   `parent_comment_id` int(11) DEFAULT NULL,
   `content` varchar(500) NOT NULL,
   `create_time` datetime NOT NULL DEFAULT current_timestamp(),
   PRIMARY KEY (`id`),
   KEY `comments_articles_FK` (`article_id`),
   KEY `comments_users_FK` (`user_id`),
-  KEY `comments_comments_FK` (`comment_id`),
   KEY `comments_comments_FK_1` (`parent_comment_id`),
   CONSTRAINT `comments_articles_FK` FOREIGN KEY (`article_id`) REFERENCES `articles` (`id`),
-  CONSTRAINT `comments_comments_FK` FOREIGN KEY (`comment_id`) REFERENCES `comments` (`id`),
   CONSTRAINT `comments_comments_FK_1` FOREIGN KEY (`parent_comment_id`) REFERENCES `comments` (`id`),
   CONSTRAINT `comments_users_FK` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
@@ -238,7 +236,7 @@ CREATE TABLE `daily_missions` (
   `normal_vote` int(11) DEFAULT NULL,
   `mafia_vote` int(11) DEFAULT NULL,
   `doctor_vote` int(11) DEFAULT NULL,
-  `article_id` int(11) default NULL,
+  `article_id` int(11) DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `daily_missions_users_FK` (`normal_vote`),
   KEY `daily_missions_users_FK_1` (`mafia_vote`),
@@ -327,6 +325,7 @@ CREATE TABLE `rooms` (
   `start_time` datetime DEFAULT NULL,
   `title` varchar(100) NOT NULL,
   `image_url` varchar(300) DEFAULT NULL,
+  `flag_available` int(11) NOT NULL DEFAULT 1,
   PRIMARY KEY (`id`),
   KEY `rooms_messages_FK` (`last_message_id`),
   KEY `rooms_room_images_FK` (`image_url`),
