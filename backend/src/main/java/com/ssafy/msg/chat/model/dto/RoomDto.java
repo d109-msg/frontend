@@ -18,4 +18,5 @@ public class RoomDto {
     private String startTime;
     private String title;
     private String imageUrl;
+    private int flagAvailable;
 }
