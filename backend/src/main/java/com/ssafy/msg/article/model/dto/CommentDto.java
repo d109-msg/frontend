@@ -13,9 +13,10 @@ public class CommentDto {
     private int id;
     private int userId;
     private int articleId;
-    private int commentId;
     private Integer parentCommentId;
     private String content;
     private String createTime;
+
+    private int commentLikeCount;
 
 }

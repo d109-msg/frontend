@@ -13,6 +13,5 @@ public class CommentLikeDto {
     private int id;
     private int commentId;
     private int userId;
-    private int commentLikeCount;
     private String createTime;
 }

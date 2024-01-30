@@ -39,13 +39,6 @@
 
     </select>
 
-    <select id="getLikeCount" parameterType="int" resultType="int">
-        select count(*) as like_count
-        from article_likes
-        where article_id = #{articleId};
-
-    </select>
-
     <select id="getArticleImages" parameterType="int" resultType="ArticleImageDto">
         select *
         from article_images
@@ -92,6 +85,13 @@
 
     </delete>
 
+    <select id="getLikeCount" parameterType="int" resultType="int">
+        select count(*) as like_count
+        from article_likes
+        where article_id = #{articleId};
+
+    </select>
+
     <select id="getLikeUserList" parameterType="int" resultType="LikeUserListDto">
         select al.user_id
         from article_likes al
@@ -124,6 +124,13 @@
 
     </delete>
 
+    <select id="getCommentLikeCount" parameterType="int" resultType="int">
+        select count(*) as comment_like_count
+        from comment_likes
+        where comment_id = #{commentId};
+
+    </select>
+
 <!--    <select id="getCommentLikeUserList" parameterType="int" resultType="commentLikeUserListDto">-->
 <!--        select cl.user_id-->
 <!--        from comment_likes cl-->
@@ -144,7 +151,7 @@
     <select id="getComments" parameterType="CommentDto" resultType="CommentDto">
         SELECT *
         FROM comments
-        WHERE article_id = #{articleId}
+        WHERE article_id
         <choose>
             <when test="parentCommentId != null">
                 AND parent_comment_id = #{parentCommentId}
@@ -152,7 +159,7 @@
             <otherwise>
                 AND parent_comment_id IS NULL
             </otherwise>
-        </choose>
+        </choose>;
     </select>
 
 

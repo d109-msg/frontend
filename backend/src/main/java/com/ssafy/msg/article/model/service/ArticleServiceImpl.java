@@ -115,7 +115,7 @@ public class ArticleServiceImpl implements ArticleService{
 
     }
 
-
+    // 게시물 좋아요 시작
     @Override
     @Transactional
     public void articleLike(ArticleDto articleDto) throws Exception {
@@ -137,6 +137,15 @@ public class ArticleServiceImpl implements ArticleService{
 
     }
 
+    @Override
+    public List<LikeUserListDto> getLikeUserList(int articleId) throws Exception {
+        log.info("(ArticleServiceImpl) 좋아요 유저 리스트 조회 시작");
+
+        return articleMapper.getLikeUserList(articleId);
+    }
+
+    // 게시물 좋아요 끝
+
     // 댓글 좋아요 서비스
     @Override
     @Transactional
@@ -156,13 +165,8 @@ public class ArticleServiceImpl implements ArticleService{
 
     }
 
-    @Override
-    public List<LikeUserListDto> getLikeUserList(int articleId) throws Exception {
-        log.info("(ArticleServiceImpl) 좋아요 유저 리스트 조회 시작");
 
-        return articleMapper.getLikeUserList(articleId);
-    }
-
+    // 댓글 crud 시작
     @Override
     public void createComment(CommentDto commentDto) throws Exception {
         log.info("(ArticleServiceImpl) 댓글 작성 서비스 시작");
@@ -172,9 +176,17 @@ public class ArticleServiceImpl implements ArticleService{
 
     @Override
     public List<CommentDto> getComments(CommentDto commentDto) throws Exception {
-        return articleMapper.getComments(commentDto);
+        List<CommentDto> commentDtos = articleMapper.getComments(commentDto);
+
+        for (CommentDto cd : commentDtos) {
+            cd.setCommentLikeCount(articleMapper.getCommentLikeCount(cd.getId()));
+        }
+
+        return commentDtos;
 
     }
+
+    // 댓글 crud 끝
 
     @Override
     public int isLike(ArticleDto articleDto) throws Exception {

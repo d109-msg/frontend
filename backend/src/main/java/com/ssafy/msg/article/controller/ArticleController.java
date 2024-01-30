@@ -257,9 +257,9 @@ public class ArticleController {
                 .build();
 
         try {
-            articleService.getComments(commentDto);
+            List<CommentDto> commentDtos = articleService.getComments(commentDto);
             log.info("(ArticleController) 댓글 조회 성공");
-            return new ResponseEntity<>(commentDto, HttpStatus.OK);
+            return new ResponseEntity<>(commentDtos, HttpStatus.OK);
         } catch (Exception e) {
             log.error("(ArticleController) getComments", e);
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
