@@ -20,6 +20,7 @@ public interface ArticleMapper {
 
     List<ArticleDetailDto> getFeedArticleList(FeedParamDto feedParamDto) throws SQLException;
 
+    // 게시물 좋아요 시작
     Boolean selectArticleLike(ArticleDto articleDto) throws SQLException;
 
     void insertArticleLike(ArticleDto articleDto) throws SQLException;
@@ -27,8 +28,22 @@ public interface ArticleMapper {
     void deleteArticleLike(ArticleDto articleDto) throws SQLException;
 
     int getLikeCount(int articleId) throws SQLException;
+    // 게시물 좋아요 ----------------------------------------
+
+    // 댓글 좋아요 시작 --------------------------------------
+    Boolean selectCommentLike(CommentLikeDto commentLikeDto) throws SQLException;
+
+    void insertCommentLike(CommentLikeDto commentLikeDto) throws SQLException;
+
+    void deleteCommentLike(CommentLikeDto commentLikeDto) throws SQLException;
+
+    int getCommentLikeCount(int commentId) throws SQLException;
+
+    // 댓글 좋아요 끝 -------------------------------------
 
     void createComment(CommentDto commentDto) throws SQLException;
+
+    List<CommentDto> getComments(CommentDto commentDto) throws SQLException;
 
     Integer getUserId(Integer userId) throws SQLException;
 

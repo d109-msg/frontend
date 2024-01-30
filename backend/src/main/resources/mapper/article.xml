@@ -100,7 +100,38 @@
     </select>
 
 
-<!--    좋아요 관련 쿼리문 끝 -->
+<!--     좋아요 관련 쿼리문 끝 -->
+
+<!--   댓글 좋아요 관련 쿼리문 시작 -->
+    <select id="selectCommentLike" parameterType="commentLikeDto" resultType="Boolean">
+        select case
+                   when count(*) > 0 then true else false
+                   end
+        from comment_likes
+        where comment_id = #{commentId} and user_id = #{userId}
+
+    </select>
+
+    <insert id="insertCommentLike" parameterType="commentLikeDto">
+        insert into comment_likes (comment_id, user_id, create_time)
+        values (#{commentId}, #{userId}, now());
+
+    </insert>
+
+    <delete id="deleteCommentLike" parameterType="commentLikeDto">
+        delete from comment_likes
+        where comment_id = #{commentId} and user_id = #{userId};
+
+    </delete>
+
+<!--    <select id="getCommentLikeUserList" parameterType="int" resultType="commentLikeUserListDto">-->
+<!--        select cl.user_id-->
+<!--        from comment_likes cl-->
+<!--        where comment_id = #{commentId}-->
+
+<!--    </select>-->
+
+<!--   댓글 좋아요 관련 쿼리문 끝 -->
 
 <!--    댓글 관련 쿼리문 시작-->
     <insert id="createComment" parameterType="CommentDto" useGeneratedKeys="true" keyProperty="id">
@@ -109,6 +140,23 @@
         values (#{articleId}, #{userId}, #{parentCommentId}, #{content}, now());
 
     </insert>
+
+    <select id="getComments" parameterType="CommentDto" resultType="CommentDto">
+        SELECT *
+        FROM comments
+        WHERE article_id = #{articleId}
+        <choose>
+            <when test="parentCommentId != null">
+                AND parent_comment_id = #{parentCommentId}
+            </when>
+            <otherwise>
+                AND parent_comment_id IS NULL
+            </otherwise>
+        </choose>
+    </select>
+
+
+<!--    댓글 관련 쿼리문 끝-->
 
 <!--    userId 유무 확인 -->
     <select id="getUserId" parameterType="Integer" resultType="Integer">
