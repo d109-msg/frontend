@@ -217,7 +217,7 @@ public class ArticleController {
     public ResponseEntity<?> createComment(HttpServletRequest request,
                                            @RequestParam("articleId") int articleId,
                                            @RequestParam("content") String content,
-                                           @RequestParam("parentCommentId") Integer parentCommentId ) {
+                                           @RequestParam(value = "parentCommentId", defaultValue = "0") Integer parentCommentId ) {
 
         CommentDto commentDto = CommentDto.builder()
                 .userId((Integer) request.getAttribute("id"))
