@@ -55,7 +55,7 @@
     </select>
 
     <select id="getFeedArticleList" parameterType="FeedParamDto" resultType="ArticleDetailDto">
-        select a.id as article_id, a.user_id, a.content, a.create_time, a.flag_private, a.modify_time, a.room_id, a.like_count
+        select a.id as article_id, a.user_id, a.content, a.create_time, a.flag_private, a.modify_time, a.room_id
         from articles a
         where (a.user_id in (
             select f.to_user_id
