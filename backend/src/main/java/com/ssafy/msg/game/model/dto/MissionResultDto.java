@@ -11,6 +11,9 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Builder
 public class MissionResultDto {
+    @Schema(description = "데일리 미션 id", example = "1")
+    int id;
+
     @Schema(description = "일반 시민 미션", example = "자연 사진")
     String normalMission;
 

@@ -47,5 +47,7 @@ public interface GameService {
     MissionResultDto getMyMission(int participantId) throws Exception;
 
     AiResultDto analyzeImage(MultipartFile imageFile, String condition) throws Exception;
+
+    Integer getMaxDay(int participantId) throws Exception;
 }
 

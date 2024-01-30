@@ -150,7 +150,7 @@ public class GameController {
 
     @GetMapping("/room/mission")
     @Operation(summary = "유저 현재 방의 미션 조회"
-            , description = "participantId를 입력받아 진행 중인 미션을 리턴합니다.")
+            , description = "participantId를 입력받아 진행 중인 미션을 리턴합니다. 유저가 죽었다면 null을 리턴합니다.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "조회 성공", content = {
                     @Content(mediaType = "application/json", schema = @Schema(implementation = MissionResultDto.class)) }),
@@ -204,7 +204,7 @@ public class GameController {
             @ApiResponse(responseCode = "200", description = "조회 성공", content = @Content),
             @ApiResponse(responseCode = "400", description = "조회 실패", content = @Content)})
     public ResponseEntity<?> getMyVote(@RequestParam("participantId") int participantId){
-        log.info("getMyVote() -> s");
+        log.info("getMyVote() -> start");
         try {
             String result = gameService.getMyVote(participantId);
             return new ResponseEntity<>(result, HttpStatus.OK);
