@@ -55,7 +55,7 @@
     </select>
 
     <select id="getFeedArticleList" parameterType="FeedParamDto" resultType="ArticleDetailDto">
-        select a.id as article_id, a.user_id, a.content, a.create_time, a.flag_private, a.modify_time, a.room_id, a.like_count
+        select a.id as article_id, a.user_id, a.content, a.create_time, a.flag_private, a.modify_time, a.room_id
         from articles a
         where (a.user_id in (
             select f.to_user_id
@@ -89,7 +89,15 @@
     <delete id="deleteArticleLike" parameterType="articleDto">
         delete from article_likes
         where article_id = #{id} and user_id = #{userId};
+
     </delete>
+
+    <select id="getLikeUserList" parameterType="int" resultType="LikeUserListDto">
+        select al.user_id
+        from article_likes al
+        where article_id = #{articleId}
+
+    </select>
 
 
 <!--    좋아요 관련 쿼리문 끝 -->
@@ -101,6 +109,13 @@
         values (#{articleId}, #{userId}, #{parentCommentId}, #{content}, now());
 
     </insert>
+
+<!--    userId 유무 확인 -->
+    <select id="getUserId" parameterType="Integer" resultType="Integer">
+        select u.id
+        from users u
+        where id = #{userId}
+    </select>
 
 
 </mapper>

@@ -30,4 +30,8 @@ public interface ArticleMapper {
 
     void createComment(CommentDto commentDto) throws SQLException;
 
+    Integer getUserId(Integer userId) throws SQLException;
+
+    List<LikeUserListDto> getLikeUserList(int articleId) throws SQLException;
+
 }

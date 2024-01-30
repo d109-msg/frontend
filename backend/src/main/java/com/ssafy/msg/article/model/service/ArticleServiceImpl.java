@@ -3,8 +3,11 @@ package com.ssafy.msg.article.model.service;
 import com.ssafy.msg.article.model.dto.*;
 import com.ssafy.msg.article.model.mapper.ArticleMapper;
 import com.ssafy.msg.article.util.S3Util;
+import com.ssafy.msg.user.exception.UserNotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -59,9 +62,16 @@ public class ArticleServiceImpl implements ArticleService{
     }
 
     @Override
-    public List<ArticleWithUrlDto> getArticles(int userId) throws Exception {
+    public List<ArticleWithUrlDto> getArticles(Integer userId) throws Exception {
         log.info("(ArticleServiceImpl) 게시물조회 시작");
-        return articleMapper.getArticles(userId);
+
+        userId = articleMapper.getUserId(userId);
+
+        if (userId != null) {
+            return articleMapper.getArticles(userId);
+        } else {
+            throw new UserNotFoundException();
+        }
 
     }
 
@@ -93,18 +103,19 @@ public class ArticleServiceImpl implements ArticleService{
         List<ArticleDetailDto> feedArticleList = new ArrayList<>();
 
         for (ArticleDetailDto at : articleList) { // 받아온 팔로우하는 사람들의 게시물 리스트를 받아서 돌린다
-            ArticleDto articleDto = ArticleDto.builder().id(at.getArticleId()).userId(at.getUserId()).build();
+            ArticleDto articleDto = ArticleDto.builder().id(at.getArticleId()).userId(feedParamDto.getUserId()).build();
             ArticleDetailDto articleDetail = getArticleDetail(articleDto);
             at.setUrls(articleDetail.getUrls());
 
-            feedArticleList.add(at);
+            at.setIsLike(articleDetail.getIsLike());
+            at.setLikeCount(articleDetail.getLikeCount());
 
+            feedArticleList.add(at);
 
         }
         return feedArticleList;
 
     }
-
 
 
     @Override
@@ -126,8 +137,13 @@ public class ArticleServiceImpl implements ArticleService{
             log.info("(ArticleServiceImpl) 좋아요 추가");
         }
 
-//        articleMapper.updateLikeCount(articleLikeDto);
+    }
 
+    @Override
+    public List<LikeUserListDto> getLikeUserList(int articleId) throws Exception {
+        log.info("(ArticleServiceImpl) 좋아요 유저 리스트 조회 시작");
+
+        return articleMapper.getLikeUserList(articleId);
     }
 
     @Override

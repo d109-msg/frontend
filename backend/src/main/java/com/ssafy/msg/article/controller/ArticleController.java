@@ -3,8 +3,7 @@ package com.ssafy.msg.article.controller;
 
 import com.ssafy.msg.article.model.dto.*;
 import com.ssafy.msg.article.model.service.ArticleService;
-import com.ssafy.msg.article.util.OpenAiUtil;
-import com.ssafy.msg.article.util.S3Util;
+import com.ssafy.msg.user.exception.UserNotFoundException;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -19,7 +18,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -68,11 +66,14 @@ public class ArticleController {
 
         try {
             List<ArticleWithUrlDto> articleWithUrlDtoList = articleService.getArticles(userId);
-            log.info("(ArticleController) 게시물 조회 성공");
+
+            log.info("(ArticleController) 프로필 조회 성공");
             return new ResponseEntity<>(articleWithUrlDtoList, HttpStatus.OK);
+        } catch (UserNotFoundException e) {
+            return new ResponseEntity<>("회원 정보가 없습니다.", HttpStatus.BAD_REQUEST);
         } catch (Exception e) {
             log.error("(Exception) ", e);
-            return new ResponseEntity<>("게시물 작성 실패", HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>("프로필 조회 실패", HttpStatus.BAD_REQUEST);
         } finally {
             log.info("(ArticleController) getArticles -> end");
         }
@@ -187,6 +188,26 @@ public class ArticleController {
 
     }
 
+    @GetMapping(value = "/likeUserList")
+    @Operation(summary = "좋아요 유저 리스트", description = "좋아요 누른 유저 리스트를 조회")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "좋아요 리스트 조회 성공" , content ={
+                    @Content(mediaType = "application/json", schema = @Schema(implementation = LikeUserListDto.class)) }),
+            @ApiResponse(responseCode = "400", description = "좋아요 리스트 조회 실패", content = @Content) })
+    public ResponseEntity<?> getLikeUserList(@RequestParam("articleId") int articleId ) {
+        log.info("(ArticleController) likeUserList 조회 시작");
+
+        try {
+            articleService.getLikeUserList(articleId);
+            return new ResponseEntity<>(articleService.getLikeUserList(articleId), HttpStatus.OK);
+        } catch (Exception e) {
+            log.error("(ArticleController) 좋아요 유저 리스트 조회 실패", e);
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        } finally {
+            log.info("(ArticleController) getLikeUserList end");
+        }
+    }
+
     @PostMapping(value = "/comment")
     @Operation(summary = "댓글 작성", description = "댓글 작성하기")
     @ApiResponses(value = {
@@ -196,7 +217,7 @@ public class ArticleController {
     public ResponseEntity<?> createComment(HttpServletRequest request,
                                            @RequestParam("articleId") int articleId,
                                            @RequestParam("content") String content,
-                                           @RequestParam("parentCommentId") Integer parentCommentId ) {
+                                           @RequestParam(value = "parentCommentId", defaultValue = "0") Integer parentCommentId ) {
 
         CommentDto commentDto = CommentDto.builder()
                 .userId((Integer) request.getAttribute("id"))
