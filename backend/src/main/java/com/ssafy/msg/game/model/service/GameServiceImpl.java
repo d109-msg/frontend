@@ -111,14 +111,22 @@ public class GameServiceImpl implements GameService{
         return aiResult;
     }
 
+    /**
+     * participant가 죽었다면
+     * @param participantId
+     * @return
+     * @throws Exception
+     */
     @Override
     public String getMyVote(int participantId) throws Exception {
-        if(gameMapper.isAlive(participantId) != 0) { //죽었다면
+        Integer day = getMaxDay(participantId);
+
+        if(day == null) { //죽었다면, maxday가 다르다면
             log.info("getMyVote() player is dead");
             return "participant is dead";
         }
 
-        MyVoteDto dto = gameMapper.getMyVote(participantId);
+        MyVoteDto dto = gameMapper.getMyVote(participantId, day);
         String job = gameMapper.getParticipantWithPId(participantId).getJobId();
         log.info("getMyVote() myVote : {}", dto);
         log.info("getMyVote() job : {}", job);
@@ -364,6 +372,25 @@ public class GameServiceImpl implements GameService{
     }
 
     /**
+     * 유저의 가장 높은 day가 room의 가장 높은 day와 같다면 day를 리턴하고 아니라면 null을 리턴함
+     * @param participantId
+     * @return Integer day or null
+     * @throws Exception
+     */
+    @Override
+    public Integer getMaxDay(int participantId) throws Exception {
+        if(gameMapper.isAlive(participantId) != 0) {
+            log.info("getMaxDay() participant is dead");
+            return null;
+        } else {
+            Integer day = gameMapper.getMaxDay(participantId);
+            log.info("getMaxDay() day : {}", day);
+
+            return day;
+        }
+    }
+
+    /**
      * participantId를 입력받아 현재 진행 중인 미션을 리턴
      * @param participantId
      * @return MissionResultDto 현재 진행 중인 미션 (일반, 마피아)
@@ -371,11 +398,13 @@ public class GameServiceImpl implements GameService{
      */
     @Override
     public MissionResultDto getMyMission(int participantId) throws Exception {
-        if(gameMapper.isAlive(participantId) != 0) {
+        Integer day = getMaxDay(participantId);
+
+        if(day == null) {
             log.info("getMyMission() participant is dead");
             return null;
         } else {
-            return gameMapper.getMyMission(participantId);
+            return gameMapper.getMyMission(participantId, day);
         }
     }
 
@@ -386,7 +415,9 @@ public class GameServiceImpl implements GameService{
      */
     @Override
     public void vote(VoteReceiveDto voteReceiveDto) throws Exception {
-        if(gameMapper.isAlive(voteReceiveDto.getParticipantId()) != 0) {
+        Integer day = getMaxDay(voteReceiveDto.getParticipantId());
+
+        if(day == null) {
             log.info("vote() participant is dead");
             return;
         }
@@ -395,17 +426,17 @@ public class GameServiceImpl implements GameService{
             //낮 08:00 - 20:00
             //시민 투표
             log.info("vote() -> normalVote : {}", voteReceiveDto.getTargetId());
-            gameMapper.normalVote(voteReceiveDto.getParticipantId(), voteReceiveDto.getTargetId());
+            gameMapper.normalVote(voteReceiveDto.getParticipantId(), voteReceiveDto.getTargetId(), day);
         } else {
             //밤
             if (voteReceiveDto.getJobId().equals("마피아")){
                 //마피아 투표
                 log.info("vote() -> mafiaVote : {}", voteReceiveDto.getTargetId());
-                gameMapper.mafiaVote(voteReceiveDto.getParticipantId(), voteReceiveDto.getTargetId());
+                gameMapper.mafiaVote(voteReceiveDto.getParticipantId(), voteReceiveDto.getTargetId(), day);
             } else if(voteReceiveDto.getJobId().equals("의사")){
                 //의사 투표
                 log.info("vote() -> doctorVote : {}", voteReceiveDto.getTargetId());
-                gameMapper.doctorVote(voteReceiveDto.getParticipantId(), voteReceiveDto.getTargetId());
+                gameMapper.doctorVote(voteReceiveDto.getParticipantId(), voteReceiveDto.getTargetId(), day);
             }
         }
     }
@@ -457,4 +488,6 @@ public class GameServiceImpl implements GameService{
 
         log.info("createNewMission() -> new mission created");
     }
+
+
 }
