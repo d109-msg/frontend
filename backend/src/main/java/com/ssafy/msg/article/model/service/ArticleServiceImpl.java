@@ -103,15 +103,14 @@ public class ArticleServiceImpl implements ArticleService{
         List<ArticleDetailDto> feedArticleList = new ArrayList<>();
 
         for (ArticleDetailDto at : articleList) { // 받아온 팔로우하는 사람들의 게시물 리스트를 받아서 돌린다
-            ArticleDto articleDto = ArticleDto.builder().id(at.getArticleId()).userId(at.getUserId()).build();
+            ArticleDto articleDto = ArticleDto.builder().id(at.getArticleId()).userId(feedParamDto.getUserId()).build();
             ArticleDetailDto articleDetail = getArticleDetail(articleDto);
             at.setUrls(articleDetail.getUrls());
-//            log.info("(ArticleServiceImpl) at isLike {} ", at.getIsLike());
-//            at.setIsLike(isLike(articleDto));
-//            log.info("(ArticleServiceImpl) at isLike2 {} ", at.getIsLike());
+
+            at.setIsLike(articleDetail.getIsLike());
+            at.setLikeCount(articleDetail.getLikeCount());
 
             feedArticleList.add(at);
-
 
         }
         return feedArticleList;
