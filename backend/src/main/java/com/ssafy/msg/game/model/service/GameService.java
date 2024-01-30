@@ -7,7 +7,11 @@ import java.sql.SQLException;
 import java.util.List;
 
 public interface GameService {
-    void applyRandomGame(int userId) throws Exception;
+    boolean getRandomGameApplyStatus(int userId) throws Exception;
+
+    boolean applyRandomGame(int userId) throws Exception;
+
+    boolean cancelRandomGame(int userId) throws Exception;
 
     boolean isParticipantInRoom(EnterGroupRoomDto enterGroupRoomDto) throws Exception;
 

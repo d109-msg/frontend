@@ -1,40 +1,15 @@
 <template>
-  <div class="message-container">
-    <MessageList></MessageList>
-    <MessageDetail></MessageDetail>
-    <div>
-      <MiniProfile></MiniProfile>
-    </div>
+  <div>
+    <h1 style="margin-top: 93px;">adjvlaksdjvklasdjlkv;asdlkvj</h1>
   </div>
-
-
 </template>
 
 <script>
-import MiniProfile from '../MiniProfile/MiniProfile.vue';
-import MessageDetail from './MessageDetail.vue';
-import MessageList from './MessageList.vue';
-
 export default {
-    name: 'MessagePage',
-    data(){
-      return{
-        userName: "",
-        message: "",
-        recvList:[]
-
-      }
-    },
-    components:{
-      MiniProfile,
-      MessageList,
-      MessageDetail
-    }
-
-   
+    name : 'MessagePage'
 }
 </script>
 
-<style src="./MessagePage.css">
+<style>
 
 </style>

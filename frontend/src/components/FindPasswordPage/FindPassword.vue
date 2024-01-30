@@ -1,6 +1,5 @@
 <template>
     <div class="container">
-        <LoadingSpinner v-if="spinFlag"/>
         <div class="main-img">
 
             <div  v-if="step==0">
@@ -28,8 +27,7 @@
 
             <div  v-if="step==1">
                 <div  class="find-password-form">
-                    <p class="find-password-title2">
-                        발송된 <span>임시 비밀번호</span>를 확인 후, 새로운 비밀번호를 설정해주세요.</p>
+                    <p class="find-password-title2">새로운 비밀번호를 설정해주세요.</p>
                     <div class="find-password-content-box">
                         <div class="temp-password-form">
                            <input class="temp-password-input" required v-model="tempPassword">
@@ -63,14 +61,11 @@
 
 <script>
 import axios from 'axios'
-import router from '@/router'
-import { useAuthStore } from '@/store/authStore'
-import LoadingSpinner from '../LoadingSpinner/LoadingSpinner.vue'
 export default {
     name : 'FindPassword',
     data(){
         return{
-            step:0,
+            step:1,
             email : "",
             emailCheck : true,
             tempPassword : "",
@@ -79,47 +74,55 @@ export default {
             passwordCheck : false,
             validation : "",
             validationCheck : false,
-            spinFlag : false,
         }
     },
     methods:{
-        async next(){
-            const emailInput = document.querySelector(".email-input")
+        next(){
             if (this.emailCheck == false){
-                try{
-                this.spinFlag = true
-                const auth = useAuthStore()
-                await auth.resetPassword(this.email)
-                alert('임시비밀번호가 발송되었습니다.')
-                this.spinFlag = false
-                router.push('/login')
-                } catch(err) {
-                    alert('존재하지 않는 이메일입니다. 다시 이메일을 확인해주세요.')
-                    emailInput.focus()
+                const emailInput = document.querySelector(".email-input")
+                const emailData = {
+                    "emailId": this.email
                 }
-            } else {
+                axios.post("http://localhost:8080/user/password/reset", JSON.stringify(emailData),
+                {
+                    headers : {"Content-Type": `application/json`},
+                }
+                ).then(res=>{
+                    console.log(res)
+                    this.step++
+                }).catch(err=>{
+                    console.log(err)
+                    emailInput.focus()
+                })
+            }else{
                 emailInput.focus()
             }
         },
-
-        async resetPassword(){
+        resetPassword(){
             const tempPasswordInput = document.querySelector(".temp-password-input")
-            try{
-                const auth = useAuthStore()
-                let value = await auth.login(this.email,this.tempPassword)
-                auth.setAccess(value.data.accessToken)
-                auth.setRefresh(value.data.refreshToken)
-                await auth.changePassword(this.tempPassword,this.password)
-                this.step = 0
-                router.push('/')
-            } catch(error){
-                console.log(error)
-                tempPasswordInput.focus()
-                alert('잘못된 비밀번호입니다.')
+            const passwordData = {
+                "emailId": this.email,
+                "emailPassword": this.tempPassword
             }
-            
-        },
 
+            axios.post("http://localhost:8080/user/",JSON.stringify(passwordData),
+            {
+                    headers : {"Content-Type": `application/json`},
+            }).then(res=>{
+                console.log(res)
+                axios.post(
+
+                ).then(res=>{
+                    console.log(res)
+                    this.step++
+                }).catch(err=>{
+                    console.log(err)
+                })
+            }).catch(err=>{
+                console.log(err)
+                tempPasswordInput.focus()
+            })
+        },
         checkEmail : function(){
             const valid = /^[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*.[a-zA-Z]{2,3}$/i;
             if(!valid.test(this.email)|| !this.email) {
@@ -166,9 +169,6 @@ export default {
         validation(){
             this.checkValidation()
         },
-    },
-    components: {
-        LoadingSpinner,
     }
 }
 </script>

@@ -14,7 +14,7 @@
         </div>
         <div class="final-control">
             <div class="back-control" @click.prevent="$emit('closeWrite')">뒤로가기</div>
-            <div class="submit-control" @click.prevent="addFeed">제출하기</div>
+            <div class="submit-control" @click.prevent="createFeed">제출하기</div>
         </div>
     </div>
   </div>
@@ -23,23 +23,15 @@
 
 <script>
 import axios from 'axios'
-import { useAuthStore } from '@/store/authStore'
-import router from '@/router'
-import { useCookies } from 'vue3-cookies'
-import { useFeedStore } from '@/store/feedStore'
-
 export default {
     name : "WriteContent",
     data(){
         return{
-            roomId : "",
             imgData : Array,
             imgSrc : Array,
             selectRoom : String,
             step : 0,
             content : "",
-            feedStore : useFeedStore(),
-            authStore : useAuthStore()
         }
     },
     props:{
@@ -54,16 +46,27 @@ export default {
             this.step++
             if(this.step==this.imgSrc.length) this.step = 0
         },
-        addFeed : async function(){
-            try{
-                await this.feedStore.axiosFeed(this.content,this.roomId,this.imgData)
-            } catch {
-                await this.authStore.useRefresh()
-                await this.feedStore.axiosFeed(this.content,this.roomId,this.imgData)
+        createFeed : function(){
+            const data = new FormData()
+            data.append('content',this.content)
+            data.append('roomId',"") //차후에 추가
+            let token = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhY2Nlc3MtdG9rZW4iLCJpc3MiOiJNU0ciLCJpZCI6MTEsImlhdCI6MTcwNjE0MTYwOCwiZXhwIjoxNzA2MTUzNjA4fQ.Omu9Z9NDFYcSW-Dr4HKBj_D9x6sPlR_h6q0-lSN49BY"
+            //토큰도 차후 vuex에서 다룰 것
+            this.imgData.forEach(img=>{
+                data.append('articleImageList',img)
+            })
+            axios.post('http://localhost:8080/article/create',data,{
+                headers: {
+                    'Content-Type' : 'multipart/form-data',
+                    Authorization : `Bearer ${token}`
                 }
-            this.$emit('createFeed')
-        },
-            },
+            }).then(res=>{
+                this.$emit('createFeed')
+            }).catch(err=>{
+                console.log('실패',err)
+            })
+        }
+    },
     mounted(){
         this.imgData = this.$props.dataInfo['imgData']
         this.imgSrc = this.$props.dataInfo['imgSrc']

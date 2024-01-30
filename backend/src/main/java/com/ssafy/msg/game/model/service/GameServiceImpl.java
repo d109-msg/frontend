@@ -10,7 +10,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
-import java.sql.SQLException;
 import java.time.LocalTime;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
@@ -26,9 +25,9 @@ public class GameServiceImpl implements GameService{
     private final UserMapper userMapper;
 
     @Override
-    public void applyRandomGame(int userId) throws Exception {
-        UserDto user = userMapper.findUserById(userId);
-        gameMapper.applyRandomGame(user);
+    public boolean getRandomGameApplyStatus(int userId) throws Exception {
+        boolean randomGameApplyStatus = gameMapper.getRandomGameApplyStatus(userId);
+        return randomGameApplyStatus;
     }
 
     @Override
@@ -165,7 +164,11 @@ public class GameServiceImpl implements GameService{
             result.add(participant);
         }
 
-        int resultCnt = gameMapper.updateParticipants(result);
+        int resultCnt = gameMapper.insertParticipants(result);
+
+        for(int userId: roomStartReceiveDto.getUserList()){
+            gameMapper.deleteParticipant(userId);
+        }
 
         log.info("gameStart() resultCnt : {}", resultCnt);
 

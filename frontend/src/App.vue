@@ -52,6 +52,4 @@ body{
   background-color: #FFF8ED;
   scroll-snap-type: y mandatory;
 }
-
-
 </style>

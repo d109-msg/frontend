@@ -406,8 +406,6 @@ public class UserController {
 	@PatchMapping("/password")
 	public ResponseEntity<?> updatePassword(HttpServletRequest request,
 			@RequestBody UpdatePasswordDto updatePasswordDto) {
-		System.out.println(11111);
-
 		log.info("updatePassword() -> Start");
 		log.info("updatePassword() -> Receive updatePasswordDto : {}", updatePasswordDto);
 
