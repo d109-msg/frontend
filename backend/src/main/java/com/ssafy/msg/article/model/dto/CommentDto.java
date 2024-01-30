@@ -11,6 +11,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class CommentDto {
     private int id;
+    private String nickname;
     private int userId;
     private int articleId;
     private Integer parentCommentId;

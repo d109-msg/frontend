@@ -20,7 +20,7 @@
     </insert>
 
     <select id="getArticles" parameterType="int" resultType="ArticleWithUrlDto" >
-        select a.id as article_id, a.user_id, a.create_time, a.flag_private, a.modify_time, a.room_id, ai.url
+        select a.id as article_id, a.user_id, a.create_time, a.flag_private, a.modify_time, a.room_id, ai.url, users.nickname
         from articles a
                  left join (
             select article_id, MIN(id) as min_id
@@ -28,13 +28,15 @@
             group by article_id
         ) as sub_ai on a.id = sub_ai.article_id
                  left join article_images ai on sub_ai.min_id = ai.id
+        left join users on a.user_id = users.id
         where a.user_id = #{userId};
 
     </select>
 
     <select id="getArticleDetail" parameterType="ArticleDto" resultType="ArticleDetailDto">
-        select a.id as article_id, a.user_id, a.content, a.create_time, a.flag_private, a.modify_time, a.room_id
+        select users.nickname, a.id as article_id, a.user_id, a.content, a.create_time, a.flag_private, a.modify_time, a.room_id
         from articles a
+        left join users on a.user_id = users.id
         where a.id = #{id};
 
     </select>
@@ -48,8 +50,9 @@
     </select>
 
     <select id="getFeedArticleList" parameterType="FeedParamDto" resultType="ArticleDetailDto">
-        select a.id as article_id, a.user_id, a.content, a.create_time, a.flag_private, a.modify_time, a.room_id
+        select users.nickname, a.id as article_id, a.user_id, a.content, a.create_time, a.flag_private, a.modify_time, a.room_id
         from articles a
+        left join users on a.user_id = users.id
         where (a.user_id in (
             select f.to_user_id
             from follows f
@@ -93,8 +96,9 @@
     </select>
 
     <select id="getLikeUserList" parameterType="int" resultType="LikeUserListDto">
-        select al.user_id
+        select al.user_id, users.nickname
         from article_likes al
+        left join users on al.user_id = users.id
         where article_id = #{articleId}
 
     </select>
@@ -149,8 +153,9 @@
     </insert>
 
     <select id="getComments" parameterType="CommentDto" resultType="CommentDto">
-        SELECT *
-        FROM comments
+        SELECT *, users.nickname
+        FROM comments c
+        left join users on c.user_id = users.id
         WHERE article_id
         <choose>
             <when test="parentCommentId != null">

@@ -10,5 +10,6 @@ import lombok.RequiredArgsConstructor;
 @AllArgsConstructor
 @RequiredArgsConstructor
 public class LikeUserListDto {
+    private String nickname;
     private int userId;
 }

@@ -12,6 +12,7 @@ import lombok.NoArgsConstructor;
 public class CommentLikeDto {
     private int id;
     private int commentId;
+    private String nickname;
     private int userId;
     private String createTime;
 }

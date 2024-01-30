@@ -14,6 +14,7 @@ import java.util.List;
 @AllArgsConstructor
 public class ArticleWithUrlDto {
     private int articleId;
+    private String nickname;
     private int userId;
     private String createTime;
     private int flagPrivate;
