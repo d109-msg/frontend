@@ -1,6 +1,5 @@
 package com.ssafy.msg.article.util;
 
-import com.ssafy.msg.game.model.dto.OpenAiApiResponseDto;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
@@ -33,7 +32,7 @@ public class OpenAiUtil {
      * @return true, false 이유
      * @throws Exception
      */
-    public OpenAiApiResponseDto analyzeImage(MultipartFile imageFile, String condition) throws Exception{
+    public String analyzeImage(MultipartFile imageFile, String condition) throws Exception{
         String base64Image = encodeImageToBase64(imageFile);
 
         HttpHeaders headers = new HttpHeaders();
@@ -55,7 +54,7 @@ public class OpenAiUtil {
         HttpEntity<String> request = new HttpEntity<>(payload, headers);
         RestTemplate restTemplate = new RestTemplate();
 
-        return restTemplate.postForObject(OPENAI_API_URL, request, OpenAiApiResponseDto.class);
+        return restTemplate.postForObject(OPENAI_API_URL, request, String.class);
     }
 
     private String encodeImageToBase64(MultipartFile imageFile) throws IOException {

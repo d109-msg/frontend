@@ -1,7 +1,9 @@
 package com.ssafy.msg.game.controller;
 
+import com.amazonaws.services.ec2.model.GetTransitGatewayRouteTablePropagationsRequest;
 import com.ssafy.msg.chat.model.dto.RoomDto;
 import com.ssafy.msg.game.model.dto.*;
+import com.ssafy.msg.game.model.mapper.GameMapper;
 import com.ssafy.msg.game.model.service.GameService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -14,11 +16,11 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 
 @RestController
@@ -29,30 +31,6 @@ import java.util.List;
 public class GameController {
 
     private final GameService gameService;
-
-    @PostMapping(value = "/analyze",
-            consumes = MediaType.MULTIPART_FORM_DATA_VALUE,
-            produces = MediaType.APPLICATION_JSON_VALUE)
-    @Operation(summary = "사진 검증 api", description = "사진이 해당 조건에 부함하면 true 아니면 false를 이유와 함께 리턴합니다.")
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "요청 성공", content = {
-                    @Content(mediaType = "application/json", schema = @Schema(implementation = AiResultDto.class)) }),
-            @ApiResponse(responseCode = "400", description = "조회 실패", content = @Content) })
-    public ResponseEntity<?> analyzeImage(@RequestParam("image") MultipartFile imageFile, @RequestParam("condition") String condition) throws Exception{
-        log.info("analyzeImage() start");
-        try {
-            AiResultDto result = gameService.analyzeImage(imageFile, condition);
-
-            return new ResponseEntity<>(result, HttpStatus.OK);
-        } catch (Exception e) {
-            log.error("analyzeImage() -> error : {}", e);
-
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-        } finally {
-            log.info("analyzeImage() e");
-        }
-
-    }
 
     @GetMapping("/participant")
     @Operation(summary = "유저 participant 조회", description = "userEmail과 roomId를 이용해 해당 해당 유저의 participant 조회")
@@ -80,16 +58,16 @@ public class GameController {
     }
 
     @GetMapping("/room/alive")
-    @Operation(summary = "살아있는 참가자 리스트와 데일리 미션 성공 여부", description = "roomId를 입력받아 게임방 내의 살아있는 참가자만 데일리 미션 성공 여부와 함께 리턴")
+    @Operation(summary = "살아있는 참가자 리스트", description = "roomId를 입력받아 게임방 내의 살아있는 참가자만 리턴")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "조회 성공", content = {
-                    @Content(mediaType = "application/json", schema = @Schema(implementation = AliveParticipantDto.class)) }),
+                    @Content(mediaType = "application/json", schema = @Schema(implementation = ParticipantDto.class)) }),
             @ApiResponse(responseCode = "400", description = "조회 실패", content = @Content) })
     public ResponseEntity<?> getAliveParticipants(@RequestParam("roomId") String roomId){
         log.info("getAliveParticipants() -> roomId : {}", roomId);
 
         try {
-            List<AliveParticipantDto> list = gameService.getAliveParticipant(roomId);
+            List<ParticipantDto> list = gameService.getAliveParticipant(roomId);
             log.info("getAliveParticipants() -> list : {}", list);
 
             return new ResponseEntity<>(list, HttpStatus.OK);
@@ -104,16 +82,13 @@ public class GameController {
 
     @GetMapping("/vote/room")
     @Operation(summary = "유저 현재 방의 투표 현황 조회"
-            , description = "userId와 roomId를 이용해 해당 room의 투표 현황 조회\n현재 볼 수 있는 투표만 리턴합니다.\n 죽은 사람의 투표는 반영하지 않고, 죽은 사람이 받은 투표 수도 보여주지 않습니다.")
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "조회 성공", content = {
-                    @Content(mediaType = "application/json", schema = @Schema(implementation = VoteResponseDto.class)) }),
-            @ApiResponse(responseCode = "400", description = "조회 실패", content = @Content) })
+            , description = "userEmail과 roomId를 이용해 해당 room의 투표 현황 조회\n낮과 밤에 따라 볼 수 없는 투표 수는 -1로 표시")
+
     public ResponseEntity<?> getRoomVote(HttpServletRequest request, @RequestParam String roomId) {
         int userId = (int) request.getAttribute("id");
 
         try {
-            List<VoteResponseDto> result = gameService.getRoomVote(userId, roomId);
+            List<VoteResultDto> result = gameService.getRoomVote(userId, roomId);
             log.info("getRoomVote() -> result : {}", result);
 
             return new ResponseEntity<>(result, HttpStatus.OK);
@@ -125,51 +100,6 @@ public class GameController {
             log.info("getRoomVote() -> end");
         }
 
-    }
-
-    @GetMapping(value = "/room/list")
-    @Operation(summary = "유저의 진행 중인 게임 리스트를 반환", description = "userId을 이용해 user의 room list 반환")
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "조회 성공"),
-            @ApiResponse(responseCode = "400", description = "조회 실패", content = @Content) })
-    public ResponseEntity<?> getUserRooms(HttpServletRequest request){
-        int userId = (int) request.getAttribute("id");
-
-        log.info("getUserRooms() -> id : {}", userId);
-        try {
-            List<RoomDto> list = gameService.getUserRooms(userId);
-            log.info("getUserRooms() list : {}", list);
-            return new ResponseEntity<>(list, HttpStatus.OK);
-        } catch (Exception  e){
-            log.error("getUserRooms() -> error : {}", e);
-            return new ResponseEntity<>(e.toString(), HttpStatus.BAD_REQUEST);
-        } finally {
-            log.info("getUserRooms() -> end");
-        }
-    }
-
-    @GetMapping("/room/mission")
-    @Operation(summary = "유저 현재 방의 미션 조회"
-            , description = "participantId를 입력받아 진행 중인 미션을 리턴합니다.")
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "조회 성공", content = {
-                    @Content(mediaType = "application/json", schema = @Schema(implementation = MissionResultDto.class)) }),
-            @ApiResponse(responseCode = "400", description = "조회 실패", content = @Content) })
-    public ResponseEntity<?> getMyMission(@RequestParam("participantId") int participantId){
-        log.info("getMyMission() participantId : {}", participantId);
-
-        try {
-            MissionResultDto missionResultDto = gameService.getMyMission(participantId);
-            log.info("getMyMission() missionResultDto : {}", missionResultDto);
-
-            return new ResponseEntity<>(missionResultDto, HttpStatus.OK);
-        } catch (Exception e) {
-            log.error("getMyMission() -> error : {}", e);
-
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-        } finally {
-            log.info("getMyMission() end");
-        }
     }
 
     @PatchMapping("/vote")
@@ -194,12 +124,35 @@ public class GameController {
         } finally {
             log.info("submitVote() -> end");
         }
+        
 
+    }
+
+    @GetMapping(value = "/room/list")
+    @Operation(summary = "유저의 진행 중인 게임 리스트를 반환", description = "userId을 이용해 user의 room list 반환")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "조회 성공", content = {
+                    @Content(mediaType = "application/json", schema = @Schema(implementation = RoomDto.class)) }),
+            @ApiResponse(responseCode = "400", description = "조회 실패", content = @Content) })
+    public ResponseEntity<?> getUserRooms(HttpServletRequest request){
+        int userId = (int) request.getAttribute("id");
+
+        log.info("getUserRooms() -> id : {}", userId);
+        try {
+            List<RoomDto> list = gameService.getUserRooms(userId);
+            log.info("getUserRooms() list : {}", list);
+            return new ResponseEntity<>(list, HttpStatus.OK);
+        } catch (Exception  e){
+            log.error("getUserRooms() -> error : {}", e);
+            return new ResponseEntity<>(e.toString(), HttpStatus.BAD_REQUEST);
+        } finally {
+            log.info("getUserRooms() -> end");
+        }
     }
 
     @GetMapping(value = "/vote/pick", produces = "text/pain;charset=utf-8")
     @PatchMapping("/vote")
-    @Operation(summary = "내 투표현황 api", description = "유저의 participantId를 입력받아 리턴합니다. 유저가 죽었다면 participant is dead 를 리턴합니다")
+    @Operation(summary = "내 투표현황 api", description = "유저의 participantId, 직업을 입력받아 리턴합니다.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "조회 성공", content = @Content),
             @ApiResponse(responseCode = "400", description = "조회 실패", content = @Content)})
@@ -307,7 +260,6 @@ public class GameController {
         }
 
     }
-
 
     //test
     @GetMapping("/nicknametest")

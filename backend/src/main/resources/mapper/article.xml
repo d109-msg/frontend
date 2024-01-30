@@ -32,25 +32,10 @@
 
     </select>
 
-<<<<<<< HEAD
-    <select id="getArticleDetail" parameterType="ArticleDto" resultType="ArticleDetailDto">
-        select a.id as article_id, a.user_id, a.content, a.create_time, a.flag_private, a.modify_time, a.room_id
-        from articles a
-        where a.id = #{id};
-
-    </select>
-
-    <select id="getLikeCount" parameterType="int" resultType="int">
-        select count(*) as like_count
-        from article_likes
-        where article_id = #{articleId};
-
-=======
     <select id="getArticleDetail" parameterType="int" resultType="ArticleDetailDto">
         select a.id as article_id, a.user_id, a.content, a.create_time, a.flag_private, a.modify_time, a.room_id
         from articles a
         where a.id = #{articleId};
->>>>>>> cb4fd39a819d76beb9fbcd326e240676f721fefd
     </select>
 
     <select id="getArticleImages" parameterType="int" resultType="ArticleImageDto">
@@ -74,41 +59,4 @@
 
     </select>
 
-<<<<<<< HEAD
-
-    <!--    좋아요 관련 쿼리문 시작 -->
-    <select id="selectArticleLike" parameterType="articleDto" resultType="Boolean">
-        select case
-            when count(*) > 0 then true else false
-        end
-        from article_likes
-        where article_id = #{id} and user_id = #{userId}
-
-    </select>
-
-    <insert id="insertArticleLike" parameterType="articleDto">
-        insert into article_likes (article_id, user_id, create_time)
-        values (#{id}, #{userId}, now());
-
-    </insert>
-
-    <delete id="deleteArticleLike" parameterType="articleDto">
-        delete from article_likes
-        where article_id = #{id} and user_id = #{userId};
-    </delete>
-
-
-<!--    좋아요 관련 쿼리문 끝 -->
-
-<!--    댓글 관련 쿼리문 시작-->
-    <insert id="createComment" parameterType="CommentDto" useGeneratedKeys="true" keyProperty="id">
-        insert into comments
-            (article_id, user_id, parent_comment_id, content, create_time)
-        values (#{articleId}, #{userId}, #{parentCommentId}, #{content}, now());
-
-    </insert>
-
-
-=======
->>>>>>> cb4fd39a819d76beb9fbcd326e240676f721fefd
 </mapper>

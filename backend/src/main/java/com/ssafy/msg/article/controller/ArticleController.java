@@ -34,6 +34,17 @@ import java.util.List;
 public class ArticleController {
     private final ArticleService articleService;
 
+    private final OpenAiUtil openAiUtil;
+
+    private final S3Util s3Util;
+
+    @PostMapping(value = "/analyze",
+            consumes = MediaType.MULTIPART_FORM_DATA_VALUE,
+            produces = MediaType.APPLICATION_JSON_VALUE)
+    public String analyzeImageTest(@RequestParam("image") MultipartFile imageFile, @RequestParam("condition") String condition) throws Exception{
+        return openAiUtil.analyzeImage(imageFile, condition);
+    }
+
     @PostMapping(value = "/create",
             consumes = MediaType.MULTIPART_FORM_DATA_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE)
@@ -87,28 +98,17 @@ public class ArticleController {
             @ApiResponse(responseCode = "200", description = "게시물 상세 조회 성공", content ={
                     @Content(mediaType = "application/json", schema = @Schema(implementation = ArticleDetailDto.class)) }),
             @ApiResponse(responseCode = "400", description = "게시물 상세 조회 실패", content = @Content) })
-    public ResponseEntity<?> getArticleDetail(@RequestParam("articleId") int articleId, HttpServletRequest request) {
+    public ResponseEntity<?> getArticleDetail(@RequestParam("articleId") int articleId) {
         log.info("(ArticleController) 게시물 상세보기 시작");
 
-        int userId = (Integer) request.getAttribute("id");
-
-        ArticleDto articleDto = ArticleDto.builder()
-                .id(articleId)
-                .userId(userId)
-                .build();
-
         try {
-            ArticleDetailDto articleDetailDto = articleService.getArticleDetail(articleDto); // 게시물 상세 내용 가져오기
-
+            ArticleDetailDto articleDetailDto = articleService.getArticleDetail(articleId);
             log.info("(ArticleController) 게시물 상세조회 성공");
-
             return new ResponseEntity<>(articleDetailDto, HttpStatus.OK);
         } catch (Exception e) {
             log.error("(ArticleController) 게시물 상세 조회 실패", e);
-
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         } finally {
-
             log.info("(ArticleController) getArticleDetail end");
         }
 
@@ -134,66 +134,5 @@ public class ArticleController {
             log.info("(ArticleController) getFeedArticleList end");
         }
     }
-
-    @PostMapping(value = "/like")
-    @Operation(summary = "게시물 좋아요", description = "게시물 좋아요")
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "좋아요 성공", content ={
-                    @Content(mediaType = "application/json", schema = @Schema(implementation = ArticleLikeDto.class)) }),
-            @ApiResponse(responseCode = "400", description = "좋아요 실패", content = @Content) })
-    public ResponseEntity<?> articleLike(@RequestParam("articleId") int articleId, HttpServletRequest request) {
-        log.info("(ArticleController) articleLike() -> 게시물 좋아요 시작");
-
-        int userId = (Integer) request.getAttribute("id");
-
-        ArticleDto articleDto = ArticleDto.builder().
-                userId(userId).
-                id(articleId).
-                build();
-
-        try {
-            articleService.articleLike(articleDto);
-            log.info("(ArticleController) 좋아요 누르기 성공");
-            return new ResponseEntity<>(articleDto, HttpStatus.OK);
-        } catch (Exception e) {
-            log.error("(ArticleController) 좋아요 누르기 실패", e);
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-        } finally {
-            log.info("(ArticleController) 좋아요 누르기 끝");
-        }
-
-    }
-
-    @PostMapping(value = "/comment")
-    @Operation(summary = "댓글 작성", description = "댓글 작성하기")
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "201", description = "댓글 작성 성공" , content ={
-                    @Content(mediaType = "application/json", schema = @Schema(implementation = CommentDto.class)) }),
-            @ApiResponse(responseCode = "400", description = "댓글 작성 실패", content = @Content) })
-    public ResponseEntity<?> createComment(HttpServletRequest request,
-                                           @RequestParam("articleId") int articleId,
-                                           @RequestParam("content") String content,
-                                           @RequestParam("parentCommentId") Integer parentCommentId ) {
-
-        CommentDto commentDto = CommentDto.builder()
-                .userId((Integer) request.getAttribute("id"))
-                .articleId(articleId)
-                .content(content)
-                .parentCommentId(parentCommentId > 0 ? parentCommentId : null) // 유효한 ID가 아니라면 null을 할당
-                .build();
-        log.info("(controller) createComment() 댓글 작성 시작 {}", commentDto);
-
-        try {
-            articleService.createComment(commentDto);
-            return new ResponseEntity<>(HttpStatus.CREATED);
-        } catch (Exception e) {
-            log.error("(controller) 댓글 작성 실패", e);
-            return new ResponseEntity<>(commentDto, HttpStatus.BAD_REQUEST);
-        } finally {
-            log.info("(ArticleController) 끝");
-        }
-
-    }
-
 
 }

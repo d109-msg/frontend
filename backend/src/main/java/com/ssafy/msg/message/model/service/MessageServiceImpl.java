@@ -61,7 +61,7 @@ public class MessageServiceImpl implements MessageService{
                 .id(0)
                 .roomId(participantDto.getRoomId())
                 .userId(0)
-                .noticeType("en")
+                .noticeType("enterNotice")
                 .sendTime("")
                 .dataType("text")
                 .text(participantDto.getNickname()+"님이 입장하였습니다.").build();
@@ -77,13 +77,11 @@ public class MessageServiceImpl implements MessageService{
                 .id(0)
                 .roomId(roomId)
                 .userId(0)
-                .noticeType("gameNotice")
+                .noticeType("dayNotice")
                 .sendTime("")
                 .dataType("text")
                 .text(day+"일차 " + dayOrNight + "이 되었습니다.").build();
         sendingOperations.convertAndSend("/sub/"+messageResponseDto.getRoomId(), messageResponseDto);
-
-        log.info(messageResponseDto.getRoomId() + " - " + messageResponseDto.getText());
     }
 
     @Override
@@ -99,8 +97,6 @@ public class MessageServiceImpl implements MessageService{
                 .dataType("text")
                 .text("게임이 시작되었습니다.").build();
         sendingOperations.convertAndSend("/sub/"+messageResponseDto.getRoomId(), messageResponseDto);
-
-        log.info(messageResponseDto.getRoomId() + " - " + messageResponseDto.getText());
     }
 
     @Override
@@ -116,24 +112,5 @@ public class MessageServiceImpl implements MessageService{
                 .dataType("text")
                 .text("게임이 종료되었습니다.").build();
         sendingOperations.convertAndSend("/sub/"+messageResponseDto.getRoomId(), messageResponseDto);
-
-        log.info(messageResponseDto.getRoomId() + " - " + messageResponseDto.getText());
-    }
-
-    @Override
-    public void sendGameNotice(String roomId, String text) throws SQLException {
-        // DB 저장 로직 구현 필요
-        // Time 추가 로직 구현 필요
-        MessageResponseDto messageResponseDto = MessageResponseDto.builder()
-                .id(0)
-                .roomId(roomId)
-                .userId(0)
-                .noticeType("gameNotice")
-                .sendTime("")
-                .dataType("text")
-                .text(text).build();
-        sendingOperations.convertAndSend("/sub/"+messageResponseDto.getRoomId(), messageResponseDto);
-
-        log.info(messageResponseDto.getRoomId() + " - " + messageResponseDto.getText());
     }
 }

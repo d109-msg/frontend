@@ -5,83 +5,6 @@
 <mapper
 	namespace="com.ssafy.msg.game.model.mapper.GameMapper">
 
-<<<<<<< HEAD
-	<select id="getMyMission" resultType="MissionResultDto" parameterType="int">
-		SELECT
-			m.normal AS normal_mission,
-			m.mafia AS mafia_mission,
-			latest_mission.day,
-			latest_mission.flag_success,
-			latest_mission.try AS cnt_try
-		FROM
-			missions m
-				JOIN
-			(SELECT
-				 dm.mission_id,
-				 dm.day,
-				 dm.flag_success,
-				 dm.try
-			 FROM
-				 daily_missions dm
-			 WHERE
-				 dm.participant_id = 1
-			 ORDER BY
-				 dm.day DESC
-				 LIMIT 1) AS latest_mission
-			ON
-				m.id = latest_mission.mission_id;
-	</select>
-
-	<select id="isAlive" resultType="int" parameterType="int">
-		SELECT flag_die FROM participants p WHERE p.id = #{particiapntId};
-	</select>
-
-	<insert id="createNewMission" parameterType="NewMissionDto">
-		INSERT INTO daily_missions (participant_id, try, flag_success, mission_id, day, normal_vote, mafia_vote, doctor_vote)
-		SELECT
-			p.id,
-			0,
-			0,
-			#{missionId},
-			#{day},
-			p.id,
-			CASE
-				WHEN p.job_id = '마피아' THEN p.id
-				ELSE NULL
-				END AS mafia_vote,
-			CASE
-				WHEN p.job_id = '의사' THEN p.id
-				ELSE NULL
-				END AS doctor_vote
-		FROM
-			participants p
-		WHERE
-			p.room_id = #{roomId} AND p.flag_die = 0;
-	</insert>
-
-	<select id="getRandomMission" parameterType="string" resultType="int">
-		SELECT
-			m.id
-		FROM
-			missions m
-		WHERE
-			m.id NOT IN (
-				SELECT
-					dm.mission_id
-				FROM
-					daily_missions dm
-						JOIN
-					participants p ON dm.participant_id = p.id
-				WHERE
-					p.room_id = #{roomId}
-			)
-		ORDER BY
-			RAND()
-			LIMIT 1;
-	</select>
-
-=======
->>>>>>> cb4fd39a819d76beb9fbcd326e240676f721fefd
 	<select id="getMyVote" parameterType="int" resultType="myVoteDto">
 		SELECT
 				(SELECT nickname FROM participants WHERE id = dm.normal_vote) AS normal_vote,
@@ -126,25 +49,10 @@
 			  );
 	</update>
 
-	<select id="getAliveParticipants" resultType="AliveParticipantDto" parameterType="string">
-		SELECT
-			p.*,
-			dm.flag_success
-		FROM
-			participants p
-				JOIN
-			daily_missions dm ON p.id = dm.participant_id
-				JOIN
-			(SELECT
-				 participant_id,
-				 MAX(day) AS max_day
-			 FROM
-				 daily_missions
-			 GROUP BY
-				 participant_id
-			) max_dm ON dm.participant_id = max_dm.participant_id AND dm.day = max_dm.max_day
-		WHERE
-			p.room_id = #{roomId} AND p.flag_die = 0;
+	<select id="getAliveParticipants" resultType="ParticipantDto" parameterType="string">
+		SELECT *
+		FROM participants
+		WHERE room_id = #{roomId} AND flag_die = 0;
 	</select>
 
 	<select id="getParticipantWithPId" resultType="ParticipantDto" parameterType="int">
@@ -158,31 +66,12 @@
 	<select id="getRoomVote" resultType="VoteResultDto" parameterType="string">
 		SELECT
 			p.id,
-			p.image_url,
 			p.nickname,
-			(SELECT COUNT(*) FROM daily_missions dm_normal WHERE dm_normal.normal_vote = p.id AND dm_normal.day = max_day) AS normal_vote_count,
-			(SELECT COUNT(*) FROM daily_missions dm_mafia WHERE dm_mafia.mafia_vote = p.id AND dm_mafia.day = max_day) AS mafia_vote_count,
-			(SELECT COUNT(*) FROM daily_missions dm_doctor WHERE dm_doctor.doctor_vote = p.id AND dm_doctor.day = max_day) AS doctor_vote_count
+			COUNT(CASE WHEN dm.normal_vote = p.id THEN 1 ELSE NULL END) AS normal_vote_count,
+			COUNT(CASE WHEN dm.mafia_vote = p.id THEN 1 ELSE NULL END) AS mafia_vote_count,
+			COUNT(CASE WHEN dm.doctor_vote = p.id THEN 1 ELSE NULL END) AS doctor_vote_count
 		FROM
 			participants p
-<<<<<<< HEAD
-				JOIN rooms r ON p.room_id = r.id
-				LEFT JOIN daily_missions dm ON p.id IN (dm.normal_vote, dm.mafia_vote, dm.doctor_vote)
-				AND dm.day = (
-					SELECT MAX(day) FROM daily_missions dm_max_day
-											 JOIN participants ON dm_max_day.participant_id = participants.id
-					WHERE participants.room_id = 'room1'
-				)
-				LEFT JOIN participants p_vote ON p_vote.id IN (dm.normal_vote, dm.mafia_vote, dm.doctor_vote)
-				CROSS JOIN (
-				SELECT MAX(day) AS max_day FROM daily_missions dm_max
-													JOIN participants ON dm_max.participant_id = participants.id
-				WHERE participants.room_id = 'room1'
-			) AS max_day_subquery
-		WHERE
-			r.id = 'room1' AND (p_vote.flag_die IS NULL OR p_vote.flag_die = 0)
-		  AND p.flag_die = 0
-=======
 				LEFT JOIN
 			daily_missions dm ON p.id IN (dm.normal_vote, dm.mafia_vote, dm.doctor_vote) AND dm.day = (
 				SELECT MAX(day) FROM daily_missions
@@ -193,9 +82,8 @@
 			rooms r ON p.room_id = r.id
 		WHERE
 			r.id = 'room1'
->>>>>>> cb4fd39a819d76beb9fbcd326e240676f721fefd
 		GROUP BY
-			p.id, p.image_url, p.nickname;
+			p.id;
 	</select>
 
 	<select id="getUserRooms" parameterType="integer" resultType="RoomDto">
