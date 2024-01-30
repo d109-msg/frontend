@@ -13,6 +13,7 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 public class ArticleDto {
+    // 게시글 관련
     private int id;
     private int userId;
     private String content;

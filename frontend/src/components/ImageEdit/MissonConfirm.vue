@@ -36,8 +36,6 @@
 import btof from './base64ToFile'
 import axios from 'axios'
 import LoadingSpinner from '../LoadingSpinner/LoadingSpinner.vue'
-import { useFeedStore } from '@/store/feedStore'
-import { useAuthStore } from '@/store/authStore'
 export default {
     name: "MissionConfirm",
     data(){
@@ -49,8 +47,6 @@ export default {
             spinnerFlag : false,
             checkFlag : false,
             answer : Object,
-            feedStore : useFeedStore(),
-            authStore : useAuthStore(),
         }
     },
     components:{
@@ -60,31 +56,34 @@ export default {
         closeImage : function(){
             this.$emit("closeModal")
         },
-        processResponse: function(value) {
-        this.answer = value.data.choices[0].message.content;
-        if (this.answer.includes("True")) {
-            this.$emit("missionTrue");
-        } else {
-            this.$emit("missionFalse");
-        }},
-        axiosAi : async function(){
-            try{
-                this.spinnerFlag = true
-                const value = await this.feedStore.missionConfirm(this.dataImg,"와인")
-                this.processResponse(value)
-            } catch(err){
-                await this.authStore.useRefresh()
-                try{
-                    let value = await this.feedStore.missionConfirm(this.dataImg,"와인")
-                    this.processResponse(value)
-                } catch(err){
-                    alert("서버에 오류가 발생했습니다.")
-                    this.$emit("closeModal")
-                } finally {
-                    this.spinnerFlag = false
-                    this.checkFlag = false
-                }
+        axiosAi : function(){
+            this.spinnerFlag = true
+            let formData = new FormData()
+            formData.append('image',this.dataImg)
+            let item = "와인"
+            let token = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhY2Nlc3MtdG9rZW4iLCJpc3MiOiJNU0ciLCJpZCI6MTEsImlhdCI6MTcwNjE0MTYwOCwiZXhwIjoxNzA2MTUzNjA4fQ.Omu9Z9NDFYcSW-Dr4HKBj_D9x6sPlR_h6q0-lSN49BY"
+            axios.post(`http://localhost:8080/article/analyze?condition=${item}`,formData,{
+            headers:{
+                "Content-Type": `multipart/form-data`,
+                Authorization : `Bearer ${token}`
             }
+            }).then(res=>{
+                this.answer = res.data.choices[0].message.content
+                this.spinnerFlag = false
+                this.checkFlag = false
+                if(this.answer.includes("True")){
+                    this.$emit("missionTrue")
+                } else{
+                    this.$emit("missionFalse")
+                }
+            })
+            .catch(err=>{
+                this.spinnerFlag = false
+                this.checkFlag = false
+                alert("서버에 오류가 발생했습니다.")
+                this.$emit("closeModal")
+                console.log(err)
+            })
         }
     },
     props:{

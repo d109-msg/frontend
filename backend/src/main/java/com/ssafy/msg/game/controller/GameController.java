@@ -217,9 +217,32 @@ public class GameController {
 
     }
 
+    @Operation(summary = "랜덤 게임 참여 신청 여부 조회", description = "랜덤 게임 참여 신청 여부 조회")
+    @ApiResponses(value = { @ApiResponse(responseCode = "200", description = "랜덤 게임 참여 신청 여부 조회 성공", content = @Content),
+            @ApiResponse(responseCode = "400", description = "랜덤 게임 참여 신청 여부 조회 실패", content = @Content) })
+    @GetMapping("/random")
+    public ResponseEntity<?> getRandomGameApplyStatus(@Valid HttpServletRequest request) {
+        log.info("getRandomGameApplyStatus() -> Start");
+
+        int userId = (int) request.getAttribute("id");
+
+        try {
+            boolean randomGameApplyStatus = gameService.getRandomGameApplyStatus(userId);
+            log.info("getRandomGameApplyStatus() -> Success");
+            return new ResponseEntity<>(randomGameApplyStatus, HttpStatus.OK);
+        } catch (Exception e) {
+            log.error("getRandomGameApplyStatus() -> Exception : {}", e);
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        } finally {
+            log.info("getRandomGameApplyStatus() -> End");
+        }
+    }
+
     @Operation(summary = "랜덤 게임 참여 신청", description = "랜덤 게임 참여 신청")
-    @ApiResponses(value = { @ApiResponse(responseCode = "200", description = "랜덤 게임 참여 신청 성공", content = @Content),
-            @ApiResponse(responseCode = "400", description = "랜덤 게임 참여 신청 실패", content = @Content) })
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "랜덤 게임 참여 신청 성공", content = @Content),
+            @ApiResponse(responseCode = "400", description = "랜덤 게임 참여 신청 실패", content = @Content),
+            @ApiResponse(responseCode = "409", description = "이미 랜덤 게임 참여 신청 중", content = @Content)})
     @PostMapping("/random")
     public ResponseEntity<?> applyRandomGame(@Valid HttpServletRequest request) {
         log.info("applyRandomGame() -> Start");
@@ -227,14 +250,47 @@ public class GameController {
         int userId = (int) request.getAttribute("id");
 
         try {
-            gameService.applyRandomGame(userId);
-            log.info("applyRandomGame() -> Success");
-            return new ResponseEntity<>(HttpStatus.OK);
+            boolean result = gameService.applyRandomGame(userId);
+            if (result == true){
+                log.info("applyRandomGame() -> Success");
+                return new ResponseEntity<>(HttpStatus.OK);
+            }else{
+                log.info("applyRandomGame() -> Fail (중복 신청)");
+                return new ResponseEntity<>(HttpStatus.CONFLICT);
+            }
         } catch (Exception e) {
             log.error("applyRandomGame() -> Exception : {}", e);
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         } finally {
             log.info("applyRandomGame() -> End");
+        }
+    }
+
+    @Operation(summary = "랜덤 게임 참여 취소", description = "랜덤 게임 참여 취소")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "랜덤 게임 참여 취소 성공", content = @Content),
+            @ApiResponse(responseCode = "204", description = "랜덤 게임 참여 신청 상태가 아님", content = @Content),
+            @ApiResponse(responseCode = "400", description = "랜덤 게임 참여 취소 실패", content = @Content) })
+    @DeleteMapping("/random")
+    public ResponseEntity<?> cancelRandomGame(@Valid HttpServletRequest request) {
+        log.info("cancelRandomGame() -> Start");
+
+        int userId = (int) request.getAttribute("id");
+
+        try {
+            boolean result = gameService.cancelRandomGame(userId);
+            if (result == true){
+                log.info("cancelRandomGame() -> Success");
+                return new ResponseEntity<>(HttpStatus.OK);
+            }else{
+                log.info("cancelRandomGame() -> Fail (신청 중 X)");
+                return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+            }
+        } catch (Exception e) {
+            log.error("cancelRandomGame() -> Exception : {}", e);
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        } finally {
+            log.info("cancelRandomGame() -> End");
         }
     }
 
@@ -308,6 +364,19 @@ public class GameController {
 
     }
 
+
+    //test
+    @PostMapping("/mission/test")
+    public ResponseEntity<?> insertRandomMission(@RequestBody NewMissionDto dto) {
+        try {
+            gameService.createNewMission(dto.getRoomId(), dto.getDay());
+            return new ResponseEntity<>(HttpStatus.OK);
+        } catch (Exception e) {
+            log.error("insertRandomMission() -> error : {}", e);
+            return null;
+        }
+
+    }
 
     //test
     @GetMapping("/nicknametest")

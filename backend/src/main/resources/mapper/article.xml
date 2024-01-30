@@ -7,8 +7,8 @@
 
     <insert id="createArticle" parameterType="ArticleCreateDto" useGeneratedKeys="true" keyProperty="id">
         insert into articles
-            (user_id, content, create_time, flag_private, modify_time, room_id)
-        values ( #{userId}, #{content}, now(), #{flagPrivate}, now(), #{roomId});
+            (user_id, content, create_time, flag_private, room_id)
+        values ( #{userId}, #{content}, now(), #{flagPrivate}, #{roomId});
 
     </insert>
 
@@ -22,17 +22,16 @@
     <select id="getArticles" parameterType="int" resultType="ArticleWithUrlDto" >
         select a.id as article_id, a.user_id, a.create_time, a.flag_private, a.modify_time, a.room_id, ai.url
         from articles a
-        left join (
+                 left join (
             select article_id, MIN(id) as min_id
             from article_images
             group by article_id
         ) as sub_ai on a.id = sub_ai.article_id
-        left join article_images ai on sub_ai.min_id = ai.id
+                 left join article_images ai on sub_ai.min_id = ai.id
         where a.user_id = #{userId};
 
     </select>
 
-<<<<<<< HEAD
     <select id="getArticleDetail" parameterType="ArticleDto" resultType="ArticleDetailDto">
         select a.id as article_id, a.user_id, a.content, a.create_time, a.flag_private, a.modify_time, a.room_id
         from articles a
@@ -45,12 +44,6 @@
         from article_likes
         where article_id = #{articleId};
 
-=======
-    <select id="getArticleDetail" parameterType="int" resultType="ArticleDetailDto">
-        select a.id as article_id, a.user_id, a.content, a.create_time, a.flag_private, a.modify_time, a.room_id
-        from articles a
-        where a.id = #{articleId};
->>>>>>> cb4fd39a819d76beb9fbcd326e240676f721fefd
     </select>
 
     <select id="getArticleImages" parameterType="int" resultType="ArticleImageDto">
@@ -61,20 +54,21 @@
 
     </select>
 
-    <select id="getFeedArticleList" parameterType="int" resultType="ArticleDetailDto">
-        select *
+    <select id="getFeedArticleList" parameterType="FeedParamDto" resultType="ArticleDetailDto">
+        select a.id as article_id, a.user_id, a.content, a.create_time, a.flag_private, a.modify_time, a.room_id, a.like_count
         from articles a
-        left join article_images ai on a.id = ai.article_id
-        where a.user_id in (
+        where (a.user_id in (
             select f.to_user_id
             from follows f
             where f.from_user_id = #{userId}
             )
-        order by a.create_time desc;
+        or a.user_id = #{userId})
+        and a.id &lt; coalesce(#{offset}, (select max(id) from articles))
+        order by a.create_time desc
+        limit #{limit};
 
     </select>
 
-<<<<<<< HEAD
 
     <!--    좋아요 관련 쿼리문 시작 -->
     <select id="selectArticleLike" parameterType="articleDto" resultType="Boolean">
@@ -109,6 +103,4 @@
     </insert>
 
 
-=======
->>>>>>> cb4fd39a819d76beb9fbcd326e240676f721fefd
 </mapper>
