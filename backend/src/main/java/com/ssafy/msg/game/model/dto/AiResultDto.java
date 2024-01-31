@@ -12,8 +12,8 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class AiResultDto {
     @Schema(description = "사진 검증 통과 여부", example = "false")
-    boolean result;
+    private boolean result;
 
     @Schema(description = "result에 대한 이유", example = "사진에 나무가 없습니다.")
-    String reason;
+    private String reason;
 }
