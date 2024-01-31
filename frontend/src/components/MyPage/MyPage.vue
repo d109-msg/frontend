@@ -27,7 +27,39 @@
 <div v-if="is_edit==true" >
   <div class="edit-profile-back">
     <div class="edit-profile-box">
-      <img class="close-edit-box" src="./Img/icon_close.png" @click="is_edit=false" alt="">
+      <div class="edit-profile-nav" >
+        <p>회원정보 수정</p>
+        <img class="close-edit-box" src="./Img/icon_close.png" @click="is_edit=false" alt="">
+      </div>
+      <hr>
+      <div class="edit-profile-content-box">
+        <div class="edit-prifle-img" @click="editProfileImg"></div>
+        <div class="edit-profile-content">
+          <div>
+            <p>이름</p>
+            <div>{{ userName }}</div>
+          </div>
+          <div>
+            <p>이메일</p>
+            <div>{{ userEmail}}</div>
+          </div>
+          <hr>
+          <div>
+            <p>닉네임</p>
+            <input class="input-style" type="text" v-model="userNickname" required>
+          </div>
+          <div>
+            <p>소개글</p>
+            <input class="input-style" type="text" v-model="userIntro" required>
+          </div>
+          
+          <div style="display: flex; justify-content: end;">
+            <button class="withdraw-btn" >회원탈퇴</button>
+            <button @click="$router.push('/change-password')" class="password-btn">비밀번호 변경</button>
+            <button class="edit-btn">수정하기</button>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 </div>
@@ -47,7 +79,13 @@ export default {
     data(){
       return{
         userInfo : Object,
-        is_edit : false
+        is_edit : false,
+        userName: "",
+        userEmail: "",
+        userNickname: "닉네임을 입려해주세요.",
+        userIntro: "소개글을 입력해주세요.",
+        imaeUrl :"",
+
       }
     },
     components : {
@@ -60,6 +98,8 @@ export default {
       try{
         let value = await auth.getUser()
         this.userInfo = value.data
+        this.userName = this.userInfo.nickname
+        this.userEmail = this.userInfo.emailId
         console.log(this.userInfo)
       } catch (error) {
         auth.useRefresh()
@@ -88,7 +128,7 @@ export default {
     
   },
   mounted(){
-    // this.getUser()
+    this.getUser()
     // this.getFeed()
   }
 }

@@ -46,7 +46,7 @@
 .content>.img{
     width: 100%;
     height: 100%;
-    background: url(./ex.png);
+    background: url(../Img/ex.png);
     background-size: cover;
     border-radius: 12px;
 }
