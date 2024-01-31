@@ -10,6 +10,8 @@ public interface ArticleMapper {
 
     void createArticle(ArticleDto articleDto) throws SQLException;
 
+    void updateArticle(UpdateArticleDto updateArticleDto) throws SQLException;
+
     void insertArticleImage(ArticleImageDto articleImageDto) throws SQLException;
 
     List<ArticleImageDto> getArticleImages(int articleId) throws SQLException;

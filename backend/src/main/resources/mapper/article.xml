@@ -12,6 +12,12 @@
 
     </insert>
 
+    <update id="updateArticle" parameterType="ArticleDto">
+        update articles
+        set content = #{content}, modify_time = now()
+        where id = #{articleId} and user_id = #{userId}
+    </update>
+
     <insert id="insertArticleImage" parameterType="ArticleImageDto">
         insert into article_images
             (article_id, url, uuid, flag_mission)
@@ -165,7 +171,7 @@
         SELECT *, users.nickname
         FROM comments c
         left join users on c.user_id = users.id
-        WHERE article_id
+        WHERE article_id = #{articleId}
         <choose>
             <when test="parentCommentId != null">
                 AND parent_comment_id = #{parentCommentId}
