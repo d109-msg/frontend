@@ -162,7 +162,7 @@
     </insert>
 
     <select id="getComments" parameterType="CommentDto" resultType="CommentDto">
-        SELECT *, users.nickname
+        SELECT *, users.nickname, users.image_url
         FROM comments c
         left join users on c.user_id = users.id
         WHERE article_id
