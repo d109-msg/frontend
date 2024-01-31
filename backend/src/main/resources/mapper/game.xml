@@ -5,6 +5,23 @@
 <mapper
 	namespace="com.ssafy.msg.game.model.mapper.GameMapper">
 
+	<select id="getUserEndGame" resultType="UserEndGameDto" parameterType="int">
+		SELECT
+			p.job_id,
+			p.flag_win,
+			p.flag_die
+		FROM
+			participants p
+				JOIN
+			rooms r ON p.room_id = r.id
+				JOIN
+			users u ON p.user_id = u.id
+		WHERE
+			u.id = #{userId} AND
+			r.data_type = '랜덤' AND
+			r.end_time IS NOT NULL;
+	</select>
+
 	<select id="getMaxDay" resultType="integer" parameterType="int">
 		SELECT
 			CASE

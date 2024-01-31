@@ -36,7 +36,7 @@ public interface GameService {
 
     List<AliveParticipantDto> getAliveParticipant(String roomId) throws Exception;
 
-    void vote(VoteReceiveDto voteReceiveDto) throws Exception;
+    String vote(VoteReceiveDto voteReceiveDto) throws Exception;
 
     boolean getTime();
 
@@ -49,5 +49,7 @@ public interface GameService {
     AiResultDto analyzeImage(MultipartFile imageFile, String condition) throws Exception;
 
     Integer getMaxDay(int participantId) throws Exception;
+
+    UserGameRateResultDto getUserRate(int userId) throws Exception;
 }
 

@@ -30,6 +30,28 @@ public class GameController {
 
     private final GameService gameService;
 
+    @GetMapping("/user/rate")
+    @Operation(summary = "유저 승패 가져오기", description = "userId를 입력받아 유저의 게임 통계를 가져옵니다.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "조회 성공", content = {
+                    @Content(mediaType = "application/json", schema = @Schema(implementation = UserGameRateResultDto.class)) }),
+            @ApiResponse(responseCode = "400", description = "조회 실패", content = @Content) })
+    public ResponseEntity<?> getUserWin(int userId){
+        log.info("getUserWin() start");
+
+        try{
+            UserGameRateResultDto result = gameService.getUserRate(userId);
+
+            return new ResponseEntity<>(result, HttpStatus.OK);
+        } catch (Exception e){
+            log.error("getUserWin() -> error : {}", e);
+
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        } finally {
+            log.info("getUserWin() end");
+        }
+    }
+
     @PostMapping(value = "/analyze",
             consumes = MediaType.MULTIPART_FORM_DATA_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE)
@@ -183,10 +205,10 @@ public class GameController {
         log.info("submitVote() -> job : {}", voteReceiveDto.getJobId());
 
         try {
-            gameService.vote(voteReceiveDto);
+            String result = gameService.vote(voteReceiveDto);
             log.info("submitVote() -> done");
 
-            return new ResponseEntity<>(HttpStatus.OK);
+            return new ResponseEntity<>(result, HttpStatus.OK);
         } catch (Exception e) {
             log.error("submitVote() -> error : {}", e.toString());
 
