@@ -6,9 +6,8 @@ import axios from "axios"
 
 
 const cookies = useCookies().cookies
-const server = 'http://commitTest'
-const server1 = 'http://localhost:8080'
-const server2 = 'http://i10d109.p.ssafy.io/api'
+const server = 'https://i10d109.p.ssafy.io/api'
+const server2 = 'http://localhost:8080'
 
 export const useAuthStore = defineStore('auth',{
     state: ()=>({
