@@ -68,7 +68,7 @@ public class SchedulerController {
 
 
 
-    @Operation(summary = "오전 8시 랜덤 게임 배정 테스트", description = "오전 8시 랜덤 게임 배정 테스트")
+    @Operation(summary = "오전 8시 게임 시작 테스트", description = "오전 8시 게임 시작 배정 테스트")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "랜덤 게임 배정 성공", content = @Content),
             @ApiResponse(responseCode = "404", description = "랜덤 게임 배정 실패", content = @Content) })
@@ -110,7 +110,7 @@ public class SchedulerController {
         }
     }
 
-    @Operation(summary = "오후 8시 랜덤 게임 투표 결과 테스트", description = "오후 8시 랜덤 게임 투표 결과 테스트")
+    @Operation(summary = "오후 8시 게임 투표 결과 테스트", description = "오후 8시 게임 투표 결과 테스트")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "랜덤 게임 배정 성공", content = @Content),
             @ApiResponse(responseCode = "404", description = "랜덤 게임 배정 실패", content = @Content) })
@@ -130,27 +130,5 @@ public class SchedulerController {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
     }
-
-    @Operation(summary = "미션 미이행자 flag_die 수정 테스트", description = "미션 미이행자 flag_die 수정 테스트")
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "랜덤 게임 배정 성공", content = @Content),
-            @ApiResponse(responseCode = "404", description = "랜덤 게임 배정 실패", content = @Content) })
-    @GetMapping("/nonCompleter")
-    public ResponseEntity<?> testNonCompleter(HttpServletRequest request) {
-        log.info("testNonCompleter() -> Start");
-
-        int id = (int) request.getAttribute("id");
-        log.info("testNonCompleter() -> Receive id : {}", id);
-
-        try {
-            schedulerService.manageNonCompleter("71a7d310-fe99-4c5d-b886-dce4bbcfe27a");
-            log.info("testNonCompleter() -> Success");
-            return new ResponseEntity<>(HttpStatus.OK);
-        } catch (Exception e) {
-            log.error("testNonCompleter() -> Exception : {}", e);
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-        }
-    }
-
 
 }
