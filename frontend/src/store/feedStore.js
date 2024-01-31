@@ -30,6 +30,7 @@ export const useFeedStore = defineStore('feed',{
             }
             return axios.post('http://localhost:8080/article/create',data,{ headers })
         },
+        
         missionConfirm : async function(dataImg,item){
             const formData = new FormData()
             formData.append('image',dataImg)
@@ -38,10 +39,25 @@ export const useFeedStore = defineStore('feed',{
                 "Content-Type": `multipart/form-data`,
                 Authorization : `Bearer ${accessToken}`
             }
-            return axios.post(`http://localhost:8080/article/analyze?condition=${item}`,formData,{ headers })
+            return axios.post(`http://localhost:8080/game/analyze?condition=${item}`,formData,{ headers })
         },
+
         getUserProfile : async function(email){
             return axios.get(`http://localhost:8080/article/profile?userId=${1}`)
+        },
+
+        readFeed : async function(url){
+            const headers = {
+                Authorization : `Bearer ${useAuthStore().getAccess}`
+            }
+            return axios.get(url,{headers})
+        },
+        getDetail : async function(idx){
+            const headers = {
+                Authorization : `Bearer ${useAuthStore().getAccess}`
+            }
+            console.log(idx)
+            return axios.get(`http://localhost:8080/api/article?articleId=${idx}`,{headers})
         }
     },
     persist: [

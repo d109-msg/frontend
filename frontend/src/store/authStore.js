@@ -53,7 +53,7 @@ export const useAuthStore = defineStore('auth',{
             const headers = {
                 "Content-Type": `application/json`
             }
-            axios.post("http://localhost:8080/user/sign-up",JSON.stringify(data),{ headers })
+            axios.post("http://i10d109.p.ssafy.io/api/user/sign-up",JSON.stringify(data),{ headers })
         },
         async login(email,password){
             const data = {
@@ -63,7 +63,7 @@ export const useAuthStore = defineStore('auth',{
             const headers = {
                 "Content-Type": `application/json`
             }
-            return axios.post("http://localhost:8080/user/sign-in",JSON.stringify(data),{ headers })
+            return axios.post("http://i10d109.p.ssafy.io/api/user/sign-in",JSON.stringify(data),{ headers })
         },
         async resetPassword(email){
             const data = {

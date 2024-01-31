@@ -60,13 +60,15 @@ export default {
         closeImage : function(){
             this.$emit("closeModal")
         },
+
         processResponse: function(value) {
-        this.answer = value.data.choices[0].message.content;
-        if (this.answer.includes("True")) {
+        this.answer = value.data.result
+        if (this.answer == true) {
             this.$emit("missionTrue");
         } else {
             this.$emit("missionFalse");
         }},
+
         axiosAi : async function(){
             try{
                 this.spinnerFlag = true
