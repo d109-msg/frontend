@@ -20,7 +20,7 @@
     </insert>
 
     <select id="getArticles" parameterType="int" resultType="ArticleWithUrlDto" >
-        select a.id as article_id, a.user_id, a.create_time, a.flag_private, a.modify_time, a.room_id, ai.url, users.nickname
+        select a.id as article_id, a.user_id, a.create_time, a.flag_private, a.modify_time, a.room_id, ai.url, users.nickname, users.image_url
         from articles a
                  left join (
             select article_id, MIN(id) as min_id
@@ -34,7 +34,7 @@
     </select>
 
     <select id="getArticleDetail" parameterType="ArticleDto" resultType="ArticleDetailDto">
-        select users.nickname, a.id as article_id, a.user_id, a.content, a.create_time, a.flag_private, a.modify_time, a.room_id
+        select users.image_url, users.nickname, a.id as article_id, a.user_id, a.content, a.create_time, a.flag_private, a.modify_time, a.room_id
         from articles a
         left join users on a.user_id = users.id
         where a.id = #{id};
@@ -50,7 +50,7 @@
     </select>
 
     <select id="getFeedArticleList" parameterType="FeedParamDto" resultType="ArticleDetailDto">
-        select users.nickname, a.id as article_id, a.user_id, a.content, a.create_time, a.flag_private, a.modify_time, a.room_id
+        select users.nickname, users.image_url, a.id as article_id, a.user_id, a.content, a.create_time, a.flag_private, a.modify_time, a.room_id
         from articles a
         left join users on a.user_id = users.id
         where (a.user_id in (
@@ -96,7 +96,7 @@
     </select>
 
     <select id="getLikeUserList" parameterType="int" resultType="LikeUserListDto">
-        select al.user_id, users.nickname
+        select al.user_id, users.nickname, users.image_url
         from article_likes al
         left join users on al.user_id = users.id
         where article_id = #{articleId}
@@ -135,12 +135,13 @@
 
     </select>
 
-<!--    <select id="getCommentLikeUserList" parameterType="int" resultType="commentLikeUserListDto">-->
-<!--        select cl.user_id-->
-<!--        from comment_likes cl-->
-<!--        where comment_id = #{commentId}-->
+    <select id="getCommentLikeUserList" parameterType="int" resultType="commentLikeUserListDto">
+        select u.nickname, u.image_url
+        from comment_likes cl
+        left join users u on cl.user_id = u.id
+        where comment_id = #{commentId}
 
-<!--    </select>-->
+    </select>
 
 <!--   댓글 좋아요 관련 쿼리문 끝 -->
 

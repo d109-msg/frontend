@@ -86,14 +86,12 @@ public class ArticleController {
             @ApiResponse(responseCode = "200", description = "게시물 상세 조회 성공", content ={
                     @Content(mediaType = "application/json", schema = @Schema(implementation = ArticleDetailDto.class)) }),
             @ApiResponse(responseCode = "400", description = "게시물 상세 조회 실패", content = @Content) })
-    public ResponseEntity<?> getArticleDetail(@RequestParam("articleId") int articleId, HttpServletRequest request) {
+    public ResponseEntity<?> getArticleDetail(@RequestParam("articleId") int articleId) {
         log.info("(ArticleController) 게시물 상세보기 시작");
 
-        int userId = (Integer) request.getAttribute("id");
 
         ArticleDto articleDto = ArticleDto.builder()
                 .id(articleId)
-                .userId(userId)
                 .build();
 
         try {
@@ -297,6 +295,26 @@ public class ArticleController {
             log.info("(ArticleController) 좋아요 누르기 끝");
         }
 
+    }
+
+    @GetMapping(value = "/commentLikeUserList")
+    @Operation(summary = "댓글 좋아요 유저 리스트", description = "댓글 좋아요 누른 유저 리스트를 조회")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "댓글 좋아요 리스트 조회 성공" , content ={
+                    @Content(mediaType = "application/json", schema = @Schema(implementation = LikeUserListDto.class)) }),
+            @ApiResponse(responseCode = "400", description = "댓글 좋아요 리스트 조회 실패", content = @Content) })
+    public ResponseEntity<?> getCommentLikeUserList(@RequestParam("commentId") int commentId ) {
+        log.info("(ArticleController) commentLikeUserList 조회 시작");
+
+        try {
+            articleService.getCommentLikeUserList(commentId);
+            return new ResponseEntity<>(articleService.getCommentLikeUserList(commentId), HttpStatus.OK);
+        } catch (Exception e) {
+            log.error("(ArticleController) 댓글 좋아요 유저 리스트 조회 실패", e);
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        } finally {
+            log.info("(ArticleController) getCommentLikeUserList end");
+        }
     }
 
 }
