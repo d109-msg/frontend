@@ -6,7 +6,7 @@ import axios from "axios"
 import { useAuthStore } from "./authStore"
 
 const cookies = useCookies().cookies
-const server = 'http://i10d109.p.ssafy.io/api'
+const server = 'https://i10d109.p.ssafy.io/api'
 const server2 = 'http://localhost:8080'
 export const useFeedStore = defineStore('feed',{
     state: ()=>({
