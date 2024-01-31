@@ -6,6 +6,8 @@ import axios from "axios"
 
 
 const cookies = useCookies().cookies
+const server = 'http://i10d109.p.ssafy.io/api'
+const server2 = 'http://localhost:8080'
 
 export const useAuthStore = defineStore('auth',{
     state: ()=>({
@@ -28,7 +30,7 @@ export const useAuthStore = defineStore('auth',{
         async useRefresh(){
             const refresh = cookies.get('msgRefresh')
             try{
-            let value = await axios.get('http://localhost:8080/user/token',{
+            let value = await axios.get(`${server}/user/token`,{
                 headers: {Authorization: `Bearer ${refresh}`}
                 //header에 refresh 담아서 access 요청 후에 catch를 통한 에러처리 필요
             })
@@ -53,7 +55,7 @@ export const useAuthStore = defineStore('auth',{
             const headers = {
                 "Content-Type": `application/json`
             }
-            axios.post("http://localhost:8080/user/sign-up",JSON.stringify(data),{ headers })
+            axios.post(`${server}/user/sign-up`,JSON.stringify(data),{ headers })
         },
         async login(email,password){
             const data = {
@@ -63,7 +65,7 @@ export const useAuthStore = defineStore('auth',{
             const headers = {
                 "Content-Type": `application/json`
             }
-            return axios.post("http://localhost:8080/user/sign-in",JSON.stringify(data),{ headers })
+            return axios.post(`${server}/user/sign-in`,JSON.stringify(data),{ headers })
         },
         async resetPassword(email){
             const data = {
@@ -72,7 +74,7 @@ export const useAuthStore = defineStore('auth',{
             const headers = {
                 "Content-Type": `application/json`
             }
-            return axios.post("http://localhost:8080/user/password/reset",JSON.stringify(data),{ headers })
+            return axios.post(`${server}/user/password/reset`,JSON.stringify(data),{ headers })
         },
         async changePassword(temp,password){
                 const data = {
@@ -87,14 +89,14 @@ export const useAuthStore = defineStore('auth',{
                 console.log(this.getAccess)
                 console.log(JSON.stringify(data))
                 console.log(headers)
-                return axios.post("http://localhost:8080/user/password",JSON.stringify(data),{ headers })
+                return axios.post(`${server}/user/password`,JSON.stringify(data),{ headers })
         },
         async getUser(){
             const token = this.getAccess
             const headers = {
                 Authorization : `Bearer ${token}`
             }
-            return axios.get("http://localhost:8080/user/info",{ headers })
+            return axios.get(`${server}/user/info`,{ headers })
         },
     },
     persist: [

@@ -6,7 +6,8 @@ import axios from "axios"
 import { useAuthStore } from "./authStore"
 
 const cookies = useCookies().cookies
-
+const server = 'http://i10d109.p.ssafy.io/api'
+const server2 = 'http://localhost:8080'
 export const useFeedStore = defineStore('feed',{
     state: ()=>({
 
@@ -28,8 +29,9 @@ export const useFeedStore = defineStore('feed',{
                 'Content-Type' : 'multipart/form-data',
                 Authorization : `Bearer ${accessToken}`
             }
-            return axios.post('http://localhost:8080/article/create',data,{ headers })
+            return axios.post(`${server}/article/create`,data,{ headers })
         },
+        
         missionConfirm : async function(dataImg,item){
             const formData = new FormData()
             formData.append('image',dataImg)
@@ -38,10 +40,25 @@ export const useFeedStore = defineStore('feed',{
                 "Content-Type": `multipart/form-data`,
                 Authorization : `Bearer ${accessToken}`
             }
-            return axios.post(`http://localhost:8080/article/analyze?condition=${item}`,formData,{ headers })
+            return axios.post(`${server}/game/analyze?condition=${item}`,formData,{ headers })
         },
+
         getUserProfile : async function(email){
-            return axios.get(`http://localhost:8080/article/profile?userId=${1}`)
+            return axios.get(`${server}/article/profile?userId=${1}`)
+        },
+
+        readFeed : async function(url){
+            const headers = {
+                Authorization : `Bearer ${useAuthStore().getAccess}`
+            }
+            return axios.get(url,{headers})
+        },
+        getDetail : async function(idx){
+            const headers = {
+                Authorization : `Bearer ${useAuthStore().getAccess}`
+            }
+            console.log(idx)
+            return axios.get(`${server}/article?articleId=${idx}`,{headers})
         }
     },
     persist: [
