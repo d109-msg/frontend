@@ -20,6 +20,7 @@
 import GameMidPageVue from './GameMidPage.vue'
 import GameRoomPageVue from './GameRoomPage.vue'
 import MiniProfile from '../MiniProfile/MiniProfile.vue'
+import { usePageStore } from '@/store/pageStore'
 
 export default {
     name: "GamePage",
@@ -34,11 +35,12 @@ export default {
         MiniProfile,
     },
     mounted(){
+        this.emitter.emit('pageChange',1)
         let banner = document.querySelector('.banner')
         this.prevScrollY = window.scrollY
         window.addEventListener('scroll',()=>{
             let nowScrollY = window.scrollY
-            if(this.prevScrollY < nowScrollY){
+            if(this.prevScrollY < nowScrollY){  
                 banner.classList.remove('banner-up-event')
                 banner.classList.add('banner-down-event')
             }else{

@@ -14,6 +14,7 @@
 </template>
 
 <script>
+import { usePageStore } from '@/store/pageStore'
 import FeedPage from '../FeedPage/FeedPage.vue'
 import MiniProfile from '../MiniProfile/MiniProfile.vue'
 
@@ -30,8 +31,8 @@ export default {
     },
 
     mounted(){
-
-
+        this.emitter.emit('pageChange',0)
+        // this.$emit('pageChange',0)
 
         // 스크롤 이벤트에 따른 배너 margin 조정
         let banner = document.querySelector('.banner')
