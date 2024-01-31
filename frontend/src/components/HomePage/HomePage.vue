@@ -1,7 +1,7 @@
 <template>
   <div class="container">
-    <NavBarVue/>
-    <router-view></router-view>
+    <NavBarVue :page="page"/>
+    <router-view @page-change="change"></router-view>
   </div>
 </template>
 
@@ -11,6 +11,16 @@ import MainPage from '../MainPage/MainPage.vue';
 
 export default {
   name:"HomePage",
+  data(){
+    return{
+      page : ''
+    }
+  },
+  methods:{
+    change : function(value){
+      this.page = value
+    }
+  },
   components:{
       NavBarVue,
       MainPage

@@ -1,14 +1,16 @@
 <template>
-  <div class="mypage-banner">
-  </div>
+  <div>
 
-  <div class="mypage-box">
-    <div class="profile-box">
-      <div class="profile-content">
-      <div class="edit-profile" @click="openEdit" ></div>
-
-        <div class="profile-img"></div>
-        <div class="profile-section">
+    <div class="mypage-banner">
+    </div>
+    
+    <div class="mypage-box">
+      <div class="profile-box">
+        <div class="profile-content">
+          <div class="edit-profile" @click="openEdit" ></div>
+          
+          <div class="profile-img"></div>
+          <div class="profile-section">
           <div class="">닉네임 <span> {{ userInfo.nickname  }} </span></div>
           <div class="" >소개글 <span> {{  }} </span></div>
           <div class="profile-bot-section">
@@ -23,48 +25,49 @@
       <MyFeedVue></MyFeedVue>
       <MyGameVue></MyGameVue>
     </div>
-</div>
-<div v-if="is_edit==true" >
-  <div class="edit-profile-back">
-    <div class="edit-profile-box">
-      <div class="edit-profile-nav" >
-        <p>회원정보 수정</p>
-        <img class="close-edit-box" src="./Img/icon_close.png" @click="is_edit=false" alt="">
-      </div>
-      <hr>
-      <div class="edit-profile-content-box">
-        <div class="edit-prifle-img" @click="editProfileImg"></div>
-        <div class="edit-profile-content">
-          <div>
-            <p>이름</p>
-            <div>{{ userName }}</div>
-          </div>
-          <div>
-            <p>이메일</p>
-            <div>{{ userEmail}}</div>
-          </div>
-          <hr>
-          <div>
-            <p>닉네임</p>
-            <input class="input-style" type="text" v-model="userNickname" required>
-          </div>
-          <div>
-            <p>소개글</p>
-            <input class="input-style" type="text" v-model="userIntro" required>
-          </div>
-          
-          <div style="display: flex; justify-content: end;">
-            <button class="withdraw-btn" >회원탈퇴</button>
-            <button @click="$router.push('/change-password')" class="password-btn">비밀번호 변경</button>
-            <button class="edit-btn">수정하기</button>
+  </div>
+  <div v-if="is_edit==true" >
+    <div class="edit-profile-back">
+      <div class="edit-profile-box">
+        <div class="edit-profile-nav" >
+          <p>회원정보 수정</p>
+          <img class="close-edit-box" src="./Img/icon_close.png" @click="is_edit=false" alt="">
+        </div>
+        <hr>
+        <div class="edit-profile-content-box">
+          <div class="edit-prifle-img" @click="editProfileImg"></div>
+          <div class="edit-profile-content">
+            <div>
+              <p>이름</p>
+              <div>{{ userName }}</div>
+            </div>
+            <div>
+              <p>이메일</p>
+              <div>{{ userEmail}}</div>
+            </div>
+            <hr>
+            <div>
+              <p>닉네임</p>
+              <input class="input-style" type="text" v-model="userNickname" required>
+            </div>
+            <div>
+              <p>소개글</p>
+              <input class="input-style" type="text" v-model="userIntro" required>
+            </div>
+            
+            <div style="display: flex; justify-content: end;">
+              <button class="withdraw-btn" >회원탈퇴</button>
+              <button @click="$router.push('/change-password')" class="password-btn">비밀번호 변경</button>
+              <button class="edit-btn">수정하기</button>
+            </div>
           </div>
         </div>
       </div>
     </div>
   </div>
+  
+  
 </div>
-
-
 </template>
 
 <script>
@@ -128,7 +131,7 @@ export default {
     
   },
   mounted(){
-    this.getUser()
+    this.emitter.emit('pageChange',3)
     // this.getFeed()
   }
 }
