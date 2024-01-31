@@ -11,6 +11,7 @@ import SocialSign from './components/SocialSign.vue'
 import Mainpage from './components/MainPage/MainPage.vue'
 import GamePage from './components/GamePage/GamePage.vue'
 import ChangePassword from './components/ChangePassword/ChangePassword.vue'
+import RoomDetailPage from "./components/GamePage/RoomDetailPage.vue"
 import { useAuthStore } from "./store/authStore";
 
 
@@ -33,12 +34,17 @@ const routes = [
             {
                 name: "game",
                 path: "/game",
-                component: GamePage
+                component: GamePage,
             },
             {   name: "mypage",
                 path: "/mypage",
                 component : MyPage,
             },
+            {
+                name: "room",
+                path: "/game/:roomId",
+                component: RoomDetailPage,
+            }
 
 
             

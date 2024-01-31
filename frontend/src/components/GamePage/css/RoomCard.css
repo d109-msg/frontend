@@ -4,12 +4,15 @@
     height: 220px;
     width: 280px;
     border-radius: 10px;
+    margin-bottom: 20px;
 }
 
 .card-content{
     position: absolute;
     top: 0;
     background-color: #fff;
+    background: url('../Img/room_img1.png');
+    background-size: contain;
     height: 170px;
     width: 280px;
     border-radius: 5px;
@@ -27,6 +30,8 @@
     box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.2);
 
 }
+
+
 
 .card-job-icon{
     position: absolute;
