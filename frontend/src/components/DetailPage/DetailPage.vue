@@ -3,7 +3,7 @@
         @click.prevent="close"
     >
         <div class="detail-container">
-            <img  alt="" class="detail-img">
+            <img alt="" class="detail-img" :src="img">
         </div>
     </div>
 </template>
@@ -16,6 +16,7 @@ export default {
         return{
             itemIdx : this.$props.idx,
             itemData : Object,
+            img : "",
         }
     },
     methods: {
@@ -29,6 +30,7 @@ export default {
                 let value = await feed.getDetail(idx)
                 this.itemData = value.data
                 console.log(this.itemData)
+                this.img = this.itemData.urls[0]
             } catch(err){
                 this.$emit('closeDetail')
                 alert('예기치 않은 오류가 발생했습니다.')
@@ -42,6 +44,7 @@ export default {
     mounted(){
         // console.log(this.idx.articleId)
         this.readDetail(this.idx.articleId)
+        
     }
 
 }
