@@ -1,0 +1,41 @@
+.card-body{
+    position: relative;
+    background-color: #fff;
+    height: 220px;
+    width: 280px;
+    border-radius: 10px;
+}
+
+.card-content{
+    position: absolute;
+    top: 0;
+    background-color: #fff;
+    height: 170px;
+    width: 280px;
+    border-radius: 5px;
+    box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.2);
+
+}
+
+.card-title-box{
+    position: absolute;
+    bottom: 0;
+    background-color: #A1444A;
+    height: 50px;
+    width: 280px;
+    border-radius: 5px;
+    box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.2);
+
+}
+
+.card-job-icon{
+    position: absolute;
+    height: 50px;
+    width: 50px;
+    bottom: 30px;
+    left: 20px;
+    z-index: 30;
+    border-radius: 50px;
+    background: url('../Img/icon_job.PNG');
+    background-size: contain;
+}

@@ -1,13 +1,26 @@
 <template>
   <div>
-    <div>
-        <div class="banner"></div>
-        <div style="height: 100000px;"></div>
+    <div class="banner">
+        <div class="search-box">
+            <input class="search-bar" type="text" value="초대코드 입력">
+            <div class="search-btn">입장</div>
+        </div>
+    </div>
+    <GameMidPageVue></GameMidPageVue>
+    <div class="game-bot-box">
+        <GameRoomPageVue class="game-room-box"></GameRoomPageVue>
+        <MiniProfile>
+
+        </MiniProfile>
     </div>
   </div>
 </template>
 
 <script>
+import GameMidPageVue from './GameMidPage.vue'
+import GameRoomPageVue from './GameRoomPage.vue'
+import MiniProfile from '../MiniProfile/MiniProfile.vue'
+
 export default {
     name: "GamePage",
     data(){
@@ -15,7 +28,11 @@ export default {
             prevScrollY : '',
         }
     },
-
+    components:{
+        GameMidPageVue,
+        GameRoomPageVue,
+        MiniProfile,
+    },
     mounted(){
         let banner = document.querySelector('.banner')
         this.prevScrollY = window.scrollY
@@ -35,6 +52,6 @@ export default {
 }
 </script>
 
-<style scoped src="./GamePage.css">
+<style scoped src="./css/GamePage.css">
 
 </style>

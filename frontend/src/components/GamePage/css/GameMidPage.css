@@ -1,0 +1,36 @@
+
+.create-room-btn, .enter-room-btn, .game-guide-btn{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 400px;
+    height: 200px;
+    /* border: 1px solid black; */
+    border-radius: 15px;
+    box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.2);
+    font-size: 30px;
+    background-color:#ffffff;
+}
+
+.create-room-btn{
+    background: url('../Img/button_img2.PNG');
+    background-size: contain;
+    color: #fff;
+    text-shadow:1px 1px 1px #000;
+}
+
+.enter-room-btn{
+    background: url('../Img/button_img1.png');
+    background-repeat: no-repeat;
+    background-size: cover;
+    color: #fff;
+    text-shadow:1px 1px 1px #000;
+}
+
+.game-guide-btn{
+    background: url('../Img/button_img3.png');
+    background-repeat: no-repeat;
+    background-size: cover;
+    color: #fff;
+    text-shadow:1px 1px 1px #000;
+}
