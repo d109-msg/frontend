@@ -69,6 +69,11 @@ public class ArticleServiceImpl implements ArticleService{
     }
 
     @Override
+    public void deleteArticle(DeleteArticleDto deleteArticleDto) throws Exception {
+        articleMapper.deleteArticle(deleteArticleDto);
+    }
+
+    @Override
     public List<ArticleWithUrlDto> getArticles(Integer userId) throws Exception {
         log.info("(ArticleServiceImpl) 게시물조회 시작");
 
@@ -217,28 +222,45 @@ public class ArticleServiceImpl implements ArticleService{
     @Override
     public List<CommentDto> getComments(CommentDto commentDto) throws Exception {
         List<CommentDto> commentDtos = articleMapper.getComments(commentDto);
+        List<CommentDto> commentDtoList = new ArrayList<>();
 
         for (CommentDto cd : commentDtos) {
             cd.setCommentLikeCount(articleMapper.getCommentLikeCount(cd.getId()));
+
+            CommentLikeDto commentLikeDto = CommentLikeDto.builder().commentId(cd.getId()).userId(cd.getUserId()).build();
+            cd.setIsCommentLike(isCommentLike(commentLikeDto));
+
+            commentDtoList.add(cd);
         }
 
-        return commentDtos;
+        return commentDtoList;
 
     }
 
     // 댓글 crud 끝
 
+    // 게시물 조아요 여부
     @Override
     public int isLike(ArticleDto articleDto) throws Exception {
 
         // 게시물 좋아요 목록에 접속 유저가 있으면 1 없으면 0 리턴
         if (articleMapper.selectArticleLike(articleDto)) {
             return 1;
-
         } else {
             return 0;
-
         }
     }
 
+    // 댓글 좋아요 여부
+
+
+    @Override
+    public int isCommentLike(CommentLikeDto commentLikeDto) throws Exception {
+
+        if (articleMapper.selectCommentLike(commentLikeDto)) {
+            return 1;
+        } else {
+            return 0;
+        }
+    }
 }

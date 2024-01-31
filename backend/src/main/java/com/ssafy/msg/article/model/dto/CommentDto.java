@@ -21,6 +21,7 @@ public class CommentDto {
     private String content;
     private String createTime;
 
+    private int isCommentLike;
     private int commentLikeCount;
 
 }

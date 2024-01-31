@@ -18,6 +18,12 @@
         where id = #{articleId} and user_id = #{userId}
     </update>
 
+    <delete id="deleteArticle" parameterType="DeleteArticleDto">
+        delete
+        from articles
+        where id = #{articleId} and user_id = #{userId}
+    </delete>
+
     <insert id="insertArticleImage" parameterType="ArticleImageDto">
         insert into article_images
             (article_id, url, uuid, flag_mission)

@@ -78,7 +78,6 @@ public class ArticleController {
                 .userId(userId)
                 .build();
 
-
         try {
             articleService.updateArticle(updateArticleDto1);
             log.info("(ArticleController) 게시물 수정 성공");
@@ -91,6 +90,31 @@ public class ArticleController {
         }
     }
 
+    // 게시물 삭제
+    @DeleteMapping("/delete")
+    @Operation(summary = "게시물 삭제", description = "게시물 삭제")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "게시물 삭제 성공"),
+            @ApiResponse(responseCode = "400", description = "게시물 삭제 실패", content = @Content) })
+    public ResponseEntity<?> deleteArticle(@RequestParam("articleId") int articleId, HttpServletRequest request) {
+
+        int userId = (int) request.getAttribute("id");
+
+        DeleteArticleDto deleteArticleDto = DeleteArticleDto.builder()
+                .userId(userId)
+                .articleId(articleId)
+                .build();
+
+        try {
+            articleService.deleteArticle(deleteArticleDto);
+            return new ResponseEntity<>(HttpStatus.OK);
+        } catch (Exception e) {
+            log.info("(controller) 게시물 삭제 실패 에러");
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        } finally {
+            log.info("controller 게시물 삭제 끝");
+        }
+    }
 
 
     // 마이페이지에서 프로필 보기

@@ -11,6 +11,9 @@ public interface ArticleService {
     // 게시물 수정
     void updateArticle(UpdateArticleDto updateArticleDto) throws Exception;
 
+    // 게시물 삭제
+    void deleteArticle(DeleteArticleDto deleteArticleDto) throws Exception;
+
     List<ArticleWithUrlDto> getArticles(Integer userId) throws Exception; // 전체 게시물 리스트 받아옴
 
     ArticleDetailDto getArticleDetail(ArticleDto articleDto) throws Exception; // 게시물 하나 조회
@@ -27,7 +30,12 @@ public interface ArticleService {
 
     List<CommentDto> getComments(CommentDto commentDto) throws Exception;
 
+
+    // 게시물 좋아요 여부
     int isLike(ArticleDto articleDto) throws Exception;
+
+    // 댓글 좋아요 여부
+    int isCommentLike(CommentLikeDto commentLikeDto) throws Exception;
 
     List<LikeUserListDto> getLikeUserList(int articleId) throws Exception;
 
@@ -35,5 +43,7 @@ public interface ArticleService {
 
     // 기본 제공 게시물 불러오기
     List<ArticleDetailDto> getDefaultFeedList() throws Exception;
+
+
 
 }

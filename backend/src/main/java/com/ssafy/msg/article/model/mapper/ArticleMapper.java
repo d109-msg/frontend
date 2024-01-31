@@ -12,6 +12,9 @@ public interface ArticleMapper {
 
     void updateArticle(UpdateArticleDto updateArticleDto) throws SQLException;
 
+    //게시물 삭제
+    void deleteArticle(DeleteArticleDto deleteArticleDto) throws SQLException;
+
     void insertArticleImage(ArticleImageDto articleImageDto) throws SQLException;
 
     List<ArticleImageDto> getArticleImages(int articleId) throws SQLException;
