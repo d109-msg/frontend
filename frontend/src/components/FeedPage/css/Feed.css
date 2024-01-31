@@ -76,13 +76,15 @@
     background-position: 50% 50%;
     width: 28px;
     height: 28px;
-    background-size: cover;
+    background-size: contain;
+    background-repeat: no-repeat;
     margin-right: 10px;
     cursor: pointer;
 }
 .chat-icon{
     background: url(../Icon/chat.png);
-    background-size: cover;
+    background-size: contain;
+    background-repeat: no-repeat;
     background-position: 50% 50%;
     cursor: pointer;
     margin-right: 10px;
@@ -93,7 +95,8 @@
     background-position: 50% 50%;
     cursor: pointer;
     background: url(../Icon/share.png);
-    background-size: cover;
+    background-size: contain;
+    background-repeat: no-repeat;
     width: 22px;
     height: 23px;
 }

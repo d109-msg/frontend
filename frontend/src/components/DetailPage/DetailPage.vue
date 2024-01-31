@@ -4,8 +4,8 @@
     >
         <div class="detail-container">
             <div class="detail-img" id="detailImg">
-                <div class="left-arrow"></div>
-                <div class="right-arrow"></div>
+                <div class="left-arrow" @click="leftStep"></div>
+                <div class="right-arrow" @click="rightStep"></div>
             </div>
             <div class="detail-info">
                 <div class="user-info">
@@ -19,16 +19,24 @@
                 <div class="comment-list">
                     <p>댓글 {{ commentCount }}개</p>
                     <div class="comment" v-for="(item,idx) in comment" :key="idx">
-                        <div class="comment-img"></div>
+                        <img class="comment-img" :src="item.imageUrl">
+                        <div class="info-container">
+                            <p class="comment-nick">{{ item.nickname }}</p>
+                            <p>{{ item.content }}</p>
+                            <div style="display: flex; align-items: center; margin-left: 2px;">
+                                <!-- <img class="heart-img" src="./Icon/heart.png" alt="" v-if=""> -->
+                                <img src="./Icon/fullheart.png" class="heart-img">
+                                <img class="chat-img" src="./Icon/chat.png" alt="">
+                            </div>
+                        </div>
                     </div>
-                    
                 </div>
                 <div class="line2"></div>
                 <div class="bottom">
                     <p>{{ likeCount }}명의 사람들이 이 글을 좋아합니다.</p>
                     <p class="time">{{ createTime }}</p>
                     <div class="write">
-                        <textarea  cols="30" rows="10" class="write-comment" maxlength="50"
+                        <textarea  cols="30" rows="10" class="write-comment" maxlength="20"
                         v-model="writeComment" @keyup.enter.prevent="send"
                         ></textarea>
                         <div class="submit" @click.prevent="send">댓글쓰기</div>
@@ -93,7 +101,21 @@ export default {
                 this.$emit('closeDetail')
                 alert('예기치 않은 오류가 발생했습니다.')
             }
-        }
+        },
+        leftStep : function(){
+            if(this.step >0) {
+                this.step--
+            } else{
+                this.step = this.imgList.length-1
+            } 
+        },
+        rightStep : function(){
+            if(this.step <this.imgList.length-1) {
+                this.step++
+            } else{
+                this.step = 0
+            } 
+        },
 
     },
     props: {
