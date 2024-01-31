@@ -38,7 +38,7 @@ public interface GameService {
 
     String vote(VoteReceiveDto voteReceiveDto) throws Exception;
 
-    boolean getTime();
+    boolean getTime(int start, int end);
 
     String getMyVote(int participantId) throws Exception;
 

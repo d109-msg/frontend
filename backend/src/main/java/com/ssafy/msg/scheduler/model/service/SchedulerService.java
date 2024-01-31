@@ -12,4 +12,6 @@ public interface SchedulerService {
     void gamePM6() throws SQLException;
     void gamePM8() throws Exception;
     void gameAM12() throws SQLException;
+
+    void startRandomGame() throws Exception;
 }
