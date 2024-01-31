@@ -62,6 +62,37 @@ public class ArticleController {
         }
     }
 
+    // 게시물 수정
+    @PatchMapping("/modify")
+    @Operation(summary = "게시물 수정", description = "게시물 내용 수정")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "게시물 수정 성공"),
+            @ApiResponse(responseCode = "400", description = "게시물 수정 실패", content = @Content) })
+    public ResponseEntity<?> updateArticle(@RequestBody UpdateArticleDto updateArticleDto, HttpServletRequest request) {
+
+        int userId = (int) request.getAttribute("id");
+
+        UpdateArticleDto updateArticleDto1 = UpdateArticleDto.builder()
+                .content(updateArticleDto.getContent())
+                .articleId(updateArticleDto.getArticleId())
+                .userId(userId)
+                .build();
+
+
+        try {
+            articleService.updateArticle(updateArticleDto1);
+            log.info("(ArticleController) 게시물 수정 성공");
+            return new ResponseEntity<>(HttpStatus.OK);
+        } catch (Exception e) {
+            log.error("(ArticleController) 게시물 수정 실패", e);
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        } finally {
+            log.info("(ArticleController) 게시물 수정 끝");
+        }
+    }
+
+
+
     // 마이페이지에서 프로필 보기
     @GetMapping(value = "/profile")
     @Operation(summary = "프로필 게시물", description = "프로필 게시물 조회")
@@ -223,6 +254,8 @@ public class ArticleController {
         }
     }
 
+
+    // 댓글 쓰기
     @PostMapping(value = "/comment")
     @Operation(summary = "댓글 작성", description = "댓글 작성하기")
     @ApiResponses(value = {

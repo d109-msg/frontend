@@ -22,6 +22,7 @@ public class ArticleServiceImpl implements ArticleService{
 
     private final S3Util s3Util;
 
+    // 게시물 작성
     @Override
     public void createArticle(ArticleDto articleDto) throws Exception {
         log.info("(service) Start");
@@ -57,6 +58,14 @@ public class ArticleServiceImpl implements ArticleService{
             }
         }
         log.info("(service) end");
+    }
+
+    // 게시물 수정
+
+
+    @Override
+    public void updateArticle(UpdateArticleDto updateArticleDto) throws Exception {
+        articleMapper.updateArticle(updateArticleDto);
     }
 
     @Override

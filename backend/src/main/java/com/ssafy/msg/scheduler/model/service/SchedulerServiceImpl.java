@@ -96,6 +96,7 @@ public class SchedulerServiceImpl implements SchedulerService{
      * @param
      * @return void
      */
+    @Override
     public void startRandomGame() throws Exception {
         // 대기방 유저 조회
         List<Integer> waitingUsersId = schedulerMapper.getWaitingUsersId();

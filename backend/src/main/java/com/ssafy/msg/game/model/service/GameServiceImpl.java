@@ -5,6 +5,7 @@ import com.ssafy.msg.chat.model.dto.RoomDto;
 import com.ssafy.msg.chat.model.mapper.ChatMapper;
 import com.ssafy.msg.game.model.dto.*;
 import com.ssafy.msg.game.model.mapper.GameMapper;
+import com.ssafy.msg.scheduler.model.service.SchedulerService;
 import com.ssafy.msg.user.model.dto.UserDto;
 import com.ssafy.msg.user.model.mapper.UserMapper;
 import lombok.RequiredArgsConstructor;
@@ -26,7 +27,12 @@ public class GameServiceImpl implements GameService{
     private final ChatMapper chatMapper;
     private final UserMapper userMapper;
 
+    private final SchedulerService schedulerService;
+
     private final OpenAiUtil openAiUtil;
+
+
+
 
     @Override
     public boolean getRandomGameApplyStatus(int userId) throws Exception {
@@ -41,6 +47,11 @@ public class GameServiceImpl implements GameService{
         }else{
             UserDto user = userMapper.findUserById(userId);
             gameMapper.applyRandomGame(user);
+
+            if (getTime(8, 13)){
+                schedulerService.startRandomGame();
+            }
+
             return true;
         }
     }
@@ -163,7 +174,7 @@ public class GameServiceImpl implements GameService{
         log.info("getMyVote() myVote : {}", dto);
         log.info("getMyVote() job : {}", job);
 
-        if (getTime()) {
+        if (getTime(8, 20)) {
             //낮
             log.info("getMyVote() result : {}", dto.getNormalVote());
             return dto.getNormalVote();
@@ -230,6 +241,8 @@ public class GameServiceImpl implements GameService{
                     .build();
 
             chatMapper.enterRoom(participant);
+
+            // 해당 room의 인원이 7명이라면 게임 시작
         }
         return roomDto;
     }
@@ -358,7 +371,7 @@ public class GameServiceImpl implements GameService{
                     .nickname(vote.getNickname())
                     .imageUrl(vote.getImageUrl())
                     .build();
-            if (getTime()) { // 낮일 때
+            if (getTime(8, 20)) { // 낮일 때
                 voteResult.setVoteCount(vote.getNormalVoteCount());
             } else { //밤일 때
                 if (job.equals("의사")) { //의사일 때
@@ -522,7 +535,7 @@ public class GameServiceImpl implements GameService{
             return "mission uncompleted";
         }
 
-        if(getTime()){
+        if(getTime(8, 20)){
             //낮 08:00 - 20:00
             //시민 투표
             log.info("vote() -> normalVote : {}", voteReceiveDto.getTargetId());
@@ -544,24 +557,24 @@ public class GameServiceImpl implements GameService{
     }
 
     /**
-     * 현재 시간으로 08:00 - 20:00 사이라면 true, 아니라면 false를 리턴하는 함수
-     * @return 08:00 - 20:00 true, else false
+     * 현재 시간으로 start:00 - end:00 사이라면 true, 아니라면 false를 리턴하는 함수
+     * @return start:00 - end:00 true, else false
      */
     @Override
-    public boolean getTime() {
+    public boolean getTime(int start, int end) {
         // 서울 표준시 기준으로 현재 시간을 가져옵니다.
         ZonedDateTime now = ZonedDateTime.now(ZoneId.of("Asia/Seoul"));
         log.info("getTime() -> now : {}", now);
-        // 시작 시간 (08:00)과 종료 시간 (20:00)을 설정합니다.
-        LocalTime startTime = LocalTime.of(8, 0);
-        LocalTime endTime = LocalTime.of(20, 0);
+        // 시작 시간과 종료 시간을 설정합니다.
+        LocalTime startTime = LocalTime.of(start, 0);
+        LocalTime endTime = LocalTime.of(end, 0);
 
         // 현재 시간이 시작 시간과 종료 시간 사이인지 확인합니다.
         if (now.toLocalTime().isAfter(startTime) && now.toLocalTime().isBefore(endTime)) {
-            log.info("getRoomTime() 현재 시간은 08:00과 20:00 사이입니다.");
+            log.info("getRoomTime() 현재 시간은 {}:00과 {}:00 사이입니다.", start, end);
             return true;
         } else {
-            log.info("getRoomTime() 현재 시간은 08:00과 20:00 사이가 아닙니다.");
+            log.info("getRoomTime() 현재 시간은 {}:00과 {}:00 사이입니다.", start, end);
             return false;
         }
     }
