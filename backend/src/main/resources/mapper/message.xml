@@ -5,11 +5,19 @@
 <mapper
         namespace="com.ssafy.msg.message.model.mapper.MessageMapper">
 
+<!--    <select id="calDay" parameterType="string"-->
+<!--            resultType="int">-->
+<!--        SELECT DATEDIFF(NOW(), start_time) AS day-->
+<!--        FROM rooms-->
+<!--        WHERE id = #{roomId};-->
+<!--    </select>-->
+
     <select id="calDay" parameterType="string"
             resultType="int">
-        SELECT DATEDIFF(NOW(), start_time) AS day
-        FROM rooms
-        WHERE id = #{roomId};
+        SELECT COALESCE(MAX(dm.day), 0)
+        FROM daily_missions dm
+                 INNER JOIN participants p ON dm.participant_id = p.id
+        WHERE p.room_id = #{roomId}
     </select>
 
 </mapper>
