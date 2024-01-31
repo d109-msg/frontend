@@ -21,7 +21,7 @@ public interface SchedulerMapper {
 
     List<Integer> getMafiaVoteResult(String roomId) throws SQLException;
 
-    int getDoctorVoteResult(String roomId) throws SQLException;
+    List<Integer> getDoctorVoteResult(String roomId) throws SQLException;
 
     void killParticipant(int id) throws SQLException;
 

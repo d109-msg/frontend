@@ -203,24 +203,23 @@ public class SchedulerServiceImpl implements SchedulerService{
      * @throws SQLException
      */
     public void manageMafiaDoctorVote(String roomId) throws Exception {
-        List<Integer> mafiaVote = schedulerMapper.getMafiaVoteResult(roomId);
+        List<Integer> mafiaVotes = schedulerMapper.getMafiaVoteResult(roomId);
+        List<Integer> doctorVotes = schedulerMapper.getDoctorVoteResult(roomId);
 
         // 마피아 의견 갈림
-        if (mafiaVote.size() != 1){
+        if (mafiaVotes.size() != 1){
             messageService.sendGameNotice(roomId, "평화로운 밤이었습니다.");
             newDayMission(roomId);
         }else{
-            // 마피아 * 의사 지목 대상 매칭 여부
-            ParticipantDto participantDto = schedulerMapper.getParticipant(mafiaVote.get(0));
-            int doctorVote = schedulerMapper.getDoctorVoteResult(roomId);
-            if (mafiaVote.get(0) == doctorVote){
-                messageService.sendGameNotice(roomId, "마피아가 " + participantDto.getNickname() + "님을 죽이려 시도했지만 의사의 치료를 받아 살아났습니다!");
+            ParticipantDto target = schedulerMapper.getParticipant(mafiaVotes.get(0));
+            if (doctorVotes.size() == 1 && doctorVotes.get(0) == target.getId()){
+                // 의사 의견 통일 -> 살리기
+                messageService.sendGameNotice(roomId, "마피아가 " + target.getNickname() + "님을 죽이려 시도했지만 의사의 치료를 받아 살아났습니다!");
                 newDayMission(roomId);
             }else{
                 // 유저 flag_die 변경, 시민이었습니다 or 마피아였습니다
-                // participant의 flag_die 변경
-                schedulerMapper.killParticipant(mafiaVote.get(0));
-                messageService.sendGameNotice(roomId, participantDto.getNickname()+"님이 마피아에게 당했습니다.");
+                schedulerMapper.killParticipant(target.getId());
+                messageService.sendGameNotice(roomId, target.getNickname() + "님이 마피아에게 당했습니다.");
 
                 manageGameEnd(roomId, false);
             }
