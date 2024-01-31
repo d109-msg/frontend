@@ -51,5 +51,7 @@ public interface GameService {
     Integer getMaxDay(int participantId) throws Exception;
 
     UserGameRateResultDto getUserRate(int userId) throws Exception;
+
+    int completeMission(int userId, String roomId) throws Exception;
 }
 

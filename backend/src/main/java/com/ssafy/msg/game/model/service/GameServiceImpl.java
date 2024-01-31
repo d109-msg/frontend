@@ -30,14 +30,13 @@ public class GameServiceImpl implements GameService{
 
     @Override
     public boolean getRandomGameApplyStatus(int userId) throws Exception {
-        boolean randomGameApplyStatus = gameMapper.getRandomGameApplyStatus(userId);
-        return randomGameApplyStatus;
+        return gameMapper.getRandomGameApplyStatus(userId);
     }
 
     @Override
     public boolean applyRandomGame(int userId) throws Exception {
         boolean randomGameApplyStatus = gameMapper.getRandomGameApplyStatus(userId);
-        if (randomGameApplyStatus == true){
+        if (randomGameApplyStatus){
             return false;
         }else{
             UserDto user = userMapper.findUserById(userId);
@@ -49,12 +48,45 @@ public class GameServiceImpl implements GameService{
     @Override
     public boolean cancelRandomGame(int userId) throws Exception {
         boolean randomGameApplyStatus = gameMapper.getRandomGameApplyStatus(userId);
-        if (randomGameApplyStatus == true){
+        if (randomGameApplyStatus){
             gameMapper.deleteParticipant(userId);
             return true;
         }else{
             return false;
         }
+    }
+
+    /**
+     * userId와 roomId를 입력받아 id및 participant 생존여부 등을 체크하고 day를 구해 해당 participant의 mission에 완료 처리를 함
+     * @param userId userId를 입력받음
+     * @param roomId 게임방Id를 입력받음
+     * @return int result 결과를 리턴함. 정상:1, 유저 사망 등:-1, 업데이트 실패: 0
+     * @throws Exception
+     */
+    @Override
+    public int completeMission(int userId, String roomId) throws Exception {
+        //유저 검증
+        ParticipantDto participant = getParticipant(userId, roomId);
+
+        if(participant == null){
+            log.info("completeMission() can not find participant");
+            return -1;
+        }
+
+        int participantId = participant.getUserId();
+        Integer day = getMaxDay(participantId);
+        
+        //죽었는지 체크
+        if(day == null) {
+            log.info("completeMission() participant is dead");
+            return -1;
+        }
+
+        int result = gameMapper.completeMission(participantId, day);
+        log.info("completeMission() result : {}", result);
+
+        
+        return result;
     }
 
     /**
@@ -112,9 +144,9 @@ public class GameServiceImpl implements GameService{
     }
 
     /**
-     * participant가 죽었다면
-     * @param participantId
-     * @return
+     * participant가 살아있다면 현재 누구를 지목 중인지 리턴합니다.
+     * @param participantId participantId를 입력받음
+     * @return 누구를 지목 중인지 nickname을 리턴합니다.
      * @throws Exception
      */
     @Override
@@ -150,8 +182,7 @@ public class GameServiceImpl implements GameService{
 
     @Override
     public boolean isParticipantInRoom(EnterGroupRoomDto enterGroupRoomDto) throws Exception {
-        boolean isParticipantInRoom = gameMapper.isParticipantInRoom(enterGroupRoomDto);
-        return isParticipantInRoom;
+        return gameMapper.isParticipantInRoom(enterGroupRoomDto);
     }
 
     @Override
@@ -408,6 +439,13 @@ public class GameServiceImpl implements GameService{
         }
     }
 
+    /**
+     * 유저의 랜덤 게임 플레이 횟수를 가져옵니다.
+     * 전체 플레이 횟수 및 승리 수 부터 마피아, 시민 게임 플레이 횟수 및 승리 수를 가져옵니다.
+     * @param userId userId를 입력받는다.
+     * @return 게임 횟수, 승리 수, 시민 게임 횟스, 승리 수, 마피아 게임 횟수, 승리수
+     * @throws Exception
+     */
     @Override
     public UserGameRateResultDto getUserRate(int userId) throws Exception {
         //유저 검증 필요?

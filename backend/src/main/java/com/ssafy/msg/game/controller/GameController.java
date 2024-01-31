@@ -220,7 +220,6 @@ public class GameController {
     }
 
     @GetMapping(value = "/vote/pick", produces = "text/pain;charset=utf-8")
-    @PatchMapping("/vote")
     @Operation(summary = "내 투표현황 api", description = "유저의 participantId를 입력받아 리턴합니다. 유저가 죽었다면 participant is dead 를 리턴합니다")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "조회 성공", content = @Content),

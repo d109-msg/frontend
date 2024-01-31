@@ -5,6 +5,12 @@
 <mapper
 	namespace="com.ssafy.msg.game.model.mapper.GameMapper">
 
+	<update id="completeMission" parameterType="CompleteMissionDto">
+		UPDATE daily_missions
+		SET flag_success = 1
+		WHERE participant_id = #{participantId} AND day = #{day};
+	</update>
+
 	<select id="getUserEndGame" resultType="UserEndGameDto" parameterType="int">
 		SELECT
 			p.job_id,
