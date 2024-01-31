@@ -8,6 +8,9 @@ import java.util.List;
 public interface ArticleService {
     void createArticle(ArticleDto articleDto) throws Exception; // 게시물 입력 정보를 받아옴
 
+    // 게시물 수정
+    void updateArticle(UpdateArticleDto updateArticleDto) throws Exception;
+
     List<ArticleWithUrlDto> getArticles(Integer userId) throws Exception; // 전체 게시물 리스트 받아옴
 
     ArticleDetailDto getArticleDetail(ArticleDto articleDto) throws Exception; // 게시물 하나 조회
