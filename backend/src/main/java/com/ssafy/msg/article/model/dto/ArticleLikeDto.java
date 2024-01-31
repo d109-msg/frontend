@@ -10,9 +10,12 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Builder
 public class ArticleLikeDto {
+    //유저 정보
+    private String nickname;
+    private String imageUrl;
+
     private int id;
     private int articleId;
-    private String nickname;
     private int userId;
     private String createTime;
 

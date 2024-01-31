@@ -81,6 +81,9 @@ public class ArticleServiceImpl implements ArticleService{
         articleDetailDto.setLikeCount(articleMapper.getLikeCount(articleDto.getId())); // 좋아요 수 넣어주기
         articleDetailDto.setIsLike(isLike(articleDto)); // 좋아요 여부 알려주기
 
+        // 댓글 리스트 넣어주기
+        articleDetailDto.setCommentList(getComments(CommentDto.builder().articleId(articleDto.getId()).build()));
+
         List<String> urls = new ArrayList<>();
 
         for (ArticleImageDto ai : articleMapper.getArticleImages(articleDto.getId())) {
@@ -113,6 +116,29 @@ public class ArticleServiceImpl implements ArticleService{
         }
         return feedArticleList;
 
+    }
+
+    // 비로그인 혹은 팔로워 없을 때 보여주는 게시물 가져오기
+    @Override
+    public List<ArticleDetailDto> getDefaultFeedList() throws Exception {
+        List<ArticleDetailDto> articleList = articleMapper.getDefaultFeedList();
+        List<ArticleDetailDto> defaultFeedList = new ArrayList<>();
+
+        for (ArticleDetailDto at : articleList) { // 받아온 게시물 리스트를 받아서 돌린다
+            ArticleDto articleDto = ArticleDto.builder()
+                    .id(at.getArticleId())
+                    .build();
+
+            ArticleDetailDto articleDetail = getArticleDetail(articleDto);
+
+            at.setUrls(articleDetail.getUrls());
+            at.setIsLike(articleDetail.getIsLike());
+            at.setLikeCount(articleDetail.getLikeCount());
+
+            defaultFeedList.add(at);
+
+        }
+        return defaultFeedList;
     }
 
     // 게시물 좋아요 시작
