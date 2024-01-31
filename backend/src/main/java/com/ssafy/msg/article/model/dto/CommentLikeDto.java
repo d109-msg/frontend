@@ -10,9 +10,11 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class CommentLikeDto {
+    private String imageUrl;
+    private String nickname;
+
     private int id;
     private int commentId;
-    private String nickname;
     private int userId;
     private String createTime;
 }

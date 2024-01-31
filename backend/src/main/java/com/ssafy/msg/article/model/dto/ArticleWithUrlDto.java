@@ -13,8 +13,12 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 public class ArticleWithUrlDto {
-    private int articleId;
+    // 유저 정보
     private String nickname;
+    private String imageUrl;
+
+    // 게시글 관련
+    private int articleId;
     private int userId;
     private String createTime;
     private int flagPrivate;

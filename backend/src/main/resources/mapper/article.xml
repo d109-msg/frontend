@@ -41,6 +41,14 @@
 
     </select>
 
+<!--    기본제공 게시물 조회-->
+    <select id="getDefaultFeedList" resultType="ArticleDetailDto">
+        select u.image_url, u.nickname, a.content, a.id as articleId, a.user_id
+        from articles a
+        left join users u on a.user_id = u.id
+        where a.id &lt; 6;
+    </select>
+
     <select id="getArticleImages" parameterType="int" resultType="ArticleImageDto">
         select *
         from article_images

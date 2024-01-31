@@ -39,10 +39,16 @@ public class ArticleController {
             @ApiResponse(responseCode = "400", description = "게시물 작성 실패", content = @Content) })
     public ResponseEntity<?> createArticle(@ModelAttribute ArticleCreateDto articleCreateDto, HttpServletRequest request) {
         log.info("(controller) create Start");
+
         log.info("(controller) 클라이언트에서 받아온 articleCreateDto : {}", articleCreateDto);
 
         int id = (int) request.getAttribute("id");
-        ArticleDto articleDto = ArticleDto.builder().userId(id).articleImageList(articleCreateDto.getArticleImageList()).content(articleCreateDto.getContent()).roomId(articleCreateDto.getRoomId()).build();
+        ArticleDto articleDto = ArticleDto.builder()
+                .userId(id)
+                .articleImageList(articleCreateDto.getArticleImageList())
+                .content(articleCreateDto.getContent())
+                .roomId(articleCreateDto.getRoomId())
+                .build();
 
         try {
             articleService.createArticle(articleDto); // 클라이언트로부터 받은 정보를 서비스에 입력
@@ -56,6 +62,7 @@ public class ArticleController {
         }
     }
 
+    // 마이페이지에서 프로필 보기
     @GetMapping(value = "/profile")
     @Operation(summary = "프로필 게시물", description = "프로필 게시물 조회")
     @ApiResponses(value = {
@@ -80,6 +87,7 @@ public class ArticleController {
 
     }
 
+    // 게시물 상세 보기 (댓글 포함(대댓글 미포함))
     @GetMapping(value = "")
     @Operation(summary = "게시물 상세", description = "게시물 상세 내용 보기")
     @ApiResponses(value = {
@@ -88,7 +96,6 @@ public class ArticleController {
             @ApiResponse(responseCode = "400", description = "게시물 상세 조회 실패", content = @Content) })
     public ResponseEntity<?> getArticleDetail(@RequestParam("articleId") int articleId) {
         log.info("(ArticleController) 게시물 상세보기 시작");
-
 
         ArticleDto articleDto = ArticleDto.builder()
                 .id(articleId)
@@ -111,6 +118,7 @@ public class ArticleController {
 
     }
 
+    // 메인페이지에서 피드 조회 하기 ( 내가 팔로우 하고 있는 사람만 )
     @GetMapping(value = "/feed")
     @Operation(summary = "피드 게시물 리스트", description = "피드에 보여줄 게시물 리스트")
     @ApiResponses(value = {
@@ -137,6 +145,13 @@ public class ArticleController {
 
         try {
             List<ArticleDetailDto> articleDetailDtos = articleService.getFeedArticleList(feedParamDto);
+
+            //  보여줄 피드가 없을 때 조건 넣어주기
+            if (articleDetailDtos.isEmpty()) {
+                articleDetailDtos = articleService.getDefaultFeedList();
+
+            }
+
             int lastId = articleDetailDtos.get(articleDetailDtos.size() -1).getArticleId();
 
             String currentUrl = request.getRequestURL().toString();
@@ -157,6 +172,7 @@ public class ArticleController {
         }
     }
 
+    // 게시물 좋아요 누르기
     @PostMapping(value = "/like")
     @Operation(summary = "게시물 좋아요", description = "게시물 좋아요")
     @ApiResponses(value = {
@@ -186,6 +202,7 @@ public class ArticleController {
 
     }
 
+    // 게시물 좋아요 누른 유저 리스트 조회
     @GetMapping(value = "/likeUserList")
     @Operation(summary = "좋아요 유저 리스트", description = "좋아요 누른 유저 리스트를 조회")
     @ApiResponses(value = {
@@ -267,7 +284,7 @@ public class ArticleController {
 
     }
 
-    // 댓글 좋아요 계속 수정해야함....
+    // 댓글 좋아요 누르기
     @PostMapping(value = "/commentLike")
     @Operation(summary = "댓글 좋아요", description = "게시물 좋아요")
     @ApiResponses(value = {
@@ -297,6 +314,7 @@ public class ArticleController {
 
     }
 
+    // 댓글 좋아요누른 유저 리스트
     @GetMapping(value = "/commentLikeUserList")
     @Operation(summary = "댓글 좋아요 유저 리스트", description = "댓글 좋아요 누른 유저 리스트를 조회")
     @ApiResponses(value = {

@@ -13,8 +13,11 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 public class ArticleDetailDto {
-    //게시글 관련
+    // 유저 정보
+    private String imageUrl;
     private String nickname;
+
+    //게시글 관련
     private int articleId;
     private int userId;
     private String content;
@@ -31,7 +34,5 @@ public class ArticleDetailDto {
 
     // 댓글 관련
     private List<CommentDto> commentList;
-
-
 
 }
