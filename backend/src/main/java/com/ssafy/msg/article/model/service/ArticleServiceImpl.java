@@ -122,16 +122,16 @@ public class ArticleServiceImpl implements ArticleService{
     @Override
     public List<ArticleDetailDto> getDefaultFeedList() throws Exception {
         List<ArticleDetailDto> articleList = articleMapper.getDefaultFeedList();
-
         List<ArticleDetailDto> defaultFeedList = new ArrayList<>();
 
         for (ArticleDetailDto at : articleList) { // 받아온 게시물 리스트를 받아서 돌린다
             ArticleDto articleDto = ArticleDto.builder()
                     .id(at.getArticleId())
                     .build();
-            ArticleDetailDto articleDetail = getArticleDetail(articleDto);
-            at.setUrls(articleDetail.getUrls());
 
+            ArticleDetailDto articleDetail = getArticleDetail(articleDto);
+
+            at.setUrls(articleDetail.getUrls());
             at.setIsLike(articleDetail.getIsLike());
             at.setLikeCount(articleDetail.getLikeCount());
 
