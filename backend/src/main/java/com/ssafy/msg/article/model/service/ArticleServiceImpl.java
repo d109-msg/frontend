@@ -165,6 +165,11 @@ public class ArticleServiceImpl implements ArticleService{
 
     }
 
+    @Override
+    public List<CommentLikeUserListDto> getCommentLikeUserList(int commentId) throws Exception {
+
+        return articleMapper.getCommentLikeUserList(commentId);
+    }
 
     // 댓글 crud 시작
     @Override

@@ -28,7 +28,9 @@ public interface ArticleMapper {
     void deleteArticleLike(ArticleDto articleDto) throws SQLException;
 
     int getLikeCount(int articleId) throws SQLException;
-    // 게시물 좋아요 ----------------------------------------
+
+    List<LikeUserListDto> getLikeUserList(int articleId) throws SQLException;
+    // 게시물 좋아요 끝 --------------------------------------
 
     // 댓글 좋아요 시작 --------------------------------------
     Boolean selectCommentLike(CommentLikeDto commentLikeDto) throws SQLException;
@@ -39,6 +41,8 @@ public interface ArticleMapper {
 
     int getCommentLikeCount(int commentId) throws SQLException;
 
+    List<CommentLikeUserListDto> getCommentLikeUserList(int commentId) throws SQLException;
+
     // 댓글 좋아요 끝 -------------------------------------
 
     void createComment(CommentDto commentDto) throws SQLException;
@@ -47,6 +51,6 @@ public interface ArticleMapper {
 
     Integer getUserId(Integer userId) throws SQLException;
 
-    List<LikeUserListDto> getLikeUserList(int articleId) throws SQLException;
+
 
 }

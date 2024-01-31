@@ -26,6 +26,8 @@ public interface ArticleService {
 
     int isLike(ArticleDto articleDto) throws Exception;
 
-
     List<LikeUserListDto> getLikeUserList(int articleId) throws Exception;
+
+    List<CommentLikeUserListDto> getCommentLikeUserList(int commentId) throws Exception;
+
 }
