@@ -133,7 +133,6 @@
             onDetail : function(idx){
                 this.item = idx
                 this.detailFlag = true
-
             },
             offDetail : function(){
                 this.detailFlag = false

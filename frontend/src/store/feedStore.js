@@ -57,8 +57,13 @@ export const useFeedStore = defineStore('feed',{
             const headers = {
                 Authorization : `Bearer ${useAuthStore().getAccess}`
             }
-            console.log(idx)
             return axios.get(`${server}/article?articleId=${idx}`,{headers})
+        },
+        writeComment : async function(id,content,commentId){
+            const headers= {
+                Authorization : `Bearer ${useAuthStore().getAccess}`
+            }
+            return axios.post(`${server}/article/comment?articleId=${id}&content=${content}&parentCommentId=${commentId}`,null,{ headers })
         }
     },
     persist: [
