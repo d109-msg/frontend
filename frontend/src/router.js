@@ -11,7 +11,7 @@ import SocialSign from './components/SocialSign.vue'
 import Mainpage from './components/MainPage/MainPage.vue'
 import GamePage from './components/GamePage/GamePage.vue'
 import ChangePassword from './components/ChangePassword/ChangePassword.vue'
-import RoomDetailPage from "./components/GamePage/RoomDetailPage.vue"
+import RoomDetailPage from "./components/RoomDetail/RoomDetailPage.vue"
 import { useAuthStore } from "./store/authStore";
 
 
