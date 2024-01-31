@@ -14,6 +14,7 @@ import java.util.List;
 @AllArgsConstructor
 public class ArticleDetailDto {
     //게시글 관련
+    private String nickname;
     private int articleId;
     private int userId;
     private String content;
@@ -22,7 +23,7 @@ public class ArticleDetailDto {
     private String modifyTime;
     private String roomId;
     private List<String> urls;
-    private List<MultipartFile> articleImageList;
+//    private List<MultipartFile> articleImageList;
 
     // 좋아요
     private int likeCount;
@@ -30,5 +31,7 @@ public class ArticleDetailDto {
 
     // 댓글 관련
     private List<CommentDto> commentList;
+
+
 
 }

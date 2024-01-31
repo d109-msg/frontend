@@ -239,5 +239,64 @@ public class ArticleController {
 
     }
 
+    // 댓글 조회
+    @GetMapping("/comment")
+    @Operation(summary = "댓글 목록 조회", description = "댓글 목록 조회하기")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "댓글 조회 성공", content = {
+                    @Content(mediaType = "application/json", schema = @Schema(implementation = CommentDto.class)) }),
+            @ApiResponse(responseCode = "400", description = "댓글 조회 실패", content = @Content) })
+    public ResponseEntity<?> getComments(@RequestParam("articleId") int articleId,
+                                         @RequestParam(value = "parentCommentId", required = false) Integer parentCommentId,
+                                         HttpServletRequest request) {
+        int userId = (Integer) request.getAttribute("id");
+        CommentDto commentDto = CommentDto.builder()
+                .userId(userId)
+                .articleId(articleId)
+                .parentCommentId(parentCommentId)
+                .build();
+
+        try {
+            List<CommentDto> commentDtos = articleService.getComments(commentDto);
+            log.info("(ArticleController) 댓글 조회 성공");
+            return new ResponseEntity<>(commentDtos, HttpStatus.OK);
+        } catch (Exception e) {
+            log.error("(ArticleController) getComments", e);
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        } finally {
+            log.info("(ArticleController) getComments 댓글 조회 끝");
+        }
+
+    }
+
+    // 댓글 좋아요 계속 수정해야함....
+    @PostMapping(value = "/commentLike")
+    @Operation(summary = "댓글 좋아요", description = "게시물 좋아요")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "댓글 좋아요 성공", content ={
+                    @Content(mediaType = "application/json", schema = @Schema(implementation = CommentLikeDto.class)) }),
+            @ApiResponse(responseCode = "400", description = "댓글 좋아요 실패", content = @Content) })
+    public ResponseEntity<?> commentLike(@RequestParam("commentId") int commentId, HttpServletRequest request) {
+        log.info("(ArticleController) articleLike() -> 게시물 좋아요 시작");
+
+        int userId = (Integer) request.getAttribute("id");
+
+        CommentLikeDto commentLikeDto = CommentLikeDto.builder().
+                commentId(commentId).
+                userId(userId).
+                build();
+
+        try {
+            articleService.commentLike(commentLikeDto);
+            log.info("(ArticleController) 좋아요 누르기 성공");
+            return new ResponseEntity<>(commentLikeDto, HttpStatus.OK);
+        } catch (Exception e) {
+            log.error("(ArticleController) 좋아요 누르기 실패", e);
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        } finally {
+            log.info("(ArticleController) 좋아요 누르기 끝");
+        }
+
+    }
 
 }

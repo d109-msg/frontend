@@ -14,6 +14,7 @@ import java.util.List;
 @AllArgsConstructor
 public class ArticleDto {
     // 게시글 관련
+    private String nickname;
     private int id;
     private int userId;
     private String content;

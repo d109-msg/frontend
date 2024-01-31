@@ -12,6 +12,7 @@ import lombok.NoArgsConstructor;
 public class ArticleLikeDto {
     private int id;
     private int articleId;
+    private String nickname;
     private int userId;
     private String createTime;
 

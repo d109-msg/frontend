@@ -20,7 +20,7 @@
     </insert>
 
     <select id="getArticles" parameterType="int" resultType="ArticleWithUrlDto" >
-        select a.id as article_id, a.user_id, a.create_time, a.flag_private, a.modify_time, a.room_id, ai.url
+        select a.id as article_id, a.user_id, a.create_time, a.flag_private, a.modify_time, a.room_id, ai.url, users.nickname
         from articles a
                  left join (
             select article_id, MIN(id) as min_id
@@ -28,21 +28,16 @@
             group by article_id
         ) as sub_ai on a.id = sub_ai.article_id
                  left join article_images ai on sub_ai.min_id = ai.id
+        left join users on a.user_id = users.id
         where a.user_id = #{userId};
 
     </select>
 
     <select id="getArticleDetail" parameterType="ArticleDto" resultType="ArticleDetailDto">
-        select a.id as article_id, a.user_id, a.content, a.create_time, a.flag_private, a.modify_time, a.room_id
+        select users.nickname, a.id as article_id, a.user_id, a.content, a.create_time, a.flag_private, a.modify_time, a.room_id
         from articles a
+        left join users on a.user_id = users.id
         where a.id = #{id};
-
-    </select>
-
-    <select id="getLikeCount" parameterType="int" resultType="int">
-        select count(*) as like_count
-        from article_likes
-        where article_id = #{articleId};
 
     </select>
 
@@ -55,8 +50,9 @@
     </select>
 
     <select id="getFeedArticleList" parameterType="FeedParamDto" resultType="ArticleDetailDto">
-        select a.id as article_id, a.user_id, a.content, a.create_time, a.flag_private, a.modify_time, a.room_id
+        select users.nickname, a.id as article_id, a.user_id, a.content, a.create_time, a.flag_private, a.modify_time, a.room_id
         from articles a
+        left join users on a.user_id = users.id
         where (a.user_id in (
             select f.to_user_id
             from follows f
@@ -92,15 +88,61 @@
 
     </delete>
 
+    <select id="getLikeCount" parameterType="int" resultType="int">
+        select count(*) as like_count
+        from article_likes
+        where article_id = #{articleId};
+
+    </select>
+
     <select id="getLikeUserList" parameterType="int" resultType="LikeUserListDto">
-        select al.user_id
+        select al.user_id, users.nickname
         from article_likes al
+        left join users on al.user_id = users.id
         where article_id = #{articleId}
 
     </select>
 
 
-<!--    좋아요 관련 쿼리문 끝 -->
+<!--     좋아요 관련 쿼리문 끝 -->
+
+<!--   댓글 좋아요 관련 쿼리문 시작 -->
+    <select id="selectCommentLike" parameterType="commentLikeDto" resultType="Boolean">
+        select case
+                   when count(*) > 0 then true else false
+                   end
+        from comment_likes
+        where comment_id = #{commentId} and user_id = #{userId}
+
+    </select>
+
+    <insert id="insertCommentLike" parameterType="commentLikeDto">
+        insert into comment_likes (comment_id, user_id, create_time)
+        values (#{commentId}, #{userId}, now());
+
+    </insert>
+
+    <delete id="deleteCommentLike" parameterType="commentLikeDto">
+        delete from comment_likes
+        where comment_id = #{commentId} and user_id = #{userId};
+
+    </delete>
+
+    <select id="getCommentLikeCount" parameterType="int" resultType="int">
+        select count(*) as comment_like_count
+        from comment_likes
+        where comment_id = #{commentId};
+
+    </select>
+
+<!--    <select id="getCommentLikeUserList" parameterType="int" resultType="commentLikeUserListDto">-->
+<!--        select cl.user_id-->
+<!--        from comment_likes cl-->
+<!--        where comment_id = #{commentId}-->
+
+<!--    </select>-->
+
+<!--   댓글 좋아요 관련 쿼리문 끝 -->
 
 <!--    댓글 관련 쿼리문 시작-->
     <insert id="createComment" parameterType="CommentDto" useGeneratedKeys="true" keyProperty="id">
@@ -109,6 +151,24 @@
         values (#{articleId}, #{userId}, #{parentCommentId}, #{content}, now());
 
     </insert>
+
+    <select id="getComments" parameterType="CommentDto" resultType="CommentDto">
+        SELECT *, users.nickname
+        FROM comments c
+        left join users on c.user_id = users.id
+        WHERE article_id
+        <choose>
+            <when test="parentCommentId != null">
+                AND parent_comment_id = #{parentCommentId}
+            </when>
+            <otherwise>
+                AND parent_comment_id IS NULL
+            </otherwise>
+        </choose>;
+    </select>
+
+
+<!--    댓글 관련 쿼리문 끝-->
 
 <!--    userId 유무 확인 -->
     <select id="getUserId" parameterType="Integer" resultType="Integer">

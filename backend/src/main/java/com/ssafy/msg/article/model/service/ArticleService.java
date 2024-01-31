@@ -17,9 +17,15 @@ public interface ArticleService {
     @Transactional
     void articleLike(ArticleDto articleDto) throws Exception;
 
-    CommentDto createComment(CommentDto commentDto) throws Exception;
+    @Transactional
+    void commentLike(CommentLikeDto commentLikeDto) throws Exception;
+
+    void createComment(CommentDto commentDto) throws Exception;
+
+    List<CommentDto> getComments(CommentDto commentDto) throws Exception;
 
     int isLike(ArticleDto articleDto) throws Exception;
+
 
     List<LikeUserListDto> getLikeUserList(int articleId) throws Exception;
 }
