@@ -23,6 +23,7 @@ export default {
         return{
             selectedTag : Object,
             prevScrollY : '',
+            getId : '/'
         }
     },
     methods : {
@@ -38,7 +39,10 @@ export default {
     },
     mounted() {
         const basicUrl = window.location.pathname
-        this.selectedTag = document.getElementById(basicUrl)
+        for(let i=1; i<basicUrl.length;i++){
+            this.getId += basicUrl.charAt(i)
+        }
+        this.selectedTag = document.getElementById(this.getId)
         // if(this.selectedTag==null){ //Home에서 잘못된 URI로 접근시, ex. router-view가 적용 되지 않은 local.../main 의 주소
         //     router.push({name:'main'})
         //     setTimeout(()=>{
