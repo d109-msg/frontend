@@ -9,9 +9,6 @@ import lombok.RequiredArgsConstructor;
 @Builder
 @AllArgsConstructor
 @RequiredArgsConstructor
-public class LikeUserListDto {
-
+public class CommentLikeUserListDto {
     private String nickname;
-    private int userId;
-
 }
