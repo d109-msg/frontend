@@ -103,6 +103,14 @@
         WHERE id = #{id}
     </update>
 
+    <update id="manageNonCompleter" parameterType="int">
+        UPDATE participants
+        SET
+            flag_die = 1,
+            flag_win = 0
+        WHERE id = #{id}
+    </update>
+
     <select id="getParticipant" parameterType="int"
             resultType="ParticipantDto">
         select *
@@ -140,14 +148,20 @@
         <choose>
             <when test="isMafiaWin == 1">
                 UPDATE participants
-                SET flag_win = 1
-                WHERE room_id = #{roomId} AND job_id = '마피아'
+                SET flag_win = 0
+                WHERE room_id = #{roomId} AND job_id != '마피아'
             </when>
 
             <when test="isMafiaWin == 0">
                 UPDATE participants
-                SET flag_win = 1
-                WHERE room_id = #{roomId} AND job_id != '마피아'
+                SET flag_win = 0
+                WHERE room_id = #{roomId} AND job_id = '마피아'
+            </when>
+
+            <when test="isMafiaWin == -1">
+                UPDATE participants
+                SET flag_win = 0
+                WHERE room_id = #{roomId}
             </when>
         </choose>
     </update>
@@ -159,24 +173,17 @@
     </update>
 
     <select id="getNonCompleter" parameterType="string"
-            resultType="NonCompleterDto">
-        SELECT
-            p.id AS participantId, p.nickname, p.job_id, p.image_url
-        FROM
-            participants p
-                JOIN
-            daily_missions dm ON p.id = dm.participant_id
-                JOIN
-            (SELECT
-                 participant_id,
-                 MAX(day) AS max_day
-             FROM
-                 daily_missions
-             GROUP BY
-                 participant_id
-            ) max_dm ON dm.participant_id = max_dm.participant_id AND dm.day = max_dm.max_day
-        WHERE
-            p.room_id = #{roomId} AND p.flag_die = 0 AND dm.flag_success = 0;
+            resultType="ParticipantDto">
+        SELECT p.*
+        FROM daily_missions dm
+                 INNER JOIN participants p ON dm.participant_id = p.id
+        WHERE p.room_id = #{roomId} AND p.flag_die = 0 AND dm.flag_success = 0
+          AND dm.day = (
+            SELECT MAX(day)
+            FROM daily_missions dm2
+                     INNER JOIN participants p2 ON dm2.participant_id = p2.id
+            WHERE p2.room_id = #{roomId} AND p2.flag_die = 0
+        );
     </select>
 
 </mapper>
