@@ -10,7 +10,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Builder
 public class NewMissionDto {
-    String roomId;
-    int missionId;
-    int day;
+    private String roomId;
+    private int missionId;
+    private int day;
 }

@@ -408,18 +408,80 @@ public class GameServiceImpl implements GameService{
         }
     }
 
+    @Override
+    public UserGameRateResultDto getUserRate(int userId) throws Exception {
+        //유저 검증 필요?
+        List<UserEndGameDto> gameList = gameMapper.getUserEndGame(userId);
+        int totalGameCnt = gameList.size(); // 모든 게임 플레이 수
+
+        // 게임 플레이 수가 0인 경우, 0만 담긴 DTO 반환
+        if (totalGameCnt == 0) {
+            log.info("getUserRate() no play log");
+            return new UserGameRateResultDto(0, 0, 0, 0, 0, 0);
+        }
+
+        int totalWinCnt = 0;    //모든 게임 승리 수
+        int civilGameCnt = 0;   //시민으로 게임한 횟수
+        int civilWinCnt = 0;    //시민으로 승리한 횟수
+        int mafiaGameCnt = 0;   //마피아로 게임한 횟수
+        int mafiaWinCnt = 0;    //마피아로 승리한 횟수
+
+        for(UserEndGameDto dto : gameList) {
+            if(dto.getFlagWin() == 1){
+                //이겼을 때
+                totalWinCnt++;
+                if(dto.getJobId().equals("마피아")) {
+                    //마피아로 승리했을 때
+                    mafiaGameCnt++;
+                    mafiaWinCnt++;
+                } else {
+                    //시민, 의사로 승리했을 때
+                    civilGameCnt++;
+                    civilWinCnt++;
+                }
+
+            } else if(dto.getFlagWin() == 0) {
+                //졌을 때
+                if(dto.getJobId().equals("마피아")) {
+                    //마피아 패배했을 때
+                    mafiaGameCnt++;
+                } else {
+                    //시민, 의사로 패배했을 때
+                    civilGameCnt++;
+                }
+            }
+        }
+
+        log.info("getUserRate() - Total Games: {}, Total Wins: {}, Mafia Games: {}, Mafia Wins: {}, Civilian Games: {}, Civilian Wins: {}",
+                totalGameCnt, totalWinCnt, mafiaGameCnt, mafiaWinCnt, civilGameCnt, civilWinCnt);
+
+        return UserGameRateResultDto.builder()
+                .totalGameCnt(totalGameCnt)
+                .totalWinCnt(totalWinCnt)
+                .mafiaGameCnt(mafiaGameCnt)
+                .mafiaWinCnt(mafiaWinCnt)
+                .civilGameCnt(civilGameCnt)
+                .civilWinCnt(civilWinCnt)
+                .build();
+    }
+
     /**
      * 직업과 participantID, targetId를 입력받아 시간에 따른 투표를 반영합니다.
      * @param voteReceiveDto 직업과 participantID, targetId를 입력받아
      * @throws Exception
      */
     @Override
-    public void vote(VoteReceiveDto voteReceiveDto) throws Exception {
+    public String vote(VoteReceiveDto voteReceiveDto) throws Exception {
         Integer day = getMaxDay(voteReceiveDto.getParticipantId());
 
         if(day == null) {
             log.info("vote() participant is dead");
-            return;
+            return "participant is dead";
+        }
+
+        if(getMyMission(voteReceiveDto.getParticipantId()).getFlagSuccess() == 0){
+            log.info("vote() mission uncompleted");
+            return "mission uncompleted";
         }
 
         if(getTime()){
@@ -439,6 +501,8 @@ public class GameServiceImpl implements GameService{
                 gameMapper.doctorVote(voteReceiveDto.getParticipantId(), voteReceiveDto.getTargetId(), day);
             }
         }
+
+        return "vote completed";
     }
 
     /**

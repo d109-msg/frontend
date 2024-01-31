@@ -49,4 +49,6 @@ public interface GameMapper {
     MissionResultDto getMyMission(int participantId, int day) throws SQLException;
 
     Integer getMaxDay(int participantId) throws SQLException;
+
+    List<UserEndGameDto> getUserEndGame(int userId) throws SQLException;
 }
