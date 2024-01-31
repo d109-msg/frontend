@@ -3,7 +3,7 @@
     <div class="image-header">
         <div class="image-title">Create Feed</div>
         <div class="image-editor-cancel"
-        @click="closeImage"
+        @click="closeImage(0)"
         >X</div>
     </div>
         <hr class="image-line">
@@ -16,7 +16,7 @@
         <WriteContent v-if="writeFlag"
         :dataInfo="{imgData,imgSrc,selectRoom}"
         @close-write="writeFlag=false"
-        @create-feed="closeImage"
+        @create-feed="closeImage(1)"
         />
         <div class="wrapper" v-show="!writeFlag">
             <div class="img-wrapper">
@@ -188,7 +188,7 @@ export default {
             }this.confirm()
         },
 
-        closeImage : function(){
+        closeImage : function(value){
             this.resetFilter()
             let list = document.querySelectorAll('.img-list')
             list.forEach(img=>{
@@ -196,7 +196,13 @@ export default {
             })
             let preview = document.querySelector('.preview')
             preview.src = ""
-            this.$emit('close')
+            if(value==0){
+                this.$emit('close',0)
+                // 0이면 그냥 끄기
+            } else {
+                this.$emit('close',1)
+                // 1이면 글 작성이 완료되었다는 emit 부모 컴포넌트에서 사이트 새로고침 필요!
+            }
         },
         missionTrue : function(){
             this.missionConfirm = false

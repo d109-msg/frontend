@@ -1,6 +1,7 @@
 <template>
     <div class="feed-modal">
-            <ImageEdit @close="$emit('close')"/>
+            <ImageEdit @close="close"
+            />
     </div>
 </template>
 
@@ -10,7 +11,12 @@ export default {
     name: "FeedCreate",
     components:{
         ImageEdit,
-    }
+    },
+    methods: {
+      close : function(value){
+        this.$emit('close',value)
+      }  
+    },
 
 }
 </script>
