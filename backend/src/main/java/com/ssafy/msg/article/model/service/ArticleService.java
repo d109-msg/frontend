@@ -30,4 +30,7 @@ public interface ArticleService {
 
     List<CommentLikeUserListDto> getCommentLikeUserList(int commentId) throws Exception;
 
+    // 기본 제공 게시물 불러오기
+    List<ArticleDetailDto> getDefaultFeedList() throws Exception;
+
 }

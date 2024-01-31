@@ -12,6 +12,7 @@ import lombok.RequiredArgsConstructor;
 public class LikeUserListDto {
 
     private String nickname;
+    private String imageUrl;
     private int userId;
 
 }

@@ -10,8 +10,11 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class CommentDto {
-    private int id;
+    // 유저 정보
     private String nickname;
+    private String imageUrl;
+
+    private int id;
     private int userId;
     private int articleId;
     private Integer parentCommentId;
