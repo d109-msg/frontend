@@ -18,7 +18,9 @@
                 <div class="line"></div>
                 <div class="comment-list">
                     <p>댓글 {{ commentCount }}개</p>
-                    <div class="comment"></div>
+                    <div class="comment" v-for="(item,idx) in comment" :key="idx">
+                        <div class="comment-img"></div>
+                    </div>
                     
                 </div>
                 <div class="line2"></div>
@@ -27,11 +29,10 @@
                     <p class="time">{{ createTime }}</p>
                     <div class="write">
                         <textarea  cols="30" rows="10" class="write-comment" maxlength="50"
-                        v-model="writeComment"
+                        v-model="writeComment" @keyup.enter.prevent="send"
                         ></textarea>
                         <div class="submit" @click.prevent="send">댓글쓰기</div>
                     </div>
-
                 </div>
             </div>
         </div>
@@ -64,6 +65,8 @@ export default {
             const feed = useFeedStore()
             try{
                 await feed.writeComment(this.idx.articleId,this.writeComment,0)
+                await this.readDetail(this.idx.articleId)
+                this.writeComment = ""
             } catch(err){
                 console.log(err)
             }
@@ -80,7 +83,7 @@ export default {
                 if(value.data.commentList != null){
                     this.comment = this.itemData.commentList
                     this.commentCount = this.comment.length
-
+                    console.log(this.comment)
                 }
                 const img = document.getElementById('detailImg')
                 img.style.background = `url(${this.imgList[this.step]})`
