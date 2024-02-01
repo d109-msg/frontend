@@ -23,6 +23,12 @@ public class ArticleServiceImpl implements ArticleService{
     private final S3Util s3Util;
 
     // 게시물 작성
+
+    /**
+     * userId와 (미션 방 일때) roomId를 받아서
+     * @param articleDto
+     * @throws Exception
+     */
     @Override
     public void createArticle(ArticleDto articleDto) throws Exception {
         log.info("(service) Start");
@@ -88,6 +94,11 @@ public class ArticleServiceImpl implements ArticleService{
     @Override
     public void updateArticle(UpdateArticleDto updateArticleDto) throws Exception {
         articleMapper.updateArticle(updateArticleDto);
+    }
+
+    @Override
+    public void deleteArticle(DeleteArticleDto deleteArticleDto) throws Exception {
+        articleMapper.deleteArticle(deleteArticleDto);
     }
 
     @Override
@@ -236,31 +247,73 @@ public class ArticleServiceImpl implements ArticleService{
 
     }
 
+    /**
+     * content와 commentId를 받아 댓글 내용 수정
+     * @param updateCommentDto
+     * @throws Exception
+     */
+    @Override
+    public void updateComment(UpdateCommentDto updateCommentDto) throws Exception {
+        articleMapper.updateComment(updateCommentDto);
+    }
+
+    @Override
+    public void deleteComment(DeleteCommentDto deleteCommentDto) throws Exception {
+        articleMapper.deleteComment(deleteCommentDto);
+    }
+
     @Override
     public List<CommentDto> getComments(CommentDto commentDto) throws Exception {
         List<CommentDto> commentDtos = articleMapper.getComments(commentDto);
+        List<CommentDto> commentDtoList = new ArrayList<>();
 
         for (CommentDto cd : commentDtos) {
             cd.setCommentLikeCount(articleMapper.getCommentLikeCount(cd.getId()));
+
+            CommentLikeDto commentLikeDto = CommentLikeDto.builder().commentId(cd.getId()).userId(cd.getUserId()).build();
+            cd.setIsCommentLike(isCommentLike(commentLikeDto));
+
+            commentDtoList.add(cd);
         }
 
-        return commentDtos;
+        return commentDtoList;
 
     }
 
     // 댓글 crud 끝
 
+    // 게시물 조아요 여부
     @Override
     public int isLike(ArticleDto articleDto) throws Exception {
 
         // 게시물 좋아요 목록에 접속 유저가 있으면 1 없으면 0 리턴
         if (articleMapper.selectArticleLike(articleDto)) {
             return 1;
-
         } else {
             return 0;
-
         }
     }
 
+    // 댓글 좋아요 여부
+    @Override
+    public int isCommentLike(CommentLikeDto commentLikeDto) throws Exception {
+
+        if (articleMapper.selectCommentLike(commentLikeDto)) {
+            return 1;
+        } else {
+            return 0;
+        }
+    }
+
+    @Override
+    public void reportArticle(ArticleReportDto articleReportDto) throws Exception {
+        articleMapper.reportArticle(articleReportDto);
+    }
+
+    @Override
+    public List<ArticleReportDto> getArticleReports(int userId) throws Exception {
+        return articleMapper.getArticleReports(userId);
+    }
 }
+
+

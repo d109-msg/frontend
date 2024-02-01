@@ -12,6 +12,9 @@ public interface ArticleMapper {
 
     void updateArticle(UpdateArticleDto updateArticleDto) throws SQLException;
 
+    //게시물 삭제
+    void deleteArticle(DeleteArticleDto deleteArticleDto) throws SQLException;
+
     void insertArticleImage(ArticleImageDto articleImageDto) throws SQLException;
 
     List<ArticleImageDto> getArticleImages(int articleId) throws SQLException;
@@ -54,9 +57,17 @@ public interface ArticleMapper {
 
     void createComment(CommentDto commentDto) throws SQLException;
 
+    void updateComment(UpdateCommentDto updateCommentDto) throws SQLException;
+
+    void deleteComment(DeleteCommentDto deleteCommentDto) throws SQLException;
+
     List<CommentDto> getComments(CommentDto commentDto) throws SQLException;
 
     Integer getUserId(Integer userId) throws SQLException;
+
+    void reportArticle(ArticleReportDto articleReportDto) throws SQLException;
+
+    List<ArticleReportDto> getArticleReports(int userId) throws SQLException;
 
 
 

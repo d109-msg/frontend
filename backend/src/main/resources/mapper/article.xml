@@ -18,6 +18,12 @@
         where id = #{articleId} and user_id = #{userId}
     </update>
 
+    <delete id="deleteArticle" parameterType="DeleteArticleDto">
+        delete
+        from articles
+        where id = #{articleId} and user_id = #{userId}
+    </delete>
+
     <insert id="insertArticleImage" parameterType="ArticleImageDto">
         insert into article_images
             (article_id, url, uuid, flag_mission)
@@ -187,7 +193,7 @@
     </insert>
 
     <select id="getComments" parameterType="CommentDto" resultType="CommentDto">
-        SELECT *, users.nickname
+        SELECT *, users.nickname, users.image_url
         FROM comments c
         left join users on c.user_id = users.id
         WHERE article_id = #{articleId}
@@ -201,6 +207,17 @@
         </choose>;
     </select>
 
+    <update id="updateComment" parameterType="UpdateCommentDto">
+        update comments
+        set content = #{content}, modify_time = now()
+        where id = #{commentId} and user_id = #{userId}
+    </update>
+
+    <delete id="deleteComment" parameterType="DeleteCommentDto">
+        delete
+        from comments
+        where id = #{commentId} and user_id = #{userId}
+    </delete>
 
 <!--    댓글 관련 쿼리문 끝-->
 
@@ -209,6 +226,22 @@
         select u.id
         from users u
         where id = #{userId}
+    </select>
+
+<!--    게시물 신고하기-->
+    <insert id="reportArticle" parameterType="ArticleReportDto">
+        insert into article_reports (article_id, from_user_id, content)
+        values (#{articleId}, #{fromUserId}, #{content})
+    </insert>
+
+    <select id="getArticleReports" parameterType="int" resultType="ArticleReportDto">
+        select ar.*
+        from article_reports ar
+        where exists (
+            select 1
+            from users u
+            where u.id = #{userId} and u.flag_admin = 1
+        )
     </select>
 
 

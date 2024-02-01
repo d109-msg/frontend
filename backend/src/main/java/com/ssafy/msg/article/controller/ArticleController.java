@@ -64,7 +64,7 @@ public class ArticleController {
     }
 
     // 게시물 수정
-    @PatchMapping("/modify")
+    @PatchMapping("")
     @Operation(summary = "게시물 수정", description = "게시물 내용 수정")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "게시물 수정 성공"),
@@ -79,7 +79,6 @@ public class ArticleController {
                 .userId(userId)
                 .build();
 
-
         try {
             articleService.updateArticle(updateArticleDto1);
             log.info("(ArticleController) 게시물 수정 성공");
@@ -92,6 +91,31 @@ public class ArticleController {
         }
     }
 
+    // 게시물 삭제
+    @DeleteMapping("")
+    @Operation(summary = "게시물 삭제", description = "게시물 삭제")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "게시물 삭제 성공"),
+            @ApiResponse(responseCode = "400", description = "게시물 삭제 실패", content = @Content) })
+    public ResponseEntity<?> deleteArticle(@RequestParam("articleId") int articleId, HttpServletRequest request) {
+
+        int userId = (int) request.getAttribute("id");
+
+        DeleteArticleDto deleteArticleDto = DeleteArticleDto.builder()
+                .userId(userId)
+                .articleId(articleId)
+                .build();
+
+        try {
+            articleService.deleteArticle(deleteArticleDto);
+            return new ResponseEntity<>(HttpStatus.OK);
+        } catch (Exception e) {
+            log.info("(controller) 게시물 삭제 실패 에러");
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        } finally {
+            log.info("controller 게시물 삭제 끝");
+        }
+    }
 
 
     // 마이페이지에서 프로필 보기
@@ -281,6 +305,7 @@ public class ArticleController {
     }
 
 
+
     // 댓글 쓰기
     @PostMapping(value = "/comment")
     @Operation(summary = "댓글 작성", description = "댓글 작성하기")
@@ -313,6 +338,63 @@ public class ArticleController {
 
     }
 
+    // 댓글 수정
+    @PatchMapping("/comment")
+    @Operation(summary = "댓글 수정", description = "댓글 내용 수정")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "댓글 수정 성공"),
+            @ApiResponse(responseCode = "400", description = "댓글 수정 실패", content = @Content) })
+    public ResponseEntity<?> updateComment(@RequestBody UpdateCommentDto updateCommentDto, HttpServletRequest request) {
+        log.info("(ArticleController) 댓글 수정 시작");
+
+        int userId = (int) request.getAttribute("id");
+
+        UpdateCommentDto updateCommentDto1 = UpdateCommentDto.builder()
+                .commentId(updateCommentDto.getCommentId())
+                .content(updateCommentDto.getContent())
+                .userId(userId)
+                .build();
+
+        try {
+            articleService.updateComment(updateCommentDto1);
+            log.info("(ArticleController) 댓글 수정 성공");
+            return new ResponseEntity<>(HttpStatus.OK);
+        } catch (Exception e) {
+            log.error("(ArticleController) 댓글 수정 실패", e);
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        } finally {
+            log.info("(ArticleController) 댓글 수정 끝");
+        }
+
+
+    }
+
+    // 댓글 삭제
+    @DeleteMapping("/comment")
+    @Operation(summary = "댓글 삭제", description = "댓글 삭제")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "게시물 삭제 성공"),
+            @ApiResponse(responseCode = "400", description = "게시물 삭제 실패", content = @Content) })
+    public ResponseEntity<?> deleteComment(@RequestParam("commentId") int commentId, HttpServletRequest request) {
+
+        int userId = (int) request.getAttribute("id");
+
+        DeleteCommentDto deleteCommentDto = DeleteCommentDto.builder()
+                .commentId(commentId)
+                .userId(userId)
+                .build();
+
+        try {
+            articleService.deleteComment(deleteCommentDto);
+            return new ResponseEntity<>(HttpStatus.OK);
+        } catch (Exception e) {
+            log.info("(controller) 게시물 삭제 실패 에러");
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        } finally {
+            log.info("controller 게시물 삭제 끝");
+        }
+    }
+
     // 댓글 조회
     @GetMapping("/comment")
     @Operation(summary = "댓글 목록 조회", description = "댓글 목록 조회하기")
@@ -341,6 +423,32 @@ public class ArticleController {
             log.info("(ArticleController) getComments 댓글 조회 끝");
         }
 
+    }
+
+    // 대댓글 가져오기
+    @GetMapping("/childComment")
+    @Operation(summary = "대댓글 목록 조회", description = "대댓글 목록 조회하기")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "대댓글 조회 성공", content = {
+                    @Content(mediaType = "application/json", schema = @Schema(implementation = CommentDto.class)) }),
+            @ApiResponse(responseCode = "400", description = "대댓글 조회 실패", content = @Content) })
+    public ResponseEntity<?> getChildCommentList(@RequestParam("commentId") int commentId,
+                                                 @RequestParam("articleId") int articleId) {
+
+        CommentDto commentDto = CommentDto.builder()
+                .articleId(articleId)
+                .parentCommentId(commentId)
+                .build();
+
+        try {
+            List<CommentDto> commentDtos = articleService.getComments(commentDto);
+            return new ResponseEntity<>(commentDtos, HttpStatus.OK);
+        } catch (Exception e) {
+            log.error("(대댓글 보기) 대댓글 조회 실패", e);
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        } finally {
+            log.info("(ArticleController) 대댓글 조회 성공");
+        }
     }
 
     // 댓글 좋아요 누르기
@@ -393,5 +501,57 @@ public class ArticleController {
             log.info("(ArticleController) getCommentLikeUserList end");
         }
     }
+
+    @PostMapping(value = "/report")
+    @Operation(summary = "게시물 신고", description = "게시물 신고하기 기능")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "게시물 신고 성공"),
+            @ApiResponse(responseCode = "400", description = "게시물 신고 실패", content = @Content)})
+    public ResponseEntity<?> reportArticle(@RequestBody ArticleReportDto articleReportDto, HttpServletRequest request) {
+        log.info("(ArticleController) 게시물 리폿 시작");
+
+        int userId = (int) request.getAttribute("id");
+
+        ArticleReportDto articleReportDto1 = ArticleReportDto.builder()
+                .fromUserId(userId)
+                .articleId(articleReportDto.getArticleId())
+                .content(articleReportDto.getContent())
+                .build();
+
+        try {
+            articleService.reportArticle(articleReportDto1);
+            log.info("(ArticleController) 게시물 리폿 성공");
+            return new ResponseEntity<>(HttpStatus.OK);
+        } catch (Exception e) {
+            log.error("(ArticleController) 게시물 리폿 실패", e);
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        } finally {
+            log.info("(ArticleController) 게시물 리폿 끝");
+        }
+
+    }
+
+    @GetMapping(value = "/report")
+    @Operation(summary = "신고리스트 조회", description = "관리자에 한에서 신고목록 조회")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "신고 리스트 조회 성공"),
+            @ApiResponse(responseCode = "400", description = "신고 리스트 조회 실패", content = @Content)})
+    public ResponseEntity<?> getArticleReports(HttpServletRequest request) {
+
+        int userId = (int) request.getAttribute("id");
+
+        try {
+
+            return new ResponseEntity<>(articleService.getArticleReports(userId), HttpStatus.OK);
+        } catch (Exception e) {
+            log.error("신고 리스트 보기 ", e);
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        } finally {
+            log.info("(ArticleController) 신고 리스트 확인 끝");
+        }
+    }
+
+
+
 
 }
