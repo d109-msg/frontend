@@ -20,7 +20,6 @@
 import GameMidPageVue from './GameMidPage.vue'
 import GameRoomPageVue from './GameRoomPage.vue'
 import MiniProfile from '../MiniProfile/MiniProfile.vue'
-import { usePageStore } from '@/store/pageStore'
 
 export default {
     name: "GamePage",

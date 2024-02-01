@@ -64,7 +64,27 @@ export const useFeedStore = defineStore('feed',{
                 Authorization : `Bearer ${useAuthStore().getAccess}`
             }
             return axios.post(`${server}/article/comment?articleId=${id}&content=${content}&parentCommentId=${commentId}`,null,{ headers })
-        }
+        },
+        likeArticle : async function(idx){
+            const headers= {
+                Authorization : `Bearer ${useAuthStore().getAccess}`
+            }
+
+            return axios.post(`${server}/article/like?articleId=${idx}`,null,{ headers })
+        },
+        likeComment : async function(idx){
+            const headers={
+                Authorization : `Bearer ${useAuthStore().getAccess}`
+            }
+            return axios.post(`${server}/article/commentLike?commentId=${idx}`,null,{ headers })
+        },
+        readRecomment : async function(idx,article){
+            const headers={
+                Authorization : `Bearer ${useAuthStore().getAccess}`
+            }
+            return axios.get(`${server}/article/childComment?commentId=${idx}&articleId=${article}`,{headers})
+        },
+        
     },
     persist: [
         {

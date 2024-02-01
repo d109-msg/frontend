@@ -16,7 +16,6 @@
 
 <script>
 import router from '@/router'
-import { usePageStore } from '@/store/pageStore'
 
 export default {    
     name : 'NavBar',
@@ -25,7 +24,6 @@ export default {
             selectedTag : Object,
             prevScrollY : '',
             getId : '/',
-            basicUrl : usePageStore().getPage,
             prev : null,
             step : 0,
             prev : -1,

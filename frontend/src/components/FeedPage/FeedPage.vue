@@ -15,7 +15,6 @@
             <template  v-for="(feed,idx) in feedList" :key="idx" >
                 <div v-if="idx%2===1" :id="idx">
                     <Feed v-if="idx%2===1" :item="feed"
-                    @click.prevent="onDetail(feed)"
                     ></Feed>
                 </div>
             </template>
@@ -24,21 +23,16 @@
             <template  v-for="(feed,idx) in feedList" :key="idx" >
                 <div :id="idx" v-if="idx%2===0">
                     <Feed v-if="idx%2===0" :item="feed"
-                    @click.prevent="onDetail(feed)"
                     ></Feed>                    
                 </div>
             </template>
             <FeedCreate v-if="create" @close="complete"/>
         </div>
-        <DetailPage v-if="detailFlag"
-        @close-detail="offDetail"
-        :idx="item"
-        />
+        
     </div>
 </template>
 
 <script>
-    import DetailPage from '../DetailPage/DetailPage.vue';
     import Feed from './Feed.vue';
     import FeedCreate from './FeedCreate.vue';
     import { useFeedStore } from '@/store/feedStore';
@@ -55,10 +49,9 @@
                 create : false,
                 baseUrl : 'http://localhost:8080/article/feed',
                 feedList : [],
-                detailFlag : false,
-                last : Object,
-                io : Object,
-                item: Object,
+                last : {},
+                io : {},
+                item: {},
             }
         },  
 
@@ -86,7 +79,6 @@
                         }
                     } catch(err){
                         console.log(err)
-                        alert('잘못된 요청입니다.')
                     }
                 }
             },
@@ -117,7 +109,7 @@
                                 await authStore.useRefresh()
                                 await this.axiosRead()
                             } catch(err){
-                                alert('잘못된 요청입니다.')
+                                console.log(err)
                             }
                         }
                     }
@@ -130,19 +122,11 @@
                     //emit으로 글 작성 완료되었다는 이벤트 왔을 시 현 화면 새로고침
                 }
             },
-            onDetail : function(idx){
-                this.item = idx
-                this.detailFlag = true
-            },
-            offDetail : function(){
-                this.detailFlag = false
-            }
-
+            
         },
         components: {
             Feed,
             FeedCreate,
-            DetailPage,
         },
         mounted(){
             this.readFeed()

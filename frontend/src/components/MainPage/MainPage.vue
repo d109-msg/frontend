@@ -14,7 +14,6 @@
 </template>
 
 <script>
-import { usePageStore } from '@/store/pageStore'
 import FeedPage from '../FeedPage/FeedPage.vue'
 import MiniProfile from '../MiniProfile/MiniProfile.vue'
 

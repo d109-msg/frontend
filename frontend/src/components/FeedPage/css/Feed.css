@@ -72,14 +72,14 @@
     margin-bottom: 17px;
 }
 .heart-icon{
-    background: url(../Icon/heart.png);
     background-position: 50% 50%;
-    width: 28px;
-    height: 28px;
+    width: 24px;
+    height: 24px;
     background-size: contain;
     background-repeat: no-repeat;
     margin-right: 10px;
     cursor: pointer;
+    animation: heart 0.3s forwards ;
 }
 .chat-icon{
     background: url(../Icon/chat.png);
@@ -120,4 +120,22 @@
 
 .chat-user-name{
     margin-right: 23px;
+}
+
+.heart-icon:hover{
+    transform: scale(0.9);
+    transition: 0.5s ease;
+}
+.chat-icon:hover{
+    transform: scale(0.9);
+    transition: 0.5s ease;
+}
+
+@keyframes heart{
+    0%{
+        scale: 0.7;
+    }
+    100%{
+        scale: 1;
+    }
 }
