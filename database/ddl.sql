@@ -163,6 +163,7 @@ CREATE TABLE `article_reports` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `article_id` int(11) NOT NULL,
   `from_user_id` int(11) NOT NULL,
+  `content` varchar(100),
   `create_time` datetime NOT NULL DEFAULT current_timestamp(),
   PRIMARY KEY (`id`),
   KEY `article_reports_articles_FK` (`article_id`),
