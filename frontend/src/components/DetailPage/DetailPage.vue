@@ -10,7 +10,8 @@
             <div class="detail-info">
                 <div class="user-info">
                     <div class="info">
-                        <div class="user-img"></div>
+                        <img class="user-img" :src="itemData.imageUrl">
+                        
                         <div style="display: flex; flex-direction: column; justify-content: space-around;">
                             <p class="nick">{{ itemData.nickname }}</p>
                             <p class="nick">{{ itemData.content }}</p>

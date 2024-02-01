@@ -2,10 +2,10 @@
     <div class="feed-card">
     <div class="list-svg"></div>
     <div class="feed-item">
-      <img class="user-img" src="./example/6.jpg">
+      <img class="user-img" :src="this.feed.imageUrl">
       <div class="user-info">
-        <div class="user-name">부수환</div>
-        <div class="user-comment">subtitle</div>
+        <div class="user-name">{{ this.feed.nickname }}</div>
+        <div class="user-comment">{{ this.feed.content }}</div>
       </div>
     </div>
     <div class="feed-comment">
