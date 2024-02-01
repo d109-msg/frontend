@@ -39,6 +39,6 @@ export default {
 }
 </script>
 
-<style src="./MessagePage.css">
+<style src="./css/MessagePage.css">
 
 </style>

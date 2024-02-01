@@ -17,6 +17,6 @@ export default {
 }
 </script>
 
-<style  src="./MessagePage.css">
+<style  src="./css/MessageList.css">
 
 </style>
