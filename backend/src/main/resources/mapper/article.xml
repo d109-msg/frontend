@@ -75,7 +75,7 @@
 
 <!--    기본제공 게시물 조회-->
     <select id="getDefaultFeedList" resultType="ArticleDetailDto">
-        select u.image_url, u.nickname, u.email_id a.content, a.id as articleId, a.user_id
+        select u.image_url, u.nickname, u.email_id, a.content, a.id as articleId, a.user_id
         from articles a
         left join users u on a.user_id = u.id
         where a.id &lt; 6;
@@ -136,7 +136,7 @@
     </select>
 
     <select id="getLikeUserList" parameterType="int" resultType="LikeUserListDto">
-        select al.user_id, users.nickname, user.email_id, users.image_url
+        select al.user_id, users.nickname, users.email_id, users.image_url
         from article_likes al
         left join users on al.user_id = users.id
         where article_id = #{articleId}
@@ -194,7 +194,7 @@
     </insert>
 
     <select id="getComments" parameterType="CommentDto" resultType="CommentDto">
-        SELECT *, users.nickname, user.email_id, users.image_url
+        SELECT *, users.nickname, users.email_id, users.image_url
         FROM comments c
         left join users on c.user_id = users.id
         WHERE article_id = #{articleId}

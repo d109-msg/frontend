@@ -202,7 +202,7 @@ public class ArticleController {
     @Operation(summary = "피드 게시물 리스트", description = "피드에 보여줄 게시물 리스트")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "피드 게시물 조회 성공", content ={
-                    @Content(mediaType = "application/json", schema = @Schema(implementation = ArticleDetailDto.class)) }),
+                    @Content(mediaType = "application/json", schema = @Schema(implementation = FeedResponseDto.class)) }),
             @ApiResponse(responseCode = "400", description = "피드 게시물 조회 실패", content = @Content) })
     public ResponseEntity<?> getFeedArticleList(HttpServletRequest request,
             @Parameter(description = "마지막으로 로딩한 타겟") @RequestParam(value = "offset", required = false) Integer offset,
