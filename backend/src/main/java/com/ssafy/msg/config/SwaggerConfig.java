@@ -17,7 +17,7 @@ import io.swagger.v3.oas.models.security.SecurityScheme;
  * Swagger 설정
  */
 @OpenAPIDefinition(info = @Info(title = "MSG OpenAPI", version = "v1", description = "Backend Server"), servers = {
-		@Server(url = "http://localhost:8080", description = "Local Server") })
+		@Server(url = "/api", description = "Production") })
 @Configuration
 public class SwaggerConfig {
 

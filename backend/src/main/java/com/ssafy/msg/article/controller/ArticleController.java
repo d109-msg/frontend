@@ -2,6 +2,7 @@ package com.ssafy.msg.article.controller;
 
 
 import com.ssafy.msg.article.model.dto.*;
+import com.ssafy.msg.article.model.mapper.ArticleMapper;
 import com.ssafy.msg.article.model.service.ArticleService;
 import com.ssafy.msg.user.exception.UserNotFoundException;
 import io.swagger.v3.oas.annotations.Operation;
@@ -169,6 +170,31 @@ public class ArticleController {
             log.info("(ArticleController) getArticleDetail end");
         }
 
+    }
+
+    @GetMapping("/feed/room")
+    @Operation(summary = "게임방 피드", description = "게임방 피드에 보여줄 게시물 리스트")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "조회 성공", content ={
+                    @Content(mediaType = "application/json", schema = @Schema(implementation = RoomFeedResponseDto.class)) }),
+            @ApiResponse(responseCode = "400", description = "조회 실패", content = @Content)})
+    public ResponseEntity<?> getFeedByRoomId(HttpServletRequest request,
+            @Parameter(description = "게임방Id") @RequestParam(value = "roomId", required = true) String roomId,
+                                             @Parameter(description = "마지막으로 로딩한 타겟") @RequestParam(value = "offset", required = false, defaultValue = "0") Integer offset,
+                                             @Parameter(description = "페이지당 타겟 개수") @RequestParam(value = "limit", required = false, defaultValue = "5") Integer limit) {
+
+        try{
+            String currentUrl = request.getRequestURL().toString();
+            RoomFeedResponseDto result = articleService.getFeedByRoomId(new ArticleByRoomIdDto(roomId, limit, offset, currentUrl));
+
+            return new ResponseEntity<>(result, HttpStatus.OK);
+        } catch (Exception e) {
+            log.error("getFeedByRoomId() -> error : {}", e);
+
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        } finally {
+            log.info("getFeedByRoomId() end");
+        }
     }
 
     // 메인페이지에서 피드 조회 하기 ( 내가 팔로우 하고 있는 사람만 )
