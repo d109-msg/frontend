@@ -53,7 +53,7 @@ import router from '@/router';
                 colSapce : 16,
                 arr : [1,2,3],
                 create : false,
-                baseUrl : 'http://localhost:8080/article/feed',
+                baseUrl : 'http://localhost:8080/api/article/feed',
                 feedList : [],
                 detailFlag : false,
                 last : {},
