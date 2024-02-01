@@ -20,6 +20,7 @@
     border-top-left-radius: 10px;
     border-top-right-radius: 10px;
     background-color: #4B6C83;
+    position: relative;
 }
 .mini-title-message{
     margin-left: 32.5px;
@@ -74,3 +75,44 @@
     color: #5B5B5B;
 }
 
+.logout{
+    width: 30px;
+    height: 30px;
+    position: absolute;
+    top: 10px;
+    right: 20px;
+    cursor: pointer;
+    }
+
+.logout:hover{
+    transform: scale(0.9);
+    transition: 0.2s forwards ease;
+}
+
+.tool-tip{
+    background: white;
+    border-radius: 5px;
+    width: 60px;
+    height: 30px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    filter: drop-shadow(0 0 0.75rem gray);
+    position: absolute;
+    right: 5px;
+    top: 50px;
+    overflow: hidden;
+    }
+.tool-tip>span{
+    animation: move 2s infinite;
+    color: #5B5B5B;
+}
+@keyframes move{
+    0%{
+       transform: translate(-60px);
+    }
+    100%{
+       transform: translate(60px);
+        
+    }
+}
