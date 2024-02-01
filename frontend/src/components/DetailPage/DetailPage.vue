@@ -11,9 +11,17 @@
                 <div class="user-info">
                     <div class="info">
                         <div class="user-img"></div>
-                        <p class="nick">{{ itemData.nickname }}</p>
+                        <div style="display: flex; flex-direction: column; justify-content: space-around;">
+                            <p class="nick">{{ itemData.nickname }}</p>
+                            <p class="nick">{{ itemData.content }}</p>
+                        </div>
                     </div>
-                    <div class="list"></div>
+                    <div class="list" @click="optionFlag = !optionFlag; getUser()">
+                        <div class="list-container" v-if="optionFlag">
+                            <p style="width: 100px;"><img src="./Icon/edit.png" alt="">게시물 수정</p>
+                            <p style="width: 100px;"><img src="./Icon/delete.png" alt="">게시물 삭제</p>
+                        </div>
+                    </div>
                 </div>
                 <div class="line"></div>
                 <div class="comment-list">
@@ -24,9 +32,34 @@
                             <p class="comment-nick">{{ item.nickname }}</p>
                             <p>{{ item.content }}</p>
                             <div style="display: flex; align-items: center; margin-left: 2px;">
-                                <!-- <img class="heart-img" src="./Icon/heart.png" alt="" v-if=""> -->
-                                <img src="./Icon/fullheart.png" class="heart-img">
-                                <img class="chat-img" src="./Icon/chat.png" alt="">
+                                <img class="heart-img" src="./Icon/heart.png" alt="" v-if="item.isCommentLike==0"
+                                @click.prevent="likeComment(item.id)"
+                                >
+                                <img src="./Icon/fullheart.png" class="heart-img" v-if="item.isCommentLike==1"
+                                @click.prevent="likeComment(item.id)"
+                                >
+                                <img class="chat-img" src="./Icon/chat.png" alt="" @click="showRecomment(idx,item.id)">
+                            </div>
+                            <div class="re-comment" v-if="recommentView[idx]">
+                                <div class="re-content" v-for="(re,reIdx) in recommentList[idx]" :key="reIdx">
+                                    <img class="comment-img" :src="re.imageUrl">
+                                    <div class="info-container">
+                                        <p class="comment-nick">{{ re.nickname }}</p>
+                                        <p>{{ re.content }}</p>
+                                        <!-- <div style="display: flex; align-items: center; margin-left: 2px;"> -->
+                                            <img class="heart-img" src="./Icon/heart.png" alt="" v-if="re.isCommentLike==0"
+                                            @click.prevent="likeComment(re.id); re.isCommentLike=1"
+                                            >
+                                            <img src="./Icon/fullheart.png" class="heart-img" v-if="re.isCommentLike==1"
+                                            @click.prevent="likeComment(re.id); re.isCommentLike=0"
+                                            >
+                                        <!-- </div> -->
+                                    </div>
+                                </div>
+                                <div class="resend-form">
+                                    <input class="resend" type="text" v-model="recomment[idx]" maxlength="30">
+                                    <div class="resend-button" @click.prevent="writeRecomment(idx,item.id)">전송</div>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -49,6 +82,7 @@
 
 <script>
 import { useFeedStore } from '@/store/feedStore'
+import { useAuthStore } from '@/store/authStore'
 export default {
     name: "DetailPage",
     data(){
@@ -57,12 +91,17 @@ export default {
             itemData : Object,
             img : "",
             imgList : [],
+            optionFlag : false,
             step : 0,
             comment : [],
             commentCount : 0,
             likeCount : 0,
             createTime : "",
-            writeComment : ""
+            writeComment : "",
+            recommentList : [],
+            recommentView : [],
+            recomment : [],
+            me : {}
         }   
     },
     methods: {
@@ -80,7 +119,6 @@ export default {
             }
         },
         readDetail : async function(idx){
-            console.log(idx)
             const feed = useFeedStore()
             try{
                 let value = await feed.getDetail(idx)
@@ -90,8 +128,12 @@ export default {
                 this.createTime = this.itemData.createTime
                 if(value.data.commentList != null){
                     this.comment = this.itemData.commentList
+                    this.comment.forEach(item=>{
+                        this.recommentList.push([])
+                        this.recommentView.push(false)
+                        this.recomment.push("")
+                    })
                     this.commentCount = this.comment.length
-                    console.log(this.comment)
                 }
                 const img = document.getElementById('detailImg')
                 img.style.background = `url(${this.imgList[this.step]})`
@@ -116,6 +158,46 @@ export default {
                 this.step = 0
             } 
         },
+        likeComment : async function(value){
+        const feed = useFeedStore()
+        try{
+          await feed.likeComment(value)
+          this.readDetail(this.idx.articleId)
+        }catch(err){
+          console.log(err)
+        }
+      },
+      showRecomment : async function(idx,commentId){
+        const feed = useFeedStore()
+        try{
+            let value = await feed.readRecomment(commentId,this.itemIdx.articleId)
+            this.recommentList[idx]= value.data
+            this.recommentView[idx] = !(this.recommentView[idx])
+        } catch(err){
+            console.log(err)
+        }
+      },
+      writeRecomment : async function(idx,commentId){
+        const feed = useFeedStore()
+        const auth = useAuthStore()
+        try{
+            let value = await feed.writeComment(this.itemIdx.articleId,this.recomment[idx],commentId)
+            this.showRecomment(idx,commentId)
+            this.recomment[idx] = ""
+        } catch(err){
+            await auth.useRefresh()
+            alert('일시적 오류입니다. 다시 시도해주세요.')
+        }
+      },
+      getUser : async function(){
+        const auth = useAuthStore()
+        try{
+            let value = await auth.getUser()
+            console.log(value)
+        }catch(err){
+            console.log(err)
+        }
+      }
 
     },
     props: {
@@ -132,7 +214,6 @@ export default {
     mounted(){
         // console.log(this.idx.articleId)
         this.readDetail(this.idx.articleId)
-        
     }
 
 }

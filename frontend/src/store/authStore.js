@@ -98,6 +98,13 @@ export const useAuthStore = defineStore('auth',{
             }
             return axios.get(`${server}/user/info`,{ headers })
         },
+        async getFollowing(){
+            const token = this.getAccess
+            const headers = {
+                Authorization : `Bearer ${token}`
+            }
+            return axios.get(`${server}/user/follow&type=from`)
+        },
         async editNickname(value){
             const token = this.getAccess
             const headers = {
