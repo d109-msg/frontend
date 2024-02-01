@@ -5,7 +5,9 @@ import com.ssafy.msg.chat.model.dto.RoomDto;
 import com.ssafy.msg.chat.model.mapper.ChatMapper;
 import com.ssafy.msg.game.model.dto.*;
 import com.ssafy.msg.game.model.mapper.GameMapper;
-import com.ssafy.msg.scheduler.model.service.SchedulerService;
+import com.ssafy.msg.message.model.mapper.MessageMapper;
+import com.ssafy.msg.message.model.service.MessageService;
+import com.ssafy.msg.scheduler.model.mapper.SchedulerMapper;
 import com.ssafy.msg.user.model.dto.UserDto;
 import com.ssafy.msg.user.model.mapper.UserMapper;
 import lombok.RequiredArgsConstructor;
@@ -26,8 +28,10 @@ public class GameServiceImpl implements GameService{
     private final GameMapper gameMapper;
     private final ChatMapper chatMapper;
     private final UserMapper userMapper;
+    private final SchedulerMapper schedulerMapper;
+    private final MessageMapper messageMapper;
 
-    private final SchedulerService schedulerService;
+    private final MessageService messageService;
 
     private final OpenAiUtil openAiUtil;
 
@@ -49,7 +53,7 @@ public class GameServiceImpl implements GameService{
             gameMapper.applyRandomGame(user);
 
             if (getTime(8, 13)){
-                schedulerService.startRandomGame();
+                startRandomGame();
             }
 
             return true;
@@ -604,5 +608,56 @@ public class GameServiceImpl implements GameService{
         log.info("createNewMission() -> new mission created");
     }
 
+    /**
+     * 대기방 인원 확인 및 룸 생성 + 직업 배정 + 시작 알림
+     * @param
+     * @return void
+     */
+    @Override
+    public void startRandomGame() throws Exception {
+        // 대기방 유저 조회
+        List<Integer> waitingUsersId = schedulerMapper.getWaitingUsersId();
+
+        // 생성 가능한 방의 수 계산
+        int availableRoom = waitingUsersId.size()/7;
+
+        // 대기방의 유저 7명을 받아와, 방을 만들고 배정 - 방의 수만큼 반복
+        for(int i = 0; i < availableRoom; i++){
+            RandomNameDto randomRoomName = getRandomRoomName();
+
+            String roomId = UUID.randomUUID().toString();
+            RoomDto roomDto = RoomDto.builder()
+                    .id(roomId)
+                    .dataType("랜덤")
+                    .title(randomRoomName.getFirstName() + " " + randomRoomName.getLastName())
+                    .imageUrl(randomRoomName.getImgUrl())
+                    .build();
+            schedulerMapper.createRoom(roomDto);
+
+            RoomStartReceiveDto roomStartReceiveDto = new RoomStartReceiveDto(roomId, waitingUsersId.subList(i*7, i*7+7));
+
+            gameStart(roomStartReceiveDto);
+            messageService.sendStartNotice(roomId);
+
+            newDayMission(roomId);
+
+        }
+    }
+
+    /**
+     * 아침 알림 + 새로운 미션 배정
+     * @param roomId
+     * @throws Exception
+     */
+    @Override
+    public void newDayMission(String roomId) throws Exception {
+        // [알림] n일차 아침이 되었습니다.
+        // AM 시민 투표 알림
+        messageService.sendDayNotice("아침", roomId);
+        messageService.sendGameNotice(roomId, "마피아 의심자를 지목해주세요.");
+
+        int day = messageMapper.calDay(roomId) + 1;
+        createNewMission(roomId, day);
+    }
 
 }

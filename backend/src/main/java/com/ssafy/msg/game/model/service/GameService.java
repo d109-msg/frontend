@@ -53,5 +53,9 @@ public interface GameService {
     UserGameRateResultDto getUserRate(int userId) throws Exception;
 
     int completeMission(int userId, String roomId) throws Exception;
+
+    void startRandomGame() throws Exception;
+
+    void newDayMission(String roomId) throws Exception;
 }
 
