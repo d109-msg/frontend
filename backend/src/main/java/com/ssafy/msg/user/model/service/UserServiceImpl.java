@@ -2,22 +2,12 @@ package com.ssafy.msg.user.model.service;
 
 import java.util.List;
 
+import com.ssafy.msg.user.model.dto.*;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.ssafy.msg.user.exception.PasswordNotMatchException;
-import com.ssafy.msg.user.model.dto.FollowDetailDto;
-import com.ssafy.msg.user.model.dto.FollowFindDto;
-import com.ssafy.msg.user.model.dto.FollowParamDto;
-import com.ssafy.msg.user.model.dto.FollowUserDto;
-import com.ssafy.msg.user.model.dto.Oauth2Dto;
-import com.ssafy.msg.user.model.dto.ProfileImageDto;
-import com.ssafy.msg.user.model.dto.SignInDto;
-import com.ssafy.msg.user.model.dto.SignUpDto;
-import com.ssafy.msg.user.model.dto.UpdatePasswordDto;
-import com.ssafy.msg.user.model.dto.UserDto;
-import com.ssafy.msg.user.model.dto.UserInfoDto;
 import com.ssafy.msg.user.model.mapper.UserMapper;
 import com.ssafy.msg.user.util.EmailUtil;
 
@@ -136,5 +126,15 @@ public class UserServiceImpl implements UserService {
 	@Override
 	public void signUpWithOauth2(UserDto userDto) throws Exception {
 		userMapper.signUpWithOauth2(userDto);
+	}
+
+	@Override
+	public void updateBio(BioDto bioDto) throws Exception {
+		userMapper.updateBio(bioDto);
+	}
+
+	@Override
+	public GetBioDto getBio(BioDto bioDto) throws Exception {
+		return userMapper.getBio(bioDto);
 	}
 }

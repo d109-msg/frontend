@@ -1,18 +1,8 @@
 package com.ssafy.msg.user.model.service;
 
-import com.ssafy.msg.user.model.dto.ProfileImageDto;
-import com.ssafy.msg.user.model.dto.SignInDto;
-import com.ssafy.msg.user.model.dto.SignUpDto;
-import com.ssafy.msg.user.model.dto.UpdatePasswordDto;
+import com.ssafy.msg.user.model.dto.*;
 
 import java.util.List;
-
-import com.ssafy.msg.user.model.dto.FollowDetailDto;
-import com.ssafy.msg.user.model.dto.FollowFindDto;
-import com.ssafy.msg.user.model.dto.FollowParamDto;
-import com.ssafy.msg.user.model.dto.FollowUserDto;
-import com.ssafy.msg.user.model.dto.UserDto;
-import com.ssafy.msg.user.model.dto.UserInfoDto;
 
 public interface UserService {
 
@@ -51,5 +41,9 @@ public interface UserService {
 	UserDto findUserById(int id) throws Exception;
 
 	void signUpWithOauth2(UserDto userDto) throws Exception;
+
+	void updateBio(BioDto bioDto) throws Exception;
+
+	GetBioDto getBio(BioDto bioDto) throws Exception;
 
 }

@@ -40,8 +40,6 @@ public class ArticleController {
     public ResponseEntity<?> createArticle(@ModelAttribute ArticleCreateDto articleCreateDto, HttpServletRequest request) {
         log.info("(controller) create Start");
 
-        log.info("(controller) 클라이언트에서 받아온 articleCreateDto : {}", articleCreateDto);
-
         int id = (int) request.getAttribute("id");
         ArticleDto articleDto = ArticleDto.builder()
                 .userId(id)
