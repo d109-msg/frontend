@@ -34,7 +34,6 @@ public interface ArticleService {
 
     List<CommentDto> getComments(CommentDto commentDto) throws Exception;
 
-
     // 게시물 좋아요 여부
     int isLike(ArticleDto articleDto) throws Exception;
 
@@ -48,6 +47,10 @@ public interface ArticleService {
     // 기본 제공 게시물 불러오기
     List<ArticleDetailDto> getDefaultFeedList() throws Exception;
 
+    // 게시물 신고
+    void reportArticle(ArticleReportDto articleReportDto) throws Exception;
 
+    // 신고 리스트 보기
+    List<ArticleReportDto> getArticleReports(int userId) throws Exception;
 
 }

@@ -282,4 +282,16 @@ public class ArticleServiceImpl implements ArticleService{
             return 0;
         }
     }
+
+    @Override
+    public void reportArticle(ArticleReportDto articleReportDto) throws Exception {
+        articleMapper.reportArticle(articleReportDto);
+    }
+
+    @Override
+    public List<ArticleReportDto> getArticleReports(int userId) throws Exception {
+        return articleMapper.getArticleReports(userId);
+    }
 }
+
+

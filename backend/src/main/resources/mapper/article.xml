@@ -200,7 +200,6 @@
         where id = #{commentId} and user_id = #{userId}
     </delete>
 
-
 <!--    댓글 관련 쿼리문 끝-->
 
 <!--    userId 유무 확인 -->
@@ -208,6 +207,22 @@
         select u.id
         from users u
         where id = #{userId}
+    </select>
+
+<!--    게시물 신고하기-->
+    <insert id="reportArticle" parameterType="ArticleReportDto">
+        insert into article_reports (article_id, from_user_id, content)
+        values (#{articleId}, #{fromUserId}, #{content})
+    </insert>
+
+    <select id="getArticleReports" parameterType="int" resultType="ArticleReportDto">
+        select ar.*
+        from article_reports ar
+        where exists (
+            select 1
+            from users u
+            where u.id = #{userId} and u.flag_admin = 1
+        )
     </select>
 
 

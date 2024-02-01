@@ -63,6 +63,10 @@ public interface ArticleMapper {
 
     Integer getUserId(Integer userId) throws SQLException;
 
+    void reportArticle(ArticleReportDto articleReportDto) throws SQLException;
+
+    List<ArticleReportDto> getArticleReports(int userId) throws SQLException;
+
 
 
 }
