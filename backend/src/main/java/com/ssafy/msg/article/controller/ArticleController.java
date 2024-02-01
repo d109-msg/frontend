@@ -388,7 +388,7 @@ public class ArticleController {
             articleService.deleteComment(deleteCommentDto);
             return new ResponseEntity<>(HttpStatus.OK);
         } catch (Exception e) {
-            log.info("(controller) 게시물 삭제 실패 에러");
+            log.info("(controller) 게시물 삭제 실패 에러", e);
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         } finally {
             log.info("controller 게시물 삭제 끝");
