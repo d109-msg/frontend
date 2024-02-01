@@ -28,6 +28,10 @@ public interface ArticleService {
 
     void createComment(CommentDto commentDto) throws Exception;
 
+    void updateComment(UpdateCommentDto updateCommentDto) throws Exception;
+
+    void deleteComment(DeleteCommentDto deleteCommentDto) throws Exception;
+
     List<CommentDto> getComments(CommentDto commentDto) throws Exception;
 
 

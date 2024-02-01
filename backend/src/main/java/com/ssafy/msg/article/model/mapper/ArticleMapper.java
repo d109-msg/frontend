@@ -55,6 +55,10 @@ public interface ArticleMapper {
 
     void createComment(CommentDto commentDto) throws SQLException;
 
+    void updateComment(UpdateCommentDto updateCommentDto) throws SQLException;
+
+    void deleteComment(DeleteCommentDto deleteCommentDto) throws SQLException;
+
     List<CommentDto> getComments(CommentDto commentDto) throws SQLException;
 
     Integer getUserId(Integer userId) throws SQLException;

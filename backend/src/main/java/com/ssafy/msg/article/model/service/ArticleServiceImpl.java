@@ -225,6 +225,21 @@ public class ArticleServiceImpl implements ArticleService{
 
     }
 
+    /**
+     * content와 commentId를 받아 댓글 내용 수정
+     * @param updateCommentDto
+     * @throws Exception
+     */
+    @Override
+    public void updateComment(UpdateCommentDto updateCommentDto) throws Exception {
+        articleMapper.updateComment(updateCommentDto);
+    }
+
+    @Override
+    public void deleteComment(DeleteCommentDto deleteCommentDto) throws Exception {
+        articleMapper.deleteComment(deleteCommentDto);
+    }
+
     @Override
     public List<CommentDto> getComments(CommentDto commentDto) throws Exception {
         List<CommentDto> commentDtos = articleMapper.getComments(commentDto);
