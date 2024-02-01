@@ -279,6 +279,7 @@ public class ArticleController {
     }
 
 
+
     // 댓글 쓰기
     @PostMapping(value = "/comment")
     @Operation(summary = "댓글 작성", description = "댓글 작성하기")
@@ -312,10 +313,61 @@ public class ArticleController {
     }
 
     // 댓글 수정
+    @PatchMapping("/comment")
+    @Operation(summary = "댓글 수정", description = "댓글 내용 수정")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "댓글 수정 성공"),
+            @ApiResponse(responseCode = "400", description = "댓글 수정 실패", content = @Content) })
+    public ResponseEntity<?> updateComment(@RequestBody UpdateCommentDto updateCommentDto, HttpServletRequest request) {
+        log.info("(ArticleController) 댓글 수정 시작");
 
+        int userId = (int) request.getAttribute("id");
+
+        UpdateCommentDto updateCommentDto1 = UpdateCommentDto.builder()
+                .commentId(updateCommentDto.getCommentId())
+                .content(updateCommentDto.getContent())
+                .userId(userId)
+                .build();
+
+        try {
+            articleService.updateComment(updateCommentDto1);
+            log.info("(ArticleController) 댓글 수정 성공");
+            return new ResponseEntity<>(HttpStatus.OK);
+        } catch (Exception e) {
+            log.error("(ArticleController) 댓글 수정 실패", e);
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        } finally {
+            log.info("(ArticleController) 댓글 수정 끝");
+        }
+
+
+    }
 
     // 댓글 삭제
+    @DeleteMapping("/comment")
+    @Operation(summary = "댓글 삭제", description = "댓글 삭제")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "게시물 삭제 성공"),
+            @ApiResponse(responseCode = "400", description = "게시물 삭제 실패", content = @Content) })
+    public ResponseEntity<?> deleteComment(@RequestParam("commentId") int commentId, HttpServletRequest request) {
 
+        int userId = (int) request.getAttribute("id");
+
+        DeleteCommentDto deleteCommentDto = DeleteCommentDto.builder()
+                .commentId(commentId)
+                .userId(userId)
+                .build();
+
+        try {
+            articleService.deleteComment(deleteCommentDto);
+            return new ResponseEntity<>(HttpStatus.OK);
+        } catch (Exception e) {
+            log.info("(controller) 게시물 삭제 실패 에러");
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        } finally {
+            log.info("controller 게시물 삭제 끝");
+        }
+    }
 
     // 댓글 조회
     @GetMapping("/comment")
