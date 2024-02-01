@@ -63,7 +63,7 @@ public class ArticleController {
     }
 
     // 게시물 수정
-    @PatchMapping("/modify")
+    @PatchMapping("")
     @Operation(summary = "게시물 수정", description = "게시물 내용 수정")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "게시물 수정 성공"),
@@ -91,7 +91,7 @@ public class ArticleController {
     }
 
     // 게시물 삭제
-    @DeleteMapping("/delete")
+    @DeleteMapping("")
     @Operation(summary = "게시물 삭제", description = "게시물 삭제")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "게시물 삭제 성공"),
@@ -311,6 +311,12 @@ public class ArticleController {
 
     }
 
+    // 댓글 수정
+
+
+    // 댓글 삭제
+
+
     // 댓글 조회
     @GetMapping("/comment")
     @Operation(summary = "댓글 목록 조회", description = "댓글 목록 조회하기")
@@ -417,7 +423,6 @@ public class ArticleController {
             log.info("(ArticleController) getCommentLikeUserList end");
         }
     }
-
 
 
 }
