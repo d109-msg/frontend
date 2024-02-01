@@ -3,13 +3,19 @@
         <div class="first-col">
             <div class="feed-create">
                 <div class="create-container">
-                    <img class="create-img" :src="userImage">
+                    <img class="create-img" :src="userImage" v-if="isLogin">
+                    <img class="create-img" src="./Icon/default.png" v-if="!isLogin">
                     <div class="create-comment">What are you thinking?</div>
                 </div>
                 <div class="create-btn-box">
                     <div class="create-btn"
                     @click="create=true"
+                    v-if="isLogin"
                     >Create</div>
+                    <div class="create-btn"
+                    @click="goLogin"
+                    v-if="!isLogin"
+                    >Login</div>
                 </div>
             </div>
             <template  v-for="(feed,idx) in feedList" :key="idx" >
@@ -37,7 +43,7 @@
     import FeedCreate from './FeedCreate.vue';
     import { useFeedStore } from '@/store/feedStore';
     import { useAuthStore } from '@/store/authStore';
-
+import router from '@/router';
     export default {
         name: "FeedPage",
 
@@ -54,6 +60,7 @@
                 io : {},
                 item: {},
                 userImage: "",
+                isLogin : false,
             }
         },  
 
@@ -133,6 +140,9 @@
                     //emit으로 글 작성 완료되었다는 이벤트 왔을 시 현 화면 새로고침
                 }
             },
+            goLogin : function(){
+                router.push('/login')
+            }
             
         },
         components: {
@@ -140,10 +150,17 @@
             FeedCreate,
         },
         mounted(){
-            this.getUser()
-            this.readFeed()
-            this.io = new IntersectionObserver(this.callBack,{ threshold : 0.7})
-            // 요소의 가시성이 70% 정도 관찰되었을 때, 콜백함수 실행
+            const auth = useAuthStore()
+            if( auth.getAccess == ""){
+                this.isLogin = false
+            } else{
+                this.isLogin = true
+                this.getUser()
+                this.readFeed()
+                this.io = new IntersectionObserver(this.callBack,{ threshold : 0.7})
+                // 요소의 가시성이 70% 정도 관찰되었을 때, 콜백함수 실행
+
+            }
         },
         created() {
         },

@@ -2,8 +2,10 @@
     <div class="my-mini"> 
         <div class="mini-title">
             <p class="mini-title-message">My Profile</p>
+            <img class="logout" src="./logout.png" v-if="isLogin" @click="logout" @mouseover="toolFlag=true" @mouseleave="toolFlag=false">
+            <div class="tool-tip" v-if="toolFlag"><span>Logout</span></div>
         </div>
-        <div class="my-mini-content">
+        <div class="my-mini-content" v-if="isLogin">
             <img class="mini-image" :src="userInfo.imageUrl">
             <div class="mini-name">{{ userInfo.nickname }}</div>
             <div class="mini-comment">fun, daily, mafia game</div>
@@ -15,19 +17,33 @@
                 <span class="following">Followers</span>
                 <span class="count">24</span>
             </div>
-            
+        </div>
+        <div class="my-mini-content" v-if="!isLogin">
+            <img class="mini-image" src="./default.png">
+            <div class="mini-name">Anonymous</div>
+            <div class="mini-comment">fun, daily, mafia game!!!</div>
+            <div class="mini-following-count">
+                <span class="following">Following</span>
+                <span class="count">0</span>
+            </div>
+            <div class="mini-following-count">
+                <span class="following">Followers</span>
+                <span class="count">0</span>
+            </div>
         </div>
     </div>
 </template>
 
 <script>
 import { useAuthStore } from '@/store/authStore'
+import { useCookies } from "vue3-cookies"
 export default {
     name: 'MiniProfile',
     data(){
         return{
             userInfo : {},
-
+            isLogin : false,
+            toolFlag : false,
         }
     },
     methods:{
@@ -41,11 +57,23 @@ export default {
             }catch(err){
                 console.log(err)
             }
+        },
+        logout : function(){
+            const cookies = useCookies().cookies
+            const auth = useAuthStore()
+            auth.setAccess("")
+            cookies.remove('msgRefresh')
+            window.location.reload()
         }
     },
     mounted(){
-        console.log(this.userInfo)
-        this.getUser()
+        const auth = useAuthStore()
+        if(auth.getAccess == ""){
+            this.isLogin
+        } else{
+            this.getUser()
+            this.isLogin = true
+        }
 
     }
 }
