@@ -98,6 +98,35 @@ export const useAuthStore = defineStore('auth',{
             }
             return axios.get(`${server}/user/info`,{ headers })
         },
+        async editNickname(value){
+            const token = this.getAccess
+            const headers = {
+                Authorization : `Bearer ${token}`,
+                "Content-Type" : "application/json"
+            }
+            const data = {
+                "nickname": value
+              }
+            return axios.patch(`${server}/user/nickname`,JSON.stringify(data),{ headers})
+        },
+        async editIntro(value){
+            const token = this.getAccess
+            const headers = {
+                Authorization : `Bearer ${token}`,
+                "Content-Type" : "application/json"
+            }
+
+        },
+        async editPhoto(value){
+            const token = this.getAccess
+            const headers = {
+                Authorization : `Bearer ${token}`,
+                "Content-Type" : "multipart/form-data"
+            }
+            const data = new FormData()
+            data.append('image',value)
+            return axios.patch(`${server}/user/image` , data, { headers} )
+        },
     },
     persist: [
         {
