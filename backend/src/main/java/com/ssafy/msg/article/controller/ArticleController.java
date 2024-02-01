@@ -476,5 +476,56 @@ public class ArticleController {
         }
     }
 
+    @PostMapping(value = "/report")
+    @Operation(summary = "게시물 신고", description = "게시물 신고하기 기능")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "게시물 신고 성공"),
+            @ApiResponse(responseCode = "400", description = "게시물 신고 실패", content = @Content)})
+    public ResponseEntity<?> reportArticle(@RequestBody ArticleReportDto articleReportDto, HttpServletRequest request) {
+        log.info("(ArticleController) 게시물 리폿 시작");
+
+        int userId = (int) request.getAttribute("id");
+
+        ArticleReportDto articleReportDto1 = ArticleReportDto.builder()
+                .fromUserId(userId)
+                .articleId(articleReportDto.getArticleId())
+                .content(articleReportDto.getContent())
+                .build();
+
+        try {
+            articleService.reportArticle(articleReportDto1);
+            log.info("(ArticleController) 게시물 리폿 성공");
+            return new ResponseEntity<>(HttpStatus.OK);
+        } catch (Exception e) {
+            log.error("(ArticleController) 게시물 리폿 실패", e);
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        } finally {
+            log.info("(ArticleController) 게시물 리폿 끝");
+        }
+
+    }
+
+    @GetMapping(value = "/report")
+    @Operation(summary = "신고리스트 조회", description = "관리자에 한에서 신고목록 조회")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "신고 리스트 조회 성공"),
+            @ApiResponse(responseCode = "400", description = "신고 리스트 조회 실패", content = @Content)})
+    public ResponseEntity<?> getArticleReports(HttpServletRequest request) {
+
+        int userId = (int) request.getAttribute("id");
+
+        try {
+
+            return new ResponseEntity<>(articleService.getArticleReports(userId), HttpStatus.OK);
+        } catch (Exception e) {
+            log.error("신고 리스트 보기 ", e);
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        } finally {
+            log.info("(ArticleController) 신고 리스트 확인 끝");
+        }
+    }
+
+
+
 
 }
