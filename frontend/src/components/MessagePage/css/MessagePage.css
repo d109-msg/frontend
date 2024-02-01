@@ -1,0 +1,14 @@
+.message-container{
+    display: flex;
+    flex-direction: row;
+    margin: 110px 80px 0px 80px;
+    height: 600px;
+}
+
+
+.temp{
+    margin: 0 40px 0 50px;
+    padding: 0;
+    width: 500px;
+    height: 600px;
+}
