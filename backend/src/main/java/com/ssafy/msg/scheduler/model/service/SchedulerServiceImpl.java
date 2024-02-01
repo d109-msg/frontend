@@ -100,30 +100,35 @@ public class SchedulerServiceImpl implements SchedulerService{
         List<Integer> nonCompletersId = nonCompleters.stream().map(ParticipantDto::getId).toList();
 
         if (countNormalVote != 1) {
-            // 최종 마피아 의심 대상 다수 or 투표 null
+            // 최종 마피아 의심 대상 다수
             messageService.sendGameNotice(roomId, "아무도 죽지 않았습니다.");
         } else {
-            int targetId = normalVote.get(0);
-            ParticipantDto participantDto;
+            if (normalVote.get(0) == null){
+                // 투표 null
+                messageService.sendGameNotice(roomId, "아무도 죽지 않았습니다.");
+            }else{
+                int targetId = normalVote.get(0);
+                ParticipantDto participantDto;
 
-            int index = nonCompletersId.indexOf(targetId);
+                int index = nonCompletersId.indexOf(targetId);
 
-            // 최종 마피아 의심 대상이 미션 수행자인 경우
-            if (index == -1) {
-                schedulerMapper.killParticipant(targetId);
-                participantDto = schedulerMapper.getParticipant(targetId);
-            }
-            // 최종 마피아 의심 대상이 미션 미수행자인 경우
-            else {
-                schedulerMapper.manageNonCompleter(targetId);
-                participantDto = nonCompleters.get(index);
-                nonCompleters.remove(index);
-            }
+                // 최종 마피아 의심 대상이 미션 수행자인 경우
+                if (index == -1) {
+                    schedulerMapper.killParticipant(targetId);
+                    participantDto = schedulerMapper.getParticipant(targetId);
+                }
+                // 최종 마피아 의심 대상이 미션 미수행자인 경우
+                else {
+                    schedulerMapper.manageNonCompleter(targetId);
+                    participantDto = nonCompleters.get(index);
+                    nonCompleters.remove(index);
+                }
 
-            if (participantDto.getJobId().equals("마피아")){
-                messageService.sendGameNotice(roomId, participantDto.getNickname()+"님은 마피아였습니다!");
-            } else{
-                messageService.sendGameNotice(roomId, "선량한 시민 " +participantDto.getNickname()+"님이 처형당했습니다.");
+                if (participantDto.getJobId().equals("마피아")){
+                    messageService.sendGameNotice(roomId, participantDto.getNickname()+"님은 마피아였습니다!");
+                } else{
+                    messageService.sendGameNotice(roomId, "선량한 시민 " +participantDto.getNickname()+"님이 처형당했습니다.");
+                }
             }
         }
 
@@ -153,7 +158,7 @@ public class SchedulerServiceImpl implements SchedulerService{
         log.info(String.valueOf(mafiaVotes.size()));
 
         // 마피아 의견 갈림
-        if (mafiaVotes.size() != 1){
+        if (mafiaVotes.size() != 1 || (mafiaVotes.size() == 1 && mafiaVotes.get(0) == null)){
             messageService.sendGameNotice(roomId, "평화로운 밤이었습니다.");
             gameService.newDayMission(roomId);
         }else{
