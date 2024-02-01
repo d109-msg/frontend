@@ -214,6 +214,7 @@ CREATE TABLE `comments` (
   `parent_comment_id` int(11) DEFAULT NULL,
   `content` varchar(500) NOT NULL,
   `create_time` datetime NOT NULL DEFAULT current_timestamp(),
+  `modify_time` datetime NOT NULL DEFAULT current_timestamp(),
   PRIMARY KEY (`id`),
   KEY `comments_articles_FK` (`article_id`),
   KEY `comments_users_FK` (`user_id`),
