@@ -4,13 +4,13 @@ INSERT INTO `first_nicknames` (`id`) VALUES
 ('명석한'), ('사악한'), ('정의로운'), ('우울한'), ('냉철한'), ('기발한'), ('재치 있는'), ('재능 있는'),
 ('즐거운'), ('미스터리한'), ('불가사의한'), ('치밀한'), ('냉정한'), ('능숙한'), ('영악한'), ('음흉한'),
 ('치열한'), ('은밀한'), ('논리적인'), ('비밀스러운'), ('사려 깊은'), ('재빠른'), ('기교 있는'),
-('명민한'), ('빈틈없는'), ('기만하는'), ('천재적인'), ('계산적인'), ('조용한'), ('거짓말쟁이'), ('정직한');
+('명민한'), ('빈틈없는'), ('기만하는'), ('천재적인'), ('계산적인'), ('조용한'), ('거짓말쟁이'), ('정직한'), ('황금빛');
 
 
 INSERT INTO `last_nicknames` (`id`) VALUES
 ('콜레오네'), ('홈즈'), ('진'), ('블레이크'), ('커닝햄'), ('데모네'), ('에버렛'), ('파울러'),
 ('그리핀'), ('할로웨이'), ('잉그램'), ('젠킨스'), ('켄달'), ('레이'), ('맥코이'), ('니콜슨'),
-('오닐'), ('페인'), ('퀸'), ('리들'), ('스틸'), ('터너'), ('윈터스');
+('오닐'), ('페인'), ('퀸'), ('리들'), ('스틸'), ('터너'), ('윈터스'), ('드미트리'), ('예인'), ('규환시치'), ('호저');
 
 INSERT INTO first_room_names  (`id`) VALUES
 ('축축한'), ('음산한'), ('비내리는'), ('어두운'), ('밝은'),
@@ -18,39 +18,77 @@ INSERT INTO first_room_names  (`id`) VALUES
 
 INSERT INTO last_room_names  (`id`) VALUES
 ('런던'), ('둔산동'), ('인의동'), ('애버내시'),
-('파리'), ('서울'), ('뉴욕'), ('베를린'), ('도쿄');
+('파리'), ('서울'), ('뉴욕'), ('베를린'), ('도쿄'), ('브루클린');
 
 insert into jobs (`id`, `info`, `image_url`) values
 ('마피아', '마피아입니다.', 'tmpurl'),
 ('시민', '시민입니다.', 'tmpurl'),
 ('의사', '의사입니다.', 'tmpurl');
 
-INSERT INTO users (email_id, nickname, sign_up_time) VALUES 
-('test1@naver.com', 'test1', NOW()),
-('test2@naver.com', 'test2', NOW()),
-('test3@naver.com', 'test3', NOW()),
-('test4@naver.com', 'test4', NOW()),
-('test5@naver.com', 'test5', NOW()),
-('test6@naver.com', 'test6', NOW()),
-('test7@naver.com', 'test7', NOW()),
-('test8@naver.com', 'test8', NOW()),
-('test9@naver.com', 'test9', NOW()),
-('test10@naver.com', 'test10', NOW());
+INSERT INTO users (email_id, email_password, nickname, sign_up_time) VALUES 
+('test1@naver.com', '123', 'test1', NOW()),
+('test2@naver.com', '123', 'test2', NOW()),
+('test3@naver.com', '123', 'test3', NOW()),
+('test4@naver.com', '123', 'test4', NOW()),
+('test5@naver.com', '123', 'test5', NOW()),
+('test6@naver.com', '123', 'test6', NOW()),
+('test7@naver.com', '123', 'test7', NOW()),
+('test8@naver.com', '123', 'test8', NOW()),
+('test9@naver.com', '123', 'test9', NOW()),
+('test10@naver.com', '123', 'test10', NOW());
 
-insert into nickname_images (url, uuid) values ('tmp1', 'uuid'), ('tmp2', 'uuid'), ('tmp3', 'uuid'), ('tmp4', 'uuid'), ('tmp5', 'uuid'), ('tmp6', 'uuid'), ('tmp7', 'uuid'), ('tmp8', 'uuid'), ('tmp9', 'uuid'), ('tmp10', 'uuid');
-insert into room_images  (url, uuid) values ('tmp1', 'uuid'), ('tmp2', 'uuid'), ('tmp3', 'uuid'), ('tmp4', 'uuid'), ('tmp5', 'uuid'), ('tmp6', 'uuid'), ('tmp7', 'uuid'), ('tmp8', 'uuid'), ('tmp9', 'uuid'), ('tmp10', 'uuid');
+-- 게임 유저 아이콘
+INSERT INTO nickname_images (url, uuid) VALUES
+('https://team109testbucket.s3.ap-northeast-2.amazonaws.com/player1.png', 'player1.png'),
+('https://team109testbucket.s3.ap-northeast-2.amazonaws.com/player2.png', 'player2.png'),
+('https://team109testbucket.s3.ap-northeast-2.amazonaws.com/player3.png', 'player3.png'),
+('https://team109testbucket.s3.ap-northeast-2.amazonaws.com/player4.png', 'player4.png'),
+('https://team109testbucket.s3.ap-northeast-2.amazonaws.com/player5.png', 'player5.png'),
+('https://team109testbucket.s3.ap-northeast-2.amazonaws.com/player6.png', 'player6.png'),
+('https://team109testbucket.s3.ap-northeast-2.amazonaws.com/player7.png', 'player7.png'),
+('https://team109testbucket.s3.ap-northeast-2.amazonaws.com/player8.png', 'player8.png'),
+('https://team109testbucket.s3.ap-northeast-2.amazonaws.com/player9.png', 'player9.png'),
+('https://team109testbucket.s3.ap-northeast-2.amazonaws.com/player10.png', 'player10.png'),
+('https://team109testbucket.s3.ap-northeast-2.amazonaws.com/player11.png', 'player11.png'),
+('https://team109testbucket.s3.ap-northeast-2.amazonaws.com/player12.png', 'player12.png'),
+('https://team109testbucket.s3.ap-northeast-2.amazonaws.com/player13.png', 'player13.png'),
+('https://team109testbucket.s3.ap-northeast-2.amazonaws.com/player14.png', 'player14.png'),
+('https://team109testbucket.s3.ap-northeast-2.amazonaws.com/player15.png', 'player15.png'),
+('https://team109testbucket.s3.ap-northeast-2.amazonaws.com/player16.png', 'player16.png'),
+('https://team109testbucket.s3.ap-northeast-2.amazonaws.com/player17.png', 'player17.png'),
+('https://team109testbucket.s3.ap-northeast-2.amazonaws.com/player18.png', 'player18.png'),
+('https://team109testbucket.s3.ap-northeast-2.amazonaws.com/player19.png', 'player19.png'),
+('https://team109testbucket.s3.ap-northeast-2.amazonaws.com/player20.png', 'player20.png'),
+('https://team109testbucket.s3.ap-northeast-2.amazonaws.com/player21.png', 'player21.png');
+
+INSERT INTO room_images (url, uuid) VALUES 
+('https://team109testbucket.s3.ap-northeast-2.amazonaws.com/room_img1.png', 'room_img1.png'),
+('https://team109testbucket.s3.ap-northeast-2.amazonaws.com/room_img2.png', 'room_img2.png'),
+('https://team109testbucket.s3.ap-northeast-2.amazonaws.com/room_img3.png', 'room_img3.png'),
+('https://team109testbucket.s3.ap-northeast-2.amazonaws.com/room_img4.png', 'room_img4.png'),
+('https://team109testbucket.s3.ap-northeast-2.amazonaws.com/room_img5.png', 'room_img5.png'),
+('https://team109testbucket.s3.ap-northeast-2.amazonaws.com/room_img6.png', 'room_img6.png'),
+('https://team109testbucket.s3.ap-northeast-2.amazonaws.com/room_img7.png', 'room_img7.png'),
+('https://team109testbucket.s3.ap-northeast-2.amazonaws.com/room_img8.png', 'room_img8.png'),
+('https://team109testbucket.s3.ap-northeast-2.amazonaws.com/room_img9.png', 'room_img9.png'),
+('https://team109testbucket.s3.ap-northeast-2.amazonaws.com/room_img10.png', 'room_img10.png');
+
 
 INSERT INTO rooms (id, data_type, create_time, title, image_url) 
-VALUES ('room1', '랜덤', NOW(), 'Sample Room1', 'tmp1'), ('room2', '그룹', NOW(), 'Sample Room2', 'tmp2'), ('room3', '개인', NOW(), 'Sample Room3', 'tmp3');
+VALUES 
+('room1', '대기방', NOW(), 'Sample Room1', 'https://team109testbucket.s3.ap-northeast-2.amazonaws.com/room_img1.png'), 
+('room2', '그룹', NOW(), 'Sample Room2', 'https://team109testbucket.s3.ap-northeast-2.amazonaws.com/room_img2.png'), 
+('room3', '개인', NOW(), 'Sample Room3', 'https://team109testbucket.s3.ap-northeast-2.amazonaws.com/room_img9.png'),
+('room4', '랜덤', NOW(), 'Sample Room4', 'https://team109testbucket.s3.ap-northeast-2.amazonaws.com/room_img10.png');
 
-INSERT INTO `participants` (`id`, `room_id`, `user_id`, `last_message_id`, `flag_die`, `flag_win`, `job_id`, `image_url`, `nickname`) VALUES
-(1, 'room1', 1, NULL, 0, 0, '시민', 'tmp3', '거짓말쟁이 니콜슨'),
-(2, 'room1', 2, NULL, 0, 0, '마피아', 'tmp4', '재능 있는 젠킨스'),
-(3, 'room1', 3, NULL, 0, 0, '마피아', 'tmp5', '능숙한 스틸'),
-(4, 'room1', 4, NULL, 0, 0, '의사', 'tmp9', '우울한 터너'),
-(5, 'room1', 5, NULL, 0, 0, '시민', 'tmp10', '은밀한 데모네'),
-(6, 'room1', 6, NULL, 0, 0, '시민', 'tmp6', '비밀스러운 콜레오네'),
-(7, 'room1', 7, NULL, 0, 0, '시민', 'tmp1', '기발한 윈터스');
+INSERT INTO `participants` (`id`, `room_id`, `user_id`, `last_message_id`, `flag_die`, `job_id`, `image_url`, `nickname`) VALUES
+(1, 'room4', 1, NULL, 0, '시민', 'https://team109testbucket.s3.ap-northeast-2.amazonaws.com/player21.png', '거짓말쟁이 니콜슨'),
+(2, 'room4', 2, NULL, 0, '마피아', 'https://team109testbucket.s3.ap-northeast-2.amazonaws.com/player18.png', '재능 있는 젠킨스'),
+(3, 'room4', 3, NULL, 0, '마피아', 'https://team109testbucket.s3.ap-northeast-2.amazonaws.com/player10.png', '능숙한 스틸'),
+(4, 'room4', 4, NULL, 0, '의사', 'https://team109testbucket.s3.ap-northeast-2.amazonaws.com/player9.png', '우울한 터너'),
+(5, 'room4', 5, NULL, 0, '시민', 'https://team109testbucket.s3.ap-northeast-2.amazonaws.com/player11.png', '은밀한 데모네'),
+(6, 'room4', 6, NULL, 0, '시민', 'https://team109testbucket.s3.ap-northeast-2.amazonaws.com/player6.png', '비밀스러운 콜레오네'),
+(7, 'room4', 7, NULL, 0, '시민', 'https://team109testbucket.s3.ap-northeast-2.amazonaws.com/player1.png', '기발한 윈터스');
 
 INSERT INTO `missions` (`normal`, `mafia`) VALUES
 ('자연 사진', '나무 사진'),
@@ -89,5 +127,3 @@ INSERT INTO daily_missions (participant_id, mission_id, day, try, flag_success, 
 SELECT * FROM daily_missions dm ;
 SELECT * FROM participants p ;
 SELECT * FROM users;
-
-

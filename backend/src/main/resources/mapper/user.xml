@@ -164,5 +164,20 @@
 			</when>
 		</choose>
 	</select>
+
+<!--	자기소개글 작성하기-->
+	<insert id="updateBio" parameterType="BioDto">
+		update users
+		set bio = #{bio}
+		where id = #{userId}
+	</insert>
+
+	<select id="getBio" parameterType="BioDto">
+		select u.bio, u.id, u.emailId, u.nickname
+		from users u
+		where id = #{userId}
+	</select>
+
+
 </mapper>
 

@@ -3,16 +3,8 @@ package com.ssafy.msg.user.model.mapper;
 import java.sql.SQLException;
 import java.util.List;
 
+import com.ssafy.msg.user.model.dto.*;
 import org.apache.ibatis.annotations.Mapper;
-
-import com.ssafy.msg.user.model.dto.FollowDetailDto;
-import com.ssafy.msg.user.model.dto.FollowFindDto;
-import com.ssafy.msg.user.model.dto.FollowParamDto;
-import com.ssafy.msg.user.model.dto.FollowUserDto;
-import com.ssafy.msg.user.model.dto.ProfileImageDto;
-import com.ssafy.msg.user.model.dto.SignUpDto;
-import com.ssafy.msg.user.model.dto.UserDto;
-import com.ssafy.msg.user.model.dto.UserInfoDto;
 
 @Mapper
 public interface UserMapper {
@@ -50,4 +42,8 @@ public interface UserMapper {
 	UserDto findUserById(int id) throws SQLException;
 
 	void signUpWithOauth2(UserDto userDto) throws SQLException;
+
+	void updateBio(BioDto bioDto) throws SQLException;
+
+	GetBioDto getBio(BioDto bioDto) throws SQLException;
 }

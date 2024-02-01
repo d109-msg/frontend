@@ -12,4 +12,5 @@ import lombok.RequiredArgsConstructor;
 public class CommentLikeUserListDto {
     private String imageUrl;
     private String nickname;
+    private String emailId;
 }

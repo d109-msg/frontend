@@ -3,6 +3,8 @@ package com.ssafy.msg.user.controller;
 import java.util.Arrays;
 import java.util.List;
 
+import com.ssafy.msg.article.model.dto.CommentDto;
+import com.ssafy.msg.user.model.dto.*;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -24,24 +26,6 @@ import com.ssafy.msg.user.exception.IdentifierException;
 import com.ssafy.msg.user.exception.TokenInvalidException;
 import com.ssafy.msg.user.exception.UserDuplicateException;
 import com.ssafy.msg.user.exception.UserNotFoundException;
-import com.ssafy.msg.user.model.dto.AccessTokenDto;
-import com.ssafy.msg.user.model.dto.FollowDetailDto;
-import com.ssafy.msg.user.model.dto.FollowDto;
-import com.ssafy.msg.user.model.dto.FollowFindDto;
-import com.ssafy.msg.user.model.dto.FollowParamDto;
-import com.ssafy.msg.user.model.dto.FollowResponseDto;
-import com.ssafy.msg.user.model.dto.FollowUserDto;
-import com.ssafy.msg.user.model.dto.IdentifierDto;
-import com.ssafy.msg.user.model.dto.NicknameDto;
-import com.ssafy.msg.user.model.dto.Oauth2Dto;
-import com.ssafy.msg.user.model.dto.ProfileImageDto;
-import com.ssafy.msg.user.model.dto.ResetPasswordDto;
-import com.ssafy.msg.user.model.dto.SignInDto;
-import com.ssafy.msg.user.model.dto.SignUpDto;
-import com.ssafy.msg.user.model.dto.TokenDto;
-import com.ssafy.msg.user.model.dto.UpdatePasswordDto;
-import com.ssafy.msg.user.model.dto.UserDto;
-import com.ssafy.msg.user.model.dto.UserInfoDto;
 import com.ssafy.msg.user.model.service.UserService;
 import com.ssafy.msg.user.util.JwtUtil;
 import com.ssafy.msg.user.util.Oauth2Util;
@@ -565,6 +549,52 @@ public class UserController {
 	    } finally {
 	        log.info("getFollowList() -> End");
 	    }
+	}
+
+	// 자기소개 작성하기
+	@PatchMapping(value = "/bio")
+	@Operation(summary = "자기소개 작성", description = "자기소개 작성하기")
+	@ApiResponses(value = {
+			@ApiResponse(responseCode = "201", description = "자기소개 작성 성공" , content ={
+					@Content(mediaType = "application/json", schema = @Schema(implementation = BioDto.class)) }),
+			@ApiResponse(responseCode = "400", description = "자기소개 작성 실패", content = @Content) })
+	public ResponseEntity<?> updateBio(HttpServletRequest request, @RequestBody BioDto bioDto) {
+
+		bioDto.setUserId((int) request.getAttribute("id"));
+
+		try {
+			userService.updateBio(bioDto);
+			return new ResponseEntity<>(HttpStatus.CREATED);
+		} catch (Exception e) {
+			log.error("(UserController) 자기소개 작성 실패", e);
+			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+		} finally {
+			log.info("(UserController) 끝");
+		}
+	}
+
+	@GetMapping(value = "/bio")
+	@Operation(summary = "자기소개 작성", description = "자기소개 작성하기")
+	@ApiResponses(value = {
+			@ApiResponse(responseCode = "201", description = "자기소개 작성 성공" , content ={
+					@Content(mediaType = "application/json", schema = @Schema(implementation = BioDto.class)) }),
+			@ApiResponse(responseCode = "400", description = "자기소개 작성 실패", content = @Content) })
+	public ResponseEntity<?> getBio(@RequestParam("bio") String bio,
+									@RequestParam("userId") int userId) {
+
+		BioDto bioDto = BioDto.builder()
+				.userId(userId)
+				.bio(bio)
+				.build();
+
+		try {
+			return new ResponseEntity<>(userService.getBio(bioDto), HttpStatus.CREATED);
+		} catch (Exception e) {
+			log.error("(UserController) 자기소개 작성 실패", e);
+			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+		} finally {
+			log.info("(UserController) 끝");
+		}
 	}
 
 }
