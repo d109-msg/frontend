@@ -45,6 +45,25 @@
 
     </select>
 
+    <select id="getArticleListByRoomId" resultType="RoomArticleResultDto" parameterType="ArticleByRoomIdDto">
+        SELECT
+            a.id AS articleId,
+            a.user_id AS userId,
+            p.id AS participantId,
+            p.nickname AS nickname,
+            p.image_url AS iconUrl,
+            a.content AS content,
+            a.create_time AS createTime,
+            GROUP_CONCAT(ai.url ORDER BY ai.id SEPARATOR ',') AS urls
+        FROM articles a
+                 JOIN participants p ON a.user_id = p.user_id AND a.room_id = p.room_id
+                 LEFT JOIN article_images ai ON a.id = ai.article_id
+        WHERE a.room_id = #{roomId}
+        GROUP BY a.id
+        ORDER BY a.create_time DESC
+            LIMIT #{limit} OFFSET #{offset};
+    </select>
+
     <select id="getArticleDetail" parameterType="ArticleDto" resultType="ArticleDetailDto">
         select users.image_url, users.nickname, a.id as article_id, a.user_id, a.content, a.create_time, a.flag_private, a.modify_time, a.room_id
         from articles a
