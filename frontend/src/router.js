@@ -4,9 +4,7 @@ import Signup from './components/Signup.vue'
 import Login from './components/Login.vue'
 import FindPassword from './components/FindPasswordPage/FindPassword.vue'
 import MyPage from './components/MyPage/MyPage.vue'
-import CategoryPage from './components/CategoryPage/CategoryPage.vue'
 import MessagePage from './components/MessagePage/MessagePage.vue'
-import TodayPage from './components/TodayPage/TodayPage.vue'
 import SocialSign from './components/SocialSign.vue'
 import Mainpage from './components/MainPage/MainPage.vue'
 import GamePage from './components/GamePage/GamePage.vue'
@@ -66,15 +64,6 @@ const routes = [
         component : FindPassword,
     },
 
-    {
-        path: "/CategoryPage",
-        component : CategoryPage,
-    },
-
-    {
-        path: "/TodayPage",
-        component : TodayPage,
-    },
 
     {
         path : "/sign-in/callback/:id", //소셜로그인
