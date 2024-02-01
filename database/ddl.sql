@@ -110,8 +110,8 @@ CREATE TABLE `follows` (
   PRIMARY KEY (`id`),
   KEY `follows_users_FK` (`from_user_id`),
   KEY `follows_users_FK_1` (`to_user_id`),
-  CONSTRAINT `follows_users_FK` FOREIGN KEY (`from_user_id`) REFERENCES `users` (`id`),
-  CONSTRAINT `follows_users_FK_1` FOREIGN KEY (`to_user_id`) REFERENCES `users` (`id`)
+  CONSTRAINT `follows_users_FK` FOREIGN KEY (`from_user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE,
+  CONSTRAINT `follows_users_FK_1` FOREIGN KEY (`to_user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 
@@ -124,7 +124,7 @@ CREATE TABLE `notifications` (
   `create_time` datetime DEFAULT current_timestamp(),
   PRIMARY KEY (`id`),
   KEY `notifications_users_FK` (`user_id`),
-  CONSTRAINT `notifications_users_FK` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`)
+  CONSTRAINT `notifications_users_FK` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 
@@ -138,7 +138,7 @@ CREATE TABLE `article_images` (
   `flag_mission` int(11) DEFAULT 0,
   PRIMARY KEY (`id`),
   KEY `article_images_articles_FK` (`article_id`),
-  CONSTRAINT `article_images_articles_FK` FOREIGN KEY (`article_id`) REFERENCES `articles` (`id`)
+  CONSTRAINT `article_images_articles_FK` FOREIGN KEY (`article_id`) REFERENCES `articles` (`id`) ON DELETE CASCADE 
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 
@@ -152,8 +152,8 @@ CREATE TABLE `article_likes` (
   PRIMARY KEY (`id`),
   KEY `article_likes_articles_FK` (`article_id`),
   KEY `article_likes_users_FK` (`user_id`),
-  CONSTRAINT `article_likes_articles_FK` FOREIGN KEY (`article_id`) REFERENCES `articles` (`id`),
-  CONSTRAINT `article_likes_users_FK` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`)
+  CONSTRAINT `article_likes_articles_FK` FOREIGN KEY (`article_id`) REFERENCES `articles` (`id`) ON DELETE CASCADE,
+  CONSTRAINT `article_likes_users_FK` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 
@@ -167,8 +167,8 @@ CREATE TABLE `article_reports` (
   PRIMARY KEY (`id`),
   KEY `article_reports_articles_FK` (`article_id`),
   KEY `article_reports_users_FK` (`from_user_id`),
-  CONSTRAINT `article_reports_articles_FK` FOREIGN KEY (`article_id`) REFERENCES `articles` (`id`),
-  CONSTRAINT `article_reports_users_FK` FOREIGN KEY (`from_user_id`) REFERENCES `users` (`id`)
+  CONSTRAINT `article_reports_articles_FK` FOREIGN KEY (`article_id`) REFERENCES `articles` (`id`) ON DELETE CASCADE,
+  CONSTRAINT `article_reports_users_FK` FOREIGN KEY (`from_user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 
@@ -186,7 +186,7 @@ CREATE TABLE `articles` (
   KEY `articles_users_FK` (`user_id`),
   KEY `articles_rooms_FK` (`room_id`),
   CONSTRAINT `articles_rooms_FK` FOREIGN KEY (`room_id`) REFERENCES `rooms` (`id`),
-  CONSTRAINT `articles_users_FK` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`)
+  CONSTRAINT `articles_users_FK` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 
@@ -200,8 +200,8 @@ CREATE TABLE `comment_likes` (
   PRIMARY KEY (`id`),
   KEY `comment_likes_comments_FK` (`comment_id`),
   KEY `comment_likes_users_FK` (`user_id`),
-  CONSTRAINT `comment_likes_comments_FK` FOREIGN KEY (`comment_id`) REFERENCES `comments` (`id`),
-  CONSTRAINT `comment_likes_users_FK` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`)
+  CONSTRAINT `comment_likes_comments_FK` FOREIGN KEY (`comment_id`) REFERENCES `comments` (`id`) ON DELETE CASCADE,
+  CONSTRAINT `comment_likes_users_FK` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 
@@ -218,9 +218,9 @@ CREATE TABLE `comments` (
   KEY `comments_articles_FK` (`article_id`),
   KEY `comments_users_FK` (`user_id`),
   KEY `comments_comments_FK_1` (`parent_comment_id`),
-  CONSTRAINT `comments_articles_FK` FOREIGN KEY (`article_id`) REFERENCES `articles` (`id`),
-  CONSTRAINT `comments_comments_FK_1` FOREIGN KEY (`parent_comment_id`) REFERENCES `comments` (`id`),
-  CONSTRAINT `comments_users_FK` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`)
+  CONSTRAINT `comments_articles_FK` FOREIGN KEY (`article_id`) REFERENCES `articles` (`id`) ON DELETE CASCADE,
+  CONSTRAINT `comments_comments_FK_1` FOREIGN KEY (`parent_comment_id`) REFERENCES `comments` (`id`) ON DELETE CASCADE,
+  CONSTRAINT `comments_users_FK` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 
@@ -287,7 +287,7 @@ CREATE TABLE `messages` (
   KEY `messages_users_FK` (`user_id`),
   KEY `messages_rooms_FK` (`room_id`),
   CONSTRAINT `messages_rooms_FK` FOREIGN KEY (`room_id`) REFERENCES `rooms` (`id`),
-  CONSTRAINT `messages_users_FK` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`)
+  CONSTRAINT `messages_users_FK` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 
@@ -299,7 +299,7 @@ CREATE TABLE `participants` (
   `user_id` int(11) NOT NULL,
   `last_message_id` int(11) DEFAULT NULL,
   `flag_die` int(11) NOT NULL DEFAULT 0,
-  `flag_win` int(11) NOT NULL DEFAULT 0,
+  `flag_win` int(11) NOT NULL DEFAULT 1,
   `job_id` varchar(50) DEFAULT NULL,
   `image_url` varchar(300) DEFAULT NULL,
   `nickname` varchar(100) NOT NULL,
@@ -310,7 +310,7 @@ CREATE TABLE `participants` (
   KEY `participants_nickname_images_FK` (`image_url`),
   CONSTRAINT `participants_jobs_FK` FOREIGN KEY (`job_id`) REFERENCES `jobs` (`id`),
   CONSTRAINT `participants_rooms_FK` FOREIGN KEY (`room_id`) REFERENCES `rooms` (`id`),
-  CONSTRAINT `participants_users_FK` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`)
+  CONSTRAINT `participants_users_FK` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 
@@ -344,7 +344,7 @@ CREATE TABLE `user_reports` (
   KEY `reports_participants_FK` (`participant_id`),
   KEY `reports_users_FK` (`to_user_id`),
   CONSTRAINT `reports_participants_FK` FOREIGN KEY (`participant_id`) REFERENCES `participants` (`id`),
-  CONSTRAINT `reports_users_FK` FOREIGN KEY (`to_user_id`) REFERENCES `users` (`id`)
+  CONSTRAINT `reports_users_FK` FOREIGN KEY (`to_user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 SET FOREIGN_KEY_CHECKS=1;

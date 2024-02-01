@@ -23,6 +23,12 @@ public class ArticleServiceImpl implements ArticleService{
     private final S3Util s3Util;
 
     // 게시물 작성
+
+    /**
+     * userId와 (미션 방 일때) roomId를 받아서
+     * @param articleDto
+     * @throws Exception
+     */
     @Override
     public void createArticle(ArticleDto articleDto) throws Exception {
         log.info("(service) Start");
@@ -252,8 +258,6 @@ public class ArticleServiceImpl implements ArticleService{
     }
 
     // 댓글 좋아요 여부
-
-
     @Override
     public int isCommentLike(CommentLikeDto commentLikeDto) throws Exception {
 
