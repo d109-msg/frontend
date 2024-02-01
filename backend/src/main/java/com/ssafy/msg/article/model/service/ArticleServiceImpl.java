@@ -60,8 +60,30 @@ public class ArticleServiceImpl implements ArticleService{
         log.info("(service) end");
     }
 
-    // 게시물 수정
+    @Override
+    public RoomFeedResponseDto getFeedByRoomId(ArticleByRoomIdDto articleByRoomIdDto) throws Exception {
+        log.info("getFeedByRoomId() roomId : {}", articleByRoomIdDto.getRoomId());
+        log.info("getFeedByRoomId() limit : {}", articleByRoomIdDto.getLimit());
+        log.info("getFeedByRoomId() offset : {}", articleByRoomIdDto.getOffset());
 
+        List<RoomArticleResultDto> list = articleMapper.getArticleListByRoomId(articleByRoomIdDto);
+        List<RoomArticleResponseDto> resultList = new ArrayList<>();
+
+        if(list.isEmpty()){
+            return null;
+        }
+
+        for(RoomArticleResultDto dto : list) {
+            resultList.add(new RoomArticleResponseDto(dto));
+        }
+
+        int offset = articleByRoomIdDto.getOffset() + articleByRoomIdDto.getLimit();
+        String nextUrl = articleByRoomIdDto.getCurrentUrl() + "?offset=" + offset + "&limit=" + articleByRoomIdDto.getLimit() ;
+
+        return RoomFeedResponseDto.builder().articles(resultList).nextUrl(nextUrl).build();
+    }
+
+// 게시물 수정
 
     @Override
     public void updateArticle(UpdateArticleDto updateArticleDto) throws Exception {

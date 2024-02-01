@@ -17,6 +17,8 @@ public interface ArticleService {
 
     List<ArticleDetailDto> getFeedArticleList(FeedParamDto feedParamDto) throws Exception;
 
+    RoomFeedResponseDto getFeedByRoomId(ArticleByRoomIdDto articleByRoomIdDto) throws Exception;
+
     @Transactional
     void articleLike(ArticleDto articleDto) throws Exception;
 

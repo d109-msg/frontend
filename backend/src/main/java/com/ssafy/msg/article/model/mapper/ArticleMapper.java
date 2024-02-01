@@ -22,6 +22,8 @@ public interface ArticleMapper {
 
     List<ArticleDetailDto> getFeedArticleList(FeedParamDto feedParamDto) throws SQLException;
 
+    List<RoomArticleResultDto> getArticleListByRoomId(ArticleByRoomIdDto articleByRoomIdDto) throws SQLException;
+
     // 기본 게시물 조회
     List<ArticleDetailDto> getDefaultFeedList() throws SQLException;
 
