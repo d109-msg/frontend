@@ -343,8 +343,6 @@ public class ArticleController {
 
     }
 
-
-
     // 댓글 삭제
     @DeleteMapping("/comment")
     @Operation(summary = "댓글 삭제", description = "댓글 삭제")
