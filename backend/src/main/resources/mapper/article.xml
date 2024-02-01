@@ -188,6 +188,18 @@
         </choose>;
     </select>
 
+    <update id="updateComment" parameterType="UpdateCommentDto">
+        update comments
+        set content = #{content}, modify_time = now()
+        where id = #{commentId} and user_id = #{userId}
+    </update>
+
+    <delete id="deleteComment" parameterType="DeleteCommentDto">
+        delete
+        from comments
+        where id = #{commentId} and user_id = #{userId}
+    </delete>
+
 
 <!--    댓글 관련 쿼리문 끝-->
 
