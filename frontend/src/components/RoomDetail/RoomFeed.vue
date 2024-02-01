@@ -14,6 +14,9 @@ export default {
       reload: function(){
         window.location.reload()
       }
+    },
+    mounted(){
+      this.emitter.emit('pageChange',1)
     }
 }
 </script>

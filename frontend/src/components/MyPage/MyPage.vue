@@ -8,8 +8,7 @@
       <div class="profile-box">
         <div class="profile-content">
           <div class="edit-profile" @click="openEdit" ></div>
-          
-          <div class="profile-img"></div>
+          <img class="profile-img" :src="userInfo.imageUrl" alt="">
           <div class="profile-section">
           <div class="">닉네임 <span> {{ userInfo.nickname  }} </span></div>
           <div class="" >소개글 <span> {{  }} </span></div>
@@ -26,44 +25,8 @@
       <MyGameVue></MyGameVue>
     </div>
   </div>
-  <div v-if="is_edit==true" >
-    <div class="edit-profile-back">
-      <div class="edit-profile-box">
-        <div class="edit-profile-nav" >
-          <p>회원정보 수정</p>
-          <img class="close-edit-box" src="./Img/icon_close.png" @click="is_edit=false" alt="">
-        </div>
-        <hr>
-        <div class="edit-profile-content-box">
-          <div class="edit-prifle-img" @click="editProfileImg"></div>
-          <div class="edit-profile-content">
-            <div>
-              <p>이름</p>
-              <div>{{ userName }}</div>
-            </div>
-            <div>
-              <p>이메일</p>
-              <div>{{ userEmail}}</div>
-            </div>
-            <hr>
-            <div>
-              <p>닉네임</p>
-              <input class="input-style" type="text" v-model="userNickname" required>
-            </div>
-            <div>
-              <p>소개글</p>
-              <input class="input-style" type="text" v-model="userIntro" required>
-            </div>
-            
-            <div style="display: flex; justify-content: end;">
-              <button class="withdraw-btn" >회원탈퇴</button>
-              <button @click="$router.push('/change-password')" class="password-btn">비밀번호 변경</button>
-              <button class="edit-btn">수정하기</button>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
+  <div v-if="isEdit==true"  >
+    <EditProfile @close-edit="isEdit=false" :userInfo="userInfo" />
   </div>
   
   
@@ -76,24 +39,22 @@ import MyFeedVue from './MyFeed.vue'
 import MyGameVue from './MyGame.vue'
 import router from '@/router'
 import { useFeedStore } from '@/store/feedStore'
+import EditProfile from './EditProfile.vue'
 
 export default {
     name : 'MyPage',
     data(){
       return{
-        userInfo : Object,
-        is_edit : false,
-        userName: "",
-        userEmail: "",
-        userNickname: "닉네임을 입려해주세요.",
-        userIntro: "소개글을 입력해주세요.",
-        imaeUrl :"",
+        userInfo : {},
+        isEdit : false,
+
 
       }
     },
     components : {
-      MyFeedVue : MyFeedVue,
-      MyGameVue : MyGameVue
+      MyFeedVue,
+      MyGameVue,
+      EditProfile,
     },
     methods:{
     getUser : async function(){
@@ -101,7 +62,7 @@ export default {
       try{
         let value = await auth.getUser()
         this.userInfo = value.data
-        this.userName = this.userInfo.nickname
+        this.userNickname = this.userInfo.nickname
         this.userEmail = this.userInfo.emailId
         console.log(this.userInfo)
       } catch (error) {
@@ -126,12 +87,14 @@ export default {
       }
     },
     openEdit(){
-      this.is_edit=true;
+      this.isEdit=true;
     }
     
   },
   mounted(){
     this.emitter.emit('pageChange',3)
+    this.getUser()
+
     // this.getFeed()
   }
 }

@@ -3,7 +3,7 @@
         <div class="first-col">
             <div class="feed-create">
                 <div class="create-container">
-                    <img class="create-img" src="./example/3.jpg">
+                    <img class="create-img" :src="userImage">
                     <div class="create-comment">What are you thinking?</div>
                 </div>
                 <div class="create-btn-box">
@@ -49,13 +49,24 @@
                 create : false,
                 baseUrl : 'http://localhost:8080/article/feed',
                 feedList : [],
+                detailFlag : false,
                 last : {},
                 io : {},
                 item: {},
+                userImage: "",
             }
         },  
 
         methods: {
+            getUser : async function(){
+                const auth = useAuthStore()
+                try{
+                    let value = await auth.getUser()
+                    this.userImage = value.data.imageUrl
+                }catch(err){
+                    console.log(err)
+                }
+            },
             readFeed : async function(){
                 try{
                     await this.axiosRead()
@@ -129,6 +140,7 @@
             FeedCreate,
         },
         mounted(){
+            this.getUser()
             this.readFeed()
             this.io = new IntersectionObserver(this.callBack,{ threshold : 0.7})
             // 요소의 가시성이 70% 정도 관찰되었을 때, 콜백함수 실행
