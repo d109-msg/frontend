@@ -1,14 +1,9 @@
 package com.ssafy.msg;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration;
-
-import com.ssafy.msg.test.model.dto.TestDto;
-import com.ssafy.msg.test.model.repo.TestRepository;
 import org.springframework.scheduling.annotation.EnableScheduling;
 
 /*
@@ -52,7 +47,7 @@ import org.springframework.scheduling.annotation.EnableScheduling;
  * @Configuration: 클래스에 대한 설정 파일임을 명시할 때 사용 (@Configration 클래스 내에서 @Bean을 사용하여 Bean을 직접 등록할 수 있음)
  */
 
-/* 
+/*
  * Lombok Annotation (Lombok은 자바 코드를 자동으로 생성해주는 라이브러리)
  * https://projectlombok.org/features/all
  * @Slf4j: Logger를 사용할 때 사용 (로그 출력에 사용)
@@ -91,42 +86,15 @@ import org.springframework.scheduling.annotation.EnableScheduling;
  * N:M 관계에서만 관계가 명시적으로 테이블로 나타남
  */
 
-@EnableScheduling
-@EnableAutoConfiguration(exclude = { DataSourceAutoConfiguration.class })
-@SpringBootApplication
-public class BackendApplication implements CommandLineRunner {
 
-	@Autowired
-	private TestRepository repository;
+// 무중단 배포 버전
+@EnableScheduling
+@EnableAutoConfiguration(exclude = {DataSourceAutoConfiguration.class})
+@SpringBootApplication
+public class BackendApplication {
 
 	public static void main(String[] args) {
 		SpringApplication.run(BackendApplication.class, args);
 	}
 
-	@Override
-	public void run(String... args) throws Exception {
-
-		repository.deleteAll();
-
-		repository.save(TestDto.builder().firstName("Alice").lastName("Smith").build());
-		repository.save(TestDto.builder().firstName("Bob").lastName("Smith").build());
-		
-		System.out.println("TestDtos found with findAll():");
-		System.out.println("-------------------------------");
-		for (TestDto testDto : repository.findAll()) {
-			System.out.println(testDto);
-		}
-		System.out.println();
-
-		System.out.println("TestDto found with findByFirstName('Alice'):");
-		System.out.println("--------------------------------");
-		System.out.println(repository.findByFirstName("Alice"));
-
-		System.out.println("TestDtos found with findByLastName('Smith'):");
-		System.out.println("--------------------------------");
-		for (TestDto testDto : repository.findByLastName("Smith")) {
-			System.out.println(testDto);
-		}
-
-	}
 }
