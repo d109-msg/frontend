@@ -78,7 +78,6 @@ public class ArticleController {
                 .userId(userId)
                 .build();
 
-
         try {
             articleService.updateArticle(updateArticleDto1);
             log.info("(ArticleController) 게시물 수정 성공");
@@ -91,6 +90,31 @@ public class ArticleController {
         }
     }
 
+    // 게시물 삭제
+    @DeleteMapping("/delete")
+    @Operation(summary = "게시물 삭제", description = "게시물 삭제")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "게시물 삭제 성공"),
+            @ApiResponse(responseCode = "400", description = "게시물 삭제 실패", content = @Content) })
+    public ResponseEntity<?> deleteArticle(@RequestParam("articleId") int articleId, HttpServletRequest request) {
+
+        int userId = (int) request.getAttribute("id");
+
+        DeleteArticleDto deleteArticleDto = DeleteArticleDto.builder()
+                .userId(userId)
+                .articleId(articleId)
+                .build();
+
+        try {
+            articleService.deleteArticle(deleteArticleDto);
+            return new ResponseEntity<>(HttpStatus.OK);
+        } catch (Exception e) {
+            log.info("(controller) 게시물 삭제 실패 에러");
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        } finally {
+            log.info("controller 게시물 삭제 끝");
+        }
+    }
 
 
     // 마이페이지에서 프로필 보기
@@ -317,6 +341,32 @@ public class ArticleController {
 
     }
 
+    // 대댓글 가져오기
+    @GetMapping("/childComment")
+    @Operation(summary = "대댓글 목록 조회", description = "대댓글 목록 조회하기")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "대댓글 조회 성공", content = {
+                    @Content(mediaType = "application/json", schema = @Schema(implementation = CommentDto.class)) }),
+            @ApiResponse(responseCode = "400", description = "대댓글 조회 실패", content = @Content) })
+    public ResponseEntity<?> getChildCommentList(@RequestParam("commentId") int commentId,
+                                                 @RequestParam("articleId") int articleId) {
+
+        CommentDto commentDto = CommentDto.builder()
+                .articleId(articleId)
+                .parentCommentId(commentId)
+                .build();
+
+        try {
+            List<CommentDto> commentDtos = articleService.getComments(commentDto);
+            return new ResponseEntity<>(commentDtos, HttpStatus.OK);
+        } catch (Exception e) {
+            log.error("(대댓글 보기) 대댓글 조회 실패", e);
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        } finally {
+            log.info("(ArticleController) 대댓글 조회 성공");
+        }
+    }
+
     // 댓글 좋아요 누르기
     @PostMapping(value = "/commentLike")
     @Operation(summary = "댓글 좋아요", description = "게시물 좋아요")
@@ -367,5 +417,7 @@ public class ArticleController {
             log.info("(ArticleController) getCommentLikeUserList end");
         }
     }
+
+
 
 }
