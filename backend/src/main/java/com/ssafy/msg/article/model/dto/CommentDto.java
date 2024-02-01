@@ -13,6 +13,7 @@ public class CommentDto {
     // 유저 정보
     private String nickname;
     private String imageUrl;
+    private String emailId;
 
     private int id;
     private int userId;

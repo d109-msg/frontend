@@ -84,6 +84,7 @@ CREATE TABLE `users` (
   `email_id` varchar(100) NOT NULL,
   `email_password` varchar(100) DEFAULT NULL,
   `nickname` varchar(50) NOT NULL,
+  `bio` varchar(100) DEFAULT NULL,
   `provider` varchar(10) DEFAULT NULL,
   `identifier` varchar(50) DEFAULT NULL,
   `flag_identifier` int(11) DEFAULT 0,

@@ -16,6 +16,7 @@ public class ArticleDetailDto {
     // 유저 정보
     private String imageUrl;
     private String nickname;
+    private String emailId;
 
     //게시글 관련
     private int articleId;
