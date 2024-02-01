@@ -12,6 +12,9 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class UserInfoDto {
+	@Schema(description = "유저 아이디", nullable = false)
+	private int id;
+
 	@Schema(description = "닉네임", nullable = false)
 	private String nickname;
 	

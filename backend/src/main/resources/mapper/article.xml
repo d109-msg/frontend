@@ -32,7 +32,8 @@
     </insert>
 
     <select id="getArticles" parameterType="int" resultType="ArticleWithUrlDto" >
-        select a.id as article_id, a.user_id, a.create_time, a.flag_private, a.modify_time, a.room_id, ai.url, users.nickname, users.image_url
+        select a.id as article_id, a.user_id, a.create_time, a.flag_private, a.modify_time, a.room_id, ai.url,
+               users.nickname, users.image_url, user.email_id
         from articles a
                  left join (
             select article_id, MIN(id) as min_id
@@ -46,7 +47,7 @@
     </select>
 
     <select id="getArticleDetail" parameterType="ArticleDto" resultType="ArticleDetailDto">
-        select users.image_url, users.nickname, a.id as article_id, a.user_id, a.content, a.create_time, a.flag_private, a.modify_time, a.room_id
+        select users.image_url, users.nickname, users.email_id, a.id as article_id, a.user_id, a.content, a.create_time, a.flag_private, a.modify_time, a.room_id
         from articles a
         left join users on a.user_id = users.id
         where a.id = #{id};
@@ -55,7 +56,7 @@
 
 <!--    기본제공 게시물 조회-->
     <select id="getDefaultFeedList" resultType="ArticleDetailDto">
-        select u.image_url, u.nickname, a.content, a.id as articleId, a.user_id
+        select u.image_url, u.nickname, u.email_id a.content, a.id as articleId, a.user_id
         from articles a
         left join users u on a.user_id = u.id
         where a.id &lt; 6;
@@ -70,7 +71,7 @@
     </select>
 
     <select id="getFeedArticleList" parameterType="FeedParamDto" resultType="ArticleDetailDto">
-        select users.nickname, users.image_url, a.id as article_id, a.user_id, a.content, a.create_time, a.flag_private, a.modify_time, a.room_id
+        select users.nickname, users.email_id, users.image_url, a.id as article_id, a.user_id, a.content, a.create_time, a.flag_private, a.modify_time, a.room_id
         from articles a
         left join users on a.user_id = users.id
         where (a.user_id in (
@@ -116,7 +117,7 @@
     </select>
 
     <select id="getLikeUserList" parameterType="int" resultType="LikeUserListDto">
-        select al.user_id, users.nickname, users.image_url
+        select al.user_id, users.nickname, user.email_id, users.image_url
         from article_likes al
         left join users on al.user_id = users.id
         where article_id = #{articleId}
@@ -156,7 +157,7 @@
     </select>
 
     <select id="getCommentLikeUserList" parameterType="int" resultType="commentLikeUserListDto">
-        select u.nickname, u.image_url
+        select u.nickname, u.email_id, u.image_url
         from comment_likes cl
         left join users u on cl.user_id = u.id
         where comment_id = #{commentId}
@@ -174,7 +175,7 @@
     </insert>
 
     <select id="getComments" parameterType="CommentDto" resultType="CommentDto">
-        SELECT *, users.nickname, users.image_url
+        SELECT *, users.nickname, user.email_id, users.image_url
         FROM comments c
         left join users on c.user_id = users.id
         WHERE article_id = #{articleId}
