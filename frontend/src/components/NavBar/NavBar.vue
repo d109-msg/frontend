@@ -1,5 +1,5 @@
 <template>
-    <div class="nav-container" v-if="windowWidth == 'xs' ">
+    <div class="nav-container" >
         <div class="nav-logo"></div>
         <div class="right-bar">
             <div class="tag"  @click="$router.push('/')" id="/">HOME</div>
@@ -12,7 +12,7 @@
             </div>
         </div>
     </div>
-    <div class="nav-container" v-if="windowWidth == 'md' ">
+    <!-- <div class="nav-container" v-if="windowWidth == 'md' ">
         <div class="nav-logo"></div>
         <div class="right-bar">
             <div class="tag"  @click="$router.push('/')" id="/">HOME</div>
@@ -37,7 +37,7 @@
                 <div class="search-icon"></div>
             </div>
         </div>
-    </div>
+    </div> -->
 </template>
 
 <script>
