@@ -31,8 +31,14 @@ public class RoomArticleResponseDto {
         this.content = dto.getContent();
         this.createTime = dto.getCreateTime();
 
-        String[] urlArray = dto.getUrls().split(",");
+        String[] urlArray = null;
+
+        if(dto.getUrls() != null){
+            urlArray = dto.getUrls().split(",");
+            this.urls = Arrays.asList(urlArray);
+        }
         // 배열을 리스트로 변환
-        this.urls = Arrays.asList(urlArray);
+
+
     }
 }

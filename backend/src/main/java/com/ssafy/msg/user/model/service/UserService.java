@@ -46,4 +46,5 @@ public interface UserService {
 
 	GetBioDto getBio(BioDto bioDto) throws Exception;
 
+	List<SearchedUserDto> searchUsers(SearchUsersParamDto searchUsersParamDto) throws Exception;
 }

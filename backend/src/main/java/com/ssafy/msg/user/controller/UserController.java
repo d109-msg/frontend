@@ -504,6 +504,59 @@ public class UserController {
 		}
 	}
 
+	@Operation(summary = "회원 검색"
+			, description = "입력된 검색어로 일치되는 user nickname이나 email이 일치하는 user를 찾아 내가 팔로우 하는지 여부, 나를 팔로우 하는지 여부, userId 순서로 결과를 페이지네이션하여 보여줍니다.")
+	@ApiResponses(value = { @ApiResponse(responseCode = "200", description = "회원 목록 조회 성공", content = {
+			@Content(mediaType = "application/json", schema = @Schema(implementation = SearchUsersResponseDto.class)) }),
+			@ApiResponse(responseCode = "400", description = "회원 목록 조회 실패", content = @Content) })
+	@GetMapping("/list")
+	public ResponseEntity<?> searchUsers(HttpServletRequest request,
+			 @Parameter(description = "키워드") @RequestParam(value = "keyword", required = false, defaultValue = "") String keyword,
+			 @Parameter(description = "Offset") @RequestParam(value = "offset", required = false, defaultValue = "0") Integer offset,
+			 @Parameter(description = "페이지당 타겟 개수") @RequestParam(value = "limit", required = false, defaultValue = "10") Integer limit) {
+		log.info("searchUsers() start");
+
+		String currentUrl = request.getRequestURL().toString();
+		Integer userId = (Integer) request.getAttribute("id");
+
+		log.info("searchUsers() userId : {}", userId);
+		log.info("searchUsers() keyword : {}", keyword);
+		log.info("searchUsers() offset : {}", offset);
+		log.info("searchUsers() limit : {}", limit);
+
+		SearchUsersParamDto searchUsersParamDto = SearchUsersParamDto.builder()
+				.userId(userId)
+				.keyword(keyword)
+				.limit(limit)
+				.offset(offset)
+				.build();
+
+		try {
+			List<SearchedUserDto> userList = userService.searchUsers(searchUsersParamDto);
+
+			if(userList.isEmpty()) {
+				return new ResponseEntity<>(HttpStatus.OK);
+			}
+			else {
+				log.info("searchUsers() searched userList : {}", userList);
+				int nextOffset = offset + limit;
+				String nextUrl = currentUrl + "?keyword=" + keyword + "?offset=" + nextOffset + "?limit=" + limit;
+				SearchUsersResponseDto result = SearchUsersResponseDto.builder()
+						.searchResult(userList)
+						.nextUrl(nextUrl)
+						.build();
+
+				return new ResponseEntity<>(result ,HttpStatus.OK);
+			}
+
+		} catch (Exception e) {
+			log.error("searchUsers() -> Exception : {}", e);
+			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+		} finally {
+			log.info("searchUsers() -> end");
+		}
+	}
+
 	@Operation(summary = "회원 팔로워(to)/팔로잉(from) 목록 조회", description = "액세스 토큰으로 회원 팔로워(to)/팔로잉(from) 목록 조회")
 	@ApiResponses(value = { @ApiResponse(responseCode = "200", description = "회원 팔로워(to)/팔로잉(from) 목록 조회 성공", content = {
 			@Content(mediaType = "application/json", schema = @Schema(implementation = FollowUserDto[].class)) }),

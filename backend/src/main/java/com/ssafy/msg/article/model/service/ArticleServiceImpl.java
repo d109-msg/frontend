@@ -84,7 +84,7 @@ public class ArticleServiceImpl implements ArticleService{
         }
 
         int offset = articleByRoomIdDto.getOffset() + articleByRoomIdDto.getLimit();
-        String nextUrl = articleByRoomIdDto.getCurrentUrl() + "?offset=" + offset + "&limit=" + articleByRoomIdDto.getLimit() ;
+        String nextUrl = articleByRoomIdDto.getCurrentUrl() +"?roomId=" + articleByRoomIdDto.getRoomId() + "?offset=" + offset + "&limit=" + articleByRoomIdDto.getLimit() ;
 
         return RoomFeedResponseDto.builder().articles(resultList).nextUrl(nextUrl).build();
     }
