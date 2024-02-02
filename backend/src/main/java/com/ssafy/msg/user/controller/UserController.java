@@ -307,10 +307,15 @@ public class UserController {
 	public ResponseEntity<?> signOut(HttpServletRequest request) {
 		log.info("signOut() -> Start");
 
-		int id = (int) request.getAttribute("id");
+		String header = request.getHeader(authorization);
+		if (header == null || !header.startsWith("Bearer ")) {
+			throw new TokenInvalidException();
+		}
+		String refreshToken = header.replace("Bearer ", "");
 
 		try {
-			userService.signOut(id);
+//			userService.signOut(id);
+			refreshTokenRepository.deleteById(refreshToken);
 			log.info("signOut() -> Success");
 			return new ResponseEntity<>(HttpStatus.OK);
 		} catch (Exception e) {

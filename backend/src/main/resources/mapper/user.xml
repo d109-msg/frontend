@@ -37,7 +37,7 @@
 	<select id="findUserByEmailId" parameterType="string"
 		resultType="UserDto">
 		select id, email_id, email_password, nickname, provider,
-		identifier, flag_admin, refresh_token, sign_in_time, sign_up_time,
+		identifier, flag_admin, sign_in_time, sign_up_time,
 		flag_private, flag_identifier, image_url, image_uuid
 		from users
 		where
@@ -48,7 +48,7 @@
 	<select id="findUserById" parameterType="int"
 		resultType="UserDto">
 		select id, email_id, email_password, nickname, provider,
-		identifier, flag_admin, refresh_token, sign_in_time, sign_up_time,
+		identifier, flag_admin, sign_in_time, sign_up_time,
 		flag_private, flag_identifier, image_url, image_uuid
 		from users
 		where
@@ -94,15 +94,14 @@
 
 	<update id="signIn" parameterType="UserDto">
 		update users set
-		refresh_token
-		= #{refreshToken}, sign_in_time = now()
+		sign_in_time = now()
 		where email_id = #{emailId}
 	</update>
 
-	<update id="signOut" parameterType="int">
-		update users set
-		refresh_token = null where id = #{id}
-	</update>
+<!--	<update id="signOut" parameterType="int">-->
+<!--		update users set-->
+<!--		refresh_token = null where id = #{id}-->
+<!--	</update>-->
 
 	<delete id="withdraw" parameterType="int">
 		delete from users where
