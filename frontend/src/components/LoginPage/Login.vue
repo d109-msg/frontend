@@ -11,7 +11,7 @@
             </div>
 
             <div class="password-form">
-                <input type="password" class="password-input" required v-model="emailPassword">
+                <input type="password" class="password-input" @keyup.enter.prevent="login" required v-model="emailPassword">
                 <p class="password-label">Password</p>
             </div>
            
@@ -86,5 +86,5 @@ export default {
 }
 </script>
 
-<style scoped src="../assets/css/loginform.css">
+<style scoped src="./LoginPage.css">
 </style>

@@ -100,6 +100,6 @@ export default {
 }
 </script>
 
-<style scoped src="./MyPage.css">
+<style scoped src="./css/MyPage.css">
 
 </style>
