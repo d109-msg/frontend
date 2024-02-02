@@ -6,7 +6,7 @@
         </div>
         <div class="message-content-box">
             <div class="message-content">
-<!-- 
+
                 <div class="nickname">
                     <span>닉네임</span>
                     <input type="text" v-model="nickname">
@@ -19,7 +19,7 @@
 
 
 
- -->
+
 
 
 
