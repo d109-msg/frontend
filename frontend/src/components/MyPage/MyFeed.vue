@@ -53,8 +53,11 @@ export default {
       DetailPage
     },
     mounted(){
-      this.myInfo = useAuthStore().getUserInfo
-      this.getFeed()
+      const auth = useAuthStore()
+      if(auth.getAccess != ""){
+        this.myInfo = auth.getUserInfo
+        this.getFeed()
+      }
     },
     
     

@@ -58,8 +58,6 @@ export default {
       chatBox.style.marginTop = '10px';
       chatBox.style.marginRight = '20px';
       chatBox.style.textAlign = 'right';
-      
-      
       const chatText = document.createElement('div')
       chatText.style.display = 'inline-block';
       chatText.style.position = 'relative';
@@ -121,11 +119,11 @@ export default {
     },
     startPage: async function(){
       const auth = useAuthStore()
-      await auth.useRefresh()
       if(auth.getAccess != ""){
+        await auth.useRefresh()
         try{
           await this.getUser()
-          console.log(this.userInfo)
+          this.$emit('userInfo',this.userInfo)
           this.connect()
         } catch(err){
            console.log(err)

@@ -82,6 +82,10 @@ export default {
         FindPassword(){
             router.push('/findpassword')
         }
+    },
+    mounted(){
+        const auth = useAuthStore()
+        auth.logout()
     }
 }
 </script>

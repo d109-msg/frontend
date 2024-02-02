@@ -69,8 +69,8 @@ export default {
         this.userId = this.userInfo.id
 
       } catch (error) {
-        auth.useRefresh()
         try{
+          await auth.useRefresh()
           value = await auth.getUser()
           this.userInfo = value.data
         }
@@ -87,11 +87,13 @@ export default {
     startPage : async function(){
       const auth = useAuthStore()
       try{
-        await auth.useRefresh()
-        console.log('hi')
         const access = auth.getAccess
         if(access != ""){
-          const info = this.getUser()
+          await auth.useRefresh()
+          const info = await this.getUser()
+        }else{
+          router.push('/')
+          alert('회원 전용 페이지입니다.')
         }
       } catch(err){
       }

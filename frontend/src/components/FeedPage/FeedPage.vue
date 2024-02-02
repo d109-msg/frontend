@@ -162,13 +162,13 @@ import router from '@/router';
             },
             startPage : async function(){
                 const auth = useAuthStore()
-                    await this.getUser()
                     if(auth.getAccess == ""){
-                        await this.axiosGuest()
                         this.isLogin = false
+                        await this.axiosGuest()
                     } else{
-                        await this.readFeed()
+                        await this.getUser()
                         this.isLogin = true
+                        await this.readFeed()
                     }
             }
             
@@ -176,6 +176,11 @@ import router from '@/router';
         components: {
             Feed,
             FeedCreate,
+        },
+        watch:{
+            userInfo(nv,ov){
+                this.$emit('userInfo',nv)
+            }
         },
         mounted(){
             const auth = useAuthStore()
