@@ -178,7 +178,7 @@ public class ArticleController {
                     @Content(mediaType = "application/json", schema = @Schema(implementation = RoomFeedResponseDto.class)) }),
             @ApiResponse(responseCode = "400", description = "조회 실패", content = @Content)})
     public ResponseEntity<?> getFeedByRoomId(HttpServletRequest request,
-            @Parameter(description = "게임방Id") @RequestParam(value = "roomId", required = true) String roomId,
+            @Parameter(description = "게임방Id") @RequestParam(value = "roomId", required = true, defaultValue = "room4") String roomId,
                                              @Parameter(description = "마지막으로 로딩한 타겟") @RequestParam(value = "offset", required = false, defaultValue = "0") Integer offset,
                                              @Parameter(description = "페이지당 타겟 개수") @RequestParam(value = "limit", required = false, defaultValue = "5") Integer limit) {
 

@@ -81,7 +81,7 @@ public class GameController {
     }
 
     @GetMapping("/participant")
-    @Operation(summary = "유저 participant 조회", description = "userEmail과 roomId를 이용해 해당 해당 유저의 participant 조회")
+    @Operation(summary = "유저 participant 조회", description = "userId과 roomId를 이용해 해당 해당 유저의 participant 조회")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "조회 성공", content = {
                     @Content(mediaType = "application/json", schema = @Schema(implementation = ParticipantDto.class)) }),
