@@ -46,6 +46,13 @@
 
     </select>
 
+<!--&lt;!&ndash;    비회원 피드 &ndash;&gt;-->
+<!--    <select id="getGuestFeed" resultType="">-->
+<!--        select *-->
+<!--        from articles-->
+<!--        where id &lt;= 5;-->
+<!--    </select>-->
+
     <select id="getArticleListByRoomId" resultType="RoomArticleResultDto" parameterType="ArticleByRoomIdDto">
         SELECT
             a.id AS articleId,

@@ -3,16 +3,15 @@ package com.ssafy.msg.article.model.dto;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
-import lombok.NoArgsConstructor;
-import org.springframework.web.multipart.MultipartFile;
+import lombok.RequiredArgsConstructor;
 
 import java.util.List;
 
 @Data
 @Builder
-@NoArgsConstructor
 @AllArgsConstructor
-public class ArticleDetailDto {
+@RequiredArgsConstructor
+public class GuestArticleDto {
     // 유저 정보
     private String imageUrl;
     private String nickname;
@@ -34,5 +33,4 @@ public class ArticleDetailDto {
 
     // 댓글 관련
     private List<CommentDto> commentList;
-
 }
