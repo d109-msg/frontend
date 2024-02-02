@@ -1,6 +1,10 @@
 package com.ssafy.msg.game.controller;
 
+import ch.qos.logback.core.encoder.EchoEncoder;
 import com.ssafy.msg.chat.model.dto.RoomDto;
+import com.ssafy.msg.game.exception.GroupRoomDuplicateException;
+import com.ssafy.msg.game.exception.GroupRoomFullException;
+import com.ssafy.msg.game.exception.GroupRoomNotFoundException;
 import com.ssafy.msg.game.model.dto.*;
 import com.ssafy.msg.game.model.service.GameService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -341,11 +345,12 @@ public class GameController {
     @Operation(summary = "사용자 설정 게임 참여", description = "사용자 설정 게임 참여")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "사용자 설정 게임 참여 성공", content = @Content),
-            @ApiResponse(responseCode = "204", description = "사용자 설정 게임 존재하지 않음", content = @Content),
-            @ApiResponse(responseCode = "400", description = "사용자 설정 게임 참여 실패", content = @Content),
+            @ApiResponse(responseCode = "204", description = "존재하지 않는 방", content = @Content),
+            @ApiResponse(responseCode = "400", description = "사용자 설정 게임 참여 실패 (에러)", content = @Content),
+            @ApiResponse(responseCode = "403", description = "인원 제한으로 실패", content = @Content),
             @ApiResponse(responseCode = "409", description = "이미 참여 중인 게임", content = @Content)})
     @PostMapping("/group/join")
-    public ResponseEntity<?> enterGroupRoom(@Valid HttpServletRequest request, @RequestBody ApplyGroupRoomDto applyGroupRoomDto) {
+    public ResponseEntity<?> enterGroupRoom(@Valid HttpServletRequest request, @RequestBody ApplyGroupRoomDto applyGroupRoomDto){
         log.info("enterGroupRoom() -> Start");
         int userId = (int) request.getAttribute("id");
 
@@ -355,32 +360,22 @@ public class GameController {
                 .userId(userId)
                 .roomId(applyGroupRoomDto.getRoomId())
                 .build();
-        RoomDto roomDto = null;
 
         try {
-            boolean isParticipantInRoom = gameService.isParticipantInRoom(enterGroupRoomDto);
-
-            if (isParticipantInRoom == true){
-                return new ResponseEntity<>(roomDto, HttpStatus.CONFLICT);
-            } else{
-                try {
-                    roomDto = gameService.enterGroupRoom(enterGroupRoomDto);
-                    log.info("enterGroupRoom() -> Success");
-                    if (roomDto != null){
-                        return new ResponseEntity<>(roomDto, HttpStatus.OK);
-                    }else{
-                        return new ResponseEntity<>(roomDto, HttpStatus.NO_CONTENT);
-                    }
-
-                } catch (Exception e) {
-                    log.error("enterGroupRoom() -> Exception : {}", e);
-                    return new ResponseEntity<>(roomDto, HttpStatus.BAD_REQUEST);
-                } finally {
-                    log.info("enterGroupRoom() -> End");
-                }
-            }
-        } catch (Exception e) {
-            throw new RuntimeException(e);
+            RoomDto roomDto = gameService.enterGroupRoom(enterGroupRoomDto);
+            log.info("enterGroupRoom() -> Success");
+            return new ResponseEntity<>(roomDto, HttpStatus.OK);
+        } catch (GroupRoomDuplicateException e) {
+            log.error("GroupRoomDuplicateException() -> Exception : {}", e);
+            return new ResponseEntity<>(HttpStatus.CONFLICT);
+        } catch (GroupRoomFullException e) {
+            log.error("GroupRoomFullException() -> Exception : {}", e);
+            return new ResponseEntity<>(HttpStatus.FORBIDDEN);
+        } catch (GroupRoomNotFoundException e) {
+            log.error("GroupRoomNotFoundException() -> Exception : {}", e);
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        } catch (Exception e){
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
 
     }

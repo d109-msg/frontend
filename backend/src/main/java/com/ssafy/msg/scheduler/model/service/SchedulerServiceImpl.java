@@ -1,6 +1,7 @@
 package com.ssafy.msg.scheduler.model.service;
 
 import com.ssafy.msg.game.model.dto.ParticipantDto;
+import com.ssafy.msg.game.model.mapper.GameMapper;
 import com.ssafy.msg.game.model.service.GameService;
 import com.ssafy.msg.message.model.service.MessageService;
 import com.ssafy.msg.scheduler.model.dto.UpdateWinFlagDto;
@@ -20,6 +21,7 @@ import java.util.Objects;
 public class SchedulerServiceImpl implements SchedulerService{
 
     private final SchedulerMapper schedulerMapper;
+    private final GameMapper gameMapper;
 
     private final GameService gameService;
     private final MessageService messageService;
@@ -28,14 +30,20 @@ public class SchedulerServiceImpl implements SchedulerService{
     @Override
     public void gameAM8() throws Exception {
 
-        // end_time이 null인 roomId 조회
+        // strart_time은 not null이지만 end_time이 null인 roomId 조회
         List<String> unendRoom = schedulerMapper.getUnendRoom();
-
         for (String roomId: unendRoom) {
             // 투표 결과 처리
             manageMafiaDoctorVote(roomId);;
         }
 
+        // 7명이 모두 모였지만 start_time이 null인 그룹방 roomId 조회
+        List<String> unstartRoom = schedulerMapper.getUnstartRoom();
+        for (String roomId: unstartRoom){
+            gameService.startGroupGame(roomId, gameMapper.getParticipantsInRoom(roomId));
+        }
+
+        // 대기방 인원 체크 및 게임 시작
         gameService.startRandomGame();
 
     }
@@ -240,4 +248,5 @@ public class SchedulerServiceImpl implements SchedulerService{
 
         messageService.sendEndNotice(roomId);
     }
+
 }

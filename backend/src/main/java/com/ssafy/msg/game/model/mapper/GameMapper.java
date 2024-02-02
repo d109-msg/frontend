@@ -3,6 +3,7 @@ package com.ssafy.msg.game.model.mapper;
 import com.ssafy.msg.chat.model.dto.RoomDto;
 import com.ssafy.msg.game.model.dto.*;
 import com.ssafy.msg.user.model.dto.UserDto;
+import jakarta.mail.Part;
 import org.apache.ibatis.annotations.Mapper;
 
 import java.sql.SQLException;
@@ -53,4 +54,10 @@ public interface GameMapper {
     List<UserEndGameDto> getUserEndGame(int userId) throws SQLException;
 
     Integer completeMission(int participantId, int day) throws SQLException;
+
+    List<Integer> getParticipantsInRoom(String roomId) throws SQLException;
+
+    void updateStartTime(String roomId) throws SQLException;
+
+    void updateParticipant(UpdateParticipantDto updateParticipantDto) throws SQLException;
 }
