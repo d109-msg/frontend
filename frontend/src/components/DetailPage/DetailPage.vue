@@ -17,15 +17,24 @@
                             <p class="nick">{{ itemData.content }}</p>
                         </div>
                     </div>
-                    <div class="list" @click="optionFlag = !optionFlag; getUser()">
-                        <div class="list-container" v-if="optionFlag">
-                            <p style="width: 100px;"><img src="./Icon/edit.png" alt="">게시물 수정</p>
-                            <p style="width: 100px;"><img src="./Icon/delete.png" alt="">게시물 삭제</p>
+                    <div class="list" @click.self.prevent="optionFlag = !optionFlag;">
+                        <div class="list-container" v-if="optionFlag && me.id==itemData.userId">
+                            <p style="width: 100px;"
+                            @click="editFlag=true"
+                            ><img src="./Icon/edit.png" alt="">게시물 수정</p>
+                            
+                            <p style="width: 100px;"
+                            @click="deleteFlag=true"
+                            ><img src="./Icon/delete.png" alt="">게시물 삭제</p>
+                        </div>
+                        <div class="list-container" v-if="optionFlag && me.id!=itemData.userId">
+                            <p style="width: 100px;"><img src="./Icon/report.png" alt="">게시물 신고</p>
                         </div>
                     </div>
                 </div>
+                
                 <div class="line"></div>
-                <div class="comment-list">
+                <div class="comment-list" @click="optionFlag = false">
                     <p>댓글 {{ commentCount }}개</p>
                     <div class="comment" v-for="(item,idx) in comment" :key="idx">
                         <img class="comment-img" :src="item.imageUrl">
@@ -78,6 +87,27 @@
                 </div>
             </div>
         </div>
+        <div class="edit-back" v-if="editFlag" @click.self="editFlag=false">
+            <div class="edit-content">
+                <p class="edit-header"><img src="./Icon/edit.png" alt="">게시물 내용 수정</p>
+                <div class="edit-body">
+                    <textarea  cols="30" rows="10" class="edit-write" maxlength="20"
+                    v-model="editComment" @keyup.enter.prevent="send"
+                    ></textarea>
+                </div>
+                <div class="edit-button" @click="editFeed">edit</div>
+            </div>
+        </div>
+        <div class="edit-back" v-if="deleteFlag" @click.self="deleteFlag=false">
+            <div class="delete-content">
+                <div class="delte-body">
+                    <p><img src="./Icon/delete.png" alt="">게시물 삭제</p>
+                    <div class="delete-false" @click="deleteFlag=false">취소하기</div>
+                    <div class="delete-button" @click="deleteFeed">삭제하기</div>
+                </div>
+                
+            </div>
+        </div>
     </div>
 </template>
 
@@ -102,7 +132,10 @@ export default {
             recommentList : [],
             recommentView : [],
             recomment : [],
-            me : {}
+            me : {},
+            editComment: "",
+            editFlag : false,
+            deleteFlag : false,
         }   
     },
     methods: {
@@ -124,6 +157,7 @@ export default {
             try{
                 let value = await feed.getDetail(idx)
                 this.itemData = value.data
+                console.log(this.itemData)
                 this.imgList = this.itemData.urls
                 this.likeCount = this.itemData.likeCount
                 this.createTime = this.itemData.createTime
@@ -192,9 +226,25 @@ export default {
       },
       getUser : async function(){
         const auth = useAuthStore()
+        this.me = auth.getUserInfo
+      },
+      editFeed : async function(){
+        const feed =useFeedStore()
         try{
-            let value = await auth.getUser()
-            console.log(value)
+            let value = await feed.editFeed(this.me.id,this.idx.articleId,this.editComment)
+            alert('게시글 수정이 완료되었습니다.')
+            this.editFlag = false
+            this.readDetail(this.idx.articleId)
+        } catch(err){
+            console.log(err)
+        }
+      },
+      deleteFeed: async function(){
+        const feed = useFeedStore()
+        try{
+            await feed.deleteFeed(this.idx.articleId)
+            alert("게시글 삭제가 완료되었습니다.")
+            window.location.reload()
         }catch(err){
             console.log(err)
         }
@@ -215,6 +265,7 @@ export default {
     mounted(){
         // console.log(this.idx.articleId)
         this.readDetail(this.idx.articleId)
+        this.getUser()
     }
 
 }

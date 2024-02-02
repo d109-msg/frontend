@@ -11,7 +11,7 @@
           <img class="profile-img" :src="userInfo.imageUrl" alt="">
           <div class="profile-section">
           <div class="">닉네임 <span> {{ userInfo.nickname  }} </span></div>
-          <div class="" >소개글 <span> {{  }} </span></div>
+          <div class="" >소개글 <span> {{ "아직 없음." }} </span></div>
           <div class="profile-bot-section">
             <div>게시물 <span> {{ 8 }} </span></div>
             <div>팔로우 <span> {{ 10 }} </span></div>
@@ -40,6 +40,7 @@ import MyGameVue from './MyGame.vue'
 import router from '@/router'
 import { useFeedStore } from '@/store/feedStore'
 import EditProfile from './EditProfile.vue'
+import { watch } from 'vue'
 
 export default {
     name : 'MyPage',
@@ -47,8 +48,8 @@ export default {
       return{
         userInfo : {},
         isEdit : false,
-
-
+        userId : "",
+        MyFeed : {},
       }
     },
     components : {
@@ -64,6 +65,7 @@ export default {
         this.userInfo = value.data
         this.userNickname = this.userInfo.nickname
         this.userEmail = this.userInfo.emailId
+        this.userId = this.userInfo.id
         console.log(this.userInfo)
       } catch (error) {
         auth.useRefresh()
@@ -77,10 +79,10 @@ export default {
         }
         console.log(error)}
     },
-    getFeed : async function(){
+    getFeed : async function(id){
       const feed = useFeedStore()
       try{
-        let value = await feed.getUserProfile()
+        let value = await feed.getUserProfile(id)
         console.log(value)
       } catch(error) {
         console.log(error)
@@ -89,7 +91,11 @@ export default {
     openEdit(){
       this.isEdit=true;
     }
-    
+  },
+  watch:{
+    async userId(newId,old){
+      this.getFeed(newId)
+    }
   },
   mounted(){
     this.emitter.emit('pageChange',3)

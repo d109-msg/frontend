@@ -61,6 +61,7 @@ import router from '@/router';
                 item: {},
                 userImage: "",
                 isLogin : false,
+                userInfo : {},
             }
         },  
 
@@ -69,6 +70,8 @@ import router from '@/router';
                 const auth = useAuthStore()
                 try{
                     let value = await auth.getUser()
+                    this.userInfo = value.data
+                    auth.setUserInfo(this.userInfo)
                     this.userImage = value.data.imageUrl
                 }catch(err){
                     console.log(err)
@@ -162,7 +165,7 @@ import router from '@/router';
 
             }
         },
-        created() {
+        created(){
         },
     }
 </script>
