@@ -6,13 +6,14 @@ import axios from "axios"
 
 
 const cookies = useCookies().cookies
-const server =  'https://i10d109.p.ssafy.io/api'
-const server2 = 'http://localhost:8080/api'
+const server =  'http://localhost:8080/api'
+const server2 = 'https://i10d109.p.ssafy.io/api'
 
 export const useAuthStore = defineStore('auth',{
     state: ()=>({
         access: "",
         userInfo : {},
+        refresh : "",
     }),
     getters: {
         getAccess: (state)=>{
@@ -26,7 +27,8 @@ export const useAuthStore = defineStore('auth',{
         logout(){
             this.access = ""
             this.userInfo = {}
-            cookies.remove('msgRefresh')
+            this.refresh = ""
+            // cookies.set('msgRefresh',"")
         },
         setAccess(token){
             this.access = token
@@ -35,14 +37,15 @@ export const useAuthStore = defineStore('auth',{
             this.userInfo = value
         },
         setRefresh(token){
-            cookies.set("msgRefresh",token, (60*60*24))
+            this.refresh = token
+            // cookies.set("msgRefresh",token, (60*60*24))
             //refresh 토큰의 갱신기간 하루(24시간)로 설정
         },
         async useRefresh(){
-            const refresh = cookies.get('msgRefresh')
+            // const refresh = cookies.get('msgRefresh')
             try{
             let value = await axios.get(`${server}/user/token`,{
-                headers: {Authorization: `Bearer ${refresh}`}
+                headers: {Authorization: `Bearer ${this.refresh}`}
                 //header에 refresh 담아서 access 요청 후에 catch를 통한 에러처리 필요
             })
             this.setAccess(value.data.accessToken)
@@ -149,7 +152,7 @@ export const useAuthStore = defineStore('auth',{
             //해당 accessToken local로 저장, refresh는 cookie에서 따로 관리
         },
         {
-            paths: ['userInfo'],
+            paths: ['userInfo','refresh'],
             storage : sessionStorage,
         }
  

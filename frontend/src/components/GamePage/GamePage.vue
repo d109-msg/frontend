@@ -9,9 +9,8 @@
     <GameMidPageVue></GameMidPageVue>
     <div class="game-bot-box">
         <GameRoomPageVue class="game-room-box"></GameRoomPageVue>
-        <MiniProfile>
+        <MiniProfile :userInfo="userInfo"/>
 
-        </MiniProfile>
     </div>
   </div>
 </template>
@@ -20,12 +19,23 @@
 import GameMidPageVue from './GameMidPage.vue'
 import GameRoomPageVue from './GameRoomPage.vue'
 import MiniProfile from '../MiniProfile/MiniProfile.vue'
+import { useAuthStore } from '@/store/authStore'
 
 export default {
     name: "GamePage",
     data(){
         return{
             prevScrollY : '',
+            userInfo : {},
+        }
+    },
+    methods:{
+        getUser : async function(){
+            const auth = useAuthStore()
+            if(auth.getAccess!=""){
+                let value = await auth.getUser()
+                this.userInfo = value.data
+            }
         }
     },
     components:{
@@ -34,6 +44,7 @@ export default {
         MiniProfile,
     },
     mounted(){
+        this.getUser()
         this.emitter.emit('pageChange',1)
         let banner = document.querySelector('.banner')
         this.prevScrollY = window.scrollY

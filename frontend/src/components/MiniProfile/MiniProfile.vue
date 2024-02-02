@@ -5,7 +5,7 @@
             <img class="logout" src="./logout.png" v-if="isLogin" @click="logout" @mouseover="toolFlag=true" @mouseleave="toolFlag=false">
             <div class="tool-tip" v-if="toolFlag"><span>Logout</span></div>
         </div>
-        <div class="my-mini-content" v-if="isLogin">
+        <div class="my-mini-content" v-if="userInfo.imageUrl!=undefined">
             <img class="mini-image" :src="userInfo.imageUrl">
             <div class="mini-name">{{ userInfo.nickname }}</div>
             <div class="mini-comment">fun, daily, mafia game</div>
@@ -18,7 +18,7 @@
                 <span class="count">24</span>
             </div>
         </div>
-        <div class="my-mini-content" v-if="!isLogin">
+        <div class="my-mini-content" v-if="userInfo.imageUrl == undefined">
             <img class="mini-image" src="./default.png">
             <div class="mini-name">Anonymous</div>
             <div class="mini-comment">fun, daily, mafia game!!!</div>
@@ -40,35 +40,26 @@ export default {
     name: 'MiniProfile',
     data(){
         return{
-            userInfo : {},
             isLogin : false,
             toolFlag : false,
         }
     },
     methods:{
-        getUser : async function(){
-            const auth = useAuthStore()
-            try{
-                let value = await auth.getUser()
-                this.userInfo = value.data
-                // console.log(this.userInfo)
-
-            }catch(err){
-                console.log(err)
-            }
-        },
+        
         logout : function(){
             const auth = useAuthStore()
             auth.logout()
             window.location.reload()
         }
     },
+    props:{
+        userInfo : Object,
+    },
     mounted(){
         const auth = useAuthStore()
         if(auth.getAccess == ""){
-            this.isLogin
+            this.isLogin = false
         } else{
-            this.getUser()
             this.isLogin = true
         }
 

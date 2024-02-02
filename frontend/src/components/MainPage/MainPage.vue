@@ -4,10 +4,10 @@
         <div class="banner"></div>
         <div class="main-container">
             <!-- 추후 컴포넌트로 분리 가능(피드) -->
-            <FeedPage/>
+            <FeedPage @user-info="sendUser"/>
 
             <!-- 추후 컴포넌트로 분리 가능(작은 프로필) -->
-            <MiniProfile/>
+            <MiniProfile :userInfo="user"/>
 
         </div>
     </div>
@@ -22,12 +22,18 @@ export default {
     data(){
         return {
             prevScrollY : '',
+            user : {},
         }
     },
     components :{
         MiniProfile,
         FeedPage,
     },
+    methods:{
+        sendUser: function(data){
+            this.user = data
+        }
+    },  
 
     mounted(){
         this.emitter.emit('pageChange',0)
