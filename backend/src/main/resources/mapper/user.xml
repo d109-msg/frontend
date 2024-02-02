@@ -173,7 +173,7 @@
 	</insert>
 
 	<select id="getBio" parameterType="BioDto">
-		select u.bio, u.id, u.emailId, u.nickname
+		select u.bio, u.id, u.email_id, u.nickname
 		from users u
 		where id = #{userId}
 	</select>

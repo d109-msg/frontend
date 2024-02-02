@@ -2,7 +2,6 @@ package com.ssafy.msg.article.controller;
 
 
 import com.ssafy.msg.article.model.dto.*;
-import com.ssafy.msg.article.model.mapper.ArticleMapper;
 import com.ssafy.msg.article.model.service.ArticleService;
 import com.ssafy.msg.user.exception.UserNotFoundException;
 import io.swagger.v3.oas.annotations.Operation;
@@ -301,7 +300,6 @@ public class ArticleController {
             log.info("(ArticleController) getLikeUserList end");
         }
     }
-
 
 
     // 댓글 쓰기
