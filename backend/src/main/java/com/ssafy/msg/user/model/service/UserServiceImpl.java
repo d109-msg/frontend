@@ -137,4 +137,9 @@ public class UserServiceImpl implements UserService {
 	public GetBioDto getBio(BioDto bioDto) throws Exception {
 		return userMapper.getBio(bioDto);
 	}
+
+	@Override
+	public List<SearchedUserDto> searchUsers(SearchUsersParamDto searchUsersParamDto) throws Exception {
+		return userMapper.searchUsers(searchUsersParamDto);
+	}
 }

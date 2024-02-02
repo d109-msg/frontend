@@ -4,6 +4,36 @@
 
 <mapper namespace="com.ssafy.msg.user.model.mapper.UserMapper">
 
+	<select id="searchUsers" parameterType="SearchUsersParamDto"
+			resultType="SearchedUserDto">
+		SELECT
+			u.id AS userId,
+			u.email_id AS userEmail,
+			u.nickname,
+			u.image_url AS imageUrl,
+			CASE
+				WHEN f_from.id IS NOT NULL THEN 1
+				ELSE 0
+				END AS isFollow,
+			CASE
+				WHEN f_to.id IS NOT NULL THEN 1
+				ELSE 0
+				END AS isMyFollower
+		FROM
+			users u
+				LEFT JOIN
+			follows f_from ON f_from.to_user_id = u.id AND f_from.from_user_id = #{userId}
+				LEFT JOIN
+			follows f_to ON f_to.from_user_id = u.id AND f_to.to_user_id = #{userId}
+		WHERE
+			u.email_id LIKE CONCAT('%', #{keyword}, '%') OR u.nickname LIKE CONCAT('%', #{keyword}, '%')
+		GROUP BY
+			u.id
+		ORDER BY
+			isFollow DESC, isMyFollower DESC, u.id ASC
+			LIMIT #{limit} OFFSET #{offset}
+	</select>
+
 	<select id="findUserByEmailId" parameterType="string"
 		resultType="UserDto">
 		select id, email_id, email_password, nickname, provider,

@@ -46,4 +46,6 @@ public interface UserMapper {
 	void updateBio(BioDto bioDto) throws SQLException;
 
 	GetBioDto getBio(BioDto bioDto) throws SQLException;
+
+	List<SearchedUserDto> searchUsers(SearchUsersParamDto searchUsersParamDto) throws SQLException;
 }

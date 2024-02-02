@@ -25,18 +25,32 @@ insert into jobs (`id`, `info`, `image_url`) values
 ('시민', '시민입니다.', 'tmpurl'),
 ('의사', '의사입니다.', 'tmpurl');
 
-INSERT INTO users (email_id, email_password, nickname, sign_up_time) VALUES 
-('hong@ssafy.com', '$2a$10$8C8PCUov//Edd6tWzdvvTupTLkAXiIOPn/OZMioTWNx5NOtgHl6rq', '홍길동', NOW()),
-('test1@naver.com', '$2a$10$8C8PCUov//Edd6tWzdvvTupTLkAXiIOPn/OZMioTWNx5NOtgHl6rq', 'test1', NOW()),
-('test2@naver.com', '$2a$10$8C8PCUov//Edd6tWzdvvTupTLkAXiIOPn/OZMioTWNx5NOtgHl6rq', 'test2', NOW()),
-('test3@naver.com', '$2a$10$8C8PCUov//Edd6tWzdvvTupTLkAXiIOPn/OZMioTWNx5NOtgHl6rq', 'test3', NOW()),
-('test4@naver.com', '$2a$10$8C8PCUov//Edd6tWzdvvTupTLkAXiIOPn/OZMioTWNx5NOtgHl6rq', 'test4', NOW()),
-('test5@naver.com', '$2a$10$8C8PCUov//Edd6tWzdvvTupTLkAXiIOPn/OZMioTWNx5NOtgHl6rq', 'test5', NOW()),
-('test6@naver.com', '$2a$10$8C8PCUov//Edd6tWzdvvTupTLkAXiIOPn/OZMioTWNx5NOtgHl6rq', 'test6', NOW()),
-('test7@naver.com', '$2a$10$8C8PCUov//Edd6tWzdvvTupTLkAXiIOPn/OZMioTWNx5NOtgHl6rq', 'test7', NOW()),
-('test8@naver.com', '$2a$10$8C8PCUov//Edd6tWzdvvTupTLkAXiIOPn/OZMioTWNx5NOtgHl6rq', 'test8', NOW()),
-('test9@naver.com', '$2a$10$8C8PCUov//Edd6tWzdvvTupTLkAXiIOPn/OZMioTWNx5NOtgHl6rq', 'test9', NOW()),
-('test10@naver.com', '$2a$10$8C8PCUov//Edd6tWzdvvTupTLkAXiIOPn/OZMioTWNx5NOtgHl6rq', 'test10', NOW());
+INSERT INTO users (email_id, email_password, nickname, image_url, sign_up_time) VALUES 
+('hong@ssafy.com', '$2a$10$8C8PCUov//Edd6tWzdvvTupTLkAXiIOPn/OZMioTWNx5NOtgHl6rq', '홍길동', 'https://team109testbucket.s3.ap-northeast-2.amazonaws.com/player1.png', NOW()),
+('test1@naver.com', '$2a$10$8C8PCUov//Edd6tWzdvvTupTLkAXiIOPn/OZMioTWNx5NOtgHl6rq', 'test1', 'https://team109testbucket.s3.ap-northeast-2.amazonaws.com/player1.png', NOW()),
+('test2@naver.com', '$2a$10$8C8PCUov//Edd6tWzdvvTupTLkAXiIOPn/OZMioTWNx5NOtgHl6rq', 'test2', 'https://team109testbucket.s3.ap-northeast-2.amazonaws.com/player1.png', NOW()),
+('test3@naver.com', '$2a$10$8C8PCUov//Edd6tWzdvvTupTLkAXiIOPn/OZMioTWNx5NOtgHl6rq', 'test3', 'https://team109testbucket.s3.ap-northeast-2.amazonaws.com/player1.png', NOW()),
+('test4@naver.com', '$2a$10$8C8PCUov//Edd6tWzdvvTupTLkAXiIOPn/OZMioTWNx5NOtgHl6rq', 'test4', 'https://team109testbucket.s3.ap-northeast-2.amazonaws.com/player1.png', NOW()),
+('test5@naver.com', '$2a$10$8C8PCUov//Edd6tWzdvvTupTLkAXiIOPn/OZMioTWNx5NOtgHl6rq', 'test5', 'https://team109testbucket.s3.ap-northeast-2.amazonaws.com/player1.png', NOW()),
+('test6@naver.com', '$2a$10$8C8PCUov//Edd6tWzdvvTupTLkAXiIOPn/OZMioTWNx5NOtgHl6rq', 'test6', 'https://team109testbucket.s3.ap-northeast-2.amazonaws.com/player1.png', NOW()),
+('test7@naver.com', '$2a$10$8C8PCUov//Edd6tWzdvvTupTLkAXiIOPn/OZMioTWNx5NOtgHl6rq', 'test7', 'https://team109testbucket.s3.ap-northeast-2.amazonaws.com/player1.png', NOW()),
+('test8@naver.com', '$2a$10$8C8PCUov//Edd6tWzdvvTupTLkAXiIOPn/OZMioTWNx5NOtgHl6rq', 'test8', 'https://team109testbucket.s3.ap-northeast-2.amazonaws.com/player1.png', NOW()),
+('test9@naver.com', '$2a$10$8C8PCUov//Edd6tWzdvvTupTLkAXiIOPn/OZMioTWNx5NOtgHl6rq', 'test9', 'https://team109testbucket.s3.ap-northeast-2.amazonaws.com/player1.png', NOW()),
+('test10@naver.com', '$2a$10$8C8PCUov//Edd6tWzdvvTupTLkAXiIOPn/OZMioTWNx5NOtgHl6rq', 'test10', 'https://team109testbucket.s3.ap-northeast-2.amazonaws.com/player1.png', NOW()); 
+
+-- follow
+INSERT INTO follows (from_user_id, to_user_id) VALUES (1, 2);
+INSERT INTO follows (from_user_id, to_user_id) VALUES (1, 3);
+INSERT INTO follows (from_user_id, to_user_id) VALUES (1, 5);
+INSERT INTO follows (from_user_id, to_user_id) VALUES (7, 1);
+INSERT INTO follows (from_user_id, to_user_id) VALUES (2, 1);
+INSERT INTO follows (from_user_id, to_user_id) VALUES (2, 3);
+INSERT INTO follows (from_user_id, to_user_id) VALUES (3, 1);
+INSERT INTO follows (from_user_id, to_user_id) VALUES (3, 2);
+INSERT INTO follows (from_user_id, to_user_id) VALUES (4, 5);
+INSERT INTO follows (from_user_id, to_user_id) VALUES (5, 4);
+INSERT INTO follows (from_user_id, to_user_id) VALUES (6, 7);
+INSERT INTO follows (from_user_id, to_user_id) VALUES (7, 6);
 
 -- 게임 유저 아이콘
 INSERT INTO nickname_images (url, uuid) VALUES
@@ -161,7 +175,7 @@ VALUES
 (5, 'https://team109testbucket.s3.ap-northeast-2.amazonaws.com/player11.png', 'player11.png', 0),
 (5, 'https://team109testbucket.s3.ap-northeast-2.amazonaws.com/player12.png', 'player12.png', 0);
 
-
+SELECT * FROM follows;
 SELECT * FROM articles ;
 SELECT * FROM article_images ai ;
 SELECT * FROM daily_missions dm ;
