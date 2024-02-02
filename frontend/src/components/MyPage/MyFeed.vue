@@ -5,16 +5,59 @@
       My Feed
     </p>
     <div class="myfeed-content" >
-      <div class="content" v-for="i in [1,2,3,4,5,6,7,8]" :key="i">
-        <div class="img"></div>
+      <div class="content" v-for="(item,key) in myFeed" :key="key">
+        <img :src="item.url" class="img" @click="onDetail(item)">
       </div>
     </div>
+    <DetailPage v-if="detailFlag"
+        @close-detail="offDetail"
+        :idx="detail"
+        />
   </div>
 </template>
 
 <script>
+import { useAuthStore } from '@/store/authStore'
+import { useFeedStore } from '@/store/feedStore'
+import DetailPage from '../DetailPage/DetailPage.vue'
 export default {
-    name: 'MyFeed'
+    name: 'MyFeed',
+    data(){
+      return{
+        myFeed : [],
+        myInfo : {},
+        detailFlag : false,
+        detail : {}
+      }
+    },
+    methods:{
+      getFeed : async function(){
+      const feed = useFeedStore()
+      try{
+        let value = await feed.getUserProfile(this.myInfo.id)
+        this.myFeed = value.data
+        console.log(this.myFeed)
+      } catch(error) {
+        console.log(error)
+      }
+    },
+      offDetail : function(){
+        this.detailFlag = false
+      },
+      onDetail : function(item){
+        this.detail = item
+        this.detailFlag = true
+      }
+    },
+    components:{
+      DetailPage
+    },
+    mounted(){
+      this.myInfo = useAuthStore().getUserInfo
+      this.getFeed()
+    },
+    
+    
 }
 </script>
 

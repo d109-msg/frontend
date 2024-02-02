@@ -65,9 +65,15 @@ export const useFeedStore = defineStore('feed',{
         },
         writeComment : async function(id,content,commentId){
             const headers= {
-                Authorization : `Bearer ${useAuthStore().getAccess}`
+                Authorization : `Bearer ${useAuthStore().getAccess}`,
+                "Content-Type" : "application/json"
             }
-            return axios.post(`${server}/article/comment?articleId=${id}&content=${content}&parentCommentId=${commentId}`,null,{ headers })
+            const data = {
+                articleId : id,
+                content : content,
+                parentCommentId : commentId
+            }
+            return axios.post(`${server}/article/comment`,JSON.stringify(data),{ headers })
         },
         likeArticle : async function(idx){
             const headers= {

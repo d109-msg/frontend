@@ -23,6 +23,11 @@ export const useAuthStore = defineStore('auth',{
         }
     },
     actions: {
+        logout(){
+            this.access = ""
+            this.userInfo = {}
+            cookies.remove('msgRefresh')
+        },
         setAccess(token){
             this.access = token
         },
@@ -49,7 +54,7 @@ export const useAuthStore = defineStore('auth',{
                     //미발견된 에러시(서버 및 네트워크 오류) 토큰 갱신 실패
                     alert('토큰 갱신에 실패하였습니다. 다시 로그인해주세요.')
                 }
-                router.push('/login')
+                this.logout()
             }
         },
         async signUp(name,email,password){
@@ -104,6 +109,9 @@ export const useAuthStore = defineStore('auth',{
             }
             return axios.get(`${server}/user/info`,{ headers })
         },
+        async guestFeed(){
+            return axios.get(`${server}/article/guestFeed`)
+        },
         async getFollowing(){
             const token = this.getAccess
             const headers = {
@@ -147,6 +155,10 @@ export const useAuthStore = defineStore('auth',{
             storage : localStorage,
             //해당 accessToken local로 저장, refresh는 cookie에서 따로 관리
         },
+        {
+            paths: ['userInfo'],
+            storage : sessionStorage,
+        }
  
     ]
 })

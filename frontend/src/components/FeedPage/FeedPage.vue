@@ -62,6 +62,7 @@ import router from '@/router';
                 userImage: "",
                 isLogin : false,
                 userInfo : {},
+                nextUrl : "",
             }
         },  
 
@@ -69,19 +70,21 @@ import router from '@/router';
             getUser : async function(){
                 const auth = useAuthStore()
                 try{
+                    await auth.useRefresh()
                     let value = await auth.getUser()
                     this.userInfo = value.data
                     auth.setUserInfo(this.userInfo)
                     this.userImage = value.data.imageUrl
                 }catch(err){
-                    console.log(err)
+                    auth.logout()
                 }
             },
             readFeed : async function(){
                 try{
                     await this.axiosRead()
                     //첫 요청에서의 가시성 관찰을 위한 if문 5개 단위로 게시물이 오기 때문에 마지막 요소를 관찰하기 위한 로직
-                    if(this.feedList.length%5==0 && this.feedList.length !=0){
+                    if(this.feedList.length%5==0 && this.feedList.length !=0 && this.nextUrl != this.baseUrl){
+                        this.baseUrl = this.nextUrl
                         this.last = document.getElementById(`${this.feedList.length-1}`)
                         //저장 된 feedList의 길이 -1 이 곧 id
                         this.io.observe(this.last)
@@ -94,7 +97,8 @@ import router from '@/router';
                         await authStore.useRefresh()
                         // 토큰 refresh 시켜서 다시 요청
                         await this.axiosRead()
-                        if(this.feedList.length%5==0 && this.feedList.length !=0){
+                        if(this.feedList.length%5==0 && this.feedList.length !=0 &&this.nextUrl != this.baseUrl){
+                            this.baseUrl = this.nextUrl
                             this.last = document.getElementById(`${this.feedList.length-1}`)
                             this.io.observe(this.last)
                         }
@@ -106,10 +110,12 @@ import router from '@/router';
             axiosRead : async function(){
                 const feedStore = useFeedStore()
                 let value = await feedStore.readFeed(this.baseUrl)
-                this.baseUrl = value.data.nextUrl
-                value.data.articleDetailDtos.forEach(item=>{
-                    this.feedList.push(item)
-                    })
+                
+                    this.nextUrl = value.data.nextUrl
+                    value.data.articleDetailDtos.forEach(item=>{
+                        this.feedList.push(item)
+                        })
+                
                 },
 
             callBack : function(items,io){
@@ -120,7 +126,8 @@ import router from '@/router';
                             await this.axiosRead()
                             // 현 페이지에서 5개씩 받아옴, 만약 5개씩 받아온게 꽉 찼더라면 한번 더 요청해서 그 다음 요청 갈 수 있게
                             // 마지막 요소를 intersectionObserver로 가시성 관찰
-                            if(this.feedList.length%5==0 && this.feedList.length !=0){
+                            if(this.feedList.length%5==0 && this.feedList.length !=0 && this.nextUrl != this.baseUrl){
+                                this.baseUrl = this.nextUrl
                                 this.last = document.getElementById(`${this.feedList.length-1}`)
                                 this.io.observe(this.last)
                             }
@@ -143,8 +150,24 @@ import router from '@/router';
                     //emit으로 글 작성 완료되었다는 이벤트 왔을 시 현 화면 새로고침
                 }
             },
+            axiosGuest : async function(){
+                const auth = useAuthStore()
+                let value = await auth.guestFeed()
+                value.data.forEach(item=>{
+                    this.feedList.push(item)
+                })
+            },
             goLogin : function(){
                 router.push('/login')
+            },
+            startPage : async function(){
+                const auth = useAuthStore()
+                    await this.getUser()
+                    if(auth.getAccess == ""){
+                        await this.axiosGuest()
+                    } else{
+                        await this.readFeed()
+                    }
             }
             
         },
@@ -154,16 +177,8 @@ import router from '@/router';
         },
         mounted(){
             const auth = useAuthStore()
-            if( auth.getAccess == ""){
-                this.isLogin = false
-            } else{
-                this.isLogin = true
-                this.getUser()
-                this.readFeed()
-                this.io = new IntersectionObserver(this.callBack,{ threshold : 0.7})
-                // 요소의 가시성이 70% 정도 관찰되었을 때, 콜백함수 실행
-
-            }
+            this.io = new IntersectionObserver(this.callBack,{ threshold : 0.7})
+            this.startPage()
         },
         created(){
         },
