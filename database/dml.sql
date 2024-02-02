@@ -26,16 +26,17 @@ insert into jobs (`id`, `info`, `image_url`) values
 ('의사', '의사입니다.', 'tmpurl');
 
 INSERT INTO users (email_id, email_password, nickname, sign_up_time) VALUES 
-('test1@naver.com', '123', 'test1', NOW()),
-('test2@naver.com', '123', 'test2', NOW()),
-('test3@naver.com', '123', 'test3', NOW()),
-('test4@naver.com', '123', 'test4', NOW()),
-('test5@naver.com', '123', 'test5', NOW()),
-('test6@naver.com', '123', 'test6', NOW()),
-('test7@naver.com', '123', 'test7', NOW()),
-('test8@naver.com', '123', 'test8', NOW()),
-('test9@naver.com', '123', 'test9', NOW()),
-('test10@naver.com', '123', 'test10', NOW());
+('hong@ssafy.com', '$2a$10$8C8PCUov//Edd6tWzdvvTupTLkAXiIOPn/OZMioTWNx5NOtgHl6rq', '홍길동', NOW())
+('test1@naver.com', '$2a$10$8C8PCUov//Edd6tWzdvvTupTLkAXiIOPn/OZMioTWNx5NOtgHl6rq', 'test1', NOW()),
+('test2@naver.com', '$2a$10$8C8PCUov//Edd6tWzdvvTupTLkAXiIOPn/OZMioTWNx5NOtgHl6rq', 'test2', NOW()),
+('test3@naver.com', '$2a$10$8C8PCUov//Edd6tWzdvvTupTLkAXiIOPn/OZMioTWNx5NOtgHl6rq', 'test3', NOW()),
+('test4@naver.com', '$2a$10$8C8PCUov//Edd6tWzdvvTupTLkAXiIOPn/OZMioTWNx5NOtgHl6rq', 'test4', NOW()),
+('test5@naver.com', '$2a$10$8C8PCUov//Edd6tWzdvvTupTLkAXiIOPn/OZMioTWNx5NOtgHl6rq', 'test5', NOW()),
+('test6@naver.com', '$2a$10$8C8PCUov//Edd6tWzdvvTupTLkAXiIOPn/OZMioTWNx5NOtgHl6rq', 'test6', NOW()),
+('test7@naver.com', '$2a$10$8C8PCUov//Edd6tWzdvvTupTLkAXiIOPn/OZMioTWNx5NOtgHl6rq', 'test7', NOW()),
+('test8@naver.com', '$2a$10$8C8PCUov//Edd6tWzdvvTupTLkAXiIOPn/OZMioTWNx5NOtgHl6rq', 'test8', NOW()),
+('test9@naver.com', '$2a$10$8C8PCUov//Edd6tWzdvvTupTLkAXiIOPn/OZMioTWNx5NOtgHl6rq', 'test9', NOW()),
+('test10@naver.com', '$2a$10$8C8PCUov//Edd6tWzdvvTupTLkAXiIOPn/OZMioTWNx5NOtgHl6rq', 'test10', NOW());
 
 -- 게임 유저 아이콘
 INSERT INTO nickname_images (url, uuid) VALUES
@@ -124,6 +125,45 @@ INSERT INTO daily_missions (participant_id, mission_id, day, try, flag_success, 
 (6, 1, 1, 1, 0, 1, 1, 1),
 (7, 1, 1, 1, 0, 2, 3, 4);
 
+-- articles 테이블에 데이터 삽입
+INSERT INTO articles (user_id, content, create_time, flag_private, room_id)
+VALUES
+('1', 'test1', NOW(), 0, 'room4'),
+('2', 'test2', NOW(), 0, 'room4'),
+('3', 'test3', NOW(), 0, 'room4'),
+('4', 'test4', NOW(), 0, 'room4'),
+('5', 'test5', NOW(), 0, NULL),
+('6', 'test6', NOW(), 0, NULL),
+('7', 'test7', NOW(), 0, NULL),
+('8', 'test8', NOW(), 0, NULL),
+('9', 'test9', NOW(), 0, NULL),
+('11', 'test10', NOW(), 0, NULL);
+
+-- article_images 테이블에 데이터 삽입
+-- 1번 article_id에 대한 이미지 삽입
+INSERT INTO article_images (article_id, url, uuid, flag_mission)
+VALUES
+(1, 'https://team109testbucket.s3.ap-northeast-2.amazonaws.com/player1.png', 'player1.png', 1),
+(1, 'https://team109testbucket.s3.ap-northeast-2.amazonaws.com/player2.png', 'player2.png', 0),
+(1, 'https://team109testbucket.s3.ap-northeast-2.amazonaws.com/player3.png', 'player3.png', 0);
+
+-- 이하, 2번부터 10번 article_id에 대한 삽입을 반복합니다.
+INSERT INTO article_images (article_id, url, uuid, flag_mission)
+VALUES
+(2, 'https://team109testbucket.s3.ap-northeast-2.amazonaws.com/player4.png', 'player4.png', 1),
+(2, 'https://team109testbucket.s3.ap-northeast-2.amazonaws.com/player5.png', 'player5.png', 0),
+(2, 'https://team109testbucket.s3.ap-northeast-2.amazonaws.com/player6.png', 'player6.png', 0);
+
+
+INSERT INTO article_images (article_id, url, uuid, flag_mission)
+VALUES
+(5, 'https://team109testbucket.s3.ap-northeast-2.amazonaws.com/player10.png', 'player10.png', 0),
+(5, 'https://team109testbucket.s3.ap-northeast-2.amazonaws.com/player11.png', 'player11.png', 0),
+(5, 'https://team109testbucket.s3.ap-northeast-2.amazonaws.com/player12.png', 'player12.png', 0);
+
+
+SELECT * FROM articles ;
+SELECT * FROM article_images ai ;
 SELECT * FROM daily_missions dm ;
 SELECT * FROM participants p ;
 SELECT * FROM users;
