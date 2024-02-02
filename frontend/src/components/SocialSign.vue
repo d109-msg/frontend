@@ -23,7 +23,7 @@ export default {
     },
     mounted(){
         // console.log(this.code)
-        axios.get(`http://localhost:8080/user/sign-in/oauth2/${this.provider}?code=${this.code}`,{
+        axios.get(`https://i10d109.p.ssafy.io/api/user/sign-in/oauth2/${this.provider}?code=${this.code}`,{
             headers:{"Content-Type": `application/json`}
         })
         .then(res=>{
