@@ -15,6 +15,8 @@ public interface SchedulerMapper {
 
     List<String> getUnendRoom() throws SQLException;
 
+    List<String> getUnstartRoom() throws SQLException;
+
     void updateFlagAvailable() throws SQLException;
 
     List<Integer> getNormalVoteResult(String roomId) throws SQLException;

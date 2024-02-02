@@ -3,6 +3,9 @@ package com.ssafy.msg.game.model.service;
 import com.ssafy.msg.article.util.OpenAiUtil;
 import com.ssafy.msg.chat.model.dto.RoomDto;
 import com.ssafy.msg.chat.model.mapper.ChatMapper;
+import com.ssafy.msg.game.exception.GroupRoomDuplicateException;
+import com.ssafy.msg.game.exception.GroupRoomFullException;
+import com.ssafy.msg.game.exception.GroupRoomNotFoundException;
 import com.ssafy.msg.game.model.dto.*;
 import com.ssafy.msg.game.model.mapper.GameMapper;
 import com.ssafy.msg.message.model.mapper.MessageMapper;
@@ -232,21 +235,38 @@ public class GameServiceImpl implements GameService{
     @Override
     public RoomDto enterGroupRoom(EnterGroupRoomDto enterGroupRoomDto) throws Exception {
 
-        RoomDto roomDto = chatMapper.getRoom(enterGroupRoomDto.getRoomId());
+        String roomId = enterGroupRoomDto.getRoomId();
+        RoomDto roomDto = chatMapper.getRoom(roomId);
 
-        if (roomDto != null){
-            UserDto user = userMapper.findUserById(enterGroupRoomDto.getUserId());
+        if(roomDto == null){
+            throw new GroupRoomNotFoundException();
+        }else {
+            boolean isParticipantInRoom = gameMapper.isParticipantInRoom(enterGroupRoomDto);
+            if (isParticipantInRoom){
+                throw new GroupRoomDuplicateException();
+            }else {
+                List<Integer> participants = gameMapper.getParticipantsInRoom(roomId);
+                if (participants.size() >= 7){
+                    throw new GroupRoomFullException();
+                }else {
+                    UserDto user = userMapper.findUserById(enterGroupRoomDto.getUserId());
 
-            ParticipantDto participant = ParticipantDto.builder()
-                    .roomId(enterGroupRoomDto.getRoomId())
-                    .userId(user.getId())
-                    .imageUrl(user.getImageUrl())
-                    .nickname(user.getNickname())
-                    .build();
+                    ParticipantDto participant = ParticipantDto.builder()
+                            .roomId(roomId)
+                            .userId(user.getId())
+                            .imageUrl(user.getImageUrl())
+                            .nickname(user.getNickname())
+                            .build();
 
-            chatMapper.enterRoom(participant);
+                    chatMapper.enterRoom(participant);
 
-            // 해당 room의 인원이 7명이라면 게임 시작
+                    if (participants.size() == 6){
+                        if (getTime(8, 13)){
+                            startGroupGame(roomId, participants);
+                        }
+                    }
+                }
+            }
         }
         return roomDto;
     }
@@ -280,7 +300,7 @@ public class GameServiceImpl implements GameService{
      * @return List partcipants를 리턴한다.
      */
     @Override
-    public List<ParticipantDto> gameStart(RoomStartReceiveDto roomStartReceiveDto) throws Exception{
+    public List<ParticipantDto> randomGameStart(RoomStartReceiveDto roomStartReceiveDto) throws Exception{
         int numOfPlayers = roomStartReceiveDto.getUserList().size();
         String roomId = roomStartReceiveDto.getRoomId();
         List<RandomNameDto> randomNicknames = null;
@@ -636,12 +656,39 @@ public class GameServiceImpl implements GameService{
 
             RoomStartReceiveDto roomStartReceiveDto = new RoomStartReceiveDto(roomId, waitingUsersId.subList(i*7, i*7+7));
 
-            gameStart(roomStartReceiveDto);
+            randomGameStart(roomStartReceiveDto);
             messageService.sendStartNotice(roomId);
 
             newDayMission(roomId);
 
         }
+    }
+
+    @Override
+    public void startGroupGame(String roomId, List<Integer> participantList) throws Exception{
+        int numOfPlayers = participantList.size();
+        List<RandomNameDto> randomNicknames = null;
+
+        log.info("startGroupGame() -> roomId : {}", roomId);
+
+        // 각 participant 랜덤 닉네임, 랜덤 직업, 랜덤 이미지로 update
+        randomNicknames = gameMapper.getRandomNicknames(numOfPlayers);
+        List<String> randomJobs = getJobs(numOfPlayers);
+
+        for(int i = 0; i  < numOfPlayers; i++) {
+            UpdateParticipantDto updateParticipantDto = UpdateParticipantDto.builder()
+                    .id(participantList.get(i))
+                    .nickname(randomNicknames.get(i).getFirstName() + " " + randomNicknames.get(i).getLastName())
+                    .jobId(randomJobs.get(i))
+                    .imageUrl(randomNicknames.get(i).getImgUrl())
+                    .build();
+
+            gameMapper.updateParticipant(updateParticipantDto);
+        }
+
+        gameMapper.updateStartTime(roomId);
+        messageService.sendStartNotice(roomId);
+        newDayMission(roomId);
     }
 
     /**
