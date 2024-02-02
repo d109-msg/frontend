@@ -1,5 +1,31 @@
 <template>
-    <div class="nav-container" >
+    <div class="nav-container" v-if="windowWidth == 'xs' ">
+        <div class="nav-logo"></div>
+        <div class="right-bar">
+            <div class="tag"  @click="$router.push('/')" id="/">HOME</div>
+            <div class="tag"  @click="$router.push('/game')"  id="/game">GAME</div>
+            <div class="tag" @click="$router.push('/message')"  id="/message">MESSAGE</div>
+            <div class="tag"  @click="$router.push('/mypage')"  id="/mypage">MYPAGE</div>
+            <div class="search-container">
+                <input type="text" class="search-bar" placeholder="검색" maxlength="30">
+                <div class="search-icon"></div>
+            </div>
+        </div>
+    </div>
+    <div class="nav-container" v-if="windowWidth == 'md' ">
+        <div class="nav-logo"></div>
+        <div class="right-bar">
+            <div class="tag"  @click="$router.push('/')" id="/">HOME</div>
+            <div class="tag"  @click="$router.push('/game')"  id="/game">GAME</div>
+            <div class="tag" @click="$router.push('/message')"  id="/message">MESSAGE</div>
+            <div class="tag"  @click="$router.push('/mypage')"  id="/mypage">MYPAGE</div>
+            <div class="search-container">
+                <input type="text" class="search-bar" placeholder="검색" maxlength="30">
+                <div class="search-icon"></div>
+            </div>
+        </div>
+    </div>
+    <div class="nav-container" v-if="windowWidth == 'lg' ">
         <div class="nav-logo"></div>
         <div class="right-bar">
             <div class="tag"  @click="$router.push('/')" id="/">HOME</div>
@@ -27,6 +53,8 @@ export default {
             prev : null,
             step : 0,
             prev : -1,
+            windowHeight: window.innerHeight,
+            windowWidth: window.innerWidth,
         }
     },
     methods : {
@@ -42,6 +70,8 @@ export default {
     },
 
     mounted() {
+
+
         const list = document.querySelectorAll('.tag')
         this.emitter.on('pageChange',(value)=>{
             if(this.step == 0){
@@ -83,6 +113,9 @@ export default {
 
         })
     },
+    watch:{
+    }
+    
 }
 
 
