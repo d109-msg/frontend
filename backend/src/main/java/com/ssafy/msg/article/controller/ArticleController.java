@@ -250,6 +250,27 @@ public class ArticleController {
         }
     }
 
+    // 비회원 메인 페이지
+    @GetMapping("/guestFeed")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "게스트 피드 조회 성공", content ={
+                    @Content(mediaType = "application/json", schema = @Schema(implementation = GuestArticleDto.class)) }),
+            @ApiResponse(responseCode = "400", description = "게스트 피드 조회 실패", content = @Content) })
+    public ResponseEntity<?> getGuestFeed() {
+        log.info("(ArticleController) 게스트 피드 리스트");
+
+        try {
+            List<ArticleDetailDto> articleDetailDtos = articleService.getDefaultFeedList();
+            return new ResponseEntity<>(articleDetailDtos, HttpStatus.OK);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+
+
+    }
+
+
+
     // 게시물 좋아요 누르기
     @PostMapping(value = "/like")
     @Operation(summary = "게시물 좋아요", description = "게시물 좋아요")
@@ -310,15 +331,13 @@ public class ArticleController {
                     @Content(mediaType = "application/json", schema = @Schema(implementation = CommentDto.class)) }),
             @ApiResponse(responseCode = "400", description = "댓글 작성 실패", content = @Content) })
     public ResponseEntity<?> createComment(HttpServletRequest request,
-                                           @RequestParam("articleId") int articleId,
-                                           @RequestParam("content") String content,
-                                           @RequestParam(value = "parentCommentId", defaultValue = "0") Integer parentCommentId ) {
+                                           @RequestBody CreateCommentDto createCommentDto ) {
 
         CommentDto commentDto = CommentDto.builder()
                 .userId((Integer) request.getAttribute("id"))
-                .articleId(articleId)
-                .content(content)
-                .parentCommentId(parentCommentId > 0 ? parentCommentId : null) // 유효한 ID가 아니라면 null을 할당
+                .articleId(createCommentDto.getArticleId())
+                .content(createCommentDto.getContent())
+                .parentCommentId(createCommentDto.getParentCommentId()) // 유효한 ID가 아니라면 null을 할당
                 .build();
         log.info("(controller) createComment() 댓글 작성 시작 {}", commentDto);
 
