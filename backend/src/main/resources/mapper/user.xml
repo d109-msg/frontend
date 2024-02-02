@@ -71,7 +71,7 @@
 		#{id}
 	</select>
 
-	<insert id="signUpWithOauth2" parameterType="UserDto">
+	<insert id="signUpWithOauth2" parameterType="UserDto" useGeneratedKeys="true" keyProperty="id">
 		insert into users
 		(nickname, email_id, provider, refresh_token, sign_in_time, sign_up_time)
 		values
