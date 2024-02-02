@@ -86,5 +86,5 @@ export default {
 }
 </script>
 
-<style scoped src="../assets/css/loginform.css">
+<style scoped src="./LoginPage.css">
 </style>
