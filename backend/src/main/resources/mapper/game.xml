@@ -301,5 +301,26 @@
 			  AND room_id = #{roomId}
 		) AS IsParticipantInRoom;
 	</select>
+
+	<select id="getParticipantsInRoom" parameterType="string"
+			resultType="int">
+		select id
+		from participants
+		where room_id = #{roomId};
+	</select>
+
+	<update id="updateStartTime" parameterType="string">
+		UPDATE rooms
+		SET start_time = now()
+		WHERE id = #{roomId}
+	</update>
+
+	<update id="updateParticipant" parameterType="UpdateParticipantDto">
+		update participants
+		set nickname = #{nickname},
+		    job_id = #{jobId},
+		    image_url = #{imageUrl}
+		where id = #{id}
+	</update>
 </mapper>
 

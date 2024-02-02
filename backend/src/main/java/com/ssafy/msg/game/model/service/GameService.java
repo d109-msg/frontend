@@ -24,7 +24,7 @@ public interface GameService {
 
     RandomNameDto getRandomRoomName() throws Exception;
 
-    List<ParticipantDto> gameStart(RoomStartReceiveDto roomStartReceiveDto) throws Exception;
+    List<ParticipantDto> randomGameStart(RoomStartReceiveDto roomStartReceiveDto) throws Exception;
 
     List<String> getJobs(int num);
 
@@ -55,6 +55,8 @@ public interface GameService {
     int completeMission(int userId, String roomId) throws Exception;
 
     void startRandomGame() throws Exception;
+
+    void startGroupGame(String roomId, List<Integer> participantList) throws Exception;
 
     void newDayMission(String roomId) throws Exception;
 }

@@ -25,6 +25,16 @@
         where start_time is not null and end_time is null and (data_type='랜덤' or  data_type='그룹');
     </select>
 
+    <select id="getUnstartRoom"
+            resultType="string">
+        select p.room_id
+        from participants p
+                 join rooms r on p.room_id = r.id
+        where r.start_time is null and r.data_type = '그룹'
+        group by p.room_id
+        having count(p.user_id) = 7;
+    </select>
+
     <update id="updateFlagAvailable">
         update rooms
         set flag_available = 0
