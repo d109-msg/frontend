@@ -1,43 +1,49 @@
 <template>
+    <!-- 웹 버전 -->
     <div class="nav-container" >
-        <div class="nav-logo"></div>
-        <div class="right-bar">
-            <div class="tag"  @click="$router.push('/')" id="/">HOME</div>
-            <div class="tag"  @click="$router.push('/game')"  id="/game">GAME</div>
-            <div class="tag" @click="$router.push('/message')"  id="/message">MESSAGE</div>
-            <div class="tag"  @click="$router.push('/mypage')"  id="/mypage">MYPAGE</div>
-            <div class="search-container">
-                <input type="text" class="search-bar" placeholder="검색" maxlength="30">
-                <div class="search-icon"></div>
+        <div   v-if="size == 'lg'" class="lg-style" >
+            <div class="nav-logo"></div>
+            <div class="right-bar" >
+                <div class="tag"  @click="$router.push('/')" id="/">HOME</div>
+                <div class="tag"  @click="$router.push('/game')"  id="/game">GAME</div>
+                <div class="tag" @click="$router.push('/message')"  id="/message">MESSAGE</div>
+                <div class="tag"  @click="$router.push('/mypage')"  id="/mypage">MYPAGE</div>
+                <div class="search-container">
+                    <input type="text" class="search-bar" placeholder="검색" maxlength="30">
+                    <div class="search-icon"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 태블릿 버전 -->
+        <div v-if="size == 'md'"  class="md-style">
+            <div class="nav-logo" ></div>
+
+            <div class="right-bar">
+                <div class="tag"  @click="$router.push('/')" id="/">HOME</div>
+                <div class="tag"  @click="$router.push('/game')"  id="/game">GAME</div>
+                <div class="tag" @click="$router.push('/message')"  id="/message">MESSAGE</div>
+                <div class="tag"  @click="$router.push('/mypage')"  id="/mypage">MYPAGE</div>
+                <div class="search-container">
+                    <input type="text" class="search-bar" placeholder="검색" maxlength="30">
+                    <div class="search-icon"></div>
+                </div>
+            </div>
+        </div>
+
+        <div  v-if="size == 'xs'" class="xs-style">
+            <div class="right-bar">
+                <img class="tag" src="./Img/icon_home.png" alt=""  @click="$router.push('/')" id="/" style="height: 40px; width: 40px;">
+                <!-- <div class="tag" >HOME</div> -->
+                <img class="tag" src="./Img/icon_game.png" alt=""  @click="$router.push('/game')" id="/game" style="height: 35px; width: 35px;">
+                <img class="tag" src="./Img/icon_message.png" alt=""  @click="$router.push('/message')" id="/message" style="height: 45px; width: 45px;">
+                <img class="tag" src="./Img/icon_mypage.png" alt=""  @click="$router.push('/mypage')" id="/mypage" style="height: 50px; width: 50px;">
             </div>
         </div>
     </div>
-    <!-- <div class="nav-container" v-if="windowWidth == 'md' ">
-        <div class="nav-logo"></div>
-        <div class="right-bar">
-            <div class="tag"  @click="$router.push('/')" id="/">HOME</div>
-            <div class="tag"  @click="$router.push('/game')"  id="/game">GAME</div>
-            <div class="tag" @click="$router.push('/message')"  id="/message">MESSAGE</div>
-            <div class="tag"  @click="$router.push('/mypage')"  id="/mypage">MYPAGE</div>
-            <div class="search-container">
-                <input type="text" class="search-bar" placeholder="검색" maxlength="30">
-                <div class="search-icon"></div>
-            </div>
-        </div>
-    </div>
-    <div class="nav-container" v-if="windowWidth == 'lg' ">
-        <div class="nav-logo"></div>
-        <div class="right-bar">
-            <div class="tag"  @click="$router.push('/')" id="/">HOME</div>
-            <div class="tag"  @click="$router.push('/game')"  id="/game">GAME</div>
-            <div class="tag" @click="$router.push('/message')"  id="/message">MESSAGE</div>
-            <div class="tag"  @click="$router.push('/mypage')"  id="/mypage">MYPAGE</div>
-            <div class="search-container">
-                <input type="text" class="search-bar" placeholder="검색" maxlength="30">
-                <div class="search-icon"></div>
-            </div>
-        </div>
-    </div> -->
+
+
+
 </template>
 
 <script>
@@ -53,24 +59,35 @@ export default {
             prev : null,
             step : 0,
             prev : -1,
-            windowHeight: window.innerHeight,
-            windowWidth: window.innerWidth,
+            width: 0,
+            height: 0,
+            size : 'lg'
         }
     },
     methods : {
-        // tagClick : function(place){
-        //     this.selectedTag.classList.toggle('tag-click')
-        //     const current = document.getElementById(place)
-        //     current.classList.add('tag-click')
-        //     this.selectedTag = current
-        //     //라우터 추가 함수 여기에 넣으면 됩니다.
-        //     router.push({path:place})
-        // },
+        handleResize(event) {
+            
+            this.width = window.innerWidth;
+            this.height = window.innerHeight;
+        }
 
+
+    },
+    beforeDestroy() {
+        // console.log("beforeDestroy...");
+        window.removeEventListener('resize', this.handleResize);
     },
 
     mounted() {
+        const viewportWidth = window.innerWidth
+        if (viewportWidth<860) {
+                this.size =  "xs"
+            }
+            else if (viewportWidth >= 860 && viewportWidth < 1200) {
+                this.size = "md"}
+            else {this.size = "lg"}
 
+        window.addEventListener('resize', this.handleResize);
 
         const list = document.querySelectorAll('.tag')
         this.emitter.on('pageChange',(value)=>{
@@ -85,19 +102,6 @@ export default {
             }
         })
         
-
-        // const basicUrl = window.location.pathname
-        // for(let i=1; i<basicUrl.length;i++){
-        //     this.getId += basicUrl.charAt(i)
-        // }
-        // this.selectedTag = document.getElementById(this.getId)
-        // if(this.selectedTag==null){ //Home에서 잘못된 URI로 접근시, ex. router-view가 적용 되지 않은 local.../main 의 주소
-        //     router.push({name:'main'})
-        //     setTimeout(()=>{
-        //         window.location.reload() // router push 이후 새로고침이 안되서 강제로 해줌
-        //     },500)
-        // }
-        // this.selectedTag.classList.add('tag-click')
         let navContainer = document.querySelector('.nav-container')
         this.prevScrollY = window.scrollY
         window.addEventListener('scroll',()=>{
@@ -114,8 +118,17 @@ export default {
         })
     },
     watch:{
+        width(){
+            if (this.width<860) {
+                this.size =  "xs"
+            }
+            else if (this.width >= 860 && this.width < 1200) {
+                this.size = "md"}
+            else {this.size = "lg"}
+        },
+
+
     }
-    
 }
 
 
