@@ -165,8 +165,10 @@ import router from '@/router';
                     await this.getUser()
                     if(auth.getAccess == ""){
                         await this.axiosGuest()
+                        this.isLogin = false
                     } else{
                         await this.readFeed()
+                        this.isLogin = true
                     }
             }
             
