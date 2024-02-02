@@ -47,13 +47,6 @@ export const useAuthStore = defineStore('auth',{
             })
             this.setAccess(value.data.accessToken)
             } catch(err){
-                if(err.response && err.response.status == 401){
-                    //401 에러 발생시 로그인 관련 오류 뜨게함
-                    alert('로그인 세션이 만료되었습니다.')
-                } else{
-                    //미발견된 에러시(서버 및 네트워크 오류) 토큰 갱신 실패
-                    alert('토큰 갱신에 실패하였습니다. 다시 로그인해주세요.')
-                }
                 this.logout()
             }
         },

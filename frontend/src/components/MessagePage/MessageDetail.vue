@@ -7,16 +7,7 @@
         <div class="message-content-box">
             <div class="message-content">
 
-                <div class="nickname">
-                    <span>닉네임</span>
-                    <input type="text" v-model="nickname">
-                </div>
-                <!-- <input type="text" v-model="message"> -->
-                <!-- <button @click.prevent="send">send</button> -->
-                <!-- <div style="width: 500px; height: 500px; overflow: scroll;"></div> -->
-
-
-
+                {{ userInfo.nickname }}
             </div>
             <textarea type="text" class="message-textarea" name="" id="" cols="30" rows="10" v-model="message">
             </textarea>
@@ -30,6 +21,7 @@
 import SockJs from 'sockjs-client'
 import Stomp from 'webstomp-client'
 import { useAuthStore } from '@/store/authStore'
+import router from '@/router'
 
 export default {
     name: 'MessageDetail',
@@ -48,7 +40,7 @@ export default {
     getUser : async function(){
       const myAuth = useAuthStore()
       try{
-        let myProfile = await auth.getUser()
+        let myProfile = await myAuth.getUser()
         this.userInfo = myProfile.data
         this.nickname = this.userInfo.nickname
       }catch(err){
@@ -89,10 +81,25 @@ export default {
       this.stompClient.send("/pub/message/text",JSON.stringify(data))
       this.message = ""
     },
-  
+    startPage: async function(){
+      const auth = useAuthStore()
+      await auth.useRefresh()
+      if(auth.getAccess != ""){
+        try{
+          await this.getUser()
+          console.log(this.userInfo)
+          this.connect()
+        } catch(err){
+           console.log(err)
+        }
+      } else{
+        router.push('/')
+        alert('회원 전용 페이지입니다.')
+      }
+    }
   },
   mounted(){
-    this.connect()
+    this.startPage()
   },
   watch:{
     receive(newValue, oldValue){
