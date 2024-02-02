@@ -43,8 +43,12 @@ export const useFeedStore = defineStore('feed',{
             return axios.post(`${server}/game/analyze?condition=${item}`,formData,{ headers })
         },
 
-        getUserProfile : async function(email){
-            return axios.get(`${server}/article/profile?userId=${1}`)
+        getUserProfile : async function(id){
+            let accessToken = useAuthStore().getAccess
+            const headers = {
+                Authorization : `Bearer ${accessToken}`
+            }
+            return axios.get(`${server}/article/profile?userId=${id}`,{headers})
         },
 
         readFeed : async function(url){
@@ -84,6 +88,22 @@ export const useFeedStore = defineStore('feed',{
             }
             return axios.get(`${server}/article/childComment?commentId=${idx}&articleId=${article}`,{headers})
         },
+        editFeed : async function(userId,articleId,content){
+            const headers={
+                Authorization : `Bearer ${useAuthStore().getAccess}`,
+                "Content-Type": 'application/json',
+            }
+            const data = {
+                userId, articleId, content
+            }
+            axios.patch(`${server}/article`,JSON.stringify(data),{headers})
+        },
+        deleteFeed : async function(articleId){
+            const headers={
+                Authorization : `Bearer ${useAuthStore().getAccess}`,
+            }
+            axios.delete(`${server}/article?articleId=${articleId}`,{headers})
+        }
         
     },
     persist: [

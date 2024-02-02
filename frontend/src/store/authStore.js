@@ -12,16 +12,22 @@ const server2 = 'https://i10d109.p.ssafy.io/api'
 export const useAuthStore = defineStore('auth',{
     state: ()=>({
         access: "",
+        userInfo : {},
     }),
     getters: {
         getAccess: (state)=>{
             return state.access
         },
-        
+        getUserInfo: (state)=>{
+            return state.userInfo
+        }
     },
     actions: {
         setAccess(token){
             this.access = token
+        },
+        setUserInfo(value){
+            this.userInfo = value
         },
         setRefresh(token){
             cookies.set("msgRefresh",token, (60*60*24))
