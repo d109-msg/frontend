@@ -36,7 +36,6 @@
 
 <script>
 import { useAuthStore } from '@/store/authStore'
-import { useCookies } from "vue3-cookies"
 export default {
     name: 'MiniProfile',
     data(){
@@ -59,10 +58,8 @@ export default {
             }
         },
         logout : function(){
-            const cookies = useCookies().cookies
             const auth = useAuthStore()
-            auth.setAccess("")
-            cookies.remove('msgRefresh')
+            auth.logout()
             window.location.reload()
         }
     },

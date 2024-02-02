@@ -68,8 +68,10 @@ export default {
         const fileImage = document.getElementById('userPhoto')
         fileImage.addEventListener('change',()=>{
             const file = fileImage.files
-            this.userPhoto = URL.createObjectURL(file[0])
-            this.photoFile = file[0]
+            if(file.length >0){
+              this.userPhoto = URL.createObjectURL(file[0])
+              this.photoFile = file[0]
+            }
         })
     },
     watch:{

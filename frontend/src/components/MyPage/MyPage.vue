@@ -63,10 +63,11 @@ export default {
       try{
         let value = await auth.getUser()
         this.userInfo = value.data
+        auth.setUserInfo(this.userInfo)
         this.userNickname = this.userInfo.nickname
         this.userEmail = this.userInfo.emailId
         this.userId = this.userInfo.id
-        console.log(this.userInfo)
+
       } catch (error) {
         auth.useRefresh()
         try{
@@ -79,29 +80,29 @@ export default {
         }
         console.log(error)}
     },
-    getFeed : async function(id){
-      const feed = useFeedStore()
-      try{
-        let value = await feed.getUserProfile(id)
-        console.log(value)
-      } catch(error) {
-        console.log(error)
-      }
-    },
+    
     openEdit(){
       this.isEdit=true;
+    },
+    startPage : async function(){
+      const auth = useAuthStore()
+      try{
+        await auth.useRefresh()
+        console.log('hi')
+        const access = auth.getAccess
+        if(access != ""){
+          const info = this.getUser()
+        }
+      } catch(err){
+      }
     }
   },
   watch:{
-    async userId(newId,old){
-      this.getFeed(newId)
-    }
   },
   mounted(){
     this.emitter.emit('pageChange',3)
-    this.getUser()
+    this.startPage()
 
-    // this.getFeed()
   }
 }
 </script>
