@@ -331,13 +331,13 @@ public class ArticleController {
                     @Content(mediaType = "application/json", schema = @Schema(implementation = CommentDto.class)) }),
             @ApiResponse(responseCode = "400", description = "댓글 작성 실패", content = @Content) })
     public ResponseEntity<?> createComment(HttpServletRequest request,
-                                           @RequestBody CreateCommentDto createCommentDto ) {
+                                           @RequestBody CreateCommentDto createCommentDto) {
 
         CommentDto commentDto = CommentDto.builder()
                 .userId((Integer) request.getAttribute("id"))
                 .articleId(createCommentDto.getArticleId())
                 .content(createCommentDto.getContent())
-                .parentCommentId(createCommentDto.getParentCommentId()) // 유효한 ID가 아니라면 null을 할당
+                .parentCommentId(createCommentDto.getParentCommentId() > 0 ? createCommentDto.getParentCommentId(): null) // 유효한 ID가 아니라면 null을 할당
                 .build();
         log.info("(controller) createComment() 댓글 작성 시작 {}", commentDto);
 

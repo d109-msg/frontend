@@ -26,7 +26,7 @@ insert into jobs (`id`, `info`, `image_url`) values
 ('의사', '의사입니다.', 'tmpurl');
 
 INSERT INTO users (email_id, email_password, nickname, sign_up_time) VALUES 
-('hong@ssafy.com', '$2a$10$8C8PCUov//Edd6tWzdvvTupTLkAXiIOPn/OZMioTWNx5NOtgHl6rq', '홍길동', NOW())
+('hong@ssafy.com', '$2a$10$8C8PCUov//Edd6tWzdvvTupTLkAXiIOPn/OZMioTWNx5NOtgHl6rq', '홍길동', NOW()),
 ('test1@naver.com', '$2a$10$8C8PCUov//Edd6tWzdvvTupTLkAXiIOPn/OZMioTWNx5NOtgHl6rq', 'test1', NOW()),
 ('test2@naver.com', '$2a$10$8C8PCUov//Edd6tWzdvvTupTLkAXiIOPn/OZMioTWNx5NOtgHl6rq', 'test2', NOW()),
 ('test3@naver.com', '$2a$10$8C8PCUov//Edd6tWzdvvTupTLkAXiIOPn/OZMioTWNx5NOtgHl6rq', 'test3', NOW()),
