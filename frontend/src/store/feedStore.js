@@ -11,7 +11,7 @@ const server2 = 'http://localhost:8080/api'
 
 export const useFeedStore = defineStore('feed',{
     state: ()=>({
-
+ 
     }),
     getters: {
 
