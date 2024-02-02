@@ -73,14 +73,13 @@
 
 	<insert id="signUpWithOauth2" parameterType="UserDto" useGeneratedKeys="true" keyProperty="id">
 		insert into users
-		(nickname, email_id, provider, refresh_token, sign_in_time, sign_up_time)
+		(nickname, email_id, provider, sign_in_time, sign_up_time)
 		values
-		(#{nickname}, #{emailId}, #{provider}, #{refreshToken}, now(), now())
+		(#{nickname}, #{emailId}, #{provider}, now(), now())
 	</insert>
 
 	<update id="signInWithOauth2" parameterType="UserDto">
 		update users set
-		refresh_token = #{refreshToken},
 		sign_in_time = now()
 		where id =
 		#{id}
