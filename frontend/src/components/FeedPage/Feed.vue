@@ -1,6 +1,16 @@
 <template>
     <div class="feed-card">
-    <div class="list-svg"></div>
+    <div class="list-svg" @click="editFlag=!editFlag">
+      <div class="list-container" v-if="userInfo.id==feed.userId && editFlag == true">
+          <p style="width: 100px;"
+          @click="deleteFeed"
+          ><img src="./Icon/delete.png" alt="">게시물 삭제</p>
+      </div>
+      <div class="list-container" v-if="userInfo.id!=feed.userId  && editFlag == true">
+          <p style="width: 100px;"><img src="./Icon/report.png" alt="">게시물 신고</p>
+      </div>
+    </div>
+    <div v-if="editFlag==true" class="close-list" @click="editFlag=false"></div>
     <div class="feed-item">
       <img class="user-img" :src="this.feed.imageUrl">
       <div class="user-info">
@@ -10,7 +20,7 @@
     </div>
     <div class="feed-comment">
     </div>
-    <img class="feed-img" :src="feed.urls[0]">
+    <img class="feed-img" :src="feed.urls[0]" @click.prevent="onDetail">
     <div class="feed-btn">
       <img class="heart-icon" src="./Icon/heart.png" 
       v-if="isLike==false"
@@ -40,6 +50,7 @@
 <script>
 import { useFeedStore } from '@/store/feedStore';
 import DetailPage from '../DetailPage/DetailPage.vue';
+import { useAuthStore } from '@/store/authStore';
 
 export default {
     name: "FeedComp",
@@ -48,6 +59,8 @@ export default {
           feed : this.item,
           detailFlag : false,
           isLike : 0,
+          userInfo : {},
+          editFlag : false,
         }
     },
     methods: {
@@ -70,7 +83,15 @@ export default {
         }catch(err){
           console.log(err)
         }
-
+      },
+      deleteFeed : async function(){
+        const feed = useFeedStore()
+        try{  
+          await feed.deleteFeed(this.feed.articleId)
+          window.location.reload()
+        } catch(err){
+          console.log(err)
+        }
       }
 
     },
@@ -83,6 +104,8 @@ export default {
     },
     mounted(){
       this.isLike = this.feed.isLike
+      const auth = useAuthStore()
+      this.userInfo = auth.getUserInfo
     }
     
 }
