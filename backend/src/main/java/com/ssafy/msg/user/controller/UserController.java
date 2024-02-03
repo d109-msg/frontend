@@ -2,8 +2,10 @@ package com.ssafy.msg.user.controller;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.UUID;
 
-import com.ssafy.msg.article.model.dto.CommentDto;
+import com.ssafy.msg.redis.model.entity.RefreshTokenEntity;
+import com.ssafy.msg.redis.model.repo.RefreshTokenRepository;
 import com.ssafy.msg.user.model.dto.*;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
@@ -75,6 +77,8 @@ public class UserController {
 
 	private final UserService userService;
 
+	private final RefreshTokenRepository refreshTokenRepository;
+
 	/*
 	 * 요청 처리 메소드 설정
 	 * 1. @GetMapping, @PostMapping, @PatchMapping, @PutMapping, @DeleteMapping으로
@@ -132,15 +136,19 @@ public class UserController {
 			
 			String accessToken = jwtUtil.createAccessToken(userDto.getId());
 			log.info("signInWithOauth2() -> Create accessToken : {}", accessToken);
-			String refreshToken = jwtUtil.createRefreshToken(userDto.getId());
+//			String refreshToken = jwtUtil.createRefreshToken(userDto.getId());
+			String refreshToken = UUID.randomUUID().toString();
 			log.info("signInWithOauth2() -> Create refreshToken : {}", refreshToken);
-			userDto.setRefreshToken(refreshToken);
+//			userDto.setRefreshToken(refreshToken);
 			
 			if (flag) {
 				userService.signUpWithOauth2(userDto);
 			} else {
 				userService.signInWithOauth2(userDto);
 			}
+
+			RefreshTokenEntity refreshTokenEntity = RefreshTokenEntity.builder().userId(userDto.getId()).refreshToken(refreshToken).build();
+			refreshTokenRepository.save(refreshTokenEntity);
 
 			TokenDto tokenDto = TokenDto.builder().accessToken(accessToken).refreshToken(refreshToken).build();
 			HttpStatus httpStauts = HttpStatus.CREATED;
@@ -203,11 +211,15 @@ public class UserController {
 		try {
 			String accessToken = jwtUtil.createAccessToken(userDto.getId());
 			log.info("signIn() -> Create accessToken : {}", accessToken);
-			String refreshToken = jwtUtil.createRefreshToken(userDto.getId());
+//			String refreshToken = jwtUtil.createRefreshToken(userDto.getId());
+			String refreshToken = UUID.randomUUID().toString();
 			log.info("signIn() -> Create refreshToken : {}", refreshToken);
 
-			userDto.setRefreshToken(refreshToken);
+//			userDto.setRefreshToken(refreshToken);
 			userService.signIn(signInDto, userDto);
+
+			RefreshTokenEntity refreshTokenEntity = RefreshTokenEntity.builder().userId(userDto.getId()).refreshToken(refreshToken).build();
+			refreshTokenRepository.save(refreshTokenEntity);
 
 			TokenDto tokenDto = TokenDto.builder().accessToken(accessToken).refreshToken(refreshToken).build();
 			HttpStatus httpStauts = HttpStatus.CREATED;
@@ -225,7 +237,7 @@ public class UserController {
 	@ApiResponses(value = { @ApiResponse(responseCode = "201", description = "액세스 토큰 재발급 성공", content = {
 			@Content(mediaType = "application/json", schema = @Schema(implementation = AccessTokenDto.class)) }),
 			@ApiResponse(responseCode = "400", description = "액세스 토큰 재발급 실패", content = @Content) })
-	@GetMapping("/token")
+	@GetMapping("/refresh")
 	public ResponseEntity<?> reissueAccessToken(HttpServletRequest request) {
 		log.info("reissueAccessToken() -> Start");
 
@@ -233,25 +245,29 @@ public class UserController {
 		if (header == null || !header.startsWith("Bearer ")) {
 			throw new TokenInvalidException();
 		}
-
 		String refreshToken = header.replace("Bearer ", "");
-		jwtUtil.verify(refreshToken, "refresh-token");
 
-		int id = jwtUtil.getId(refreshToken);
+//		jwtUtil.verify(refreshToken, "refresh-token");
+//		int id = jwtUtil.getId(refreshToken);
+//
+//		UserDto userDto = null;
+//		try {
+//			userDto = userService.findUserById(id);
+//		} catch (Exception e) {
+//			throw new UserNotFoundException();
+//		}
+//
+//		String savedRefreshToken = userDto.getRefreshToken();
+//		if (!refreshToken.equals(savedRefreshToken)) {
+//			throw new TokenInvalidException();
+//		}
 
-		UserDto userDto = null;
-		try {
-			userDto = userService.findUserById(id);
-		} catch (Exception e) {
-			throw new UserNotFoundException();
-		}
-
-		String savedRefreshToken = userDto.getRefreshToken();
-		if (!refreshToken.equals(savedRefreshToken)) {
+		RefreshTokenEntity refreshTokenEntity = refreshTokenRepository.findById(refreshToken).orElse(null);
+		if (refreshTokenEntity == null) {
 			throw new TokenInvalidException();
 		}
 
-		String accessToken = jwtUtil.createAccessToken(id);
+		String accessToken = jwtUtil.createAccessToken(refreshTokenEntity.getUserId());
 		AccessTokenDto accessTokenDto = AccessTokenDto.builder().accessToken(accessToken).build();
 
 		log.info("reissueAccessToken() -> Success");
@@ -291,10 +307,15 @@ public class UserController {
 	public ResponseEntity<?> signOut(HttpServletRequest request) {
 		log.info("signOut() -> Start");
 
-		int id = (int) request.getAttribute("id");
+		String header = request.getHeader(authorization);
+		if (header == null || !header.startsWith("Bearer ")) {
+			throw new TokenInvalidException();
+		}
+		String refreshToken = header.replace("Bearer ", "");
 
 		try {
-			userService.signOut(id);
+//			userService.signOut(id);
+			refreshTokenRepository.deleteById(refreshToken);
 			log.info("signOut() -> Success");
 			return new ResponseEntity<>(HttpStatus.OK);
 		} catch (Exception e) {
@@ -501,6 +522,59 @@ public class UserController {
 			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 		} finally {
 			log.info("followOrUnfollow() -> End");
+		}
+	}
+
+	@Operation(summary = "회원 검색"
+			, description = "입력된 검색어로 일치되는 user nickname이나 email이 일치하는 user를 찾아 내가 팔로우 하는지 여부, 나를 팔로우 하는지 여부, userId 순서로 결과를 페이지네이션하여 보여줍니다.")
+	@ApiResponses(value = { @ApiResponse(responseCode = "200", description = "회원 목록 조회 성공", content = {
+			@Content(mediaType = "application/json", schema = @Schema(implementation = SearchUsersResponseDto.class)) }),
+			@ApiResponse(responseCode = "400", description = "회원 목록 조회 실패", content = @Content) })
+	@GetMapping("/list")
+	public ResponseEntity<?> searchUsers(HttpServletRequest request,
+			 @Parameter(description = "키워드") @RequestParam(value = "keyword", required = false, defaultValue = "") String keyword,
+			 @Parameter(description = "Offset") @RequestParam(value = "offset", required = false, defaultValue = "0") Integer offset,
+			 @Parameter(description = "페이지당 타겟 개수") @RequestParam(value = "limit", required = false, defaultValue = "10") Integer limit) {
+		log.info("searchUsers() start");
+
+		String currentUrl = request.getRequestURL().toString();
+		Integer userId = (Integer) request.getAttribute("id");
+
+		log.info("searchUsers() userId : {}", userId);
+		log.info("searchUsers() keyword : {}", keyword);
+		log.info("searchUsers() offset : {}", offset);
+		log.info("searchUsers() limit : {}", limit);
+
+		SearchUsersParamDto searchUsersParamDto = SearchUsersParamDto.builder()
+				.userId(userId)
+				.keyword(keyword)
+				.limit(limit)
+				.offset(offset)
+				.build();
+
+		try {
+			List<SearchedUserDto> userList = userService.searchUsers(searchUsersParamDto);
+
+			if(userList.isEmpty()) {
+				return new ResponseEntity<>(HttpStatus.OK);
+			}
+			else {
+				log.info("searchUsers() searched userList : {}", userList);
+				int nextOffset = offset + limit;
+				String nextUrl = currentUrl + "?keyword=" + keyword + "?offset=" + nextOffset + "?limit=" + limit;
+				SearchUsersResponseDto result = SearchUsersResponseDto.builder()
+						.searchResult(userList)
+						.nextUrl(nextUrl)
+						.build();
+
+				return new ResponseEntity<>(result ,HttpStatus.OK);
+			}
+
+		} catch (Exception e) {
+			log.error("searchUsers() -> Exception : {}", e);
+			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+		} finally {
+			log.info("searchUsers() -> end");
 		}
 	}
 

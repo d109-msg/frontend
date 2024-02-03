@@ -4,10 +4,40 @@
 
 <mapper namespace="com.ssafy.msg.user.model.mapper.UserMapper">
 
+	<select id="searchUsers" parameterType="SearchUsersParamDto"
+			resultType="SearchedUserDto">
+		SELECT
+			u.id AS userId,
+			u.email_id AS userEmail,
+			u.nickname,
+			u.image_url AS imageUrl,
+			CASE
+				WHEN f_from.id IS NOT NULL THEN 1
+				ELSE 0
+				END AS isFollow,
+			CASE
+				WHEN f_to.id IS NOT NULL THEN 1
+				ELSE 0
+				END AS isMyFollower
+		FROM
+			users u
+				LEFT JOIN
+			follows f_from ON f_from.to_user_id = u.id AND f_from.from_user_id = #{userId}
+				LEFT JOIN
+			follows f_to ON f_to.from_user_id = u.id AND f_to.to_user_id = #{userId}
+		WHERE
+			u.email_id LIKE CONCAT('%', #{keyword}, '%') OR u.nickname LIKE CONCAT('%', #{keyword}, '%')
+		GROUP BY
+			u.id
+		ORDER BY
+			isFollow DESC, isMyFollower DESC, u.id ASC
+			LIMIT #{limit} OFFSET #{offset}
+	</select>
+
 	<select id="findUserByEmailId" parameterType="string"
 		resultType="UserDto">
 		select id, email_id, email_password, nickname, provider,
-		identifier, flag_admin, refresh_token, sign_in_time, sign_up_time,
+		identifier, flag_admin, sign_in_time, sign_up_time,
 		flag_private, flag_identifier, image_url, image_uuid
 		from users
 		where
@@ -18,7 +48,7 @@
 	<select id="findUserById" parameterType="int"
 		resultType="UserDto">
 		select id, email_id, email_password, nickname, provider,
-		identifier, flag_admin, refresh_token, sign_in_time, sign_up_time,
+		identifier, flag_admin, sign_in_time, sign_up_time,
 		flag_private, flag_identifier, image_url, image_uuid
 		from users
 		where
@@ -41,16 +71,15 @@
 		#{id}
 	</select>
 
-	<insert id="signUpWithOauth2" parameterType="UserDto">
+	<insert id="signUpWithOauth2" parameterType="UserDto" useGeneratedKeys="true" keyProperty="id">
 		insert into users
-		(nickname, email_id, provider, refresh_token, sign_in_time, sign_up_time)
+		(nickname, email_id, provider, sign_in_time, sign_up_time)
 		values
-		(#{nickname}, #{emailId}, #{provider}, #{refreshToken}, now(), now())
+		(#{nickname}, #{emailId}, #{provider}, now(), now())
 	</insert>
 
 	<update id="signInWithOauth2" parameterType="UserDto">
 		update users set
-		refresh_token = #{refreshToken},
 		sign_in_time = now()
 		where id =
 		#{id}
@@ -65,15 +94,14 @@
 
 	<update id="signIn" parameterType="UserDto">
 		update users set
-		refresh_token
-		= #{refreshToken}, sign_in_time = now()
+		sign_in_time = now()
 		where email_id = #{emailId}
 	</update>
 
-	<update id="signOut" parameterType="int">
-		update users set
-		refresh_token = null where id = #{id}
-	</update>
+<!--	<update id="signOut" parameterType="int">-->
+<!--		update users set-->
+<!--		refresh_token = null where id = #{id}-->
+<!--	</update>-->
 
 	<delete id="withdraw" parameterType="int">
 		delete from users where

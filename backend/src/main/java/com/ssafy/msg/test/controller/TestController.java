@@ -1,6 +1,7 @@
 package com.ssafy.msg.test.controller;
 
 
+import com.ssafy.msg.redis.model.repo.RefreshTokenRepository;
 import com.ssafy.msg.test.model.dto.TestMongo;
 import com.ssafy.msg.test.model.dto.TestRedis;
 import com.ssafy.msg.test.model.repo.TestMongoRepository;
@@ -38,41 +39,41 @@ public class TestController {
     private String serverName;
 
     private final TestMongoRepository testMongoRepository;
-    private final TestRedisRepository testRedisRepository;
+    private final RefreshTokenRepository refreshTokenRepository;
 
     @GetMapping("/mongodb")
     public String testMongo() {
-        testMongoRepository.deleteAll();
-
-        testMongoRepository.save(TestMongo.builder().firstName("Alice").lastName("Smith").build());
-        testMongoRepository.save(TestMongo.builder().firstName("Bob").lastName("Smith").build());
-
-        System.out.println("TestDtos found with findAll():");
-        System.out.println("-------------------------------");
-        for (TestMongo testMongo : testMongoRepository.findAll()) {
-            System.out.println(testMongo);
-        }
-
-        System.out.println();
-        System.out.println("TestDto found with findByFirstName('Alice'):");
-        System.out.println("--------------------------------");
-        System.out.println(testMongoRepository.findByFirstName("Alice"));
-
-        System.out.println("TestDtos found with findByLastName('Smith'):");
-        System.out.println("--------------------------------");
-        for (TestMongo testMongo : testMongoRepository.findByLastName("Smith")) {
-            System.out.println(testMongo);
-        }
+//        testMongoRepository.deleteAll();
+//
+//        testMongoRepository.save(TestMongo.builder().firstName("Alice").lastName("Smith").build());
+//        testMongoRepository.save(TestMongo.builder().firstName("Bob").lastName("Smith").build());
+//
+//        System.out.println("TestDtos found with findAll():");
+//        System.out.println("-------------------------------");
+//        for (TestMongo testMongo : testMongoRepository.findAll()) {
+//            System.out.println(testMongo);
+//        }
+//
+//        System.out.println();
+//        System.out.println("TestDto found with findByFirstName('Alice'):");
+//        System.out.println("--------------------------------");
+//        System.out.println(testMongoRepository.findByFirstName("Alice"));
+//
+//        System.out.println("TestDtos found with findByLastName('Smith'):");
+//        System.out.println("--------------------------------");
+//        for (TestMongo testMongo : testMongoRepository.findByLastName("Smith")) {
+//            System.out.println(testMongo);
+//        }
         return testMongoRepository.findAll().toString();
     }
 
 
     @GetMapping("/redis")
     public String testRedis() {
-        TestRedis testRedis = new TestRedis(1L, "refreshToken");
-        testRedisRepository.save(testRedis);
+//        TestRedis testRedis = new TestRedis(1L, "refreshToken");
+//        testRedisRepository.save(testRedis);
 
-        return testRedisRepository.findAll().toString();
+        return refreshTokenRepository.findAll().toString();
     }
 
     @GetMapping("/hc")
