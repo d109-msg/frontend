@@ -1,20 +1,20 @@
 package com.ssafy.msg.test.controller;
 
 
+import com.ssafy.msg.message.model.dto.MessageRequestDto;
+import com.ssafy.msg.mongodb.model.entity.MessageEntity;
+import com.ssafy.msg.mongodb.model.entity.MessageImageEntity;
+import com.ssafy.msg.mongodb.model.repo.MessageRepository;
 import com.ssafy.msg.redis.model.repo.RefreshTokenRepository;
-import com.ssafy.msg.test.model.dto.TestMongo;
-import com.ssafy.msg.test.model.dto.TestRedis;
 import com.ssafy.msg.test.model.repo.TestMongoRepository;
-import com.ssafy.msg.test.model.repo.TestRedisRepository;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 
@@ -40,6 +40,7 @@ public class TestController {
 
     private final TestMongoRepository testMongoRepository;
     private final RefreshTokenRepository refreshTokenRepository;
+    private final MessageRepository messageRepository;
 
     @GetMapping("/mongodb")
     public String testMongo() {
@@ -91,4 +92,22 @@ public class TestController {
 
         return ResponseEntity.ok(serverEnv);
     }
+
+    @PostMapping("/mongodb/save")
+    public ResponseEntity<?> saveMongo(@RequestBody MessageRequestDto messageRequestDto) {
+
+        MessageEntity messageEntity = messageRequestDto.toEntity();
+        messageRepository.save(messageEntity);
+
+        return ResponseEntity.ok("success");
+    }
+
+    @GetMapping("/mongodb/{roomId}")
+    public ResponseEntity<?> getMongo(String roomId) {
+
+        List<MessageEntity> messages = messageRepository.findByRoomId(roomId);
+
+        return ResponseEntity.ok(messages);
+    }
+
 }
