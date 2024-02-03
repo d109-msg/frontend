@@ -141,7 +141,7 @@ public class ArticleController {
     }
 
     // 게시물 상세 보기 (댓글 포함(대댓글 미포함))
-    @GetMapping(value = "")
+    @GetMapping(value = "/detail")
     @Operation(summary = "게시물 상세", description = "게시물 상세 내용 보기")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "게시물 상세 조회 성공", content ={
