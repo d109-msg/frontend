@@ -27,7 +27,17 @@ const routes = [
             {   
                 name: "messgage",
                 path: "/message",
-                component: MessagePage
+                component: MessagePage,
+                beforeEnter: (to, from, next) => {
+                    const auth = useAuthStore()
+                    console.log(auth.getAccess)
+                    if(auth.getAccess==""){
+                        alert('로그인이 필요한 페이지입니다.')
+                        return next(from.fullPath)
+                    }else{
+                        return next()
+                    }
+                }
             },
             {
                 name: "game",
@@ -37,6 +47,16 @@ const routes = [
             {   name: "mypage",
                 path: "/mypage",
                 component : MyPage,
+                beforeEnter: (to, from, next) => {
+                    const auth = useAuthStore()
+                    console.log(auth.getAccess)
+                    if(auth.getAccess==""){
+                        alert('로그인이 필요한 페이지입니다.')
+                        return next(from.fullPath)
+                    }else{
+                        return next()
+                    }
+                }
             },
             {
                 name: "room",

@@ -6,8 +6,8 @@ import axios from "axios"
 import { useAuthStore } from "./authStore"
 
 const cookies = useCookies().cookies
-const server =  'https://i10d109.p.ssafy.io/api'
-const server2 = 'http://localhost:8080/api'
+const server =  'http://localhost:8080/api'
+const server2 = 'https://i10d109.p.ssafy.io/api'
 
 export const useFeedStore = defineStore('feed',{
     state: ()=>({
@@ -59,10 +59,12 @@ export const useFeedStore = defineStore('feed',{
             return axios.get(url,{headers})
         },
         getDetail : async function(idx){
+            const access = useAuthStore().getAccess
             const headers = {
-                Authorization : `Bearer ${useAuthStore().getAccess}`
+                Authorization : `Bearer ${access}`
             }
             return axios.get(`${server}/article?articleId=${idx}`,{headers})
+        
         },
         writeComment : async function(id,content,commentId){
             const headers= {
@@ -110,7 +112,7 @@ export const useFeedStore = defineStore('feed',{
                 Authorization : `Bearer ${useAuthStore().getAccess}`,
             }
             axios.delete(`${server}/article?articleId=${articleId}`,{headers})
-        }
+        },
         
     },
     persist: [

@@ -87,16 +87,9 @@ export default {
     startPage : async function(){
       const auth = useAuthStore()
       try{
-        const access = auth.getAccess
-        if(access != ""){
           await auth.useRefresh()
           const info = await this.getUser()
-        }else{
-          router.push('/')
-          alert('회원 전용 페이지입니다.')
-        }
-      } catch(err){
-      }
+      } catch(err){console.log(err)}
     }
   },
   watch:{

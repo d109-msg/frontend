@@ -54,10 +54,8 @@ export default {
     },
     mounted(){
       const auth = useAuthStore()
-      if(auth.getAccess != ""){
-        this.myInfo = auth.getUserInfo
-        this.getFeed()
-      }
+      this.myInfo = auth.getUserInfo
+      this.getFeed()
     },
     
     

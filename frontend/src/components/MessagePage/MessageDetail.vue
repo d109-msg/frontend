@@ -119,7 +119,6 @@ export default {
     },
     startPage: async function(){
       const auth = useAuthStore()
-      if(auth.getAccess != ""){
         await auth.useRefresh()
         try{
           await this.getUser()
@@ -128,10 +127,6 @@ export default {
         } catch(err){
            console.log(err)
         }
-      } else{
-        router.push('/')
-        alert('회원 전용 페이지입니다.')
-      }
     }
   },
   mounted(){

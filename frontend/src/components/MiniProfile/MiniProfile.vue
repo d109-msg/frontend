@@ -59,8 +59,10 @@ export default {
         const auth = useAuthStore()
         if(auth.getAccess == ""){
             this.isLogin = false
+            //로그인 여부를 getAccess의 토큰 여부로 검색, isLogin을 일종의 플래그로 둠 이를 통해 위의 :src(이미지)에서 비로그인일 시 undefined 오류 방지
         } else{
             this.isLogin = true
+            //로그인 여부를 getAccess의 토큰 여부로 검색, isLogin을 일종의 플래그로 둠 이를 통해 위의 :src(이미지)에서 비로그인일 시 undefined 오류 방지
         }
 
     }
