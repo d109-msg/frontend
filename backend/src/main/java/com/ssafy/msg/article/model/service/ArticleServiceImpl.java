@@ -84,10 +84,36 @@ public class ArticleServiceImpl implements ArticleService{
         }
 
         int offset = articleByRoomIdDto.getOffset() + articleByRoomIdDto.getLimit();
-        String nextUrl = articleByRoomIdDto.getCurrentUrl() +"?roomId=" + articleByRoomIdDto.getRoomId() + "?offset=" + offset + "&limit=" + articleByRoomIdDto.getLimit() ;
+        String nextUrl = articleByRoomIdDto.getCurrentUrl() +"?roomId=" + articleByRoomIdDto.getRoomId() + "?offset=" + offset + "&limit=" + articleByRoomIdDto.getLimit();
 
         return RoomFeedResponseDto.builder().articles(resultList).nextUrl(nextUrl).build();
     }
+
+    // 비회원 유저 공개 피드
+    @Override
+    public GusetFeedResponseDto getGuestFeed(FeedParamDto feedParamDto) throws Exception {
+        log.info("(ArticleServiceImpl) 게스트 피드 조회 시작");
+        List<GuestArticleResultDto> guestArticleResultDtos = articleMapper.getGuestFeed(feedParamDto);
+        List<GuestArticleResponseDto> guestArticleResponseDtos = new ArrayList<>();
+        log.info("(ArticleServiceImpl)  feedParamDto {}", feedParamDto);
+
+        for (GuestArticleResultDto ls : guestArticleResultDtos) {
+            GuestArticleResponseDto dto = new GuestArticleResponseDto(ls);
+
+            // 댓글 넣어주기
+            dto.setCommentList(getComments(CommentDto.builder().articleId(ls.getArticleId()).build()));
+
+            guestArticleResponseDtos.add(dto);
+        }
+
+
+        log.info("(ArticleServiceImpl) 테스트{}", feedParamDto);
+        int offset = feedParamDto.getOffset() + feedParamDto.getLimit();
+        String nextUrl = feedParamDto.getCurrentUrl() + "?offset" + offset + "&limit" + feedParamDto.getOffset();
+
+        return GusetFeedResponseDto.builder().articles(guestArticleResponseDtos).nextUrl(nextUrl).build();
+    }
+
 
 // 게시물 수정
 
@@ -115,6 +141,7 @@ public class ArticleServiceImpl implements ArticleService{
 
     }
 
+    // 게시물 상세 보기
     @Override
     public ArticleDetailDto getArticleDetail(ArticleDto articleDto) throws Exception {
         log.info("(ArticleServiceImpl) getArticleDetail 시작(이미지 제외)");
@@ -138,16 +165,20 @@ public class ArticleServiceImpl implements ArticleService{
 
     }
 
+    // 피드 게시물 조회
     @Override
     public List<ArticleDetailDto> getFeedArticleList(FeedParamDto feedParamDto) throws Exception {
         log.info("(ArticleServiceImpl) getFeed 피드 게시물 리스트 조회 시작");
+
         List<ArticleDetailDto> articleList = articleMapper.getFeedArticleList(feedParamDto);
 
         List<ArticleDetailDto> feedArticleList = new ArrayList<>();
 
         for (ArticleDetailDto at : articleList) { // 받아온 팔로우하는 사람들의 게시물 리스트를 받아서 돌린다
+
             ArticleDto articleDto = ArticleDto.builder().id(at.getArticleId()).userId(feedParamDto.getUserId()).build();
             ArticleDetailDto articleDetail = getArticleDetail(articleDto);
+
             at.setUrls(articleDetail.getUrls());
 
             at.setIsLike(articleDetail.getIsLike());
@@ -160,7 +191,7 @@ public class ArticleServiceImpl implements ArticleService{
 
     }
 
-    // 비로그인 혹은 팔로워 없을 때 보여주는 게시물 가져오기
+    // 비로그인 혹은 팔로워 없을 때 보여주는 게시물 가져오기 (구버전 5개만 보여주는것)
     @Override
     public List<ArticleDetailDto> getDefaultFeedList() throws Exception {
         List<ArticleDetailDto> articleList = articleMapper.getDefaultFeedList();
@@ -247,11 +278,7 @@ public class ArticleServiceImpl implements ArticleService{
 
     }
 
-    /**
-     * content와 commentId를 받아 댓글 내용 수정
-     * @param updateCommentDto
-     * @throws Exception
-     */
+
     @Override
     public void updateComment(UpdateCommentDto updateCommentDto) throws Exception {
         articleMapper.updateComment(updateCommentDto);
