@@ -1,7 +1,6 @@
 package com.ssafy.msg.article.model.mapper;
 
 import com.ssafy.msg.article.model.dto.*;
-import org.apache.ibatis.jdbc.SQL;
 
 import java.sql.SQLException;
 import java.util.List;
@@ -69,7 +68,7 @@ public interface ArticleMapper {
 
     List<ArticleReportDto> getArticleReports(int userId) throws SQLException;
 
-    List<GuestArticleDto> getGuestFeed() throws SQLException;
+    List<GuestArticleResultDto> getGuestFeed(FeedParamDto feedParamDto) throws SQLException;
 
 
 }

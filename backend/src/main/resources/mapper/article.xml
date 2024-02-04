@@ -46,12 +46,32 @@
 
     </select>
 
-<!--&lt;!&ndash;    비회원 피드 &ndash;&gt;-->
-<!--    <select id="getGuestFeed" resultType="">-->
-<!--        select *-->
-<!--        from articles-->
-<!--        where id &lt;= 5;-->
-<!--    </select>-->
+<!--    비회원 피드 보기 -->
+    <select id="getGuestFeed" parameterType="FeedParamDto" resultType="GuestArticleResultDto">
+        SELECT
+            a.id AS articleId,
+            a.user_id,
+            u.nickname,
+            u.email_id,
+            a.content,
+            a.create_time,
+            COALESCE(l.likes_count, 0) AS likes_count, -- 좋아요 개수가 없는 경우 0으로 표시
+            GROUP_CONCAT(ai.url ORDER BY ai.id SEPARATOR ',') AS urls
+        FROM articles a
+                 LEFT JOIN users u ON a.user_id = u.id
+                 LEFT JOIN (
+                        SELECT
+                            article_id,
+                            COUNT(*) AS likes_count -- 각 article_id에 대한 좋아요의 수를 센다.
+                        FROM article_likes
+                        GROUP BY article_id) l ON a.id = l.article_id
+                 LEFT JOIN article_images ai ON a.id = ai.article_id
+        GROUP BY a.id
+        ORDER BY likes_count DESC
+            LIMIT #{limit} OFFSET #{offset};
+
+
+    </select>
 
     <select id="getArticleListByRoomId" resultType="RoomArticleResultDto" parameterType="ArticleByRoomIdDto">
         SELECT

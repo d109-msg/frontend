@@ -30,6 +30,7 @@ import java.util.List;
 public class ArticleController {
     private final ArticleService articleService;
 
+    // 게시물 작성
     @PostMapping(value = "/create",
             consumes = MediaType.MULTIPART_FORM_DATA_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE)
@@ -254,16 +255,23 @@ public class ArticleController {
     @GetMapping("/guestFeed")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "게스트 피드 조회 성공", content ={
-                    @Content(mediaType = "application/json", schema = @Schema(implementation = GuestArticleDto.class)) }),
+                    @Content(mediaType = "application/json", schema = @Schema(implementation = GuestArticleResponseDto.class)) }),
             @ApiResponse(responseCode = "400", description = "게스트 피드 조회 실패", content = @Content) })
-    public ResponseEntity<?> getGuestFeed() {
+    public ResponseEntity<?> getGuestFeed(@RequestParam(value = "offset", required = false, defaultValue = "0") Integer offset,
+                                          @RequestParam(value = "limit", required = false, defaultValue = "5") Integer limit,
+                                          HttpServletRequest request) {
         log.info("(ArticleController) 게스트 피드 리스트");
+        String currentUrl = request.getRequestURL().toString();
+        FeedParamDto feedParamDto = FeedParamDto.builder().offset(offset).limit(limit).currentUrl(currentUrl).build();
 
         try {
-            List<ArticleDetailDto> articleDetailDtos = articleService.getDefaultFeedList();
-            return new ResponseEntity<>(articleDetailDtos, HttpStatus.OK);
+            GusetFeedResponseDto result = articleService.getGuestFeed(feedParamDto);
+            return new ResponseEntity<>(result, HttpStatus.OK);
         } catch (Exception e) {
-            throw new RuntimeException(e);
+            log.error("(ArticleController) 게시물 피드 조회 실패", e);
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        } finally {
+            log.info("(ArticleController) 게스트 피드 조회 끝");
         }
 
 
