@@ -89,7 +89,7 @@ CREATE TABLE `users` (
   `identifier` varchar(50) DEFAULT NULL,
   `flag_identifier` int(11) DEFAULT 0,
   `flag_admin` int(11) NOT NULL DEFAULT 0,
-  `refresh_token` varchar(300) DEFAULT NULL,
+  `firebase_token` varchar(300) DEFAULT NULL,
   `image_url` varchar(300) DEFAULT NULL,
   `image_uuid` varchar(100) DEFAULT NULL,
   `flag_private` int(11) NOT NULL DEFAULT 0,
@@ -249,10 +249,10 @@ CREATE TABLE `daily_missions` (
   KEY `daily_missions_articles_FK` (`article_id`),
   CONSTRAINT `daily_missions_articles_FK` FOREIGN KEY (`article_id`) REFERENCES `articles` (`id`),
   CONSTRAINT `daily_missions_missions_FK` FOREIGN KEY (`mission_id`) REFERENCES `missions` (`id`),
-  CONSTRAINT `daily_missions_participants_FK` FOREIGN KEY (`participant_id`) REFERENCES `participants` (`id`),
-  CONSTRAINT `daily_missions_users_FK` FOREIGN KEY (`normal_vote`) REFERENCES `participants` (`id`),
-  CONSTRAINT `daily_missions_users_FK_1` FOREIGN KEY (`mafia_vote`) REFERENCES `participants` (`id`),
-  CONSTRAINT `daily_missions_users_FK_2` FOREIGN KEY (`doctor_vote`) REFERENCES `participants` (`id`)
+  CONSTRAINT `daily_missions_participants_FK` FOREIGN KEY (`participant_id`) REFERENCES `participants` (`id`) ON DELETE CASCADE,
+  CONSTRAINT `daily_missions_users_FK` FOREIGN KEY (`normal_vote`) REFERENCES `participants` (`id`) ON DELETE CASCADE,
+  CONSTRAINT `daily_missions_users_FK_1` FOREIGN KEY (`mafia_vote`) REFERENCES `participants` (`id`) ON DELETE CASCADE,
+  CONSTRAINT `daily_missions_users_FK_2` FOREIGN KEY (`doctor_vote`) REFERENCES `participants` (`id`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 
