@@ -99,6 +99,7 @@ public class ArticleServiceImpl implements ArticleService{
         for (GuestArticleResultDto ls : guestArticleResultDtos) {
             GuestArticleResponseDto dto = new GuestArticleResponseDto(ls);
 
+            //댓글 넣어주기
             dto.setCommentList(getComments(CommentDto.builder().articleId(ls.getArticleId()).build()));
 
             guestArticleResponseDtos.add(dto);
