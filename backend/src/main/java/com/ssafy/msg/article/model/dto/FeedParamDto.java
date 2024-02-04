@@ -20,4 +20,6 @@ public class FeedParamDto {
 
     @Schema(description = "페이지당 타겟 개수")
     private int limit;
+
+    private String currentUrl;
 }
