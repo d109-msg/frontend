@@ -3,8 +3,10 @@
     background: url(../Img/banner.png), lightgray 50%;
     background-repeat: no-repeat;
     background-size:cover ;
-    height: 494px;
+    background-position: center;
     width: 100%;
+    height: auto;
+    min-height: 500px;
     margin-top: 80px;
 }
 

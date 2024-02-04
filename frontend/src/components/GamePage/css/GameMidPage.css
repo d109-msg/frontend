@@ -14,23 +14,31 @@
 
 .create-room-btn{
     background: url('../Img/button_img2.PNG');
-    background-size: contain;
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: center;
     color: #fff;
     text-shadow:1px 1px 1px #000;
+    margin: 5px;
 }
 
 .enter-room-btn{
     background: url('../Img/button_img1.png');
     background-repeat: no-repeat;
     background-size: cover;
+    background-position: center;
     color: #fff;
     text-shadow:1px 1px 1px #000;
+    margin: 5px;
 }
 
 .game-guide-btn{
     background: url('../Img/button_img3.png');
     background-repeat: no-repeat;
     background-size: cover;
+    background-position: center;
     color: #fff;
     text-shadow:1px 1px 1px #000;
+    margin: 5px;
+
 }
