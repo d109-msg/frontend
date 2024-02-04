@@ -30,6 +30,7 @@ import java.util.List;
 public class ArticleController {
     private final ArticleService articleService;
 
+    // 게시물 작성
     @PostMapping(value = "/create",
             consumes = MediaType.MULTIPART_FORM_DATA_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE)
@@ -204,7 +205,7 @@ public class ArticleController {
                     @Content(mediaType = "application/json", schema = @Schema(implementation = FeedResponseDto.class)) }),
             @ApiResponse(responseCode = "400", description = "피드 게시물 조회 실패", content = @Content) })
     public ResponseEntity<?> getFeedArticleList(HttpServletRequest request,
-            @Parameter(description = "마지막으로 로딩한 타겟") @RequestParam(value = "offset", required = false) Integer offset,
+            @Parameter(description = "마지막으로 로딩한 타겟") @RequestParam(value = "offset", required = false, defaultValue = "0") Integer offset,
             @Parameter(description = "페이지당 타겟 개수") @RequestParam(value = "limit", required = false, defaultValue = "5") Integer limit) {
         log.info("getFollowList() -> Start");
         log.info("getFollowList() -> Receive offset : {}", offset);
@@ -212,7 +213,7 @@ public class ArticleController {
 
         int userId = (Integer) request.getAttribute("id");
         if (offset == null) {
-            offset = Integer.MAX_VALUE;
+            offset = 0;
         }
 
         FeedParamDto feedParamDto = FeedParamDto.builder()
@@ -224,9 +225,13 @@ public class ArticleController {
         try {
             List<ArticleDetailDto> articleDetailDtos = articleService.getFeedArticleList(feedParamDto);
 
+            String currentUrl1 = request.getRequestURL().toString();
             //  보여줄 피드가 없을 때 조건 넣어주기
             if (articleDetailDtos.isEmpty()) {
-                articleDetailDtos = articleService.getDefaultFeedList();
+                feedParamDto.setCurrentUrl(currentUrl1);
+                log.info("(ArticleController){}", currentUrl1);
+                GusetFeedResponseDto result = articleService.getGuestFeed(feedParamDto);
+                return new ResponseEntity<>(result, HttpStatus.OK);
 
             }
 
@@ -252,24 +257,30 @@ public class ArticleController {
 
     // 비회원 메인 페이지
     @GetMapping("/guestFeed")
+    @Operation(summary = "비회원 피드", description = "비로그인 시 게스트로 볼 수 있는 피드")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "게스트 피드 조회 성공", content ={
-                    @Content(mediaType = "application/json", schema = @Schema(implementation = GuestArticleDto.class)) }),
+                    @Content(mediaType = "application/json", schema = @Schema(implementation = GuestArticleResponseDto.class)) }),
             @ApiResponse(responseCode = "400", description = "게스트 피드 조회 실패", content = @Content) })
-    public ResponseEntity<?> getGuestFeed() {
+    public ResponseEntity<?> getGuestFeed(@RequestParam(value = "offset", required = false, defaultValue = "0") Integer offset,
+                                          @RequestParam(value = "limit", required = false, defaultValue = "5") Integer limit,
+                                          HttpServletRequest request) {
         log.info("(ArticleController) 게스트 피드 리스트");
+        String currentUrl = request.getRequestURL().toString();
+        log.info("{}  ", currentUrl);
+        FeedParamDto feedParamDto = FeedParamDto.builder().offset(offset).limit(limit).currentUrl(currentUrl).build();
 
         try {
-            List<ArticleDetailDto> articleDetailDtos = articleService.getDefaultFeedList();
-            return new ResponseEntity<>(articleDetailDtos, HttpStatus.OK);
+            GusetFeedResponseDto result = articleService.getGuestFeed(feedParamDto);
+            return new ResponseEntity<>(result, HttpStatus.OK);
         } catch (Exception e) {
-            throw new RuntimeException(e);
+            log.error("(ArticleController) 게시물 피드 조회 실패", e);
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        } finally {
+            log.info("(ArticleController) 게스트 피드 조회 끝");
         }
 
-
     }
-
-
 
     // 게시물 좋아요 누르기
     @PostMapping(value = "/like")
