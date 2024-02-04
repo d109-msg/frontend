@@ -32,6 +32,7 @@ export default {
     methods:{
         getUser : async function(){
             const auth = useAuthStore()
+
             if(auth.getAccess!=""){
                 try{
                     await auth.useRefresh()
@@ -39,6 +40,7 @@ export default {
                     // 잘못될 시 authStore의 logout function 작동 -> 세션에 저장된 정보들 다 비워줌
                     let value = await auth.getUser()
                     this.userInfo = value.data
+                    console.log(this.userInfo)
                 } catch(err){
                     await auth.logout()
                 }
@@ -46,7 +48,7 @@ export default {
         },
 
         startPage : async function(){
-            await this.getUser
+            await this.getUser()
             this.emitter.emit('pageChange',1)
             let banner = document.querySelector('.banner')
             this.prevScrollY = window.scrollY
