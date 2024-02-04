@@ -5,7 +5,7 @@
             <img class="logout" src="./logout.png" v-if="isLogin" @click="logout" @mouseover="toolFlag=true" @mouseleave="toolFlag=false">
             <div class="tool-tip" v-if="toolFlag"><span>Logout</span></div>
         </div>
-        <div class="my-mini-content" v-if="userInfo.imageUrl!=undefined">
+        <div class="my-mini-content" v-if="userFlag">
             <img class="mini-image" :src="userInfo.imageUrl">
             <div class="mini-name">{{ userInfo.nickname }}</div>
             <div class="mini-comment">fun, daily, mafia game</div>
@@ -18,7 +18,7 @@
                 <span class="count">24</span>
             </div>
         </div>
-        <div class="my-mini-content" v-if="userInfo.imageUrl == undefined">
+        <div class="my-mini-content" v-if="!userFlag">
             <img class="mini-image" src="./default.png">
             <div class="mini-name">Anonymous</div>
             <div class="mini-comment">fun, daily, mafia game!!!</div>
@@ -42,6 +42,8 @@ export default {
         return{
             isLogin : false,
             toolFlag : false,
+            user : {},
+            userFlag : false,
         }
     },
     methods:{
@@ -54,6 +56,17 @@ export default {
     },
     props:{
         userInfo : Object,
+    },
+
+    watch:{
+        userInfo(nv,ov){
+            Object.keys(nv).forEach(item=>{
+                if(item == "imageUrl"){
+                    this.userFlag = true
+                }
+            })
+            
+        }
     },
     mounted(){
         const auth = useAuthStore()
