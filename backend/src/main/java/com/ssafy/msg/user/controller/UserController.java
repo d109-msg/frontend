@@ -275,7 +275,7 @@ public class UserController {
 		return new ResponseEntity<>(accessTokenDto, HttpStatus.CREATED);
 	}
 
-	@Operation(summary = "회원정보 조회", description = "액세스 토큰으로 회원정보 조회")
+	@Operation(summary = "본인정보 조회", description = "액세스 토큰으로 회원정보 조회")
 	@ApiResponses(value = {
 			@ApiResponse(responseCode = "200", description = "회원정보 조회 성공", content = {
 					@Content(mediaType = "application/json", schema = @Schema(implementation = UserInfoDto.class)) }),
@@ -299,6 +299,31 @@ public class UserController {
 			log.info("getUserInfo() -> End");
 		}
 	}
+
+	@Operation(summary = "타인정보 조회", description = "액세스 토큰으로 타인정보 조회")
+	@ApiResponses(value = {
+			@ApiResponse(responseCode = "200", description = "타인정보 조회 성공", content = {
+					@Content(mediaType = "application/json", schema = @Schema(implementation = UserInfoDto.class)) }),
+			@ApiResponse(responseCode = "404", description = "타인정보 조회 실패", content = @Content) })
+	@GetMapping("/info/{id}")
+	public ResponseEntity<?> getOtherUserInfo(HttpServletRequest request, @PathVariable("id") int targetId) {
+		log.info("getOtherUserInfo() -> Start");
+
+		int id = (int) request.getAttribute("id");
+
+		TargetUserInfoDto targetUserInfoDto = null;
+		try {
+			targetUserInfoDto = userService.getTargetUserInfo(targetId);
+			log.info("getOtherUserInfo() -> Success");
+			return new ResponseEntity<>(targetUserInfoDto, HttpStatus.OK);
+		} catch (Exception e) {
+			log.error("getOtherUserInfo() -> Exception : {}", e);
+			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+		} finally {
+			log.info("getOtherUserInfo() -> End");
+		}
+	}
+
 
 	@Operation(summary = "로그아웃", description = "액세스 토큰으로 로그아웃")
 	@ApiResponses(value = { @ApiResponse(responseCode = "200", description = "로그아웃 성공", content = @Content),

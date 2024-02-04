@@ -48,4 +48,6 @@ public interface UserMapper {
 	GetBioDto getBio(BioDto bioDto) throws SQLException;
 
 	List<SearchedUserDto> searchUsers(SearchUsersParamDto searchUsersParamDto) throws SQLException;
+
+    TargetUserInfoDto getTargetUserInfo(int targetId) throws SQLException;
 }
