@@ -6,7 +6,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-@Schema(description = "회원정보 조회에 대한 응답 DTO")
+@Schema(description = "본인정보 조회에 대한 응답 DTO")
 @Data
 @Builder
 @NoArgsConstructor
@@ -47,5 +47,8 @@ public class UserInfoDto {
 	
 	@Schema(description = "프로필 이미지 uuid", nullable = false)
 	private String imageUuid;
+
+	@Schema(description = "자기소개", nullable = true)
+	private String bio;
 	
 }

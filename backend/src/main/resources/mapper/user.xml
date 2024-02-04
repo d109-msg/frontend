@@ -65,7 +65,7 @@
 		sign_in_time, sign_up_time,
 		flag_private, flag_identifier,
 		image_url,
-		image_uuid
+		image_uuid, bio
 		from users
 		where id =
 		#{id}
@@ -206,6 +206,17 @@
 		where id = #{userId}
 	</select>
 
+	<select id="getTargetUserInfo" parameterType="int"
+		resultType="TargetUserInfoDto">
+		select id, nickname, email_id,
+		identifier,
+		image_url,
+		image_uuid,
+		bio
+		from users
+		where id =
+		#{id}
+	</select>
 
 </mapper>
 
