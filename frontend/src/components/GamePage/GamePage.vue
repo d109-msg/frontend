@@ -1,17 +1,18 @@
 <template>
   <div>
-    <div class="banner">
-        <div class="search-box">
-            <input class="search-bar" type="text" value="초대코드 입력">
-            <div class="search-btn">입장</div>
+    <div class="game-banner-box">
+        <div class="game-banner">
+            <div class="search-box">
+                <input class="search-bar" type="text" placeholder="초대코드 입력" >
+                <div class="search-btn">입장</div>
+            </div>
         </div>
     </div>
-    <GameMidPageVue></GameMidPageVue>
-    <div class="game-bot-box">
-        <GameRoomPageVue class="game-room-box"></GameRoomPageVue>
-        <MiniProfile :userInfo="userInfo"/>
-
-    </div>
+        <GameMidPageVue></GameMidPageVue>
+        <div class="game-bot-box">
+            <GameRoomPageVue class="game-room-box"></GameRoomPageVue>
+            <MiniProfile v-if="size == 'lg'" :userInfo="userInfo"/>
+        </div>
   </div>
 </template>
 
@@ -27,7 +28,15 @@ export default {
         return{
             prevScrollY : '',
             userInfo : {},
+            width: 0,
+            height: 0,
+            size : 'lg'
         }
+    },
+    components:{
+        GameMidPageVue,
+        GameRoomPageVue,
+        MiniProfile,
     },
     methods:{
         getUser : async function(){
@@ -48,29 +57,47 @@ export default {
         startPage : async function(){
             await this.getUser
             this.emitter.emit('pageChange',1)
-            let banner = document.querySelector('.banner')
-            this.prevScrollY = window.scrollY
-            window.addEventListener('scroll',()=>{
-                let nowScrollY = window.scrollY
-                if(this.prevScrollY < nowScrollY){  
-                    banner.classList.remove('banner-up-event')
-                    banner.classList.add('banner-down-event')
-                }else{
-                    banner.classList.add('banner-up-event')
-                    banner.classList.remove('banner-down-event')
+        },
+        handleResize(event) {
+            this.width = window.innerWidth;
+            this.height = window.innerHeight;
+        },
+        reactiveSize : function(){
+            const viewportWidth = window.innerWidth
+            if (viewportWidth<860) {
+                    this.size =  "xs"
                 }
-                this.prevScrollY = nowScrollY
-            })
-        }
+                else if (viewportWidth >= 860 && viewportWidth < 1200) {
+                    this.size = "md"}
+                else {this.size = "lg"}
+            window.addEventListener('resize', this.handleResize);
+        },
     },
-    components:{
-        GameMidPageVue,
-        GameRoomPageVue,
-        MiniProfile,
+    beforeDestroy() {
+        // console.log("beforeDestroy...");
+        window.removeEventListener('resize', this.handleResize);
     },
     mounted(){
         this.startPage()
+        this.reactiveSize()
+
     },
+    watch:{
+      width(){
+            if (this.width<440) {
+                this.size =  "xs"
+                // console.log(this.size)
+            }
+            else if (this.width >= 440 && this.width < 1100) {
+                this.size = "md"
+                // console.log(this.size)
+            }
+            else {
+                this.size = "lg"
+                // console.log(this.size)
+        }
+        },
+    }
 }
 </script>
 

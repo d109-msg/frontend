@@ -1,44 +1,173 @@
+@media screen and (max-width:440px){
+    .game-mid-box{
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        margin: 5%;
+        width: 90%;
+        height: 100px;
+    }
 
-.create-room-btn, .enter-room-btn, .game-guide-btn{
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    width: 400px;
-    height: 200px;
-    /* border: 1px solid black; */
-    border-radius: 15px;
-    box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.2);
-    font-size: 30px;
-    background-color:#ffffff;
+    .create-room-btn, .enter-room-btn, .game-guide-btn{
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        width: 100%;
+        height: 90%;
+        /* border: 1px solid black; */
+        border-radius: 15px;
+        box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.2);
+        font-size: 30px;
+        background-color:#ffffff;
+        font-size: 1em;
+    }
+    
+    .create-room-btn{
+        background: url('../Img/button_img2.PNG');
+        background-repeat: no-repeat;
+        background-size: cover;
+        background-position: center;
+        color: #fff;
+        text-shadow:1px 1px 1px #000;
+        margin: 5px;
+    }
+    
+    .enter-room-btn{
+        background: url('../Img/button_img1.png');
+        background-repeat: no-repeat;
+        background-size: cover;
+        background-position: center;
+        color: #fff;
+        text-shadow:1px 1px 1px #000;
+        margin: 5px;
+    }
+    
+    .game-guide-btn{
+        background: url('../Img/button_img3.png');
+        background-repeat: no-repeat;
+        background-size: cover;
+        background-position: center;
+        color: #fff;
+        text-shadow:1px 1px 1px #000;
+        margin: 5px;
+    
+    }
 }
 
-.create-room-btn{
-    background: url('../Img/button_img2.PNG');
-    background-repeat: no-repeat;
-    background-size: cover;
-    background-position: center;
-    color: #fff;
-    text-shadow:1px 1px 1px #000;
-    margin: 5px;
+@media screen and (min-width:441px){
+    .game-mid-box{
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        margin-left: 5%;
+        width: 90%;
+        height: 200px;
+    }
+
+    .create-room-btn, .enter-room-btn, .game-guide-btn{
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        width: 100%;
+        height: 90%;
+        /* border: 1px solid black; */
+        border-radius: 15px;
+        box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.2);
+        font-size: 30px;
+        background-color:#ffffff;
+        font-size: 1em;
+    }
+    
+    .create-room-btn{
+        background: url('../Img/button_img2.PNG');
+        background-repeat: no-repeat;
+        background-size: cover;
+        background-position: center;
+        color: #fff;
+        text-shadow:1px 1px 1px #000;
+        margin: 5px;
+    }
+    
+    .enter-room-btn{
+        background: url('../Img/button_img1.png');
+        background-repeat: no-repeat;
+        background-size: cover;
+        background-position: center;
+        color: #fff;
+        text-shadow:1px 1px 1px #000;
+        margin: 5px;
+    }
+    
+    .game-guide-btn{
+        background: url('../Img/button_img3.png');
+        background-repeat: no-repeat;
+        background-size: cover;
+        background-position: center;
+        color: #fff;
+        text-shadow:1px 1px 1px #000;
+        margin: 5px;
+    
+    }
 }
 
-.enter-room-btn{
-    background: url('../Img/button_img1.png');
-    background-repeat: no-repeat;
-    background-size: cover;
-    background-position: center;
-    color: #fff;
-    text-shadow:1px 1px 1px #000;
-    margin: 5px;
+@media screen and (min-width:861px){
+    .game-mid-box{
+        display: flex;
+        flex-direction: row;
+        justify-content: space-evenly;        
+        justify-content: center;
+        align-items: center;
+        width: 100%;
+        height: 250px;
+        padding: 25px;
+        margin: 0;
+    }
+    /* border: 3px rebeccapurple solid; */
+
+
+    .create-room-btn, .enter-room-btn, .game-guide-btn{
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        width: 400px;
+        height: 200px;
+        /* border: 1px solid black; */
+        border-radius: 15px;
+        box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.2);
+        font-size: 30px;
+        background-color:#ffffff;
+        font-size: 1.5em;
+    }
+    
+    .create-room-btn{
+        background: url('../Img/button_img2.PNG');
+        background-repeat: no-repeat;
+        background-size: cover;
+        background-position: center;
+        color: #fff;
+        text-shadow:1px 1px 1px #000;
+        margin: 5px;
+    }
+    
+    .enter-room-btn{
+        background: url('../Img/button_img1.png');
+        background-repeat: no-repeat;
+        background-size: cover;
+        background-position: center;
+        color: #fff;
+        text-shadow:1px 1px 1px #000;
+        margin: 5px;
+    }
+    
+    .game-guide-btn{
+        background: url('../Img/button_img3.png');
+        background-repeat: no-repeat;
+        background-size: cover;
+        background-position: center;
+        color: #fff;
+        text-shadow:1px 1px 1px #000;
+        margin: 5px;
+    
+    }
 }
 
-.game-guide-btn{
-    background: url('../Img/button_img3.png');
-    background-repeat: no-repeat;
-    background-size: cover;
-    background-position: center;
-    color: #fff;
-    text-shadow:1px 1px 1px #000;
-    margin: 5px;
-
-}
