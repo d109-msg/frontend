@@ -16,7 +16,7 @@ public class GuestArticleResultDto {
     private String emailId;
     private String imageUrl;
     private String content;
-    private String creatTime;
+    private String createTime;
     private String modifyTime;
     private int likesCount;
     private String urls;

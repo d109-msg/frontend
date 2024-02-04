@@ -20,7 +20,7 @@ public class GuestArticleResponseDto {
     private String emailId;
     private String imageUrl;
     private String content;
-    private String creatTime;
+    private String createTime;
     private String modifyTime;
     private int likesCount;
     private List<String> urls;
@@ -36,7 +36,7 @@ public class GuestArticleResponseDto {
         this.emailId = dto.getEmailId();
         this.imageUrl = dto.getImageUrl();
         this.content = dto.getContent();
-        this.creatTime = dto.getCreatTime();
+        this.createTime = dto.getCreateTime();
         this.modifyTime = dto.getModifyTime();
         this.likesCount = dto.getLikesCount();
 
@@ -49,7 +49,7 @@ public class GuestArticleResponseDto {
 
     public void setCommentList(List<CommentDto> list){
         commentList = new ArrayList<>();
-        if (list != null || !list.isEmpty()) {
+        if (list != null) {
             this.commentList.addAll(list);
         }
     }

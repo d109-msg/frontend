@@ -55,6 +55,7 @@
             u.email_id,
             a.content,
             a.create_time,
+            a.modify_time,
             COALESCE(l.likes_count, 0) AS likes_count, -- 좋아요 개수가 없는 경우 0으로 표시
             GROUP_CONCAT(ai.url ORDER BY ai.id SEPARATOR ',') AS urls
         FROM articles a
@@ -67,7 +68,7 @@
                         GROUP BY article_id) l ON a.id = l.article_id
                  LEFT JOIN article_images ai ON a.id = ai.article_id
         GROUP BY a.id
-        ORDER BY likes_count DESC
+        ORDER BY likes_count DESC, a.create_time desc
             LIMIT #{limit} OFFSET #{offset};
 
 
@@ -117,18 +118,23 @@
     </select>
 
     <select id="getFeedArticleList" parameterType="FeedParamDto" resultType="ArticleDetailDto">
-        select users.nickname, users.email_id, users.image_url, a.id as article_id, a.user_id, a.content, a.create_time, a.flag_private, a.modify_time, a.room_id
+        select users.nickname, users.email_id, users.image_url, a.id as articleId, a.user_id, a.content, a.create_time, a.flag_private, a.modify_time, a.room_id,
+               coalesce(l.likes_count, 0) as likeCount
         from articles a
         left join users on a.user_id = users.id
+        left join (
+            select article_id, count(*) as likes_count
+            from article_likes
+            group by article_id
+        ) l on a.id = l.article_id
         where (a.user_id in (
             select f.to_user_id
             from follows f
             where f.from_user_id = #{userId}
             )
         or a.user_id = #{userId})
-        and a.id &lt; coalesce(#{offset}, (select max(id) from articles))
         order by a.create_time desc
-        limit #{limit};
+        limit #{limit} offset #{offset};
 
     </select>
 
