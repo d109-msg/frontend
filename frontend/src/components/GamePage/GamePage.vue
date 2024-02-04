@@ -33,9 +33,34 @@ export default {
         getUser : async function(){
             const auth = useAuthStore()
             if(auth.getAccess!=""){
-                let value = await auth.getUser()
-                this.userInfo = value.data
-            }
+                try{
+                    await auth.useRefresh()
+                    // refresh 사용해 access 갱신 이를 통해 밑의 getUser메서드 가능
+                    // 잘못될 시 authStore의 logout function 작동 -> 세션에 저장된 정보들 다 비워줌
+                    let value = await auth.getUser()
+                    this.userInfo = value.data
+                } catch(err){
+                    await auth.logout()
+                }
+            } // 어세스 토큰이 존재 할 시 이를 통해 getUser 미니 프로필 컴포넌트에 해당 객체값 props로 전해줌
+        },
+
+        startPage : async function(){
+            await this.getUser
+            this.emitter.emit('pageChange',1)
+            let banner = document.querySelector('.banner')
+            this.prevScrollY = window.scrollY
+            window.addEventListener('scroll',()=>{
+                let nowScrollY = window.scrollY
+                if(this.prevScrollY < nowScrollY){  
+                    banner.classList.remove('banner-up-event')
+                    banner.classList.add('banner-down-event')
+                }else{
+                    banner.classList.add('banner-up-event')
+                    banner.classList.remove('banner-down-event')
+                }
+                this.prevScrollY = nowScrollY
+            })
         }
     },
     components:{
@@ -44,22 +69,7 @@ export default {
         MiniProfile,
     },
     mounted(){
-        this.getUser()
-        this.emitter.emit('pageChange',1)
-        let banner = document.querySelector('.banner')
-        this.prevScrollY = window.scrollY
-        window.addEventListener('scroll',()=>{
-            let nowScrollY = window.scrollY
-            if(this.prevScrollY < nowScrollY){  
-                banner.classList.remove('banner-up-event')
-                banner.classList.add('banner-down-event')
-            }else{
-                banner.classList.add('banner-up-event')
-                banner.classList.remove('banner-down-event')
-            }
-            this.prevScrollY = nowScrollY
-
-        })
+        this.startPage()
     },
 }
 </script>

@@ -24,10 +24,21 @@ export const useAuthStore = defineStore('auth',{
         }
     },
     actions: {
-        logout(){
+        reset(){
             this.access = ""
             this.userInfo = {}
             this.refresh = ""
+        },
+        async logout(){
+            const headers = {Authorization: `Bearer ${this.refresh}`}
+            try{
+                axios.get(`${server}/user/sign-out`,{headers})
+            } catch(err){
+                console.log(err)
+            }
+            finally{
+                this.reset()
+            }
             // cookies.set('msgRefresh',"")
         },
         setAccess(token){
@@ -44,13 +55,14 @@ export const useAuthStore = defineStore('auth',{
         async useRefresh(){
             // const refresh = cookies.get('msgRefresh')
             try{
-            let value = await axios.get(`${server}/user/token`,{
+            let value = await axios.get(`${server}/user/refresh`,{
                 headers: {Authorization: `Bearer ${this.refresh}`}
                 //header에 refresh 담아서 access 요청 후에 catch를 통한 에러처리 필요
             })
             this.setAccess(value.data.accessToken)
             } catch(err){
-                this.logout()
+                this.reset()
+                window.location.reload()
             }
         },
         async signUp(name,email,password){
@@ -93,9 +105,6 @@ export const useAuthStore = defineStore('auth',{
                     "Content-Type": `application/json`,
                     Authorization : `Bearer ${token}`
                 }
-                console.log(this.getAccess)
-                console.log(JSON.stringify(data))
-                console.log(headers)
                 return axios.post(`${server}/user/password`,JSON.stringify(data),{ headers })
         },
         async getUser(){
@@ -144,6 +153,18 @@ export const useAuthStore = defineStore('auth',{
             data.append('image',value)
             return axios.patch(`${server}/user/image` , data, { headers} )
         },
+        async searchUser(url, keyword,offset){
+            const headers = {
+                Authorization : `Bearer ${this.getAccess}`
+            }
+            console.log('키워드',keyword)
+            console.log(offset)
+            if(url == ""){
+                return axios.get(`${server}/user/list?keyword=${keyword}&offset=${offset}&limit=10`,{ headers })
+            } else{
+                return axios.get(url,{headers})
+            }
+        }
     },
     persist: [
         {

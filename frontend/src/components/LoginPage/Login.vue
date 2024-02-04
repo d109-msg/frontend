@@ -85,7 +85,7 @@ export default {
     },
     mounted(){
         const auth = useAuthStore()
-        auth.logout()
+        auth.reset()
     }
 }
 </script>

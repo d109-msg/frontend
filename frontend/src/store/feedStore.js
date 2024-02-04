@@ -59,10 +59,12 @@ export const useFeedStore = defineStore('feed',{
             return axios.get(url,{headers})
         },
         getDetail : async function(idx){
+            const access = useAuthStore().getAccess
             const headers = {
-                Authorization : `Bearer ${useAuthStore().getAccess}`
+                Authorization : `Bearer ${access}`
             }
-            return axios.get(`${server}/article?articleId=${idx}`,{headers})
+            return axios.get(`${server}/article/detail?articleId=${idx}`,{headers})
+        
         },
         writeComment : async function(id,content,commentId){
             const headers= {
@@ -110,7 +112,7 @@ export const useFeedStore = defineStore('feed',{
                 Authorization : `Bearer ${useAuthStore().getAccess}`,
             }
             axios.delete(`${server}/article?articleId=${articleId}`,{headers})
-        }
+        },
         
     },
     persist: [

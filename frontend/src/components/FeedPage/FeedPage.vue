@@ -76,7 +76,7 @@ import router from '@/router';
                     auth.setUserInfo(this.userInfo)
                     this.userImage = value.data.imageUrl
                 }catch(err){
-                    auth.logout()
+                    // await auth.logout()
                 }
             },
             readFeed : async function(){
@@ -164,11 +164,14 @@ import router from '@/router';
                 const auth = useAuthStore()
                     if(auth.getAccess == ""){
                         this.isLogin = false
+                        auth.reset()
                         await this.axiosGuest()
+                        //Access 토큰이 비어있음 -> 유저 처리 자체가 비로그인 상태 게스트피드 호출시킴
                     } else{
                         await this.getUser()
                         this.isLogin = true
                         await this.readFeed()
+                        //로그인 상태 시 유저 피드 호출
                     }
             }
             
@@ -185,6 +188,7 @@ import router from '@/router';
         mounted(){
             const auth = useAuthStore()
             this.io = new IntersectionObserver(this.callBack,{ threshold : 0.7})
+            //요소의 가시성을 0.7로 설정, 요소가 70% 뷰포트에 가시 될 시 지정한 callBack 함수 실행
             this.startPage()
         },
         created(){
