@@ -1,5 +1,7 @@
 package com.ssafy.msg.game.model.service;
 
+import com.ssafy.msg.chat.model.dto.CreateRoomDto;
+import com.ssafy.msg.chat.model.dto.OpponentDto;
 import com.ssafy.msg.chat.model.dto.RoomDto;
 import com.ssafy.msg.game.model.dto.*;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -19,6 +21,8 @@ public interface GameService {
     RoomDto createEnterGroupRoom(int userId) throws Exception;
 
     RoomDto enterGroupRoom(EnterGroupRoomDto enterGroupRoomDto) throws Exception;
+
+    void inviteGroupRoom(int userId, EnterGroupRoomDto enterGroupRoomDto) throws Exception;
 
     List<String> getRandomNicknames(int limit) throws Exception;
 

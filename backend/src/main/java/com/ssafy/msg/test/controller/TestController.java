@@ -97,7 +97,12 @@ public class TestController {
     public ResponseEntity<?> saveMongo(@RequestBody MessageRequestDto messageRequestDto) {
 
         MessageEntity messageEntity = messageRequestDto.toEntity();
+        System.out.println(messageEntity);
         messageRepository.save(messageEntity);
+
+
+        System.out.println("======================================");
+        System.out.println(messageEntity);
 
         return ResponseEntity.ok("success");
     }

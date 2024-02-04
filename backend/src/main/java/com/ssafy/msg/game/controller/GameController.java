@@ -1,6 +1,8 @@
 package com.ssafy.msg.game.controller;
 
 import ch.qos.logback.core.encoder.EchoEncoder;
+import com.ssafy.msg.chat.model.dto.CreateRoomDto;
+import com.ssafy.msg.chat.model.dto.OpponentDto;
 import com.ssafy.msg.chat.model.dto.RoomDto;
 import com.ssafy.msg.game.exception.GroupRoomDuplicateException;
 import com.ssafy.msg.game.exception.GroupRoomFullException;
@@ -24,6 +26,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/game")
@@ -378,6 +381,27 @@ public class GameController {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
 
+    }
+
+    @Operation(summary = "사용자 설정 게임 초대", description = "사용자 설정 게임 초대")
+    @ApiResponses(value = { @ApiResponse(responseCode = "201", description = "사용자 설정 게임 초대 성공", content = @Content),
+            @ApiResponse(responseCode = "400", description = "사용자 설정 게임 초대 실패", content = @Content) })
+    @PostMapping("/group/invite")
+    public ResponseEntity<?> inviteGroupRoom(@Valid HttpServletRequest request, @RequestBody EnterGroupRoomDto enterGroupRoomDto) {
+        log.info("inviteGroupRoom() -> Start");
+
+        int userId = (int) request.getAttribute("id");
+
+        try {
+            gameService.inviteGroupRoom(userId, enterGroupRoomDto);
+            log.info("inviteGroupRoom() -> Success");
+            return new ResponseEntity<>(HttpStatus.CREATED);
+        } catch (Exception e) {
+            log.error("inviteGroupRoom() -> Exception : {}", e);
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        } finally {
+            log.info("inviteGroupRoom() -> End");
+        }
     }
 
 
