@@ -9,10 +9,32 @@
                 <div class="tag" @click="$router.push('/message')"  id="/message">MESSAGE</div>
                 <div class="tag"  @click="$router.push('/mypage')"  id="/mypage">MYPAGE</div>
                 <div class="search-container">
-                    <input type="text" class="search-bar" placeholder="검색" maxlength="30" v-model="keyword">
+                    <input type="text" class="search-bar" placeholder="검색" maxlength="30" v-model="keyword" @focus="searchFlag=true">
                     <div class="search-icon"></div>
                     <div class="search-result" v-if="searchFlag">
-
+                        <div class="result-info" v-for="(item,key) in userInfo" :key="key"
+                        @click.self="followFlag[key] = !followFlag[key]"
+                        >
+                            <img class="comment-img" :src="item.imageUrl" @click.self="followFlag[key] = !followFlag[key]">
+                            <div class="info-container" :id="key">
+                                <p class="comment-nick" @click.self="followFlag[key] = !followFlag[key]">{{ item.nickname }}</p>
+                                <p @click.self="followFlag[key] = !followFlag[key]"> {{ item.content }}</p>
+                            </div>
+                            <div class="plus-box" v-if="followFlag[key]">
+                                <div @click="followUser(item.userId,key)" v-if="isFollow[key]==0">
+                                    <img src="./Icon/add.png" alt="" >
+                                    팔로우 하기
+                                </div>
+                                <div @click="followUser(item.userId,key)" v-if="isFollow[key]==1">
+                                    <img src="./Icon/remove.png" alt="" >
+                                    팔로우 취소
+                                </div>
+                                <div>
+                                    <img src="./Icon/share.png" alt="" style="height: 18px;">
+                                    페이지 방문하기
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -70,8 +92,9 @@ export default {
             offset : 0,
             baseUrl : "",
             userInfo : [],
-            io : {},
             searchFlag : false,
+            followFlag : [],
+            isFollow : [],
         }
     },
     methods : {
@@ -130,22 +153,24 @@ export default {
                     if(value.data.searchResult.length > 0){
                         value.data.searchResult.forEach(item=>{
                             this.userInfo.push(item)
+                            this.followFlag.push(false)
+                            this.isFollow.push(item.isFollow)
                         })
-                        if(this.userInfo.length != 0 && this.userInfo.length%10 ==0){
-                            const target = document.getElementById(`${this.userInfo.length-1}`)
-                            this.io.observe(target)
-                            this.baseUrl = value.data.nextUrl
-                        }
                     }
                 }catch(err){
                 }
             }
         },
-        ioLogic : function(items,i0){
-            items.forEach(async (item)=>{
-                await this.searchUser()
-                this.io.unobserve(item.target)
-            })
+        followUser : async function(userId,idx){
+            const auth = useAuthStore()
+            try{
+                await auth.useRefresh()
+                let value = await auth.follow(userId)
+                this.isFollow[idx] = !this.isFollow[idx]
+            }catch(err){
+                console.log(err)
+            }
+
         },
         refereshTest : async function(){
             const auth = useAuthStore()
@@ -159,7 +184,6 @@ export default {
     },
 
     mounted() {
-        this.io = new IntersectionObserver(this.ioLogic,{threshold:0.8})
         this.reactiveSize()
         this.tagClick()
         this.manageScroll()
@@ -179,7 +203,6 @@ export default {
                 this.baseUrl = ""
                 this.userInfo = []
                 this.searchFlag = true
-                this.io = new IntersectionObserver(this.ioLogic,{threshold:0.8})
             }
         }
 

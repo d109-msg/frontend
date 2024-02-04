@@ -165,6 +165,16 @@ export const useAuthStore = defineStore('auth',{
             } else{
                 return axios.get(url,{headers})
             }
+        },
+        async follow(idx){
+            const data = {
+                id : idx
+            }
+            const headers = {
+                Authorization : `Bearer ${this.getAccess}`,
+                'Content-Type' : "application/json"
+            }
+            return axios.post(`${server}/user/follow`,JSON.stringify(data),{headers})
         }
     },
     persist: [
