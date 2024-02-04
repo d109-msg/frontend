@@ -1,6 +1,7 @@
 package com.ssafy.msg.message.model.service;
 
 import com.ssafy.msg.article.util.S3Util;
+import com.ssafy.msg.game.model.dto.EnterGroupRoomDto;
 import com.ssafy.msg.game.model.dto.ParticipantDto;
 import com.ssafy.msg.message.model.dto.ImageMessageDto;
 import com.ssafy.msg.message.model.dto.MessageResponseDto;
@@ -66,6 +67,22 @@ public class MessageServiceImpl implements MessageService{
                 .dataType("text")
                 .text(participantDto.getNickname()+"님이 입장하였습니다.").build();
         sendingOperations.convertAndSend("/sub/"+messageResponseDto.getRoomId(), messageResponseDto);
+    }
+
+    @Override
+    public void sendInvitation(int userId, String chatRoomId, String gameRoomId) {
+        // DB 저장 로직 구현 필요
+        // Time 추가 로직 구현 필요
+        MessageResponseDto messageResponseDto = MessageResponseDto.builder()
+                .id(0)
+                .roomId(chatRoomId)
+                .userId(userId)
+                .noticeType("invite")
+                .sendTime("")
+                .dataType("text")
+                .text("초대 코드를 확인하세요. " + gameRoomId).build();
+        sendingOperations.convertAndSend("/sub/"+messageResponseDto.getRoomId(), messageResponseDto);
+        log.info(messageResponseDto.getRoomId() + " - " + messageResponseDto.getText());
     }
 
     @Override

@@ -20,7 +20,7 @@
                  JOIN participants p1 ON r.id = p1.room_id
                  JOIN participants p2 ON r.id = p2.room_id
         WHERE p1.user_id = #{userId1}
-          AND p2.user_id = #{userId2}
+          AND p2.user_id = #{userId2} and r.data_type = "개인";
     </select>
 
     <select id="getRoom" parameterType="string"

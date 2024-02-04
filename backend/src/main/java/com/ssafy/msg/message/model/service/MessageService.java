@@ -1,5 +1,6 @@
 package com.ssafy.msg.message.model.service;
 
+import com.ssafy.msg.game.model.dto.EnterGroupRoomDto;
 import com.ssafy.msg.game.model.dto.ParticipantDto;
 import com.ssafy.msg.message.model.dto.ImageMessageDto;
 import com.ssafy.msg.message.model.dto.TextMessageDto;
@@ -15,6 +16,7 @@ public interface MessageService {
 
     // 사용자 설정 게임 입장 메시지 전송
     void sendEnterNotice(ParticipantDto participantDto);
+    void sendInvitation(int userId, String chatRoomId, String gameRoomId);
 
     // 게임
     void sendDayNotice(String time, String roomId) throws SQLException;
