@@ -84,10 +84,34 @@ public class ArticleServiceImpl implements ArticleService{
         }
 
         int offset = articleByRoomIdDto.getOffset() + articleByRoomIdDto.getLimit();
-        String nextUrl = articleByRoomIdDto.getCurrentUrl() +"?roomId=" + articleByRoomIdDto.getRoomId() + "?offset=" + offset + "&limit=" + articleByRoomIdDto.getLimit() ;
+        String nextUrl = articleByRoomIdDto.getCurrentUrl() +"?roomId=" + articleByRoomIdDto.getRoomId() + "?offset=" + offset + "&limit=" + articleByRoomIdDto.getLimit();
 
         return RoomFeedResponseDto.builder().articles(resultList).nextUrl(nextUrl).build();
     }
+
+    // 비회원 유저 공개 피드
+    @Override
+    public GusetFeedResponseDto getGuestFeed(FeedParamDto feedParamDto) throws Exception {
+        log.info("(ArticleServiceImpl) 게스트 피드 조회 시작");
+        List<GuestArticleResultDto> guestArticleResultDtos = articleMapper.getGuestFeed(feedParamDto);
+        List<GuestArticleResponseDto> guestArticleResponseDtos = new ArrayList<>();
+
+        for (GuestArticleResultDto ls : guestArticleResultDtos) {
+            GuestArticleResponseDto dto = new GuestArticleResponseDto(ls);
+
+            dto.setCommentList(getComments(CommentDto.builder().articleId(ls.getArticleId()).build()));
+
+            guestArticleResponseDtos.add(dto);
+        }
+
+
+
+        int offset = feedParamDto.getOffset() + feedParamDto.getLimit();
+        String nextUrl = feedParamDto.getCurrentUrl() + "?offset" + offset + "&limit" + feedParamDto.getOffset();
+
+        return GusetFeedResponseDto.builder().articles(guestArticleResponseDtos).nextUrl(nextUrl).build();
+    }
+
 
 // 게시물 수정
 

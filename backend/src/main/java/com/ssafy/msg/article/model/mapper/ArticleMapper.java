@@ -68,7 +68,7 @@ public interface ArticleMapper {
 
     List<ArticleReportDto> getArticleReports(int userId) throws SQLException;
 
-    List<GuestArticleResponseDto> getGuestFeed(int offset, int limit) throws SQLException;
+    List<GuestArticleResultDto> getGuestFeed(FeedParamDto feedParamDto) throws SQLException;
 
 
 }

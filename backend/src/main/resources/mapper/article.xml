@@ -50,19 +50,21 @@
     <select id="getGuestFeed" parameterType="FeedParamDto" resultType="GuestArticleResultDto">
         SELECT
             a.id AS articleId,
-            a.user_id AS userId,
-            a.content AS content,
-            a.create_time AS createTime,
+            a.user_id,
+            u.nickname,
+            u.email_id,
+            a.content,
+            a.create_time,
             COALESCE(l.likes_count, 0) AS likes_count, -- 좋아요 개수가 없는 경우 0으로 표시
             GROUP_CONCAT(ai.url ORDER BY ai.id SEPARATOR ',') AS urls
         FROM articles a
+                 LEFT JOIN users u ON a.user_id = u.id
                  LEFT JOIN (
-            SELECT
-                article_id,
-                COUNT(*) AS likes_count -- 각 article_id에 대한 좋아요의 수를 센다.
-            FROM article_likes
-            GROUP BY article_id
-        ) l ON a.id = l.article_id
+                        SELECT
+                            article_id,
+                            COUNT(*) AS likes_count -- 각 article_id에 대한 좋아요의 수를 센다.
+                        FROM article_likes
+                        GROUP BY article_id) l ON a.id = l.article_id
                  LEFT JOIN article_images ai ON a.id = ai.article_id
         GROUP BY a.id
         ORDER BY likes_count DESC

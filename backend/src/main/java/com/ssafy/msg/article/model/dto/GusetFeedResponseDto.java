@@ -15,7 +15,7 @@ import java.util.List;
 @Schema(description = "게스트 Feed 목록 조회에 대한 응답 DTO")
 public class GusetFeedResponseDto {
     @Schema(description = "feed 리스트")
-    private List<RoomArticleResponseDto> articles;
+    private List<GuestArticleResponseDto> articles;
 
     @Schema(description = "다음 페이지를 가져오기 위한 URL")
     private String nextUrl;

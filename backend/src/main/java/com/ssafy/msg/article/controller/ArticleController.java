@@ -261,14 +261,17 @@ public class ArticleController {
                                           @RequestParam(value = "limit", required = false, defaultValue = "5") Integer limit,
                                           HttpServletRequest request) {
         log.info("(ArticleController) 게스트 피드 리스트");
-
+        String currentUrl = request.getRequestURL().toString();
+        FeedParamDto feedParamDto = FeedParamDto.builder().offset(offset).limit(limit).currentUrl(currentUrl).build();
 
         try {
-
-            List<ArticleDetailDto> articleDetailDtos = articleService.getDefaultFeedList();
-            return new ResponseEntity<>(articleDetailDtos, HttpStatus.OK);
+            GusetFeedResponseDto result = articleService.getGuestFeed(feedParamDto);
+            return new ResponseEntity<>(result, HttpStatus.OK);
         } catch (Exception e) {
-            throw new RuntimeException(e);
+            log.error("(ArticleController) 게시물 피드 조회 실패", e);
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        } finally {
+            log.info("(ArticleController) 게스트 피드 조회 끝");
         }
 
 

@@ -5,6 +5,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -39,10 +40,17 @@ public class GuestArticleResponseDto {
         this.modifyTime = dto.getModifyTime();
         this.likesCount = dto.getLikesCount();
 
+        if (dto.getUrls() != null) { // 이거는 더미 데이터에 이미지가 없어서 그럼 실재 구현 때는 무조건 url이 있을 것임
+
         String[] urlArray = dto.getUrls().split(",");
-
         this.urls = Arrays.asList(urlArray);
+        }
+    }
 
-
+    public void setCommentList(List<CommentDto> list){
+        commentList = new ArrayList<>();
+        if (list != null || !list.isEmpty()) {
+            this.commentList.addAll(list);
+        }
     }
 }
