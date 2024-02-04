@@ -256,7 +256,7 @@ public class ArticleController {
     }
 
     // 비회원 메인 페이지
-    @GetMapping("/guestFeed")
+    @GetMapping("/guest")
     @Operation(summary = "비회원 피드", description = "비로그인 시 게스트로 볼 수 있는 피드")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "게스트 피드 조회 성공", content ={
