@@ -41,7 +41,7 @@
         </div>
 
         <!-- 태블릿 버전 -->
-        <div v-if="size == 'md'"  class="md-style">
+        <div v-else-if="size == 'md'"  class="md-style">
             <div class="nav-logo" ></div>
 
             <div class="right-bar">
@@ -56,7 +56,8 @@
             </div>
         </div>
 
-        <div  v-if="size == 'xs'" class="xs-style">
+        <!-- 모바일 버전 -->
+        <div  v-else-if="size == 'xs'" class="xs-style">
             <div class="right-bar">
                 <img class="tag" src="./Img/icon_home.png" alt=""  @click="$router.push('/')" id="/" style="height: 40px; width: 40px;">
                 <!-- <div class="tag" >HOME</div> -->
@@ -192,6 +193,7 @@ export default {
         width(){
             if (this.width<860) {
                 this.size =  "xs"
+                console.log(this.size)
             }
             else if (this.width >= 860 && this.width < 1200) {
                 this.size = "md"}

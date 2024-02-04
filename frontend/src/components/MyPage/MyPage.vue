@@ -1,9 +1,9 @@
 <template>
   <div>
-
-    <div class="mypage-banner">
-    </div>
-    
+<div class="mypage-banner-box">
+  <div class="mypage-banner">
+  </div>
+</div>
     <div class="mypage-box">
       <div class="profile-box">
         <div class="profile-content">

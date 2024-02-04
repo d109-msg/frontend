@@ -1,46 +1,127 @@
-.card-body{
-    position: relative;
-    background-color: #fff;
-    height: 220px;
-    width: 280px;
-    border-radius: 10px;
-    margin-bottom: 20px;
+@media screen and (max-width:510px){
+    .card-body{
+        position: relative;
+        background: url('../Img/room_img1.png');
+        background-size: cover;
+        background-position: bottom;
+        background-repeat: no-repeat;
+        height: 220px;
+        width: 280px;
+        border-radius: 10px;
+        margin-bottom: 20px;
+        margin: 1%;
+    }
+
+    
+    .card-title-box{
+        position: absolute;
+        bottom: 0;
+        background-color: #A1444A;
+        height: 25%;
+        width: 100%;
+        border-radius: 5px;
+        box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.2);
+    
+    }
+    
+  
+    .card-job-icon{
+        position: absolute;
+        height: 22.5%;
+        width: 17.5%;
+        bottom: 12.5%;
+        left: 10%;
+        z-index: 30;
+        border-radius: 50px;
+        background: url('../Img/icon_job.PNG');
+        background-size: contain;
+    }
 }
 
-.card-content{
-    position: absolute;
-    top: 0;
-    background-color: #fff;
-    background: url('../Img/room_img1.png');
-    background-size: contain;
-    height: 170px;
-    width: 280px;
-    border-radius: 5px;
-    box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.2);
+@media screen and (min-width:511px){
+    .card-body{
+        position: relative;
+        background: url('../Img/room_img1.png');
+        background-size: cover;
+        background-position: center;
+        background-repeat: no-repeat;
+        height: 0;
+        width: 40%;
+        padding-bottom: 25%;
+        border-radius: 10px;
+        margin-bottom: 20px;
+        margin: 1%;
+    }
 
+    
+    .card-title-box{
+        position: absolute;
+        bottom: 0;
+        background-color: #A1444A;
+        height: 25%;
+        width: 100%;
+        border-radius: 5px;
+        box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.2);
+    
+    }
+    
+    
+    
+    .card-job-icon{
+        position: absolute;
+        height: 25%;
+        width: 15%;
+        bottom: 15%;
+        left: 20px;
+        z-index: 30;
+        border-radius: 50px;
+        background: url('../Img/icon_job.PNG');
+        background-repeat: no-repeat;
+        background-size: contain;
+    }
 }
 
-.card-title-box{
-    position: absolute;
-    bottom: 0;
-    background-color: #A1444A;
-    height: 50px;
-    width: 280px;
-    border-radius: 5px;
-    box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.2);
 
+
+@media screen and (min-width:980px){
+    .card-body{
+        position: relative;
+        background: url('../Img/room_img1.png');
+        background-size: cover;
+        background-position: center;
+        background-repeat: no-repeat;
+        height: 220px;
+        width: 280px;
+        border-radius: 10px;
+        margin-bottom: 20px;
+        margin: 5px;
+    }
+    
+
+    
+    .card-title-box{
+        position: absolute;
+        bottom: 0;
+        background-color: #A1444A;
+        height: 50px;
+        width: 280px;
+        border-radius: 5px;
+        box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.2);
+    
+    }
+    
+    
+    
+    .card-job-icon{
+        position: absolute;
+        height: 50px;
+        width: 50px;
+        bottom: 30px;
+        left: 20px;
+        z-index: 30;
+        border-radius: 50px;
+        background: url('../Img/icon_job.PNG');
+        background-size: contain;
+    }
 }
 
-
-
-.card-job-icon{
-    position: absolute;
-    height: 50px;
-    width: 50px;
-    bottom: 30px;
-    left: 20px;
-    z-index: 30;
-    border-radius: 50px;
-    background: url('../Img/icon_job.PNG');
-    background-size: contain;
-}
