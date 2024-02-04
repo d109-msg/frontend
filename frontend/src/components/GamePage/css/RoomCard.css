@@ -1,4 +1,4 @@
-@media screen and (max-width:499px){
+@media screen and (max-width:510px){
     .card-body{
         position: relative;
         background: url('../Img/room_img1.png');
@@ -38,7 +38,7 @@
     }
 }
 
-@media screen and (min-width:500px){
+@media screen and (min-width:511px){
     .card-body{
         position: relative;
         background: url('../Img/room_img1.png');
