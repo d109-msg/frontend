@@ -50,4 +50,6 @@ public interface UserMapper {
 	List<SearchedUserDto> searchUsers(SearchUsersParamDto searchUsersParamDto) throws SQLException;
 
     TargetUserInfoDto getTargetUserInfo(int targetId) throws SQLException;
+
+	Integer getIsFollow(int targetId, int id) throws SQLException;
 }

@@ -208,14 +208,31 @@
 
 	<select id="getTargetUserInfo" parameterType="int"
 		resultType="TargetUserInfoDto">
-		select id, nickname, email_id,
-		identifier,
-		image_url,
-		image_uuid,
-		bio
-		from users
-		where id =
-		#{id}
+		select u.id, u.nickname, u.email_id,
+		u.identifier,
+		u.image_url,
+		u.image_uuid,
+		u.bio,
+		count(a.id) as article_count,
+		(select count(*) from follows where to_user_id = #{id}) as follower_count,
+		(select count(*) from follows where from_user_id = #{id}) as following_count
+		from users u
+		left join articles a on u.id = a.user_id
+		left join follows f1 on u.id = f1.to_user_id
+		left join follows f2 on u.id = f2.from_user_id
+		where u.id = #{id}
+		group by u.id
+	</select>
+	
+	<select id="getIsFollow" parameterType="Map" resultType="int">
+		select
+		    case
+				when exists(
+				    select 1
+				    from follows
+				    where from_user_id = #{id}
+				    and to_user_id = #{targetId}
+				) then 1 else 0 end as is_follow
 	</select>
 
 </mapper>

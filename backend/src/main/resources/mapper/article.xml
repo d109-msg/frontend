@@ -53,6 +53,7 @@
             a.user_id,
             u.nickname,
             u.email_id,
+            u.image_url,
             a.content,
             a.create_time,
             a.modify_time,
