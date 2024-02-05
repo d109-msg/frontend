@@ -19,16 +19,16 @@
                 </div>
             </div>
             <template  v-for="(feed,idx) in feedList" :key="idx" >
-                <div v-if="idx%2===1" :id="idx">
-                    <Feed v-if="idx%2===1" :item="feed"
+                <div v-if="idx%2===1">
+                    <Feed :id="idx" v-if="idx%2===1" :item="feed"
                     ></Feed>
                 </div>
             </template>
         </div>
         <div class="second-col">
             <template  v-for="(feed,idx) in feedList" :key="idx" >
-                <div :id="idx" v-if="idx%2===0">
-                    <Feed v-if="idx%2===0" :item="feed"
+                <div v-if="idx%2===0">
+                    <Feed :id="idx" v-if="idx%2===0" :item="feed"
                     ></Feed>                    
                 </div>
             </template>
@@ -83,68 +83,36 @@ import router from '@/router';
                 }
             },
             readFeed : async function(){
-                try{
-                    await this.axiosRead()
-                    //첫 요청에서의 가시성 관찰을 위한 if문 5개 단위로 게시물이 오기 때문에 마지막 요소를 관찰하기 위한 로직
-                    if(this.feedList.length%5==0 && this.feedList.length !=0 && this.nextUrl != this.baseUrl){
-                        this.baseUrl = this.nextUrl
-                        this.last = document.getElementById(`${this.feedList.length-1}`)
-                        //저장 된 feedList의 길이 -1 이 곧 id
-                        this.io.observe(this.last)
-                    }
-                } catch(err){
-                    // accessToken의 기한 만료로 인한 error일시
-                    console.log(err)
-                    try{
-                        const authStore = useAuthStore()
-                        await authStore.useRefresh()
-                        // 토큰 refresh 시켜서 다시 요청
-                        await this.axiosRead()
-                        if(this.feedList.length%5==0 && this.feedList.length !=0 &&this.nextUrl != this.baseUrl){
-                            this.baseUrl = this.nextUrl
-                            this.last = document.getElementById(`${this.feedList.length-1}`)
-                            this.io.observe(this.last)
-                        }
-                    } catch(err){
-                        console.log(err)
-                    }
-                }
+                
             },
             axiosRead : async function(){
-                const feedStore = useFeedStore()
-                let value = await feedStore.readFeed(this.baseUrl)
-                
-                    this.nextUrl = value.data.nextUrl
-                    value.data.articleDetailDtos.forEach(item=>{
-                        this.feedList.push(item)
+                if(this.baseUrl != null){
+                    const feed = useFeedStore()
+                    let value = await feed.readFeed(this.baseUrl)
+                    if(value.data != ""){
+                        value.data.articleDetailDtos.forEach(item=>{
+                            this.feedList.push(item)
                         })
-                
+                    }
+                    this.baseUrl = value.data.nextUrl
+                    this.$nextTick(()=>{
+                        const last = document.getElementById(`${this.feedList.length-1}`)
+                        if(this.baseUrl !== null){
+                            this.io.observe(last)
+                        }
+                    })
+                } else{
+                    this.axiosGuest()
+                }
                 },
 
             callBack : function(items,io){
-                items.forEach(async item=>{
-                    if(item.isIntersecting){
-                        io.unobserve(item.target)
-                        try{
-                            await this.axiosRead()
-                            // 현 페이지에서 5개씩 받아옴, 만약 5개씩 받아온게 꽉 찼더라면 한번 더 요청해서 그 다음 요청 갈 수 있게
-                            // 마지막 요소를 intersectionObserver로 가시성 관찰
-                            if(this.feedList.length%5==0 && this.feedList.length !=0 && this.nextUrl != this.baseUrl){
-                                this.baseUrl = this.nextUrl
-                                this.last = document.getElementById(`${this.feedList.length-1}`)
-                                this.io.observe(this.last)
-                            }
-                        } catch(err){
-                            try{
-                                const authStore = useAuthStore()
-                                await authStore.useRefresh()
-                                await this.axiosRead()
-                            } catch(err){
-                                console.log(err)
-                            }
-                        }
-                    }
-                })
+               items.forEach(async item=>{
+                if(item.isIntersecting){
+                    this.io.unobserve(item.target)
+                    await this.axiosRead()
+                }
+               })
             },
             complete : function(value){
                 this.create = false
@@ -154,12 +122,39 @@ import router from '@/router';
                 }
             },
             axiosGuest : async function(){
-                const auth = useAuthStore()
-                let value = await auth.guestFeed()
-                console.log(value)
-                // value.data.forEach(item=>{
-                //     this.feedList.push(item)
-                // })
+                console.log()
+                if(this.guestUrl != null){
+                    const feed = useFeedStore()
+                    let value = await feed.guestFeed(this.guestUrl)
+                    if(value.data != ""){
+                        value.data['articles'].forEach(article=>{
+                            this.feedList.push(article)
+                        })
+                    }
+                    this.guestUrl = value.data.nextUrl
+                    this.$nextTick(()=>{
+                        const last = document.getElementById(`${this.feedList.length-1}`)
+                        if(this.guestUrl !== null){
+                            this.guestio.observe(last)
+                        }
+                    })
+
+                    // const last = document.getElementById(`${this.feedList.length-1}`)
+                    // console.log(last)
+                    // this.guestio.observe(last)
+                } else{
+                    console.log('피드 끝!!!')
+                }
+            },
+            guestCall : function(items,io){
+                items.forEach(async(item)=>{
+                    if(item.isIntersecting){
+                        // console.log(this.guestUrl)
+                        this.guestio.unobserve(item.target)
+                        await this.axiosGuest()
+                    }
+                })
+
             },
             goLogin : function(){
                 router.push('/login')
@@ -174,7 +169,7 @@ import router from '@/router';
                     } else{
                         await this.getUser()
                         this.isLogin = true
-                        await this.readFeed()
+                        await this.axiosRead()
                         //로그인 상태 시 유저 피드 호출
                     }
             }
@@ -192,7 +187,7 @@ import router from '@/router';
         mounted(){
             const auth = useAuthStore()
             this.io = new IntersectionObserver(this.callBack,{ threshold : 0.7})
-            this.guestio = new IntersectionObserver(()=>{},{threshold : 0.7})
+            this.guestio = new IntersectionObserver(this.guestCall,{threshold : 0.7})
             //요소의 가시성을 0.7로 설정, 요소가 70% 뷰포트에 가시 될 시 지정한 callBack 함수 실행
             this.startPage()
         },

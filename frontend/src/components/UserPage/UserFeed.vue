@@ -71,6 +71,6 @@ export default {
 }
 </script>
 
-<style scoped src="./css/MyFeed.css">
+<style scoped src="./css/UserFeed.css">
 
 </style>

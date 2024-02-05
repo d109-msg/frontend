@@ -85,6 +85,6 @@ export default {
 }
 </script>
 
-<style scoped src="./css/MyGame.css">
+<style scoped src="./css/UserGame.css">
 
 </style>

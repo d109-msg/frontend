@@ -29,6 +29,7 @@
 .user-name{
     font-size: 18px;
     color: #474646;
+    cursor: pointer;
 }
 .user-comment{
     font-size: 15px;

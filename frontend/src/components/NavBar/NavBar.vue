@@ -13,12 +13,12 @@
                     <div class="search-icon"></div>
                     <div class="search-result" v-if="searchFlag">
                         <div class="result-info" v-for="(item,key) in userInfo" :key="key"
-                        @click.self="followFlag[key] = !followFlag[key]"
+                        @click.self="onFollowFlag(key)"
                         >
-                            <img class="comment-img" :src="item.imageUrl" @click.self="followFlag[key] = !followFlag[key]">
+                            <img class="comment-img" :src="item.imageUrl" @click.self="onFollowFlag(key)">
                             <div class="info-container" :id="key">
-                                <p class="comment-nick" @click.self="followFlag[key] = !followFlag[key]">{{ item.nickname }}</p>
-                                <p @click.self="followFlag[key] = !followFlag[key]"> {{ item.content }}</p>
+                                <p class="comment-nick" @click.self="onFollowFlag(key)">{{ item.nickname }}</p>
+                                <p @click.self="onFollowFlag(key)"> {{ item.content }}</p>
                             </div>
                             <div class="plus-box" v-if="followFlag[key]">
                                 <div @click="followUser(item.userId,key)" v-if="isFollow[key]==0">
@@ -29,7 +29,7 @@
                                     <img src="./Icon/remove.png" alt="" >
                                     팔로우 취소
                                 </div>
-                                <div>
+                                <div @click="userProfile(item.userId,key)">
                                     <img src="./Icon/share.png" alt="" style="height: 18px;">
                                     페이지 방문하기
                                 </div>
@@ -176,6 +176,17 @@ export default {
         refereshTest : async function(){
             const auth = useAuthStore()
             await auth.useRefresh()
+        },
+        userProfile : function(idx,key){
+            router.push(`/user/${idx}`)
+            this.followFlag[key] = false
+            this.searchFlag = false
+        },
+        onFollowFlag(value){
+            this.followFlag = this.followFlag.map(item => item = false)
+            //map을 통해 새로운 복사된 배열 제공
+            console.log(this.followFlag)
+            this.followFlag[value] = !(this.followFlag[value])
         }
 
     },

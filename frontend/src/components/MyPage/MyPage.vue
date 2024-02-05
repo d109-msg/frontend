@@ -64,21 +64,19 @@ export default {
         let value = await auth.getUser()
         this.userInfo = value.data
         auth.setUserInfo(this.userInfo)
-        this.userNickname = this.userInfo.nickname
-        this.userEmail = this.userInfo.emailId
         this.userId = this.userInfo.id
-
       } catch (error) {
         try{
           await auth.useRefresh()
           value = await auth.getUser()
           this.userInfo = value.data
+          this.userId = this.userInfo.id
+
         }
         catch{
           alert('로그인 세션이 만료되었습니다.')
           router.push('/login')
-        }
-        console.log(error)}
+        }}
     },
     
     openEdit(){

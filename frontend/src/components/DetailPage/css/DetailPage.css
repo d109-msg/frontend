@@ -75,7 +75,7 @@
 .info{
     display: flex;
     align-items: flex-end;
-
+    cursor: pointer;
 }
 .user-img{
     width: 50px;

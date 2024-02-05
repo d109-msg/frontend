@@ -103,6 +103,44 @@
         justify-content: space-between;
         width: 90%;
     }
-    
-    
+    .button-box{
+        display: flex;
+        
+    }
+    .follow-button{
+        width: 100%;
+        cursor: pointer;
+        display: flex;
+        border: 1px solid #D69386;
+        justify-content: center;
+        align-items: center;
+        border-radius: 5px;
+        box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.25);
+        color : #D69386;
+        margin: 5px;
+    }
+    .message-button{
+        width: 100%;
+        cursor: pointer;
+        display: flex;
+        border: 1px solid #A9A5A5;
+        justify-content: center;
+        align-items: center;
+        border-radius: 5px;
+        box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.25);
+        color : #A9A5A5;
+        margin: 5px;
+    }
+    .message-button:hover{
+        animation: mouseover 0.1s forwards;
+    }
+    .follow-button:hover{
+        animation: mouseover 0.1s forwards;
+
+    }
+    @keyframes mouseover {
+        100%{
+            box-shadow: 0px 0px 0px 0px;
+        }
+    }
 }
