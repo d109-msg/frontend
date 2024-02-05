@@ -34,7 +34,7 @@ pnpm-debug.log*
 *.yml
 
 # Json file
-*.json
+service-account.json
 
 
 # Log file
