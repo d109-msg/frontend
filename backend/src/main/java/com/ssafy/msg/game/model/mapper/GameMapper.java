@@ -60,4 +60,10 @@ public interface GameMapper {
     void updateStartTime(String roomId) throws SQLException;
 
     void updateParticipant(UpdateParticipantDto updateParticipantDto) throws SQLException;
+
+    int getFlagNight(String roomId) throws SQLException;
+
+    GetAbilityResultDto getAbility(GetAbilityParamDto getAbilityParamDto) throws SQLException;
+
+    Integer checkSaboteur(int participantId) throws SQLException;
 }

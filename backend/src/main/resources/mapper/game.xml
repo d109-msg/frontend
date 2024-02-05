@@ -5,6 +5,34 @@
 <mapper
 	namespace="com.ssafy.msg.game.model.mapper.GameMapper">
 
+	<select id="checkSaboteur" resultType="int" parameterType="int">
+		SELECT COALESCE(MAX(p2.ability), '0') AS ability
+		FROM participants p1
+				 LEFT JOIN participants p2 ON p1.room_id = p2.room_id AND p2.job_id = '훼방꾼'
+		WHERE p1.id = #{participantId};
+	</select>
+	
+	<select id="getAbility" parameterType="GetAbilityParamDto" resultType="GetAbilityResultDto">
+		SELECT
+			dm.flag_success,
+			p.flag_die,
+			p.job_id,
+			p.ability,
+			r.flag_night
+		FROM
+			daily_missions dm
+				INNER JOIN
+			participants p ON dm.participant_id = p.id
+				INNER JOIN
+			rooms r ON p.room_id = r.id
+		WHERE
+			dm.participant_id = #{participantId} AND dm.day = #{day};
+	</select>
+
+	<select id="getFlagNight" parameterType="string" resultType="int">
+		SELECT flag_night FROM rooms r WHERE id = #{roomId} ;
+	</select>
+
 	<update id="completeMission" parameterType="CompleteMissionDto">
 		UPDATE daily_missions
 		SET flag_success = 1

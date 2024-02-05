@@ -240,6 +240,14 @@ CREATE TABLE `daily_missions` (
   `mafia_vote` int(11) DEFAULT NULL,
   `doctor_vote` int(11) DEFAULT NULL,
   `article_id` int(11) DEFAULT NULL,
+  `reporter_vote` INT(11) DEFAULT NULL,
+  `police_vote` INT(11) DEFAULT NULL,
+  `cleaner_vote` INT(11) DEFAULT NULL,
+  `idiot_vote` INT(11) DEFAULT NULL,
+  `hunter_vote` INT(11) DEFAULT NULL,
+  `ganster_vote` INT(11) DEFAULT NULL,
+  `spy_vote` INT(11) DEFAULT NULL,
+
   PRIMARY KEY (`id`),
   KEY `daily_missions_users_FK` (`normal_vote`),
   KEY `daily_missions_users_FK_1` (`mafia_vote`),
@@ -252,7 +260,14 @@ CREATE TABLE `daily_missions` (
   CONSTRAINT `daily_missions_participants_FK` FOREIGN KEY (`participant_id`) REFERENCES `participants` (`id`) ON DELETE CASCADE,
   CONSTRAINT `daily_missions_users_FK` FOREIGN KEY (`normal_vote`) REFERENCES `participants` (`id`) ON DELETE CASCADE,
   CONSTRAINT `daily_missions_users_FK_1` FOREIGN KEY (`mafia_vote`) REFERENCES `participants` (`id`) ON DELETE CASCADE,
-  CONSTRAINT `daily_missions_users_FK_2` FOREIGN KEY (`doctor_vote`) REFERENCES `participants` (`id`) ON DELETE CASCADE
+  CONSTRAINT `daily_missions_users_FK_2` FOREIGN KEY (`doctor_vote`) REFERENCES `participants` (`id`) ON DELETE CASCADE,
+  CONSTRAINT `daily_missions_users_FK_3` FOREIGN KEY (`reporter_vote`) REFERENCES `participants` (`id`) ON DELETE CASCADE,
+  CONSTRAINT `daily_missions_users_FK_4` FOREIGN KEY (`police_vote`) REFERENCES `participants` (`id`) ON DELETE CASCADE,
+  CONSTRAINT `daily_missions_users_FK_5` FOREIGN KEY (`cleaner_vote`) REFERENCES `participants` (`id`) ON DELETE CASCADE,
+  CONSTRAINT `daily_missions_users_FK_6` FOREIGN KEY (`idiot_vote`) REFERENCES `participants` (`id`) ON DELETE CASCADE,
+  CONSTRAINT `daily_missions_users_FK_7` FOREIGN KEY (`hunter_vote`) REFERENCES `participants` (`id`) ON DELETE CASCADE,
+  CONSTRAINT `daily_missions_users_FK_8` FOREIGN KEY (`ganster_vote`) REFERENCES `participants` (`id`) ON DELETE CASCADE,
+  CONSTRAINT `daily_missions_users_FK_9` FOREIGN KEY (`spy_vote`) REFERENCES `participants` (`id`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 
@@ -306,6 +321,7 @@ CREATE TABLE `participants` (
   `job_id` varchar(50) DEFAULT NULL,
   `image_url` varchar(300) DEFAULT NULL,
   `nickname` varchar(100) NOT NULL,
+  `ability` int(11) NOT NULL DEFAULT 0,
   PRIMARY KEY (`id`),
   KEY `participants_users_FK` (`user_id`),
   KEY `participants_rooms_FK` (`room_id`),
@@ -329,6 +345,7 @@ CREATE TABLE `rooms` (
   `title` varchar(100) NOT NULL,
   `image_url` varchar(300) DEFAULT NULL,
   `flag_available` int(11) NOT NULL DEFAULT 1,
+  `flag_night` int(11) NOT NULL DEFAULT 0,
   PRIMARY KEY (`id`),
   KEY `rooms_messages_FK` (`last_message_id`),
   KEY `rooms_room_images_FK` (`image_url`),

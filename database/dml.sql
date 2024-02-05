@@ -20,7 +20,8 @@ INSERT INTO last_room_names  (`id`) VALUES
 ('런던'), ('둔산동'), ('인의동'), ('애버내시'),
 ('파리'), ('서울'), ('뉴욕'), ('베를린'), ('도쿄'), ('브루클린');
 
-insert into jobs (`id`, `info`, `image_url`) values
+insert into jobs (`id`, `info`, `image_url`) VALUES
+('훼방꾼', '시민들도 마피아 미션을 진행하게 만듭니다.', 'tmp_image_url'),
 ('마피아', '마피아입니다.', 'tmpurl'),
 ('시민', '시민입니다.', 'tmpurl'),
 ('의사', '의사입니다.', 'tmpurl');
@@ -179,5 +180,6 @@ SELECT * FROM follows;
 SELECT * FROM articles ;
 SELECT * FROM article_images ai ;
 SELECT * FROM daily_missions dm ;
-SELECT * FROM participants p ;
+SELECT * FROM participants;
 SELECT * FROM users;
+SELECT * FROM rooms;

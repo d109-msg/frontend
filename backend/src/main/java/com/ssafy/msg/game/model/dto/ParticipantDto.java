@@ -19,4 +19,5 @@ public class ParticipantDto {
     private String jobId;
     private String nickname;
     private String imageUrl;
+    private Integer ability;
 }
