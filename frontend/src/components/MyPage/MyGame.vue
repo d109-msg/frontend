@@ -1,9 +1,19 @@
 <template>
-  <div class="mygame-box">
-    <p class="mygame-title"> 
-      <img src="./Img/icon_gamerecord.png" alt="">
-      Game Record
-    </p>
+  <div class="mygame-box"> 
+    <div style="display: flex; justify-content: space-between;">
+      <div>
+        <p class="mygame-title" @click="goMyfeed">
+          <img src="./Img/icon_myfeed.png" alt="">
+          My Feed
+        </p>
+      </div>
+      <div v-if="size=='xs'">
+        <p class="mygame-title" @click="goGameRecord">
+          <img src="./Img/icon_gamerecord.png" alt="">
+          Game Record
+        </p>
+      </div>
+    </div>
     <div class="mygame-content">
       <div style="" class="chart">
         <canvas id="doughnut"></canvas>
@@ -38,6 +48,19 @@ export default {
         mafia : 20,
         civilRange : "0%",
         mafiaRange : "0%",
+      }
+    },
+    props:{
+      pageNum : String,
+      size : String,
+    },
+    methods:{
+      goGameRecord(){
+        this.$emit('changePage', '2')
+
+      },
+      goMyfeed(){
+        this.$emit('changePage', '1')
       }
     },
     mounted(){
