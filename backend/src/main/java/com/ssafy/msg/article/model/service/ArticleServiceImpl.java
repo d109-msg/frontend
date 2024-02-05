@@ -140,6 +140,18 @@ public class ArticleServiceImpl implements ArticleService{
 
     @Override
     public void deleteArticle(DeleteArticleDto deleteArticleDto) throws Exception {
+        log.info("(ArticleServiceImpl 게시물 삭제 시작");
+        /* s3 삭제기능
+         1. deleteArticleDto에 있는 articleId를 이용해서 article_images에 있는 articleId와 비교 후
+         2. uuid 를 뽑아와서 S3Util.deletFile(uuid) -> 이렇게 호출해서 넣어주면 삭제 됨
+         */
+        List<String> list = new ArrayList<>();
+        List<ArticleImageDto> articleImageDtos = articleMapper.getArticleImages(deleteArticleDto.getArticleId());
+
+        for (ArticleImageDto result : articleImageDtos) {
+            s3Util.deleteFile(result.getUuid());
+        }
+
         articleMapper.deleteArticle(deleteArticleDto);
     }
 
