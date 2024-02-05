@@ -1,10 +1,15 @@
+   .game-room-page-title{
+        display: flex;
+        flex-direction: row;
+   }
+   
    .room-box{
         display: flex;
         flex-wrap: wrap;
         flex-direction: row;
         justify-content: center;
         align-content: center;
-        width: 100%;
+        width: auto;
         height: auto;
         margin-bottom: 20px;
         overflow: hidden;

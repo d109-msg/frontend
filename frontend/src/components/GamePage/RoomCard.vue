@@ -1,9 +1,10 @@
 <template>
   <div class="card-body">
       <!-- <img  class="card-img" :src="slide" alt=""> -->
-      <div class="card-content"></div>
+      <!-- <div class="card-content"></div> -->
+        <img class="card-content" :src="room.imageUrl" alt="">
       <div class="card-title-box">
-          <div class="card-title"></div>
+          <div class="card-title">{{ room.title }}</div>
       </div>
       <div class="card-job-icon"></div>
   </div>
@@ -14,6 +15,7 @@ export default {
     name: 'RoomCard',
     props:{
         slide : String,
+        room : Object,
     }
 }
 </script>
