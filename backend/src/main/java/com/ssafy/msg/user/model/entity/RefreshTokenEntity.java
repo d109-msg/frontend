@@ -1,4 +1,4 @@
-package com.ssafy.msg.test.model.dto;
+package com.ssafy.msg.user.model.entity;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -11,10 +11,11 @@ import org.springframework.data.redis.core.RedisHash;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-@RedisHash("token")
-public class TestRedis {
+@RedisHash(value = "refreshToken", timeToLive = 60 * 3)
+public class RefreshTokenEntity {
 
     @Id
-    private Long id;
     private String refreshToken;
+    private int userId;
+
 }

@@ -1,14 +1,17 @@
 package com.ssafy.msg.game.model.service;
 
 import com.ssafy.msg.article.util.OpenAiUtil;
+import com.ssafy.msg.chat.model.dto.CreateRoomDto;
 import com.ssafy.msg.chat.model.dto.RoomDto;
 import com.ssafy.msg.chat.model.mapper.ChatMapper;
+import com.ssafy.msg.chat.model.service.ChatService;
 import com.ssafy.msg.game.exception.GroupRoomDuplicateException;
 import com.ssafy.msg.game.exception.GroupRoomFullException;
 import com.ssafy.msg.game.exception.GroupRoomNotFoundException;
 import com.ssafy.msg.game.model.dto.*;
 import com.ssafy.msg.game.model.mapper.GameMapper;
 import com.ssafy.msg.game.util.GameUtil;
+
 import com.ssafy.msg.message.model.mapper.MessageMapper;
 import com.ssafy.msg.message.model.service.MessageService;
 import com.ssafy.msg.scheduler.model.mapper.SchedulerMapper;
@@ -35,6 +38,7 @@ public class GameServiceImpl implements GameService{
     private final SchedulerMapper schedulerMapper;
     private final MessageMapper messageMapper;
 
+    private final ChatService chatService;
     private final MessageService messageService;
 
     private final OpenAiUtil openAiUtil;
@@ -235,6 +239,7 @@ public class GameServiceImpl implements GameService{
                 .build();
 
         chatMapper.enterRoom(participant);
+        messageService.sendEnterNotice(participant);
 
         return chatMapper.getRoom(roomId);
     }
@@ -266,6 +271,7 @@ public class GameServiceImpl implements GameService{
                             .build();
 
                     chatMapper.enterRoom(participant);
+                    messageService.sendEnterNotice(participant);
 
                     if (participants.size() == 6){
                         if (getTime(8, 13)){
@@ -277,6 +283,23 @@ public class GameServiceImpl implements GameService{
         }
         return roomDto;
     }
+
+    @Override
+    public void inviteGroupRoom(int userId, EnterGroupRoomDto enterGroupRoomDto) throws Exception {
+
+        CreateRoomDto createRoomDto = CreateRoomDto.builder()
+                .userId1(userId)
+                .userId2(enterGroupRoomDto.getUserId()).build();
+
+        Map map = chatService.getPersonalRoom(createRoomDto);
+
+        String roomId = ((RoomDto) map.get("roomDto")).getId();
+
+        // roomId로 초대 코드 (enterGroupRoomDto.getRoomId()) 와 함께 메시지 전송
+        messageService.sendInvitation(userId, roomId, enterGroupRoomDto.getRoomId());
+
+    }
+
 
     @Override
     public List<String> getRandomNicknames(int limit) throws Exception {

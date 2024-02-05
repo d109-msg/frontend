@@ -12,5 +12,6 @@ import lombok.RequiredArgsConstructor;
 public class CreateCommentDto {
     private int articleId;
     private String content;
-    private Integer parentCommentId;
+    private int commentId;
+//    private Integer parentCommentId;
 }

@@ -142,4 +142,11 @@ public class UserServiceImpl implements UserService {
 	public List<SearchedUserDto> searchUsers(SearchUsersParamDto searchUsersParamDto) throws Exception {
 		return userMapper.searchUsers(searchUsersParamDto);
 	}
+
+	@Override
+	public TargetUserInfoDto getTargetUserInfo(int targetId, int id) throws Exception {
+		TargetUserInfoDto result = userMapper.getTargetUserInfo(targetId);
+		result.setIsFollow(userMapper.getIsFollow(targetId, id));
+		return result;
+	}
 }

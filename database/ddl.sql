@@ -90,8 +90,8 @@ CREATE TABLE `users` (
   `flag_identifier` int(11) DEFAULT 0,
   `flag_admin` int(11) NOT NULL DEFAULT 0,
   `firebase_token` varchar(300) DEFAULT NULL,
-  `image_url` varchar(300) DEFAULT NULL,
-  `image_uuid` varchar(100) DEFAULT NULL,
+  `image_url` varchar(300) DEFAULT NULL DEFAULT "https://team109testbucket.s3.ap-northeast-2.amazonaws.com/2c5954d7-2aec-4cac-9c67-9ada52a1eafb",
+  `image_uuid` varchar(100) DEFAULT NULL DEFAULT "2c5954d7-2aec-4cac-9c67-9ada52a1eafb",
   `flag_private` int(11) NOT NULL DEFAULT 0,
   `sign_up_time` datetime NOT NULL DEFAULT current_timestamp(),
   `sign_in_time` datetime DEFAULT NULL,
@@ -99,6 +99,7 @@ CREATE TABLE `users` (
   UNIQUE KEY `email_id` (`email_id`),
   UNIQUE KEY `users_unique` (`identifier`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
 
 
 -- msg.follows definition

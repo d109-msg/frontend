@@ -30,6 +30,7 @@ import java.util.List;
 public class ArticleController {
     private final ArticleService articleService;
 
+    // 게시물 작성
     @PostMapping(value = "/create",
             consumes = MediaType.MULTIPART_FORM_DATA_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE)
@@ -147,15 +148,18 @@ public class ArticleController {
             @ApiResponse(responseCode = "200", description = "게시물 상세 조회 성공", content ={
                     @Content(mediaType = "application/json", schema = @Schema(implementation = ArticleDetailDto.class)) }),
             @ApiResponse(responseCode = "400", description = "게시물 상세 조회 실패", content = @Content) })
-    public ResponseEntity<?> getArticleDetail(@RequestParam("articleId") int articleId) {
+    public ResponseEntity<?> getArticleDetail(@RequestParam("articleId") int articleId,
+                                              HttpServletRequest request) {
         log.info("(ArticleController) 게시물 상세보기 시작");
+
+        int id = (int) request.getAttribute("id");
 
         ArticleDto articleDto = ArticleDto.builder()
                 .id(articleId)
                 .build();
 
         try {
-            ArticleDetailDto articleDetailDto = articleService.getArticleDetail(articleDto); // 게시물 상세 내용 가져오기
+            ArticleDetailDto articleDetailDto = articleService.getArticleDetail(articleDto, id); // 게시물 상세 내용 가져오기
 
             log.info("(ArticleController) 게시물 상세조회 성공");
 
@@ -204,14 +208,14 @@ public class ArticleController {
                     @Content(mediaType = "application/json", schema = @Schema(implementation = FeedResponseDto.class)) }),
             @ApiResponse(responseCode = "400", description = "피드 게시물 조회 실패", content = @Content) })
     public ResponseEntity<?> getFeedArticleList(HttpServletRequest request,
-            @Parameter(description = "마지막으로 로딩한 타겟") @RequestParam(value = "offset", required = false) Integer offset,
+            @Parameter(description = "마지막으로 로딩한 타겟") @RequestParam(value = "offset", required = false, defaultValue = "0") Integer offset,
             @Parameter(description = "페이지당 타겟 개수") @RequestParam(value = "limit", required = false, defaultValue = "5") Integer limit) {
         log.info("getFollowList() -> Start");
         log.info("getFollowList() -> Receive offset : {}", offset);
         log.info("getFollowList() -> Receive limit : {}", limit);
 
         int userId = (Integer) request.getAttribute("id");
-        if (offset == null) {
+        if (offset == 0) {
             offset = Integer.MAX_VALUE;
         }
 
@@ -224,17 +228,21 @@ public class ArticleController {
         try {
             List<ArticleDetailDto> articleDetailDtos = articleService.getFeedArticleList(feedParamDto);
 
+            String currentUrl = request.getRequestURL().toString();
             //  보여줄 피드가 없을 때 조건 넣어주기
             if (articleDetailDtos.isEmpty()) {
-                articleDetailDtos = articleService.getDefaultFeedList();
-
+                return null;
             }
 
             int lastId = articleDetailDtos.get(articleDetailDtos.size() -1).getArticleId();
+            log.info("(offset) {}", offset);
+            log.info("(articleDetailDtos) {}", articleDetailDtos);
+            log.info("(lasteId) {}", lastId);
 
-            String currentUrl = request.getRequestURL().toString();
+
+//            String currentUrl = request.getRequestURL().toString();
             String nextUrl = currentUrl + "?offset=" + lastId + "&limit=" + limit ;
-
+            log.info("(ArticleController) nextUrel {}", nextUrl);
             FeedResponseDto feedResponseDto = FeedResponseDto.builder()
                     .articleDetailDtos(articleDetailDtos)
                     .nextUrl(nextUrl)
@@ -251,25 +259,31 @@ public class ArticleController {
     }
 
     // 비회원 메인 페이지
-    @GetMapping("/guestFeed")
+    @GetMapping("/guest")
+    @Operation(summary = "비회원 피드", description = "비로그인 시 게스트로 볼 수 있는 피드")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "게스트 피드 조회 성공", content ={
-                    @Content(mediaType = "application/json", schema = @Schema(implementation = GuestArticleDto.class)) }),
+                    @Content(mediaType = "application/json", schema = @Schema(implementation = GuestArticleResponseDto.class)) }),
             @ApiResponse(responseCode = "400", description = "게스트 피드 조회 실패", content = @Content) })
-    public ResponseEntity<?> getGuestFeed() {
+    public ResponseEntity<?> getGuestFeed(@RequestParam(value = "offset", required = false, defaultValue = "0") Integer offset,
+                                          @RequestParam(value = "limit", required = false, defaultValue = "5") Integer limit,
+                                          HttpServletRequest request) {
         log.info("(ArticleController) 게스트 피드 리스트");
+        String currentUrl = request.getRequestURL().toString();
+        log.info("{}  ", currentUrl);
+        FeedParamDto feedParamDto = FeedParamDto.builder().offset(offset).limit(limit).currentUrl(currentUrl).build();
 
         try {
-            List<ArticleDetailDto> articleDetailDtos = articleService.getDefaultFeedList();
-            return new ResponseEntity<>(articleDetailDtos, HttpStatus.OK);
+            GusetFeedResponseDto result = articleService.getGuestFeed(feedParamDto);
+            return new ResponseEntity<>(result, HttpStatus.OK);
         } catch (Exception e) {
-            throw new RuntimeException(e);
+            log.error("(ArticleController) 게시물 피드 조회 실패", e);
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        } finally {
+            log.info("(ArticleController) 게스트 피드 조회 끝");
         }
 
-
     }
-
-
 
     // 게시물 좋아요 누르기
     @PostMapping(value = "/like")
@@ -302,7 +316,7 @@ public class ArticleController {
     }
 
     // 게시물 좋아요 누른 유저 리스트 조회
-    @GetMapping(value = "/likeUserList")
+    @GetMapping(value = "/like-userlist")
     @Operation(summary = "좋아요 유저 리스트", description = "좋아요 누른 유저 리스트를 조회")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "좋아요 리스트 조회 성공" , content ={
@@ -337,7 +351,7 @@ public class ArticleController {
                 .userId((Integer) request.getAttribute("id"))
                 .articleId(createCommentDto.getArticleId())
                 .content(createCommentDto.getContent())
-                .parentCommentId(createCommentDto.getParentCommentId() > 0 ? createCommentDto.getParentCommentId(): null) // 유효한 ID가 아니라면 null을 할당
+                .parentCommentId(createCommentDto.getCommentId() > 0 ? createCommentDto.getCommentId(): null) // 유효한 ID가 아니라면 null을 할당
                 .build();
         log.info("(controller) createComment() 댓글 작성 시작 {}", commentDto);
 
@@ -380,7 +394,6 @@ public class ArticleController {
         } finally {
             log.info("(ArticleController) 댓글 수정 끝");
         }
-
 
     }
 
@@ -441,7 +454,7 @@ public class ArticleController {
     }
 
     // 대댓글 가져오기
-    @GetMapping("/childComment")
+    @GetMapping("/child-comment")
     @Operation(summary = "대댓글 목록 조회", description = "대댓글 목록 조회하기")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "대댓글 조회 성공", content = {
@@ -467,7 +480,7 @@ public class ArticleController {
     }
 
     // 댓글 좋아요 누르기
-    @PostMapping(value = "/commentLike")
+    @PostMapping(value = "/comment-like")
     @Operation(summary = "댓글 좋아요", description = "게시물 좋아요")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "댓글 좋아요 성공", content ={
@@ -497,7 +510,7 @@ public class ArticleController {
     }
 
     // 댓글 좋아요누른 유저 리스트
-    @GetMapping(value = "/commentLikeUserList")
+    @GetMapping(value = "/comment-like-userlist")
     @Operation(summary = "댓글 좋아요 유저 리스트", description = "댓글 좋아요 누른 유저 리스트를 조회")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "댓글 좋아요 리스트 조회 성공" , content ={
@@ -565,8 +578,5 @@ public class ArticleController {
             log.info("(ArticleController) 신고 리스트 확인 끝");
         }
     }
-
-
-
 
 }

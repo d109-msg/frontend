@@ -46,12 +46,34 @@
 
     </select>
 
-<!--&lt;!&ndash;    비회원 피드 &ndash;&gt;-->
-<!--    <select id="getGuestFeed" resultType="">-->
-<!--        select *-->
-<!--        from articles-->
-<!--        where id &lt;= 5;-->
-<!--    </select>-->
+<!--    비회원 피드 보기 -->
+    <select id="getGuestFeed" parameterType="FeedParamDto" resultType="GuestArticleResultDto">
+        SELECT
+            a.id AS articleId,
+            a.user_id,
+            u.nickname,
+            u.email_id,
+            u.image_url,
+            a.content,
+            a.create_time,
+            a.modify_time,
+            COALESCE(l.likes_count, 0) AS likes_count, -- 좋아요 개수가 없는 경우 0으로 표시
+            GROUP_CONCAT(ai.url ORDER BY ai.id SEPARATOR ',') AS urls
+        FROM articles a
+                 LEFT JOIN users u ON a.user_id = u.id
+                 LEFT JOIN (
+                        SELECT
+                            article_id,
+                            COUNT(*) AS likes_count -- 각 article_id에 대한 좋아요의 수를 센다.
+                        FROM article_likes
+                        GROUP BY article_id) l ON a.id = l.article_id
+                 LEFT JOIN article_images ai ON a.id = ai.article_id
+        GROUP BY a.id
+        ORDER BY likes_count DESC, a.create_time desc
+            LIMIT #{limit} OFFSET #{offset};
+
+
+    </select>
 
     <select id="getArticleListByRoomId" resultType="RoomArticleResultDto" parameterType="ArticleByRoomIdDto">
         SELECT
@@ -97,17 +119,23 @@
     </select>
 
     <select id="getFeedArticleList" parameterType="FeedParamDto" resultType="ArticleDetailDto">
-        select users.nickname, users.email_id, users.image_url, a.id as article_id, a.user_id, a.content, a.create_time, a.flag_private, a.modify_time, a.room_id
+        select users.nickname, users.email_id, users.image_url, a.id as articleId, a.user_id, a.content, a.create_time, a.flag_private, a.modify_time, a.room_id,
+               coalesce(l.likes_count, 0) as likeCount
         from articles a
         left join users on a.user_id = users.id
+        left join (
+            select article_id, count(*) as likes_count
+            from article_likes
+            group by article_id
+        ) l on a.id = l.article_id
         where (a.user_id in (
             select f.to_user_id
             from follows f
             where f.from_user_id = #{userId}
             )
         or a.user_id = #{userId})
-        and a.id &lt; coalesce(#{offset}, (select max(id) from articles))
-        order by a.create_time desc
+        and a.id &lt; #{offset}
+        order by a.create_time desc, a.id desc
         limit #{limit};
 
     </select>
@@ -199,6 +227,12 @@
         values (#{articleId}, #{userId}, #{parentCommentId}, #{content}, now());
 
     </insert>
+
+    <select id="countParentId" parameterType="int" resultType="int">
+        select count(*) as countParentId
+        from comments c
+        where c.id = #{parentId};
+    </select>
 
     <select id="getComments" parameterType="CommentDto" resultType="CommentDto">
         SELECT *, users.nickname, users.email_id, users.image_url

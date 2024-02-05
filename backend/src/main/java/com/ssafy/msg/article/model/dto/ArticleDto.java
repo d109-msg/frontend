@@ -19,7 +19,7 @@ public class ArticleDto {
     private String imageUrl;
 
     // 게시글 관련
-    private int id;
+    private int id; // articleId
     private int userId;
     private String content;
     private String createTime;

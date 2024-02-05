@@ -1,6 +1,6 @@
-package com.ssafy.msg.mongodb.model.repo;
+package com.ssafy.msg.message.model.repo;
 
-import com.ssafy.msg.mongodb.model.entity.MessageEntity;
+import com.ssafy.msg.message.model.entity.MessageEntity;
 import org.springframework.data.mongodb.repository.MongoRepository;
 
 import java.util.List;
