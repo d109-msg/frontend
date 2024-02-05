@@ -1,5 +1,6 @@
 <template>
   <div class="card-body">
+      <!-- <img  class="card-img" :src="slide" alt=""> -->
       <div class="card-content"></div>
       <div class="card-title-box">
           <div class="card-title"></div>
@@ -10,7 +11,10 @@
 
 <script>
 export default {
-    name: 'RoomCard'
+    name: 'RoomCard',
+    props:{
+        slide : String,
+    }
 }
 </script>
 

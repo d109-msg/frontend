@@ -55,7 +55,7 @@ export default {
         return{
             userEmail: this.userInfo.emailId,
             userNickname: this.userInfo.nickname,
-            userIntro: "소개글을 입력해주세요.",
+            userIntro: this.userInfo.bio,
             userPhoto :this.userInfo.imageUrl,
             photoFile : {}
         }
@@ -104,8 +104,15 @@ export default {
                 console.log(err)
             }
         } ,
-        updateIntro(){
-
+        async updateIntro(){
+          const auth = useAuthStore()
+            try{
+                let value = await auth.editIntro(this.userIntro)
+                console.log(value)
+                window.location.reload()
+            }catch(err){
+                console.log(err)
+            }
         },
         deleteUser(){
 
