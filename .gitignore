@@ -33,6 +33,10 @@ pnpm-debug.log*
 *.class
 *.yml
 
+# Json file
+*.json
+
+
 # Log file
 *.log
 
