@@ -313,7 +313,7 @@ public class UserController {
 
 		TargetUserInfoDto targetUserInfoDto = null;
 		try {
-			targetUserInfoDto = userService.getTargetUserInfo(targetId);
+			targetUserInfoDto = userService.getTargetUserInfo(targetId, id);
 			log.info("getOtherUserInfo() -> Success");
 			return new ResponseEntity<>(targetUserInfoDto, HttpStatus.OK);
 		} catch (Exception e) {

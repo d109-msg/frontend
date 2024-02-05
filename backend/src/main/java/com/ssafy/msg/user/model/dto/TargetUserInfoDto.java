@@ -32,4 +32,16 @@ public class TargetUserInfoDto {
 
     @Schema(description = "자기소개", nullable = true)
     private String bio;
+
+    @Schema(description = "게시물 갯수", nullable = false)
+    private int articleCount;
+
+    @Schema(description = "나를 팔로우 하고 있는 수")
+    private int followerCount;
+
+    @Schema(description = "내가 팔로우 하고 있는 수")
+    private int followingCount;
+
+    @Schema(description = "접속 유저의 팔로우 여부")
+    private int isFollow;
 }

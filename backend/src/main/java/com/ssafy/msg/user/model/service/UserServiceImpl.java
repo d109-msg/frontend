@@ -144,7 +144,9 @@ public class UserServiceImpl implements UserService {
 	}
 
 	@Override
-	public TargetUserInfoDto getTargetUserInfo(int targetId) throws Exception {
-		return userMapper.getTargetUserInfo(targetId);
+	public TargetUserInfoDto getTargetUserInfo(int targetId, int id) throws Exception {
+		TargetUserInfoDto result = userMapper.getTargetUserInfo(targetId);
+		result.setIsFollow(userMapper.getIsFollow(targetId, id));
+		return result;
 	}
 }

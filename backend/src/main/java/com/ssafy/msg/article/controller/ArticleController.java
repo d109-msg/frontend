@@ -148,15 +148,18 @@ public class ArticleController {
             @ApiResponse(responseCode = "200", description = "게시물 상세 조회 성공", content ={
                     @Content(mediaType = "application/json", schema = @Schema(implementation = ArticleDetailDto.class)) }),
             @ApiResponse(responseCode = "400", description = "게시물 상세 조회 실패", content = @Content) })
-    public ResponseEntity<?> getArticleDetail(@RequestParam("articleId") int articleId) {
+    public ResponseEntity<?> getArticleDetail(@RequestParam("articleId") int articleId,
+                                              HttpServletRequest request) {
         log.info("(ArticleController) 게시물 상세보기 시작");
+
+        int id = (int) request.getAttribute("id");
 
         ArticleDto articleDto = ArticleDto.builder()
                 .id(articleId)
                 .build();
 
         try {
-            ArticleDetailDto articleDetailDto = articleService.getArticleDetail(articleDto); // 게시물 상세 내용 가져오기
+            ArticleDetailDto articleDetailDto = articleService.getArticleDetail(articleDto, id); // 게시물 상세 내용 가져오기
 
             log.info("(ArticleController) 게시물 상세조회 성공");
 
@@ -229,11 +232,6 @@ public class ArticleController {
             //  보여줄 피드가 없을 때 조건 넣어주기
             if (articleDetailDtos.isEmpty()) {
                 return null;
-//                log.info("(ArticleController){}", currentUrl);
-//                FeedParamDto feedParamDto1 = FeedParamDto.builder().limit(5).currentUrl(currentUrl).build();
-//                GusetFeedResponseDto result = articleService.getGuestFeed(feedParamDto1);
-//                return new ResponseEntity<>(result, HttpStatus.OK);
-
             }
 
             int lastId = articleDetailDtos.get(articleDetailDtos.size() -1).getArticleId();
@@ -353,7 +351,6 @@ public class ArticleController {
                 .userId((Integer) request.getAttribute("id"))
                 .articleId(createCommentDto.getArticleId())
                 .content(createCommentDto.getContent())
-//                .parentCommentId(createCommentDto.getParentCommentId() > 0 ? createCommentDto.getParentCommentId(): null) // 유효한 ID가 아니라면 null을 할당
                 .parentCommentId(createCommentDto.getCommentId() > 0 ? createCommentDto.getCommentId(): null) // 유효한 ID가 아니라면 null을 할당
                 .build();
         log.info("(controller) createComment() 댓글 작성 시작 {}", commentDto);
@@ -397,7 +394,6 @@ public class ArticleController {
         } finally {
             log.info("(ArticleController) 댓글 수정 끝");
         }
-
 
     }
 

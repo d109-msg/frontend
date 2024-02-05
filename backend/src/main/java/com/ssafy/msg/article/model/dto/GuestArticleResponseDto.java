@@ -23,6 +23,7 @@ public class GuestArticleResponseDto {
     private String createTime;
     private String modifyTime;
     private int likesCount;
+    private int isLike;
     private List<String> urls;
 
     // 댓글 관련
@@ -53,4 +54,5 @@ public class GuestArticleResponseDto {
             this.commentList.addAll(list);
         }
     }
+
 }
