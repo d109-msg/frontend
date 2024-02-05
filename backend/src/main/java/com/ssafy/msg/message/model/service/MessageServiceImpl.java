@@ -62,11 +62,12 @@ public class MessageServiceImpl implements MessageService{
                 .id(0)
                 .roomId(participantDto.getRoomId())
                 .userId(0)
-                .noticeType("en")
+                .noticeType("enterNotice")
                 .sendTime("")
                 .dataType("text")
                 .text(participantDto.getNickname()+"님이 입장하였습니다.").build();
         sendingOperations.convertAndSend("/sub/"+messageResponseDto.getRoomId(), messageResponseDto);
+        log.info(messageResponseDto.getRoomId() + " - " + messageResponseDto.getText());
     }
 
     @Override
@@ -77,7 +78,7 @@ public class MessageServiceImpl implements MessageService{
                 .id(0)
                 .roomId(chatRoomId)
                 .userId(userId)
-                .noticeType("invite")
+                .noticeType("invitation")
                 .sendTime("")
                 .dataType("text")
                 .text("초대 코드를 확인하세요. " + gameRoomId).build();
