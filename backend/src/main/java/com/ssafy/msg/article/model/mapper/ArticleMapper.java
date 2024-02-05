@@ -70,5 +70,7 @@ public interface ArticleMapper {
 
     List<GuestArticleResultDto> getGuestFeed(FeedParamDto feedParamDto) throws SQLException;
 
+    Integer countParentId(int parentId) throws SQLException;
+
 
 }
