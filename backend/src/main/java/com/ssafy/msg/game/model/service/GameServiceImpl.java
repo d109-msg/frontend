@@ -232,6 +232,7 @@ public class GameServiceImpl implements GameService{
                 .build();
 
         chatMapper.enterRoom(participant);
+        messageService.sendEnterNotice(participant);
 
         return chatMapper.getRoom(roomId);
     }
@@ -263,6 +264,7 @@ public class GameServiceImpl implements GameService{
                             .build();
 
                     chatMapper.enterRoom(participant);
+                    messageService.sendEnterNotice(participant);
 
                     if (participants.size() == 6){
                         if (getTime(8, 13)){
