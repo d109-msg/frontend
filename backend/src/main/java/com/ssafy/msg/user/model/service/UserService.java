@@ -48,5 +48,5 @@ public interface UserService {
 
 	List<SearchedUserDto> searchUsers(SearchUsersParamDto searchUsersParamDto) throws Exception;
 
-    TargetUserInfoDto getTargetUserInfo(int targetId) throws Exception;
+    TargetUserInfoDto getTargetUserInfo(int targetId, int id) throws Exception;
 }

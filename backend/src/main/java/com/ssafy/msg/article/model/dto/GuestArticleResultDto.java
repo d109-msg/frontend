@@ -21,6 +21,8 @@ public class GuestArticleResultDto {
     private int likesCount;
     private String urls;
 
+    private int isLike;
+
     private int parentCommentId;
 
 }

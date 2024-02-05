@@ -35,4 +35,7 @@ public class ArticleDetailDto {
     // 댓글 관련
     private List<CommentDto> commentList;
 
+    // follow 관련
+    private int isFollow;
+
 }

@@ -4,6 +4,7 @@ import com.ssafy.msg.article.model.dto.*;
 import com.ssafy.msg.article.model.mapper.ArticleMapper;
 import com.ssafy.msg.article.util.S3Util;
 import com.ssafy.msg.user.exception.UserNotFoundException;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -12,12 +13,14 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.util.ArrayList;
 import java.util.List;
+import com.ssafy.msg.user.model.mapper.UserMapper;
 
 @Service
 @RequiredArgsConstructor
 @Slf4j
 public class ArticleServiceImpl implements ArticleService{
     private final ArticleMapper articleMapper;
+    private final UserMapper userMapper;
 
 
     private final S3Util s3Util;
@@ -84,7 +87,7 @@ public class ArticleServiceImpl implements ArticleService{
         }
 
         int offset = articleByRoomIdDto.getOffset() + articleByRoomIdDto.getLimit();
-        String nextUrl = articleByRoomIdDto.getCurrentUrl() +"?roomId=" + articleByRoomIdDto.getRoomId() + "?offset=" + offset + "&limit=" + articleByRoomIdDto.getLimit();
+        String nextUrl = articleByRoomIdDto.getCurrentUrl() +"?roomId=" + articleByRoomIdDto.getRoomId() + "&offset=" + offset + "&limit=" + articleByRoomIdDto.getLimit();
 
         return RoomFeedResponseDto.builder().articles(resultList).nextUrl(nextUrl).build();
     }
@@ -107,14 +110,21 @@ public class ArticleServiceImpl implements ArticleService{
             // 댓글 넣어주기
             dto.setCommentList(getComments(CommentDto.builder().articleId(ls.getArticleId()).build()));
 
+            ArticleDto articleDto = ArticleDto.builder().id(ls.getArticleId()).userId(feedParamDto.getUserId()).build();
+            ls.setIsLike(isLike(articleDto));
+            dto.setIsLike(ls.getIsLike());
+            log.info("(islike){} ", isLike(articleDto));
+
             guestArticleResponseDtos.add(dto);
         }
 
 
         log.info("(ArticleServiceImpl) 테스트{}", feedParamDto);
         int offset = feedParamDto.getOffset() + feedParamDto.getLimit();
-        String nextUrl = feedParamDto.getCurrentUrl() + "?offset" + offset + "&limit" + feedParamDto.getOffset();
-
+        log.info("(offset){} ", offset);
+        String nextUrl = feedParamDto.getCurrentUrl() + "?offset=" + offset + "&limit=" + feedParamDto.getLimit();
+        log.info("(url) {}", nextUrl);
+        log.info("(currentUrl) {}", feedParamDto.getCurrentUrl());
         return GusetFeedResponseDto.builder().articles(guestArticleResponseDtos).nextUrl(nextUrl).build();
     }
 
@@ -138,6 +148,7 @@ public class ArticleServiceImpl implements ArticleService{
         userId = articleMapper.getUserId(userId);
 
         if (userId != null) {
+
             return articleMapper.getArticles(userId);
         } else {
             throw new UserNotFoundException();
@@ -147,12 +158,16 @@ public class ArticleServiceImpl implements ArticleService{
 
     // 게시물 상세 보기
     @Override
-    public ArticleDetailDto getArticleDetail(ArticleDto articleDto) throws Exception {
+    public ArticleDetailDto getArticleDetail(ArticleDto articleDto, int id) throws Exception {
         log.info("(ArticleServiceImpl) getArticleDetail 시작(이미지 제외)");
         ArticleDetailDto articleDetailDto = articleMapper.getArticleDetail(articleDto);
 
         articleDetailDto.setLikeCount(articleMapper.getLikeCount(articleDto.getId())); // 좋아요 수 넣어주기
         articleDetailDto.setIsLike(isLike(articleDto)); // 좋아요 여부 알려주기
+
+
+
+        articleDetailDto.setIsLike(userMapper.getIsFollow(articleDto.getUserId(), id));
 
         // 댓글 리스트 넣어주기
         articleDetailDto.setCommentList(getComments(CommentDto.builder().articleId(articleDto.getId()).build()));
@@ -181,7 +196,7 @@ public class ArticleServiceImpl implements ArticleService{
         for (ArticleDetailDto at : articleList) { // 받아온 팔로우하는 사람들의 게시물 리스트를 받아서 돌린다
 
             ArticleDto articleDto = ArticleDto.builder().id(at.getArticleId()).userId(feedParamDto.getUserId()).build();
-            ArticleDetailDto articleDetail = getArticleDetail(articleDto);
+            ArticleDetailDto articleDetail = getArticleDetail(articleDto,feedParamDto.getUserId());
 
             at.setUrls(articleDetail.getUrls());
 
@@ -206,7 +221,7 @@ public class ArticleServiceImpl implements ArticleService{
                     .id(at.getArticleId())
                     .build();
 
-            ArticleDetailDto articleDetail = getArticleDetail(articleDto);
+            ArticleDetailDto articleDetail = getArticleDetail(articleDto, 0);
 
             at.setUrls(articleDetail.getUrls());
             at.setIsLike(articleDetail.getIsLike());
@@ -234,7 +249,7 @@ public class ArticleServiceImpl implements ArticleService{
 
         } else {
             articleMapper.insertArticleLike(articleDto);
-
+            // 누르는 사람 id 누르는 게시물 id만 넘겨주면 됨
             log.info("(ArticleServiceImpl) 좋아요 추가");
         }
 
