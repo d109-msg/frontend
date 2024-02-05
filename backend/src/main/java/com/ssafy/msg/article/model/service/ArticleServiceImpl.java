@@ -97,6 +97,10 @@ public class ArticleServiceImpl implements ArticleService{
         List<GuestArticleResponseDto> guestArticleResponseDtos = new ArrayList<>();
         log.info("(ArticleServiceImpl)  feedParamDto {}", feedParamDto);
 
+        if (guestArticleResultDtos.isEmpty()) {
+            return null;
+        }
+
         for (GuestArticleResultDto ls : guestArticleResultDtos) {
             GuestArticleResponseDto dto = new GuestArticleResponseDto(ls);
 
@@ -274,7 +278,15 @@ public class ArticleServiceImpl implements ArticleService{
     @Override
     public void createComment(CommentDto commentDto) throws Exception {
         log.info("(ArticleServiceImpl) 댓글 작성 서비스 시작");
-        articleMapper.createComment(commentDto);
+        if (commentDto.getParentCommentId() != null
+                && articleMapper.countParentId(commentDto.getParentCommentId()) > 0) {
+
+            articleMapper.createComment(commentDto);
+        } else {
+            // 존재하지 않는 parentCommentId에 대한 처리, 예외 던지기 또는 로깅
+            log.warn("유효하지 않는 parentCommentId: " + commentDto.getParentCommentId());
+            throw new Exception("유효하지 않는 parentCommentId");
+        }
 
     }
 
