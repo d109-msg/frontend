@@ -20,19 +20,19 @@
       </div>
     </div>
     <div class="feed-game-box">
-      <MyFeedVue></MyFeedVue>
+      <MyFeedVue :id="userInfo.id"></MyFeedVue>
       <MyGameVue></MyGameVue>
     </div>
   </div>
   <div v-if="isEdit==true"  >
-    <EditProfile @close-edit="isEdit=false" :userInfo="userInfo" />
+    <!-- <EditProfile @close-edit="isEdit=false" :userInfo="userInfo" /> -->
   </div>
   
   
 </div>
 </template>
 
-<script>
+<script>  
 import { useAuthStore } from '@/store/authStore'
 import MyFeedVue from './UserFeed.vue'
 import MyGameVue from './UserGame.vue'
@@ -58,30 +58,29 @@ export default {
     getUser : async function(){
       const auth = useAuthStore()
       try{
-        let value = await auth.getUser()
+        console.log(this.$route.params.id)
+        let value = await auth.getOtherUser(this.$route.params.id)
+        console.log(value)
         this.userInfo = value.data
-        auth.setUserInfo(this.userInfo)
-        this.userNickname = this.userInfo.nickname
-        this.userEmail = this.userInfo.emailId
-        this.userId = this.userInfo.id
+        if(value.data === ""){
+          alert('존재하지 않는 회원 정보입니다.')
+          router.push('/')
+        }
+        // console.log(this.userInfo)
+        // this.userNickname = this.userInfo.nickname
+        // this.userEmail = this.userInfo.emailId
+        // this.userId = this.userInfo.id
 
       } catch (error) {
-        try{
-          await auth.useRefresh()
-          value = await auth.getUser()
-          this.userInfo = value.data
-        }
-        catch{
-          alert('로그인 세션이 만료되었습니다.')
-          router.push('/login')
-        }
-        console.log(error)}
+        
+        console.log(error)  
+      }
     },
     startPage : async function(){
       const auth = useAuthStore()
       try{
           await auth.useRefresh()
-          const info = await this.getUser()
+          await this.getUser()
       } catch(err){console.log(err)}
     }
   },
@@ -89,7 +88,7 @@ export default {
   },
   mounted(){
     this.startPage()
-
+    this.$route.params.id
   }
 }
 </script>

@@ -30,11 +30,20 @@ export default {
         detail : {}
       }
     },
+    props:{
+      id : Number
+    },
+    watch: {
+      id(){
+        this.getFeed()
+      }
+    },
     methods:{
       getFeed : async function(){
       const feed = useFeedStore()
       try{
-        let value = await feed.getUserProfile(this.myInfo.id)
+        
+        let value = await feed.getUserProfile(this.id)
         this.myFeed = value.data
         console.log(this.myFeed)
       } catch(error) {
@@ -55,7 +64,7 @@ export default {
     mounted(){
       const auth = useAuthStore()
       this.myInfo = auth.getUserInfo
-      this.getFeed()
+
     },
     
     

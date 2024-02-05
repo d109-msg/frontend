@@ -6,10 +6,10 @@ import axios from "axios"
 
 
 const cookies = useCookies().cookies
-// const server =  'https://i10d109.p.ssafy.io/api'
-// const server2 = 'http://localhost:8080/api'
-const server = 'http://localhost:8080/api'
-const server2 = 'https://i10d109.p.ssafy.io/api'
+const server =  'https://i10d109.p.ssafy.io/api'
+const server2 = 'http://localhost:8080/api'
+// const server = 'http://localhost:8080/api'
+// const server2 = 'https://i10d109.p.ssafy.io/api'
 export const useAuthStore = defineStore('auth',{
     state: ()=>({
         access: "",
@@ -116,7 +116,7 @@ export const useAuthStore = defineStore('auth',{
             return axios.get(`${server}/user/info`,{ headers })
         },
         async guestFeed(){
-            return axios.get(`${server}/article/guestFeed`)
+            return axios.get(`${server}/article/guest`)
         },
         async getFollowing(){
             const token = this.getAccess
@@ -175,6 +175,12 @@ export const useAuthStore = defineStore('auth',{
                 'Content-Type' : "application/json"
             }
             return axios.post(`${server}/user/follow`,JSON.stringify(data),{headers})
+        },
+        async getOtherUser(idx){
+            const headers = {
+                Authorization : `Bearer ${this.getAccess}`
+            }
+            return axios.get(`${server}/user/info/${idx}`,{headers})
         }
     },
     persist: [
