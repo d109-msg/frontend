@@ -240,15 +240,15 @@ CREATE TABLE `daily_missions` (
   `normal_vote` int(11) DEFAULT NULL,
   `mafia_vote` int(11) DEFAULT NULL,
   `doctor_vote` int(11) DEFAULT NULL,
-  `article_id` int(11) DEFAULT NULL,
   `reporter_vote` INT(11) DEFAULT NULL,
-  `police_vote` INT(11) DEFAULT NULL,
-  `cleaner_vote` INT(11) DEFAULT NULL,
-  `idiot_vote` INT(11) DEFAULT NULL,
-  `hunter_vote` INT(11) DEFAULT NULL,
-  `ganster_vote` INT(11) DEFAULT NULL,
-  `spy_vote` INT(11) DEFAULT NULL,
-
+  `article_id` int(11) DEFAULT NULL,
+--   
+--   `police_vote` INT(11) DEFAULT NULL,
+--   `cleaner_vote` INT(11) DEFAULT NULL,
+--   `idiot_vote` INT(11) DEFAULT NULL,
+--   `hunter_vote` INT(11) DEFAULT NULL,
+--   `ganster_vote` INT(11) DEFAULT NULL,
+--   `spy_vote` INT(11) DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `daily_missions_users_FK` (`normal_vote`),
   KEY `daily_missions_users_FK_1` (`mafia_vote`),
@@ -262,13 +262,13 @@ CREATE TABLE `daily_missions` (
   CONSTRAINT `daily_missions_users_FK` FOREIGN KEY (`normal_vote`) REFERENCES `participants` (`id`) ON DELETE CASCADE,
   CONSTRAINT `daily_missions_users_FK_1` FOREIGN KEY (`mafia_vote`) REFERENCES `participants` (`id`) ON DELETE CASCADE,
   CONSTRAINT `daily_missions_users_FK_2` FOREIGN KEY (`doctor_vote`) REFERENCES `participants` (`id`) ON DELETE CASCADE,
-  CONSTRAINT `daily_missions_users_FK_3` FOREIGN KEY (`reporter_vote`) REFERENCES `participants` (`id`) ON DELETE CASCADE,
-  CONSTRAINT `daily_missions_users_FK_4` FOREIGN KEY (`police_vote`) REFERENCES `participants` (`id`) ON DELETE CASCADE,
-  CONSTRAINT `daily_missions_users_FK_5` FOREIGN KEY (`cleaner_vote`) REFERENCES `participants` (`id`) ON DELETE CASCADE,
-  CONSTRAINT `daily_missions_users_FK_6` FOREIGN KEY (`idiot_vote`) REFERENCES `participants` (`id`) ON DELETE CASCADE,
-  CONSTRAINT `daily_missions_users_FK_7` FOREIGN KEY (`hunter_vote`) REFERENCES `participants` (`id`) ON DELETE CASCADE,
-  CONSTRAINT `daily_missions_users_FK_8` FOREIGN KEY (`ganster_vote`) REFERENCES `participants` (`id`) ON DELETE CASCADE,
-  CONSTRAINT `daily_missions_users_FK_9` FOREIGN KEY (`spy_vote`) REFERENCES `participants` (`id`) ON DELETE CASCADE
+  CONSTRAINT `daily_missions_users_FK_3` FOREIGN KEY (`reporter_vote`) REFERENCES `participants` (`id`) ON DELETE CASCADE
+--   CONSTRAINT `daily_missions_users_FK_4` FOREIGN KEY (`police_vote`) REFERENCES `participants` (`id`) ON DELETE CASCADE,
+--   CONSTRAINT `daily_missions_users_FK_5` FOREIGN KEY (`cleaner_vote`) REFERENCES `participants` (`id`) ON DELETE CASCADE,
+--   CONSTRAINT `daily_missions_users_FK_6` FOREIGN KEY (`idiot_vote`) REFERENCES `participants` (`id`) ON DELETE CASCADE,
+--   CONSTRAINT `daily_missions_users_FK_7` FOREIGN KEY (`hunter_vote`) REFERENCES `participants` (`id`) ON DELETE CASCADE,
+--   CONSTRAINT `daily_missions_users_FK_8` FOREIGN KEY (`ganster_vote`) REFERENCES `participants` (`id`) ON DELETE CASCADE,
+--   CONSTRAINT `daily_missions_users_FK_9` FOREIGN KEY (`spy_vote`) REFERENCES `participants` (`id`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 

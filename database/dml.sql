@@ -3,14 +3,14 @@ use msg;
 INSERT INTO `first_nicknames` (`id`) VALUES
 ('명석한'), ('사악한'), ('정의로운'), ('우울한'), ('냉철한'), ('기발한'), ('재치 있는'), ('재능 있는'),
 ('즐거운'), ('미스터리한'), ('불가사의한'), ('치밀한'), ('냉정한'), ('능숙한'), ('영악한'), ('음흉한'),
-('치열한'), ('은밀한'), ('논리적인'), ('비밀스러운'), ('사려 깊은'), ('재빠른'), ('기교 있는'),
+('치열한'), ('은밀한'), ('논리적인'), ('비밀스러운'), ('사려 깊은'), ('재빠른'), ('기교 있는'),('지혜로운'),
 ('명민한'), ('빈틈없는'), ('기만하는'), ('천재적인'), ('계산적인'), ('조용한'), ('거짓말쟁이'), ('정직한'), ('황금빛');
 
 
 INSERT INTO `last_nicknames` (`id`) VALUES
 ('콜레오네'), ('홈즈'), ('진'), ('블레이크'), ('커닝햄'), ('데모네'), ('에버렛'), ('파울러'),
 ('그리핀'), ('할로웨이'), ('잉그램'), ('젠킨스'), ('켄달'), ('레이'), ('맥코이'), ('니콜슨'),
-('오닐'), ('페인'), ('퀸'), ('리들'), ('스틸'), ('터너'), ('윈터스'), ('드미트리'), ('예인'), ('규환시치'), ('호저');
+('오닐'), ('페인'), ('퀸'), ('리들'), ('스틸'), ('터너'), ('윈터스'), ('드미트리'), ('예인'), ('임규환'), ('호저');
 
 INSERT INTO first_room_names  (`id`) VALUES
 ('축축한'), ('음산한'), ('비내리는'), ('어두운'), ('밝은'),
@@ -20,10 +20,22 @@ INSERT INTO last_room_names  (`id`) VALUES
 ('런던'), ('둔산동'), ('인의동'), ('애버내시'),
 ('파리'), ('서울'), ('뉴욕'), ('베를린'), ('도쿄'), ('브루클린');
 
-insert into jobs (`id`, `info`, `image_url`) values
+INSERT INTO jobs (`id`, `info`, `image_url`) VALUES
+('훼방꾼', '시민들도 마피아 미션을 진행하게 만듭니다.', 'tmp_image_url'),
 ('마피아', '마피아입니다.', 'tmpurl'),
 ('시민', '시민입니다.', 'tmpurl'),
-('의사', '의사입니다.', 'tmpurl');
+('기자', '밤에 사람을 선택해 직업을 밝혀냅니다.', 'tmpurl'),
+('의사', '의사입니다.', 'tmpurl'),
+('경찰', '경찰입니다.', 'tmpurl'),
+('정치인', '정치인입니다.', 'tmpurl'),
+('군인', '군인입니다.', 'tmpurl'),
+('판사', '판사입니다.', 'tmpurl'),
+('미치광이', '미치광이입니다.', 'tmpurl'),
+('불침번', '불침번입니다.', 'tmpurl'),
+('청소부', '청소부입니다.', 'tmpurl'),
+('변장술사', '변장술사입니다.', 'tmpurl'),
+('스파이', '스파이입니다.', 'tmpurl'),
+('건달', '건달입니다.', 'tmpurl');
 
 INSERT INTO users (email_id, email_password, nickname, image_url, sign_up_time) VALUES 
 ('hong@ssafy.com', '$2a$10$8C8PCUov//Edd6tWzdvvTupTLkAXiIOPn/OZMioTWNx5NOtgHl6rq', '홍길동', 'https://team109testbucket.s3.ap-northeast-2.amazonaws.com/player1.png', NOW()),
@@ -105,6 +117,15 @@ INSERT INTO `participants` (`id`, `room_id`, `user_id`, `last_message_id`, `flag
 (6, 'room4', 6, NULL, 0, '시민', 'https://team109testbucket.s3.ap-northeast-2.amazonaws.com/player6.png', '비밀스러운 콜레오네'),
 (7, 'room4', 7, NULL, 0, '시민', 'https://team109testbucket.s3.ap-northeast-2.amazonaws.com/player1.png', '기발한 윈터스');
 
+INSERT INTO `participants` (`id`, `room_id`, `user_id`, `last_message_id`, `nickname`) VALUES
+(11, 'room1', 1, NULL,'거짓말쟁이 니콜슨'),
+(12, 'room1', 2, NULL, '재능 있는 젠킨스'),
+(13, 'room1', 3, NULL, '능숙한 스틸'),
+(14, 'room1', 4, NULL, '우울한 터너'),
+(15, 'room1', 5, NULL, '은밀한 데모네'),
+(16, 'room1', 6, NULL, '비밀스러운 콜레오네'),
+(17, 'room1', 7, NULL, '기발한 윈터스');
+
 INSERT INTO `missions` (`normal`, `mafia`) VALUES
 ('자연 사진', '나무 사진'),
 ('자연 사진', '하늘 사진'),
@@ -175,9 +196,20 @@ VALUES
 (5, 'https://team109testbucket.s3.ap-northeast-2.amazonaws.com/player11.png', 'player11.png', 0),
 (5, 'https://team109testbucket.s3.ap-northeast-2.amazonaws.com/player12.png', 'player12.png', 0);
 
-SELECT * FROM follows;
+INSERT INTO article_images (article_id, url, uuid, flag_mission) VALUES
+(3, 'https://team109testbucket.s3.ap-northeast-2.amazonaws.com/player10.png', 'player10.png', 0),
+(4, 'https://team109testbucket.s3.ap-northeast-2.amazonaws.com/player10.png', 'player10.png', 0),
+(6, 'https://team109testbucket.s3.ap-northeast-2.amazonaws.com/player10.png', 'player10.png', 0),
+(7, 'https://team109testbucket.s3.ap-northeast-2.amazonaws.com/player10.png', 'player10.png', 0),
+(8, 'https://team109testbucket.s3.ap-northeast-2.amazonaws.com/player10.png', 'player10.png', 0),
+(9, 'https://team109testbucket.s3.ap-northeast-2.amazonaws.com/player10.png', 'player10.png', 0),
+(10, 'https://team109testbucket.s3.ap-northeast-2.amazonaws.com/player10.png', 'player10.png', 0);
+
+-- SELECT * FROM follows;
 SELECT * FROM articles ;
-SELECT * FROM article_images ai ;
-SELECT * FROM daily_missions dm ;
-SELECT * FROM participants p ;
-SELECT * FROM users;
+-- SELECT * FROM article_images ai ;
+-- SELECT * FROM daily_missions dm ;
+SELECT * FROM participants;
+-- SELECT * FROM users;
+-- SELECT * FROM rooms;
+
