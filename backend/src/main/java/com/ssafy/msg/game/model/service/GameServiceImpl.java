@@ -43,7 +43,10 @@ public class GameServiceImpl implements GameService{
     private final OpenAiUtil openAiUtil;
 
 
-
+    @Override
+    public List<ParticipantDto> getParticipants(String roomId) throws Exception {
+        return gameMapper.getParticipants(roomId);
+    }
 
     @Override
     public boolean getRandomGameApplyStatus(int userId) throws Exception {
