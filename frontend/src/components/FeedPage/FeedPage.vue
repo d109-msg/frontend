@@ -63,6 +63,9 @@ import router from '@/router';
                 isLogin : false,
                 userInfo : {},
                 nextUrl : "",
+                guestio : {},
+                guestUrl : 'http://localhost:8080/api/article/guest',
+                nextGuestUrl : "",
             }
         },  
 
@@ -153,9 +156,10 @@ import router from '@/router';
             axiosGuest : async function(){
                 const auth = useAuthStore()
                 let value = await auth.guestFeed()
-                value.data.forEach(item=>{
-                    this.feedList.push(item)
-                })
+                console.log(value)
+                // value.data.forEach(item=>{
+                //     this.feedList.push(item)
+                // })
             },
             goLogin : function(){
                 router.push('/login')
@@ -188,6 +192,7 @@ import router from '@/router';
         mounted(){
             const auth = useAuthStore()
             this.io = new IntersectionObserver(this.callBack,{ threshold : 0.7})
+            this.guestio = new IntersectionObserver(()=>{},{threshold : 0.7})
             //요소의 가시성을 0.7로 설정, 요소가 70% 뷰포트에 가시 될 시 지정한 callBack 함수 실행
             this.startPage()
         },

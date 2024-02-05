@@ -116,7 +116,7 @@ export const useAuthStore = defineStore('auth',{
             return axios.get(`${server}/user/info`,{ headers })
         },
         async guestFeed(){
-            return axios.get(`${server}/article/guestFeed`)
+            return axios.get(`${server}/article/guest`)
         },
         async getFollowing(){
             const token = this.getAccess
@@ -175,6 +175,12 @@ export const useAuthStore = defineStore('auth',{
                 'Content-Type' : "application/json"
             }
             return axios.post(`${server}/user/follow`,JSON.stringify(data),{headers})
+        },
+        async getOtherUser(idx){
+            const headers = {
+                Authorization : `Bearer ${this.getAccess}`
+            }
+            return axios.get(`${server}/user/info/${idx}`,{headers})
         }
     },
     persist: [
