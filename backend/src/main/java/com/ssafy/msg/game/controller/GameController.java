@@ -37,6 +37,28 @@ public class GameController {
 
     private final GameService gameService;
 
+    @GetMapping("/room/participant")
+    @Operation(summary = "방 참가자 리스트 조회", description = "roomId에 따른 방 참가자 리스트 조회")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "조회 성공", content = @Content),
+            @ApiResponse(responseCode = "400", description = "조회 실패", content = @Content) })
+    public ResponseEntity<?> getParticipants(@RequestParam("roomId") String roomId){
+        log.info("getParticipants() -> roomId : {}", roomId);
+
+        try {
+            List<ParticipantDto> list = gameService.getParticipants(roomId);
+            log.info("getParticipants() -> list : {}", list);
+
+            return new ResponseEntity<>(list, HttpStatus.OK);
+        } catch (Exception e) {
+            log.error("getParticipants() -> error : {}", e.toString());
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        } finally {
+            log.info("getParticipants() -> end");
+        }
+
+    }
+
     @GetMapping("/user/rate")
     @Operation(summary = "유저 승패 가져오기", description = "userId를 입력받아 유저의 게임 통계를 가져옵니다.")
     @ApiResponses(value = {
@@ -108,7 +130,7 @@ public class GameController {
         }
     }
 
-    @GetMapping("/room/alive")
+    @GetMapping("/room/num")
     @Operation(summary = "살아있는 참가자 리스트와 데일리 미션 성공 여부", description = "roomId를 입력받아 게임방 내의 살아있는 참가자만 데일리 미션 성공 여부와 함께 리턴")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "조회 성공", content = {

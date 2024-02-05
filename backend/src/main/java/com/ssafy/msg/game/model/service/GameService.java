@@ -10,6 +10,9 @@ import org.springframework.web.multipart.MultipartFile;
 import java.util.List;
 
 public interface GameService {
+
+    List<ParticipantDto> getParticipants(String roomId) throws Exception;
+
     boolean getRandomGameApplyStatus(int userId) throws Exception;
 
     boolean applyRandomGame(int userId) throws Exception;

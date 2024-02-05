@@ -4,8 +4,10 @@ import com.ssafy.msg.article.util.S3Util;
 import com.ssafy.msg.game.model.dto.EnterGroupRoomDto;
 import com.ssafy.msg.game.model.dto.ParticipantDto;
 import com.ssafy.msg.message.model.dto.ImageMessageDto;
+import com.ssafy.msg.message.model.dto.MessageRequestDto;
 import com.ssafy.msg.message.model.dto.MessageResponseDto;
 import com.ssafy.msg.message.model.dto.TextMessageDto;
+import com.ssafy.msg.message.model.entity.MessageEntity;
 import com.ssafy.msg.message.model.mapper.MessageMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -35,6 +37,32 @@ public class MessageServiceImpl implements MessageService{
                 .dataType("text")
                 .text(textMessageDto.getText()).build();
         sendingOperations.convertAndSend("/sub/"+messageResponseDto.getRoomId(), messageResponseDto);
+
+
+//
+//        MessageRequestDto messageRequestDto = MessageRequestDto.builder()
+//                .userId(userId)
+//                .roomId(textMessageDto.getRoomId())
+//                .content(textMessageDto.getText()).build();
+//
+//        // MessageRequestDto를 MessageEntity로 변환
+//        MessageEntity messageEntity = messageRequestDto.toEntity();
+//        messageEntity.setCreateTime(dateTimeUtil.getCurrentDateTime());
+//
+//        // messageRepository를 이용하여 messageEntity를 저장
+//        messageRepository.save(messageEntity);
+//        log.info(String.valueOf(messageEntity));
+//
+//        MessageResponseDto messageResponseDto = MessageResponseDto.builder()
+//                .id(messageEntity.getId())
+//                .roomId(messageEntity.getRoomId())
+//                .userId(messageEntity.getUserId())
+//                .flagMafia(messageEntity.getFlagMafia())
+//                .sendTime(messageEntity.getCreateTime())
+//                .dataType("text")
+//                .text(messageEntity.getContent()).build();
+//
+//        sendingOperations.convertAndSend("/sub/"+messageResponseDto.getRoomId(), messageResponseDto);
     }
 
     @Override
