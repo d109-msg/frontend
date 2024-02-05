@@ -16,7 +16,7 @@ public interface ArticleService {
 
     List<ArticleWithUrlDto> getArticles(Integer userId) throws Exception; // 전체 게시물 리스트 받아옴
 
-    ArticleDetailDto getArticleDetail(ArticleDto articleDto) throws Exception; // 게시물 하나 조회
+    ArticleDetailDto getArticleDetail(ArticleDto articleDto, int id) throws Exception; // 게시물 하나 조회
 
     List<ArticleDetailDto> getFeedArticleList(FeedParamDto feedParamDto) throws Exception;
 

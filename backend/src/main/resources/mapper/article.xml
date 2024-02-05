@@ -53,6 +53,7 @@
             a.user_id,
             u.nickname,
             u.email_id,
+            u.image_url,
             a.content,
             a.create_time,
             a.modify_time,
@@ -133,8 +134,9 @@
             where f.from_user_id = #{userId}
             )
         or a.user_id = #{userId})
-        order by a.create_time desc
-        limit #{limit} offset #{offset};
+        and a.id &lt; #{offset}
+        order by a.create_time desc, a.id desc
+        limit #{limit};
 
     </select>
 
@@ -225,6 +227,12 @@
         values (#{articleId}, #{userId}, #{parentCommentId}, #{content}, now());
 
     </insert>
+
+    <select id="countParentId" parameterType="int" resultType="int">
+        select count(*) as countParentId
+        from comments c
+        where c.id = #{parentId};
+    </select>
 
     <select id="getComments" parameterType="CommentDto" resultType="CommentDto">
         SELECT *, users.nickname, users.email_id, users.image_url
