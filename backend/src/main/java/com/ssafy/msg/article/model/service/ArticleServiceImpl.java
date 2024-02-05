@@ -4,6 +4,7 @@ import com.ssafy.msg.article.model.dto.*;
 import com.ssafy.msg.article.model.mapper.ArticleMapper;
 import com.ssafy.msg.article.util.S3Util;
 import com.ssafy.msg.user.exception.UserNotFoundException;
+import com.ssafy.msg.webpush.model.service.WebPushService;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -22,6 +23,7 @@ public class ArticleServiceImpl implements ArticleService{
     private final ArticleMapper articleMapper;
     private final UserMapper userMapper;
 
+    private final WebPushService webPushService;
 
     private final S3Util s3Util;
 
@@ -293,15 +295,17 @@ public class ArticleServiceImpl implements ArticleService{
     @Override
     public void createComment(CommentDto commentDto) throws Exception {
         log.info("(ArticleServiceImpl) 댓글 작성 서비스 시작");
-        if (commentDto.getParentCommentId() != null
-                && articleMapper.countParentId(commentDto.getParentCommentId()) > 0) {
-
-            articleMapper.createComment(commentDto);
-        } else {
-            // 존재하지 않는 parentCommentId에 대한 처리, 예외 던지기 또는 로깅
-            log.warn("유효하지 않는 parentCommentId: " + commentDto.getParentCommentId());
-            throw new Exception("유효하지 않는 parentCommentId");
-        }
+        articleMapper.createComment(commentDto);
+//        if (commentDto.getParentCommentId() != null
+//                && articleMapper.countParentId(commentDto.getParentCommentId()) > 0) {
+//
+//            articleMapper.createComment(commentDto);
+//        } else {
+//            // 존재하지 않는 parentCommentId에 대한 처리, 예외 던지기 또는 로깅
+//            log.warn("유효하지 않는 parentCommentId: " + commentDto.getParentCommentId());
+//            throw new Exception("유효하지 않는 parentCommentId");
+//        }
+        webPushService.sendCommentWebPush(commentDto);
 
     }
 
