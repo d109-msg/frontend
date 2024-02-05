@@ -1,7 +1,7 @@
 package com.ssafy.msg.message.model.dto;
 
-import com.ssafy.msg.mongodb.model.entity.MessageEntity;
-import com.ssafy.msg.mongodb.model.entity.MessageImageEntity;
+import com.ssafy.msg.message.model.entity.MessageEntity;
+import com.ssafy.msg.message.model.entity.MessageImageEntity;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;

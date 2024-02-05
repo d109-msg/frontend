@@ -4,8 +4,8 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
 
-import com.ssafy.msg.redis.model.entity.RefreshTokenEntity;
-import com.ssafy.msg.redis.model.repo.RefreshTokenRepository;
+import com.ssafy.msg.user.model.entity.RefreshTokenEntity;
+import com.ssafy.msg.user.model.repo.RefreshTokenRepository;
 import com.ssafy.msg.user.model.dto.*;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;

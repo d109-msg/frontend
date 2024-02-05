@@ -1,6 +1,6 @@
-package com.ssafy.msg.redis.model.repo;
+package com.ssafy.msg.user.model.repo;
 
-import com.ssafy.msg.redis.model.entity.RefreshTokenEntity;
+import com.ssafy.msg.user.model.entity.RefreshTokenEntity;
 import org.springframework.data.repository.CrudRepository;
 
 public interface RefreshTokenRepository extends CrudRepository<RefreshTokenEntity, String> {
