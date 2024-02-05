@@ -10,8 +10,8 @@ import Mainpage from './components/MainPage/MainPage.vue'
 import GamePage from './components/GamePage/GamePage.vue'
 import ChangePassword from './components/ChangePassword/ChangePassword.vue'
 import RoomDetailPage from "./components/RoomDetail/RoomDetailPage.vue"
+import UserPage from "./components/UserPage/UserPage.vue"
 import { useAuthStore } from "./store/authStore";
-
 
 const routes = [
     {
@@ -62,6 +62,21 @@ const routes = [
                 name: "room",
                 path: "/game/:roomId",
                 component: RoomDetailPage,
+            },
+            {
+                name: "userpage",
+                path:"/user/:id",
+                component : UserPage,
+                beforeEnter: (to, from, next) => {
+                    const auth = useAuthStore()
+                    console.log(auth.getAccess)
+                    if(auth.getAccess==""){
+                        alert('로그인이 필요한 페이지입니다.')
+                        return next(from.fullPath)
+                    }else{
+                        return next()
+                    }
+                }
             }
 
 
