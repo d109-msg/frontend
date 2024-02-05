@@ -67,12 +67,14 @@ export default {
         this.userNickname = this.userInfo.nickname
         this.userEmail = this.userInfo.emailId
         this.userId = this.userInfo.id
+        console.log(userInfo)
 
       } catch (error) {
         try{
           await auth.useRefresh()
           value = await auth.getUser()
           this.userInfo = value.data
+          
         }
         catch{
           alert('로그인 세션이 만료되었습니다.')
