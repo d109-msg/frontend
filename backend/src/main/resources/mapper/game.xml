@@ -12,7 +12,7 @@
 		WHERE p1.id = #{participantId};
 	</select>
 	
-	<select id="getAbility" parameterType="GetAbilityParamDto" resultType="GetAbilityResultDto">
+	<select id="getAbilityAvailability" parameterType="GetAbilityParamDto" resultType="GetAbilityResultDto">
 		SELECT
 			dm.flag_success,
 			p.flag_die,
@@ -116,7 +116,7 @@
 	</select>
 
 	<insert id="createNewMission" parameterType="NewMissionDto">
-		INSERT INTO daily_missions (participant_id, try, flag_success, mission_id, day, normal_vote, mafia_vote, doctor_vote)
+		INSERT INTO daily_missions (participant_id, try, flag_success, mission_id, day, normal_vote, mafia_vote, doctor_vote, reporter_vote)
 		SELECT
 			p.id,
 			0,
@@ -131,7 +131,11 @@
 			CASE
 				WHEN p.job_id = '의사' THEN p.id
 				ELSE NULL
-				END AS doctor_vote
+				END AS doctor_vote,
+			CASE
+				WHEN p.job_id = '기자' THEN p.id
+				ELSE NULL
+				END AS reporter_vote
 		FROM
 			participants p
 		WHERE
@@ -159,11 +163,12 @@
 			LIMIT 1;
 	</select>
 
-	<select id="getMyVote" parameterType="Map" resultType="myVoteDto">
+	<select id="getMyVote" parameterType="Map" resultType="MyVoteDto">
 		SELECT
 				(SELECT nickname FROM participants WHERE id = dm.normal_vote) AS normal_vote,
 				(SELECT nickname FROM participants WHERE id = dm.mafia_vote) AS mafia_vote,
-				(SELECT nickname FROM participants WHERE id = dm.doctor_vote) AS doctor_vote
+				(SELECT nickname FROM participants WHERE id = dm.doctor_vote) AS doctor_vote,
+				(SELECT nickname FROM participants WHERE id = dm.reporter_vote) AS reporter_vote
 		FROM
 			daily_missions dm
 		WHERE
@@ -188,6 +193,13 @@
 	<update id="doctorVote" parameterType="Map">
 		UPDATE daily_missions
 		SET docotr_vote = #{targetId}
+		WHERE participant_id = #{participantId}
+				  AND day = #{day};
+	</update>
+
+	<update id="reporterVote" parameterType="Map">
+		UPDATE daily_missions
+		SET reporter_vote = #{targetId}
 		WHERE participant_id = #{participantId}
 				  AND day = #{day};
 	</update>

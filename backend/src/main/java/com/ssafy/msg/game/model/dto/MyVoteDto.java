@@ -13,4 +13,5 @@ public class MyVoteDto {
     private String normalVote;
     private String mafiaVote;
     private String doctorVote;
+    private String reporterVote;
 }

@@ -182,7 +182,7 @@ public class GameServiceImpl implements GameService{
         }
 
         MyVoteDto dto = gameMapper.getMyVote(participantId, day);
-        GetAbilityResultDto abilityResultDto = gameMapper.getAbility(new GetAbilityParamDto(participantId, day));
+        GetAbilityResultDto abilityResultDto = gameMapper.getAbilityAvailability(new GetAbilityParamDto(participantId, day));
         String job = abilityResultDto.getJobId();
         String faction = GameUtil.getRoleType(job);
 
@@ -203,6 +203,9 @@ public class GameServiceImpl implements GameService{
             } else if(job.equals("의사")) {
                 log.info("getMyVote() result : {}", dto.getDoctorVote());
                 return dto.getDoctorVote();
+            } else if(job.equals("기자")) {
+                log.info("getMyVote() result : {}", dto.getReporterVote());
+                return dto.getReporterVote();
             } else {
                 return dto.getNormalVote();
             }
@@ -377,15 +380,13 @@ public class GameServiceImpl implements GameService{
     public List<String> getJobs(int num) {
         List<String> result = new ArrayList<>();
 
-        result.add("마피아");
-        result.add("마피아");
-        result.add("의사");
-
-        for(int i = 0; i < num - 3; i++){
-            result.add("시민");
-        }
+        //랜덤 직업을 바로 배정
+        result.addAll(GameUtil.getMafiaRoles(2));
+        result.addAll(GameUtil.getCivilRoles(num - 2));
 
         Collections.shuffle(result);
+
+        log.info("getJobs() result : {}", result);
 
         return result;
     }
@@ -599,7 +600,7 @@ public class GameServiceImpl implements GameService{
             return "participant is dead";
         }
 
-        GetAbilityResultDto abilityDto = gameMapper.getAbility(new GetAbilityParamDto(day, voteReceiveDto.getParticipantId()));
+        GetAbilityResultDto abilityDto = gameMapper.getAbilityAvailability(new GetAbilityParamDto(day, voteReceiveDto.getParticipantId()));
 
         if(abilityDto.getFlagSuccess() == 0){
             log.info("vote() mission uncompleted");
@@ -623,6 +624,10 @@ public class GameServiceImpl implements GameService{
                 //의사 투표
                 log.info("vote() -> doctorVote : {}", voteReceiveDto.getTargetId());
                 gameMapper.doctorVote(voteReceiveDto.getParticipantId(), voteReceiveDto.getTargetId(), day);
+            } else if (voteReceiveDto.getJobId().equals("기자")) {
+                //기자 투표
+                log.info("vote() -> reporterVote : {}", voteReceiveDto.getTargetId());
+                gameMapper.reporterVote(voteReceiveDto.getParticipantId(), voteReceiveDto.getTargetId(), day);
             }
         }
 
@@ -656,7 +661,7 @@ public class GameServiceImpl implements GameService{
      * roomId와 day를 입력받아 해당 room에서 수행한적 없는 미션을 랜덤으로 골라
      * 모든 participant에게 새로운 daily미션을 입력받은 day로 만든다.
      * 모든 dailyMission은 생성될 때 기본적으로 각 보트가 본인을 찍음
-     * 마피아나 의사가 아니라면 해당 vote는 null로 처리
+     * 마피아나 의사, 기자가 아니라면 해당 vote는 null로 처리
      * @param roomId 새로운 미션을 분배할 roomId 입력
      * @param day   새로 만들 미션의 날짜
      * @throws Exception
