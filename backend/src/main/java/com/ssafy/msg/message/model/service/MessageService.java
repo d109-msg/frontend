@@ -11,7 +11,7 @@ import java.sql.SQLException;
 
 public interface MessageService {
 
-    void sendTextMessage(MessageRequestDto messageRequestDto);
+    void sendTextMessage(TextMessageDto textMessageDto, int userId);
     void sendImageMessage(ImageMessageDto imageMessageDto, int userId) throws IOException;
 
     // 사용자 설정 게임 입장 메시지 전송
