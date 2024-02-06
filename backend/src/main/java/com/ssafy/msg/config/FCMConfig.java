@@ -24,6 +24,7 @@ public class FCMConfig {
             if (FirebaseApp.getApps().isEmpty()){
                 FirebaseApp.initializeApp(options);
             }
+
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
