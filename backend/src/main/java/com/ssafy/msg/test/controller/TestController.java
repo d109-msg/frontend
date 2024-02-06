@@ -51,6 +51,9 @@ public class TestController {
     private final NotificationRepository notificationRepository;
     private final DateTimeUtil dateTimeUtil;
 
+    /*
+    서버 상태 확인 start =============================================================
+     */
     @Operation(summary = "서버 상태 확인", description = "서버 상태 확인")
     @GetMapping("/hc")
     public ResponseEntity<?> healthCheck() {
@@ -67,71 +70,32 @@ public class TestController {
     public ResponseEntity<?> getEnv() {
         return ResponseEntity.ok(serverEnv);
     }
+    /*
+    서버 상태 확인 end =============================================================
+     */
 
-    // 기본적으로 MongoDB 관련 Entity, Repository는 mongodb 패키지에서 관리
-    // 기본적으로 Redis 관련 Entity, Repository는 redis 패키지에서 관리
-    // 다만 Dto는 원래 패키지에서 관리 (예를 들어 MessageRequestDto는 message 패키지에서 관리)
 
+
+    /*
+    메시지 api start =============================================================
+     */
     @Operation(summary = "메시지 저장", description = "메시지 저장")
     @PostMapping("/mongodb/message/save")
     public ResponseEntity<?> saveMessage(@RequestBody MessageRequestDto messageRequestDto) {
 
         // MessageRequestDto를 MessageEntity로 변환
         MessageEntity messageEntity = messageRequestDto.toEntity();
+        
+        // 실제로는 프론트 측에서 dataType을 적어서 줘야 할 듯함 (아님 말고..)
+        // 공지의 경우 여기에서 set하고 저장
+        messageEntity.setDataType("chat"); // chat, image, notice
+        
         messageEntity.setCreateTime(dateTimeUtil.getCurrentDateTime());
-
-//        System.out.println(messageEntity);
 
         // messageRepository를 이용하여 messageEntity를 저장
         messageRepository.save(messageEntity);
 
-//        System.out.println(messageEntity);
-
         return ResponseEntity.ok("success");
-    }
-
-    @Operation(summary = "일반 알림 저장", description = "일반 알림 저장")
-    @PostMapping("/mongodb/notification/save")
-    public ResponseEntity<?> saveNotification(@RequestBody NotificationRequestDto notificationRequestDto) {
-
-        // NotificationRequestDto를 NotificationEntity로 변환
-        NotificationEntity notificationEntity = notificationRequestDto.toEntity();
-        notificationEntity.setCreateTime(dateTimeUtil.getCurrentDateTime());
-
-//        System.out.println(notificationEntity);
-
-        // notificationRepository를 이용하여 notificationEntity를 저장
-        notificationRepository.save(notificationEntity);
-
-//        System.out.println(notificationEntity);
-
-        return ResponseEntity.ok("success");
-    }
-
-    @Operation(summary = "일반 알림 클릭 시 읽음 처리", description = "일반 알림 클릭 시 읽음 처리")
-    @PatchMapping("/mongodb/notification/update")
-    public ResponseEntity<?> updateNotification(@RequestBody NotificationIdDto notificationIdDto) {
-
-        // NotificationIdDto를 이용하여 해당 알림을 찾아서 flagRead를 1로 변경
-        NotificationEntity notificationEntity = notificationRepository.findById(notificationIdDto.getId()).orElse(null);
-        notificationEntity.setFlagRead(1);
-
-        // 변경된 notificationEntity를 저장 (기본적으로 Repository로 update하려면 save 메소드를 사용; 기존 Entity에서 해당 프로퍼티만 수정)
-        notificationRepository.save(notificationEntity);
-
-        // 변경된 notificationEntity 출력
-//        System.out.println(notificationEntity);
-
-        return ResponseEntity.ok("success");
-    }
-
-    @Operation(summary = "userId에 해당하는 회원의 알림 전체 조회", description = "userId에 해당하는 회원의 알림 전체 조회")
-    @GetMapping("/mongodb/notification/{userId}")
-    public ResponseEntity<?> getNotification(int userId) {
-
-        List<NotificationEntity> notifications = notificationRepository.findByUserId(userId);
-
-        return ResponseEntity.ok(notifications);
     }
 
     @Operation(summary = "roomId에 해당하는 채팅 전체 조회", description = "roomId에 해당하는 채팅 전체 조회")
@@ -151,6 +115,54 @@ public class TestController {
 
         return ResponseEntity.ok(message);
     }
+    /*
+    메시지 api end =============================================================
+     */
+
+
+
+    /*
+    알림 api start =============================================================
+     */
+    @Operation(summary = "일반 알림 저장", description = "일반 알림 저장")
+    @PostMapping("/mongodb/notification/save")
+    public ResponseEntity<?> saveNotification() {
+
+        NotificationEntity notificationEntity = NotificationEntity.builder()
+                .userId(1)
+                .content("알림 테스트")
+                .createTime(dateTimeUtil.getCurrentDateTime())
+                .flagRead(0)
+                .dataType("noti") // noti, sub
+                .build();
+
+        notificationRepository.save(notificationEntity);
+
+        return ResponseEntity.ok("success");
+    }
+
+    @Operation(summary = "일반 알림 클릭 시 읽음 처리", description = "일반 알림 클릭 시 읽음 처리")
+    @PatchMapping("/mongodb/notification/update")
+    public ResponseEntity<?> updateNotification(@RequestBody NotificationIdDto notificationIdDto) {
+
+        // NotificationIdDto를 이용하여 해당 알림을 찾아서 flagRead를 1로 변경
+        NotificationEntity notificationEntity = notificationRepository.findById(notificationIdDto.getId()).orElse(null);
+        notificationEntity.setFlagRead(1);
+
+        // 변경된 notificationEntity를 저장 (기본적으로 Repository로 update하려면 save 메소드를 사용; 기존 Entity에서 해당 프로퍼티만 수정)
+        notificationRepository.save(notificationEntity);
+
+        return ResponseEntity.ok("success");
+    }
+
+    @Operation(summary = "userId에 해당하는 회원의 알림 전체 조회", description = "userId에 해당하는 회원의 알림 전체 조회")
+    @GetMapping("/mongodb/notification/{userId}")
+    public ResponseEntity<?> getNotification(int userId) {
+
+        List<NotificationEntity> notifications = notificationRepository.findByUserId(userId);
+
+        return ResponseEntity.ok(notifications);
+    }
 
     @Operation(summary = "알림 전체 읽음 처리", description = "알림 전체 읽음 처리")
     @PatchMapping("/mongodb/notification/update-all")
@@ -165,12 +177,17 @@ public class TestController {
         // 변경된 notificationEntity를 저장 (기본적으로 Repository로 update하려면 save 메소드를 사용; 기존 Entity에서 해당 프로퍼티만 수정)
         notificationRepository.saveAll(notifications);
 
-        // 변경된 notificationEntity 출력
-//        System.out.println(notifications);
-
         return ResponseEntity.ok("success");
     }
+    /*
+    알림 api end =============================================================
+     */
 
+
+
+    /*
+    시간 테스트 start =============================================================
+     */
     @Operation(summary = "시간 테스트", description = "시간 테스트")
     @GetMapping("/time")
     public ResponseEntity<?> time() {
@@ -186,6 +203,9 @@ public class TestController {
 
         return ResponseEntity.ok(formattedDateTime);
     }
+    /*
+    시간 테스트 end =============================================================
+     */
 
 
 }

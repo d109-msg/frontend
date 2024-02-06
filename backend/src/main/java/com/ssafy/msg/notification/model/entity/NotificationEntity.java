@@ -1,5 +1,7 @@
 package com.ssafy.msg.notification.model.entity;
 
+import com.ssafy.msg.notification.model.dto.NotificationDto;
+import com.ssafy.msg.notification.model.dto.NotificationResponseDto;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -28,4 +30,17 @@ public class NotificationEntity {
     private int flagRead;
 
     private String createTime;
+
+    private String dataType; // noti, sub
+
+    public NotificationResponseDto toDto() {
+        return NotificationResponseDto.builder()
+                .id(id)
+                .userId(userId)
+                .content(content)
+                .createTime(createTime)
+                .flagRead(flagRead)
+                .dataType(dataType)
+                .build();
+    }
 }

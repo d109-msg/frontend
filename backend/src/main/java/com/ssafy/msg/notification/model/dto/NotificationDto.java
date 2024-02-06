@@ -14,5 +14,6 @@ public class NotificationDto {
     int userId;
     String content;
     String createTime;
-    int flag_read;
+    int flagRead;
+    String dataType; // noti, sub
 }

@@ -14,11 +14,13 @@ import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
+import java.util.Enumeration;
+
 @Component
 @Slf4j
 @RequiredArgsConstructor
 public class UserInterceptor implements HandlerInterceptor {
-	
+
 	@Value("${header.authorization}")
 	private String authorization;
 	
@@ -27,7 +29,7 @@ public class UserInterceptor implements HandlerInterceptor {
 	@Override
 	public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler)
 			throws Exception {
-		
+
 		log.info("preHandle() -> Start");
 		
 		// CORS preflight 요청은 통과
