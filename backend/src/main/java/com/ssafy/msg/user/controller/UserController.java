@@ -303,7 +303,7 @@ public class UserController {
 	@Operation(summary = "타인정보 조회", description = "액세스 토큰으로 타인정보 조회")
 	@ApiResponses(value = {
 			@ApiResponse(responseCode = "200", description = "타인정보 조회 성공", content = {
-					@Content(mediaType = "application/json", schema = @Schema(implementation = UserInfoDto.class)) }),
+					@Content(mediaType = "application/json", schema = @Schema(implementation = TargetUserInfoDto.class)) }),
 			@ApiResponse(responseCode = "404", description = "타인정보 조회 실패", content = @Content) })
 	@GetMapping("/info/{id}")
 	public ResponseEntity<?> getOtherUserInfo(HttpServletRequest request, @PathVariable("id") int targetId) {
