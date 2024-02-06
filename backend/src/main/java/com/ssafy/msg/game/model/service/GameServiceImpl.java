@@ -266,7 +266,7 @@ public class GameServiceImpl implements GameService{
             return -1;
         }
 
-        int participantId = participant.getUserId();
+        int participantId = participant.getId();
         Integer day = getMaxDay(participantId);
         
         //죽었는지 체크

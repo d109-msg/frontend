@@ -161,10 +161,10 @@
 		resultType="FollowUserDto">
 		<choose>
 			<when test="type == 'to'">
-				select u.id, u.email_id, u.nickname, u.image_url,
+				select u.email_id, u.nickname, u.image_url,
 				u.image_uuid, u.identifier,
 				f.id
-				from follows f
+				from follows as f
 				join users u on
 				f.from_user_id = u.id
 				where f.to_user_id =
@@ -176,10 +176,10 @@
 				limit #{limit}
 			</when>
 			<when test="type == 'from'">
-				select u.id, u.email_id, u.nickname, u.image_url,
+				select u.email_id, u.nickname, u.image_url,
 				u.image_uuid, u.identifier,
 				f.id
-				from follows f
+				from follows as f
 				join users u on
 				f.to_user_id = u.id
 				where f.from_user_id =
@@ -235,5 +235,10 @@
 				) then 1 else 0 end as is_follow
 	</select>
 
+	<select id="getRooms" parameterType="int" resultType="string">
+		select p.room_id
+		from participants p
+		join rooms r on r.id = p.room_id
+		where user_id = #{id} and r.data_type != "대기방";
+	</select>
 </mapper>
-

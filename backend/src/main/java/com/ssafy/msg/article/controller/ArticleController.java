@@ -3,6 +3,7 @@ package com.ssafy.msg.article.controller;
 
 import com.ssafy.msg.article.model.dto.*;
 import com.ssafy.msg.article.model.service.ArticleService;
+import com.ssafy.msg.game.model.service.GameService;
 import com.ssafy.msg.user.exception.UserNotFoundException;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -29,6 +30,7 @@ import java.util.List;
 @Tag(name = "Article", description = "게시물 관련 API")
 public class ArticleController {
     private final ArticleService articleService;
+    private final GameService gameService;
 
     // 게시물 작성
     @PostMapping(value = "/create",
@@ -241,7 +243,7 @@ public class ArticleController {
 
 
 //            String currentUrl = request.getRequestURL().toString();
-            String nextUrl = currentUrl + "?offset=" + lastId + "&limit=" + limit ;
+            String nextUrl = "?offset=" + lastId + "&limit=" + limit ;
             log.info("(ArticleController) nextUrel {}", nextUrl);
             FeedResponseDto feedResponseDto = FeedResponseDto.builder()
                     .articleDetailDtos(articleDetailDtos)
