@@ -47,13 +47,18 @@
 import { useAuthStore } from '@/store/authStore'
 import { nextTick } from 'vue'
 import { useChatStore } from '@/store/chatStore'
+const server =  'https://i10d109.p.ssafy.io/api'
+const server2 = 'http://localhost:8080/api'
+// const server = 'http://localhost:8080/api'
+// const server2 = 'https://i10d109.p.ssafy.io/api'
+
 export default {
     name: 'MessageList',
     data(){
       return{
         listFlag : false,
         userList : [],
-        baseUrl : "http://localhost:8080/api/user/follow?type=from",
+        baseUrl : `${server}/user/follow?type=from`,
         io : {},
         messageList : [],
       }
