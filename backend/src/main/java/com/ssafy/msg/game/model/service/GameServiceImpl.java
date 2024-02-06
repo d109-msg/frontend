@@ -82,6 +82,173 @@ public class GameServiceImpl implements GameService{
         }
     }
 
+    @Override
+    public String useAbility(int participantId, int targetId) throws Exception {
+        Integer day = gameMapper.getMaxDay(participantId);
+        log.info("getAbilityTarget() day : {}", day);
+
+        if(day == null) {
+            log.info("useAbility() player is dead");
+            return "player is dead";
+        }
+
+        if(gameMapper.isAlive(targetId) != 0){
+            log.info("useAbility() target is dead");
+            return "target is dead";
+        }
+
+        GetAbilityResultDto abilityResult = gameMapper.getAbilityAvailability(new GetAbilityParamDto(participantId, day));
+        String job = abilityResult.getJobId();
+        log.info("useAbility() job : {}", job);
+
+
+
+        return null;
+    }
+
+    /**
+     * 입력된 participant가 가진 직업과 밤 여부, 능력 사용 여부 등을 종합하여 현재 능력을 사용할 수 있는 상태인지 리턴합니다.
+     * @param participantId participantId 입력
+     * @return status 능력 사용 가능 여부, message 메시지, flagTarget 대상을 지목해야하는 능력 이라면 true
+     * @throws Exception
+     */
+    @Override
+    public AbilityTargetResponseDto getAbilityTarget(int participantId) throws Exception {
+        Integer day = gameMapper.getMaxDay(participantId);
+        log.info("getAbilityTarget() day : {}", day);
+
+        if(day == null) {
+            log.info("getAbilityTarget() player is dead");
+
+            return AbilityTargetResponseDto.builder()
+                    .status(false)
+                    .message("player is dead")
+                    .flagTarget(false)
+                    .build();
+        }
+
+        AbilityTargetResponseDto resultDto = new AbilityTargetResponseDto();
+        GetAbilityResultDto abilityResult = gameMapper.getAbilityAvailability(new GetAbilityParamDto(participantId, day));
+
+        String job = abilityResult.getJobId();
+        log.info("getAbilityTarget() job : {}", job);
+
+        if(abilityResult.getAbility() == -1) {
+            //능력을 이미 사용함
+            log.info("getAbilityTarget() 능력을 이미 사용함");
+
+            resultDto.setStatus(false);
+            resultDto.setMessage("능력을 이미 사용했습니다.");
+        } else if (abilityResult.getAbility() > 0) {
+            //능력을 사용 중
+            log.info("getAbilityTarget() 능력 사용 중");
+
+            resultDto.setStatus(false);
+            resultDto.setMessage("능력을 이미 사용했습니다.");
+        } else if (abilityResult.getAbility() == 0) {
+            //능력을 사용하기 전
+            log.info("getAbilityTarget() 능력 사용 전");
+
+            //능력 사용 전 직업별 상태 체크
+            if(job.equals("경찰") || job.equals("미치광이")) {
+                // 경찰의 능력
+                if(abilityResult.getFlagNight() == 1) {
+                    //밤이라면
+                    resultDto.setMessage("마피아 여부를 알고싶은 대상을 선택하세요.");
+                    resultDto.setFlagTarget(true); //사람 고르기
+                    resultDto.setStatus(true);
+                } else {
+                    //낮이라면
+                    resultDto.setMessage("지금은 사용할 수 없습니다.");
+                    resultDto.setFlagTarget(false);
+                    resultDto.setStatus(false);
+                }
+            } else if (job.equals("훼방꾼")) {
+                // 훼방꾼의 능력
+                if(abilityResult.getFlagNight() == 1) {
+                    //밤이라면
+                    resultDto.setMessage("내일 시민들의 미션을 마피아 미션으로 만듭니다.");
+                    resultDto.setFlagTarget(false);
+                    resultDto.setStatus(true);
+                } else {
+                    //낮이라면
+                    resultDto.setMessage("지금은 사용할 수 없습니다.");
+                    resultDto.setFlagTarget(false);
+                    resultDto.setStatus(false);
+                }
+            } else if (job.equals("건달")) {
+                // 건달의 능력
+                if(abilityResult.getFlagNight() == 1) {
+                    //밤이라면
+                    resultDto.setMessage("내일 투표권을 압수하고 싶은 사람을 고르세요.");
+                    resultDto.setFlagTarget(true); //사람 고르기
+                    resultDto.setStatus(true);
+                } else {
+                    //낮이라면
+                    resultDto.setMessage("지금은 사용할 수 없습니다.");
+                    resultDto.setFlagTarget(false);
+                    resultDto.setStatus(false);
+                }
+            } else if (job.equals("판사")) {
+                // 판사의 능력
+                if(abilityResult.getFlagNight() == 1) {
+                    //밤이라면
+                    resultDto.setMessage("지금은 사용할 수 없습니다.");
+                    resultDto.setFlagTarget(false);
+                    resultDto.setStatus(false);
+                } else {
+                    //낮이라면
+                    resultDto.setMessage("내가 선택한 사람이 마피아로 지목됩니다.");
+                    resultDto.setFlagTarget(true); //사람 고르기
+                    resultDto.setStatus(true);
+                }
+            } else if (job.equals("변장술사")) {
+                // 변장술사의 능력
+                if(abilityResult.getFlagNight() == 1) {
+                    //밤이라면
+                    resultDto.setMessage("지금은 사용할 수 없습니다.");
+                    resultDto.setFlagTarget(false);
+                    resultDto.setStatus(false);
+                } else {
+                    //낮이라면
+                    resultDto.setMessage("내가 마피아로 지목되었을 때, 선택한 사람으로 살아갑니다.");
+                    resultDto.setFlagTarget(true); //사람 고르기
+                    resultDto.setStatus(true);
+                }
+            } else if (job.equals("스파이")) {
+                // 스파이의 능력
+                if(abilityResult.getFlagNight() == 1) {
+                    //밤이라면
+                    resultDto.setMessage("직업을 알고싶은 사람을 선택하세요.");
+                    resultDto.setFlagTarget(true); //사람 고르기
+                    resultDto.setStatus(true);
+                } else {
+                    //낮이라면
+                    resultDto.setMessage("지금은 사용할 수 없습니다.");
+                    resultDto.setFlagTarget(false);
+                    resultDto.setStatus(false);
+                }
+            } else if (job.equals("정치인")) {
+                // 정치인의 능력
+                resultDto.setMessage("마피아로 지목되어도 한 번 되살아 납니다.");
+                resultDto.setFlagTarget(false);
+                resultDto.setStatus(false);
+            } else if (job.equals("군인")) {
+                // 군인의 능력
+                resultDto.setMessage("마피아에게 지목되어도 한 번 되살아 납니다.");
+                resultDto.setFlagTarget(false);
+                resultDto.setStatus(false);
+            } else {
+                resultDto.setMessage("사용할 능력이 없습니다.");
+                resultDto.setFlagTarget(false);
+                resultDto.setStatus(false);
+            }
+
+        }
+
+        return resultDto;
+    }
+
     /**
      * userId와 roomId를 입력받아 id및 participant 생존여부 등을 체크하고 day를 구해 해당 participant의 mission에 완료 처리를 함
      * @param userId userId를 입력받음
