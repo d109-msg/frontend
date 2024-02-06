@@ -49,4 +49,6 @@ public interface UserService {
 	List<SearchedUserDto> searchUsers(SearchUsersParamDto searchUsersParamDto) throws Exception;
 
     TargetUserInfoDto getTargetUserInfo(int targetId, int id) throws Exception;
+
+	List<String> getRooms(int id) throws Exception;
 }
