@@ -243,7 +243,7 @@ public class ArticleController {
 
 
 //            String currentUrl = request.getRequestURL().toString();
-            String nextUrl = currentUrl + "?offset=" + lastId + "&limit=" + limit ;
+            String nextUrl = "?offset=" + lastId + "&limit=" + limit ;
             log.info("(ArticleController) nextUrel {}", nextUrl);
             FeedResponseDto feedResponseDto = FeedResponseDto.builder()
                     .articleDetailDtos(articleDetailDtos)
