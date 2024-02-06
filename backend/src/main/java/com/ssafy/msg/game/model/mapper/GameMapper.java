@@ -47,7 +47,7 @@ public interface GameMapper {
 
     void createNewMission(NewMissionDto newMissionDto) throws SQLException;
 
-    int isAlive(int participantId) throws SQLException;
+    Integer isAlive(int participantId) throws SQLException;
 
     MissionResultDto getMyMission(int participantId, int day) throws SQLException;
 

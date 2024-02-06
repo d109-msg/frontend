@@ -124,7 +124,7 @@
 				m.id = latest_mission.mission_id;
 	</select>
 
-	<select id="isAlive" resultType="int" parameterType="int">
+	<select id="isAlive" resultType="Integer" parameterType="int">
 		SELECT flag_die FROM participants p WHERE p.id = #{particiapntId};
 	</select>
 

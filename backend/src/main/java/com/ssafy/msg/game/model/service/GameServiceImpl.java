@@ -93,22 +93,31 @@ public class GameServiceImpl implements GameService{
             return "player is dead";
         }
 
-        if(gameMapper.isAlive(targetId) != 0){
+        Integer targetAlive = gameMapper.isAlive(targetId);
+        if(targetAlive != null && targetAlive != 0){
             log.info("useAbility() target is dead");
-            return "target is dead";
+            return "no target";
         }
 
         GetAbilityResultDto abilityResult = gameMapper.getAbilityAvailability(new GetAbilityParamDto(participantId, day));
         String job = abilityResult.getJobId();
         log.info("useAbility() job : {}", job);
 
-        ParticipantDto targetDto = gameMapper.getParticipantWithPId(targetId);
-        log.info("useAbility() target 이름 : {}", targetDto.getNickname());
+
+
+        //능력을 이미 사용한 후
+        if(abilityResult.getAbility() != 0){
+            log.info("useAbility() 능력을 이미 사용함");
+            return "can not use ability";
+        }
 
 //        gameMapper.setAbility(participantId, 1);
         switch (job) {
             case "경찰" -> {
                 // 경찰의 능력 코드
+                ParticipantDto targetDto = gameMapper.getParticipantWithPId(targetId);
+                log.info("useAbility() target 이름 : {}", targetDto.getNickname());
+
                 gameMapper.setAbility(participantId, 1);
                 String targetJob = targetDto.getJobId();
 
@@ -120,6 +129,9 @@ public class GameServiceImpl implements GameService{
             }
             case "미치광이" -> {
                 // 미치광이의 능력 코드
+                ParticipantDto targetDto = gameMapper.getParticipantWithPId(targetId);
+                log.info("useAbility() target 이름 : {}", targetDto.getNickname());
+
                 gameMapper.setAbility(participantId, 1);
                 String result = "";
 
@@ -146,15 +158,34 @@ public class GameServiceImpl implements GameService{
             }
             case "훼방꾼" -> {
                 // 훼방꾼의 능력 코드
+                gameMapper.setAbility(participantId, 1);
+                return "훼방꾼 능력을 사용했습니다. 내일 시민들은 마피아 미션을 수행하게 됩니다.";
             }
             case "건달" -> {
+                ParticipantDto targetDto = gameMapper.getParticipantWithPId(targetId);
+                log.info("useAbility() target 이름 : {}", targetDto.getNickname());
+
                 // 건달의 능력 코드
+                gameMapper.setAbility(participantId, 1);
+                return targetDto.getNickname() + "의 표를 빼앗았습니다. " + targetDto.getNickname() + "는 내일 투표할 수 없습니다.";
             }
             case "판사" -> {
                 // 판사의 능력 코드
+                gameMapper.setAbility(participantId, 1);
+                return "판사의 능력을 사용했습니다. 당신이 선택한 사람이 마피아로 지목됩니다.";
             }
             case "변장술사" -> {
                 // 변장술사의 능력 코드
+                gameMapper.setAbility(participantId, 1);
+                return "변장술사의 능력을 사용했습니다. 오늘 당신이 마피아로 지목당하면 내일 당신이 투표한 사람으로 되살아납니다.";
+            }
+            case "스파이" -> {
+                ParticipantDto targetDto = gameMapper.getParticipantWithPId(targetId);
+                log.info("useAbility() target 이름 : {}", targetDto.getNickname());
+
+                // 스파이의 능력 코드
+                gameMapper.setAbility(participantId, targetId);
+                return "내일 " + targetDto.getNickname() +"의 직업을 알아냅니다.";
             }
             case "정치인" -> {
                 // 정치인의 능력 코드
@@ -162,12 +193,12 @@ public class GameServiceImpl implements GameService{
             case "군인" -> {
                 // 군인의 능력 코드
             }
-            case "스파이" -> {
-                // 스파이의 능력 코드
+            default -> {
+                return "no ability";
             }
         }
 
-        return null;
+        return "no ability";
     }
 
     /**
