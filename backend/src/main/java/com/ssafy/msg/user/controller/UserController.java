@@ -702,4 +702,23 @@ public class UserController {
 		}
 	}
 
+	@GetMapping(value = "/room")
+	@Operation(summary = "접속 시 구독이 필요한 채팅방 목록 조회", description = "유저 아이디에 따라 구독이 필요한 모든 채팅방 목록을 조회")
+	@ApiResponses(value = {
+			@ApiResponse(responseCode = "200", description = "채팅방 목록 조회 성공" , content =@Content),
+			@ApiResponse(responseCode = "400", description = "채팅방 목록 조회 실패", content = @Content) })
+	public ResponseEntity<?> getRooms(HttpServletRequest request) {
+
+		Integer userId = (Integer) request.getAttribute("id");
+
+		try {
+			return new ResponseEntity<>(userService.getRooms(userId), HttpStatus.OK);
+		} catch (Exception e) {
+			log.error("(UserController) 자기소개 작성 실패", e);
+			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+		} finally {
+			log.info("(UserController) 끝");
+		}
+	}
+
 }
