@@ -3,7 +3,6 @@ package com.ssafy.msg.game.model.mapper;
 import com.ssafy.msg.chat.model.dto.RoomDto;
 import com.ssafy.msg.game.model.dto.*;
 import com.ssafy.msg.user.model.dto.UserDto;
-import jakarta.mail.Part;
 import org.apache.ibatis.annotations.Mapper;
 
 import java.sql.SQLException;
@@ -38,6 +37,7 @@ public interface GameMapper {
     void normalVote(int participantId, int targetId, Integer day) throws SQLException;
     void mafiaVote(int participantId, int targetId, Integer day) throws SQLException;
     void doctorVote(int participantId, int targetId, Integer day) throws SQLException;
+    void reporterVote(int participantId, int targetId, Integer day) throws SQLException;
 
     ParticipantDto getParticipantWithPId(int participantId) throws SQLException;
 
@@ -62,4 +62,10 @@ public interface GameMapper {
     void updateStartTime(String roomId) throws SQLException;
 
     void updateParticipant(UpdateParticipantDto updateParticipantDto) throws SQLException;
+
+    int getFlagNight(String roomId) throws SQLException;
+
+    GetAbilityResultDto getAbilityAvailability(GetAbilityParamDto getAbilityParamDto) throws SQLException;
+
+    Integer checkSaboteur(int participantId) throws SQLException;
 }

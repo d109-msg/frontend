@@ -10,7 +10,8 @@ import com.ssafy.msg.game.exception.GroupRoomFullException;
 import com.ssafy.msg.game.exception.GroupRoomNotFoundException;
 import com.ssafy.msg.game.model.dto.*;
 import com.ssafy.msg.game.model.mapper.GameMapper;
-import com.ssafy.msg.message.model.dto.MessageResponseDto;
+import com.ssafy.msg.game.util.GameUtil;
+
 import com.ssafy.msg.message.model.mapper.MessageMapper;
 import com.ssafy.msg.message.model.service.MessageService;
 import com.ssafy.msg.scheduler.model.mapper.SchedulerMapper;
@@ -184,21 +185,30 @@ public class GameServiceImpl implements GameService{
         }
 
         MyVoteDto dto = gameMapper.getMyVote(participantId, day);
-        String job = gameMapper.getParticipantWithPId(participantId).getJobId();
+        GetAbilityResultDto abilityResultDto = gameMapper.getAbilityAvailability(new GetAbilityParamDto(participantId, day));
+        String job = abilityResultDto.getJobId();
+        String faction = GameUtil.getRoleType(job);
+
         log.info("getMyVote() myVote : {}", dto);
         log.info("getMyVote() job : {}", job);
+        log.info("getMyVote() faction : {}", faction);
+        log.info("getMyVote() flagNight : {}", abilityResultDto.getFlagNight());
 
-        if (getTime(8, 20)) {
+//        if (getTime(8, 20)) {
+        if(abilityResultDto.getFlagNight() == 0) {
             //낮
             log.info("getMyVote() result : {}", dto.getNormalVote());
             return dto.getNormalVote();
         } else {
-            if(job.equals("마피아")) {
+            if(faction.equals("마피아")) {
                 log.info("getMyVote() result : {}", dto.getMafiaVote());
                 return dto.getMafiaVote();
             } else if(job.equals("의사")) {
                 log.info("getMyVote() result : {}", dto.getDoctorVote());
                 return dto.getDoctorVote();
+            } else if(job.equals("기자")) {
+                log.info("getMyVote() result : {}", dto.getReporterVote());
+                return dto.getReporterVote();
             } else {
                 return dto.getNormalVote();
             }
@@ -373,15 +383,13 @@ public class GameServiceImpl implements GameService{
     public List<String> getJobs(int num) {
         List<String> result = new ArrayList<>();
 
-        result.add("마피아");
-        result.add("마피아");
-        result.add("의사");
-
-        for(int i = 0; i < num - 3; i++){
-            result.add("시민");
-        }
+        //랜덤 직업을 바로 배정
+        result.addAll(GameUtil.getMafiaRoles(2));
+        result.addAll(GameUtil.getCivilRoles(num - 2));
 
         Collections.shuffle(result);
+
+        log.info("getJobs() result : {}", result);
 
         return result;
     }
@@ -413,6 +421,8 @@ public class GameServiceImpl implements GameService{
         log.info("getRoomVote() -> list : {}", list);
         log.info("getRoomVote() -> roomId : {}", roomId);
 
+        int nightFlag = gameMapper.getFlagNight(roomId);
+
         List<VoteResponseDto> responseList = new ArrayList<>();
 
         for(VoteResultDto vote : list){
@@ -421,7 +431,8 @@ public class GameServiceImpl implements GameService{
                     .nickname(vote.getNickname())
                     .imageUrl(vote.getImageUrl())
                     .build();
-            if (getTime(8, 20)) { // 낮일 때
+//            if (getTime(8, 20)) { // 낮일 때
+            if(nightFlag == 0) { // 낮일 때
                 voteResult.setVoteCount(vote.getNormalVoteCount());
             } else { //밤일 때
                 if (job.equals("의사")) { //의사일 때
@@ -498,7 +509,19 @@ public class GameServiceImpl implements GameService{
             log.info("getMyMission() participant is dead");
             return null;
         } else {
-            return gameMapper.getMyMission(participantId, day);
+            //훼방꾼 체크
+            Integer checkSaboteur = gameMapper.checkSaboteur(participantId);
+            MissionResultDto mission = gameMapper.getMyMission(participantId, day);
+
+            if(checkSaboteur == 1){
+                //훼방꾼이 능력을 사용했다면
+                mission.setNormalMission(mission.getMafiaMission());
+                return mission;
+            } else {
+                //훼방꾼이 능력을 사용하지 않았다면
+                return mission;
+            }
+
         }
     }
 
@@ -580,12 +603,16 @@ public class GameServiceImpl implements GameService{
             return "participant is dead";
         }
 
-        if(getMyMission(voteReceiveDto.getParticipantId()).getFlagSuccess() == 0){
+        GetAbilityResultDto abilityDto = gameMapper.getAbilityAvailability(new GetAbilityParamDto(day, voteReceiveDto.getParticipantId()));
+
+        if(abilityDto.getFlagSuccess() == 0){
             log.info("vote() mission uncompleted");
             return "mission uncompleted";
         }
 
-        if(getTime(8, 20)){
+
+//        if(getTime(8, 20)){
+        if(abilityDto.getFlagNight() == 0) {
             //낮 08:00 - 20:00
             //시민 투표
             log.info("vote() -> normalVote : {}", voteReceiveDto.getTargetId());
@@ -600,6 +627,10 @@ public class GameServiceImpl implements GameService{
                 //의사 투표
                 log.info("vote() -> doctorVote : {}", voteReceiveDto.getTargetId());
                 gameMapper.doctorVote(voteReceiveDto.getParticipantId(), voteReceiveDto.getTargetId(), day);
+            } else if (voteReceiveDto.getJobId().equals("기자")) {
+                //기자 투표
+                log.info("vote() -> reporterVote : {}", voteReceiveDto.getTargetId());
+                gameMapper.reporterVote(voteReceiveDto.getParticipantId(), voteReceiveDto.getTargetId(), day);
             }
         }
 
@@ -633,7 +664,7 @@ public class GameServiceImpl implements GameService{
      * roomId와 day를 입력받아 해당 room에서 수행한적 없는 미션을 랜덤으로 골라
      * 모든 participant에게 새로운 daily미션을 입력받은 day로 만든다.
      * 모든 dailyMission은 생성될 때 기본적으로 각 보트가 본인을 찍음
-     * 마피아나 의사가 아니라면 해당 vote는 null로 처리
+     * 마피아나 의사, 기자가 아니라면 해당 vote는 null로 처리
      * @param roomId 새로운 미션을 분배할 roomId 입력
      * @param day   새로 만들 미션의 날짜
      * @throws Exception

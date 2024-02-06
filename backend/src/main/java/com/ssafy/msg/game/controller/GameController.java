@@ -248,6 +248,24 @@ public class GameController {
 
     }
 
+    @GetMapping(value = "/ability")
+    @Operation(summary = "능력을 사용합니다.", description = "유저의 participantId를 입력받아 능력을 사용합니다.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "조회 성공", content = @Content),
+            @ApiResponse(responseCode = "400", description = "조회 실패", content = @Content)})
+    public ResponseEntity<?> userAbility(@RequestParam("participantId") int participantId){
+        log.info("getAbilityVote() start");
+        try {
+
+            return null;
+        } catch (Exception e) {
+            log.error("getMyVote() -> error : {}", e);
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        } finally {
+            log.info("getAbilityVote() end");
+        }
+    }
+
     @GetMapping(value = "/vote/pick", produces = "text/pain;charset=utf-8")
     @Operation(summary = "내 투표현황 api", description = "유저의 participantId를 입력받아 리턴합니다. 유저가 죽었다면 participant is dead 를 리턴합니다")
     @ApiResponses(value = {
