@@ -87,6 +87,7 @@ public class GameServiceImpl implements GameService{
         Integer day = gameMapper.getMaxDay(participantId);
         log.info("getAbilityTarget() day : {}", day);
 
+        //participantId, targetId 검증
         if(day == null) {
             log.info("useAbility() player is dead");
             return "player is dead";
@@ -101,7 +102,70 @@ public class GameServiceImpl implements GameService{
         String job = abilityResult.getJobId();
         log.info("useAbility() job : {}", job);
 
+        ParticipantDto targetDto = gameMapper.getParticipantWithPId(targetId);
+        log.info("useAbility() target 이름 : {}", targetDto.getNickname());
 
+//        gameMapper.setAbility(participantId, 1);
+        switch (job) {
+            case "경찰" -> {
+                // 경찰의 능력 코드
+                gameMapper.setAbility(participantId, 1);
+                String targetJob = targetDto.getJobId();
+
+                if (GameUtil.getRoleType(targetJob).equals("마피아")) {
+                    return "마피아가 맞습니다.";
+                } else {
+                    return "마피아가 아닙니다.";
+                }
+            }
+            case "미치광이" -> {
+                // 미치광이의 능력 코드
+                gameMapper.setAbility(participantId, 1);
+                String result = "";
+
+                if (targetId == participantId) {
+                    //미치광이가 본인을 찍었다면
+                    result = "마피아가 아닙니다.";
+                } else {
+                    //랜덤으로 마피아 여부 리턴
+                    Random random = new Random(targetId); // ID를 시드로 사용
+
+                    int num = random.nextInt(25);
+
+                    log.info("useAbility() random : {}", num);
+
+                    if (num % 2 == 0) {
+                        result = "마피아가 맞습니다.";
+                    } else {
+                        result = "마피아가 아닙니다.";
+                    }
+                }
+
+                log.info("useAbility() {}", result);
+                return result;
+            }
+            case "훼방꾼" -> {
+                // 훼방꾼의 능력 코드
+            }
+            case "건달" -> {
+                // 건달의 능력 코드
+            }
+            case "판사" -> {
+                // 판사의 능력 코드
+            }
+            case "변장술사" -> {
+                // 변장술사의 능력 코드
+            }
+            case "정치인" -> {
+                // 정치인의 능력 코드
+            }
+            case "군인" -> {
+                // 군인의 능력 코드
+            }
+            case "스파이" -> {
+                // 스파이의 능력 코드
+            }
+        }
 
         return null;
     }

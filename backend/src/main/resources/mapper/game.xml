@@ -5,6 +5,11 @@
 <mapper
 	namespace="com.ssafy.msg.game.model.mapper.GameMapper">
 
+	<update id="setAbility" parameterType="Map">
+		UPDATE participants SET ability = #{value}
+		WHERE id = #{participantId};
+	</update>
+
 	<select id="checkSaboteur" resultType="int" parameterType="int">
 		SELECT COALESCE(MAX(p2.ability), '0') AS ability
 		FROM participants p1

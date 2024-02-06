@@ -270,7 +270,7 @@ public class GameController {
         }
     }
 
-    @PostMapping(value = "/ability")
+    @PatchMapping(value = "/ability", produces = "text/pain;charset=utf-8")
     @Operation(summary = "능력을 사용합니다.", description = "유저의 participantId를 입력받아 능력을 사용합니다.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "사용 성공", content = @Content),
@@ -279,10 +279,10 @@ public class GameController {
         log.info("useAbility() start");
 
         try {
-
-            return null;
+            String result = gameService.useAbility(participantId, targetId);
+            return new ResponseEntity<>(result, HttpStatus.OK);
         } catch (Exception e) {
-            log.info("useAbility() ");
+            log.error("useAbility() -> error : {}", e);
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         } finally {
             log.info("useAbility() end");

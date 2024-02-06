@@ -68,4 +68,6 @@ public interface GameMapper {
     GetAbilityResultDto getAbilityAvailability(GetAbilityParamDto getAbilityParamDto) throws SQLException;
 
     Integer checkSaboteur(int participantId) throws SQLException;
+
+    void setAbility(int participantId, int value) throws SQLException;
 }
