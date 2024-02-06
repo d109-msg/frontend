@@ -223,6 +223,7 @@ public class GameServiceImpl implements GameService{
 
         AbilityTargetResponseDto resultDto = new AbilityTargetResponseDto();
         GetAbilityResultDto abilityResult = gameMapper.getAbilityAvailability(new GetAbilityParamDto(participantId, day));
+        resultDto.setMessage("no ability");
 
         String job = abilityResult.getJobId();
         log.info("getAbilityTarget() job : {}", job);
@@ -752,6 +753,7 @@ public class GameServiceImpl implements GameService{
         log.info("getRoomVote() -> roomId : {}", roomId);
 
         int nightFlag = gameMapper.getFlagNight(roomId);
+        log.info("getRoomVote() nightFlag : {}", nightFlag);
 
         List<VoteResponseDto> responseList = new ArrayList<>();
 
@@ -767,9 +769,11 @@ public class GameServiceImpl implements GameService{
             } else { //밤일 때
                 if (job.equals("의사")) { //의사일 때
                     voteResult.setVoteCount(vote.getDoctorVoteCount());
-                } else if (job.equals("마피아")) { //마피아일 때
+                } else if (job.equals("기자")) { //기자일 때
+                    voteResult.setVoteCount(vote.getReporterVoteCount());
+                } else if (GameUtil.getRoleType(job).equals("마피아")) { //마피아일 때
                     voteResult.setVoteCount(vote.getMafiaVoteCount());
-                } else if (job.equals("시민")) {
+                } else if (GameUtil.getRoleType(job).equals("시민")) {
                     log.info("getRoomVote() 시민에게 보여줄 투표가 없음");
                     return null;
                 }
@@ -884,7 +888,7 @@ public class GameServiceImpl implements GameService{
             if(dto.getFlagWin() == 1){
                 //이겼을 때
                 totalWinCnt++;
-                if(dto.getJobId().equals("마피아")) {
+                if(GameUtil.getRoleType(dto.getJobId()).equals("마피아")) {
                     //마피아로 승리했을 때
                     mafiaGameCnt++;
                     mafiaWinCnt++;
@@ -896,7 +900,7 @@ public class GameServiceImpl implements GameService{
 
             } else if(dto.getFlagWin() == 0) {
                 //졌을 때
-                if(dto.getJobId().equals("마피아")) {
+                if(GameUtil.getRoleType(dto.getJobId()).equals("마피아")) {
                     //마피아 패배했을 때
                     mafiaGameCnt++;
                 } else {
@@ -949,7 +953,7 @@ public class GameServiceImpl implements GameService{
             gameMapper.normalVote(voteReceiveDto.getParticipantId(), voteReceiveDto.getTargetId(), day);
         } else {
             //밤
-            if (voteReceiveDto.getJobId().equals("마피아")){
+            if (GameUtil.getRoleType(voteReceiveDto.getJobId()).equals("마피아")){
                 //마피아 투표
                 log.info("vote() -> mafiaVote : {}", voteReceiveDto.getTargetId());
                 gameMapper.mafiaVote(voteReceiveDto.getParticipantId(), voteReceiveDto.getTargetId(), day);

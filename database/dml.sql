@@ -206,10 +206,9 @@ INSERT INTO article_images (article_id, url, uuid, flag_mission) VALUES
 (10, 'https://team109testbucket.s3.ap-northeast-2.amazonaws.com/player10.png', 'player10.png', 0);
 
 -- SELECT * FROM follows;
-SELECT * FROM articles ;
+-- SELECT * FROM articles ;
 -- SELECT * FROM article_images ai ;
--- SELECT * FROM daily_missions dm ;
-SELECT * FROM participants;
+-- SELECT * FROM daily_missions;
+-- SELECT * FROM participants;
 -- SELECT * FROM users;
 -- SELECT * FROM rooms;
-

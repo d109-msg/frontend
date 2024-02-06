@@ -253,7 +253,8 @@
 			p.nickname,
 			(SELECT COUNT(*) FROM daily_missions dm_normal WHERE dm_normal.normal_vote = p.id AND dm_normal.day = max_day) AS normal_vote_count,
 			(SELECT COUNT(*) FROM daily_missions dm_mafia WHERE dm_mafia.mafia_vote = p.id AND dm_mafia.day = max_day) AS mafia_vote_count,
-			(SELECT COUNT(*) FROM daily_missions dm_doctor WHERE dm_doctor.doctor_vote = p.id AND dm_doctor.day = max_day) AS doctor_vote_count
+			(SELECT COUNT(*) FROM daily_missions dm_doctor WHERE dm_doctor.doctor_vote = p.id AND dm_doctor.day = max_day) AS doctor_vote_count,
+			(SELECT COUNT(*) FROM daily_missions dm_reporter WHERE dm_reporter.reporter_vote = p.id AND dm_reporter.day = max_day) AS reporter_vote_count
 		FROM
 			participants p
 				JOIN rooms r ON p.room_id = r.id
@@ -263,7 +264,7 @@
 											 JOIN participants ON dm_max_day.participant_id = participants.id
 					WHERE participants.room_id = #{roomId}
 				)
-				LEFT JOIN participants p_vote ON p_vote.id IN (dm.normal_vote, dm.mafia_vote, dm.doctor_vote)
+				LEFT JOIN participants p_vote ON p_vote.id IN (dm.normal_vote, dm.mafia_vote, dm.doctor_vote, dm.reporter_vote)
 				CROSS JOIN (
 				SELECT MAX(day) AS max_day FROM daily_missions dm_max
 													JOIN participants ON dm_max.participant_id = participants.id

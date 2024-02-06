@@ -34,7 +34,7 @@ public class SchedulerServiceImpl implements SchedulerService{
         List<String> unendRoom = schedulerMapper.getUnendRoom();
         for (String roomId: unendRoom) {
             // 투표 결과 처리
-            manageMafiaDoctorVote(roomId);;
+            manageMafiaDoctorVote(roomId);
         }
 
         // 7명이 모두 모였지만 start_time이 null인 그룹방 roomId 조회
