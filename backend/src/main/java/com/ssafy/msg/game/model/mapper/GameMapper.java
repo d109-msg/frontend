@@ -10,6 +10,8 @@ import java.util.List;
 
 @Mapper
 public interface GameMapper {
+    List<ParticipantDto> getParticipants(String roomId) throws SQLException;
+
     boolean getRandomGameApplyStatus(int userId) throws  SQLException;
 
     void applyRandomGame(UserDto userDto) throws SQLException;

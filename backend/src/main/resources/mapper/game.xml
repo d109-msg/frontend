@@ -33,6 +33,14 @@
 		SELECT flag_night FROM rooms r WHERE id = #{roomId} ;
 	</select>
 
+	<select id="getParticipants" parameterType="String"
+			resultType="ParticipantDto">
+		select *
+		from participants
+		where room_id = #{roomId}
+
+	</select>
+
 	<update id="completeMission" parameterType="CompleteMissionDto">
 		UPDATE daily_missions
 		SET flag_success = 1
