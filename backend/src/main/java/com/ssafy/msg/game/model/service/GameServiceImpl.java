@@ -94,21 +94,19 @@ public class GameServiceImpl implements GameService{
         }
 
         Integer targetAlive = gameMapper.isAlive(targetId);
-        if(targetAlive != null && targetAlive != 0){
+        if(targetAlive != null && targetAlive != 0 || targetId == 0){
             log.info("useAbility() target is dead");
-            return "no target";
+            return "target error";
         }
 
         GetAbilityResultDto abilityResult = gameMapper.getAbilityAvailability(new GetAbilityParamDto(participantId, day));
         String job = abilityResult.getJobId();
         log.info("useAbility() job : {}", job);
 
-
-
         //능력을 이미 사용한 후
         if(abilityResult.getAbility() != 0){
             log.info("useAbility() 능력을 이미 사용함");
-            return "can not use ability";
+            return "already used";
         }
 
 //        gameMapper.setAbility(participantId, 1);
@@ -118,13 +116,13 @@ public class GameServiceImpl implements GameService{
                 ParticipantDto targetDto = gameMapper.getParticipantWithPId(targetId);
                 log.info("useAbility() target 이름 : {}", targetDto.getNickname());
 
-                gameMapper.setAbility(participantId, 1);
+                gameMapper.setAbility(participantId, targetId);
                 String targetJob = targetDto.getJobId();
 
                 if (GameUtil.getRoleType(targetJob).equals("마피아")) {
-                    return "마피아가 맞습니다.";
+                    return targetDto.getNickname() + "님은 마피아가 맞습니다.";
                 } else {
-                    return "마피아가 아닙니다.";
+                    return targetDto.getNickname() + "님은 마피아가 아닙니다.";
                 }
             }
             case "미치광이" -> {
@@ -132,12 +130,12 @@ public class GameServiceImpl implements GameService{
                 ParticipantDto targetDto = gameMapper.getParticipantWithPId(targetId);
                 log.info("useAbility() target 이름 : {}", targetDto.getNickname());
 
-                gameMapper.setAbility(participantId, 1);
+                gameMapper.setAbility(participantId, targetId);
                 String result = "";
 
                 if (targetId == participantId) {
                     //미치광이가 본인을 찍었다면
-                    result = "마피아가 아닙니다.";
+                    result = targetDto.getNickname() + "님은 마피아가 아닙니다.";
                 } else {
                     //랜덤으로 마피아 여부 리턴
                     Random random = new Random(targetId); // ID를 시드로 사용
@@ -147,9 +145,9 @@ public class GameServiceImpl implements GameService{
                     log.info("useAbility() random : {}", num);
 
                     if (num % 2 == 0) {
-                        result = "마피아가 맞습니다.";
+                        result = targetDto.getNickname() + "님은 마피아가 맞습니다.";
                     } else {
-                        result = "마피아가 아닙니다.";
+                        result = targetDto.getNickname() + "님은 마피아가 아닙니다.";
                     }
                 }
 
@@ -166,8 +164,8 @@ public class GameServiceImpl implements GameService{
                 log.info("useAbility() target 이름 : {}", targetDto.getNickname());
 
                 // 건달의 능력 코드
-                gameMapper.setAbility(participantId, 1);
-                return targetDto.getNickname() + "의 표를 빼앗았습니다. " + targetDto.getNickname() + "는 내일 투표할 수 없습니다.";
+                gameMapper.setAbility(participantId, targetId);
+                return targetDto.getNickname() + "님의 표를 빼앗았습니다. " + targetDto.getNickname() + "님은 내일 투표할 수 없습니다.";
             }
             case "판사" -> {
                 // 판사의 능력 코드
@@ -177,7 +175,7 @@ public class GameServiceImpl implements GameService{
             case "변장술사" -> {
                 // 변장술사의 능력 코드
                 gameMapper.setAbility(participantId, 1);
-                return "변장술사의 능력을 사용했습니다. 오늘 당신이 마피아로 지목당하면 내일 당신이 투표한 사람으로 되살아납니다.";
+                return "변장술사의 능력을 사용했습니다. 오늘 당신이 마피아로 지목당하면 당신이 투표한 사람으로 되살아납니다.";
             }
             case "스파이" -> {
                 ParticipantDto targetDto = gameMapper.getParticipantWithPId(targetId);
@@ -185,7 +183,7 @@ public class GameServiceImpl implements GameService{
 
                 // 스파이의 능력 코드
                 gameMapper.setAbility(participantId, targetId);
-                return "내일 " + targetDto.getNickname() +"의 직업을 알아냅니다.";
+                return "내일 " + targetDto.getNickname() + "의 직업을 알아냅니다.";
             }
             case "정치인" -> {
                 // 정치인의 능력 코드
@@ -234,12 +232,81 @@ public class GameServiceImpl implements GameService{
 
             resultDto.setStatus(false);
             resultDto.setMessage("능력을 이미 사용했습니다.");
+            resultDto.setFlagTarget(false);
         } else if (abilityResult.getAbility() > 0) {
             //능력을 사용 중
             log.info("getAbilityTarget() 능력 사용 중");
-
+            resultDto.setMessage("능력을 사용했습니다.");
             resultDto.setStatus(false);
-            resultDto.setMessage("능력을 이미 사용했습니다.");
+            resultDto.setFlagTarget(false);
+
+            if(job.equals("경찰")) {
+                ParticipantDto targetDto = gameMapper.getParticipantWithPId(abilityResult.getAbility());
+
+                String targetJob = targetDto.getJobId();
+
+                if (GameUtil.getRoleType(targetJob).equals("마피아")) {
+                    resultDto.setMessage(targetDto.getNickname() + "님은 마피아가 맞습니다.");
+                } else {
+                    resultDto.setMessage(targetDto.getNickname() + "님은 마피아가 아닙니다.");
+                }
+
+            } else if(job.equals("미치광이")) {
+                int targetId = abilityResult.getAbility();
+                ParticipantDto targetDto = gameMapper.getParticipantWithPId(targetId);
+
+                String result = "";
+
+                if (targetId == participantId) {
+                    //미치광이가 본인을 찍었다면
+                    result = targetDto.getNickname() + "는 마피아가 아닙니다.";
+                } else {
+                    //랜덤으로 마피아 여부 리턴
+                    Random random = new Random(targetId); // ID를 시드로 사용
+
+                    int num = random.nextInt(25);
+
+                    log.info("useAbility() random : {}", num);
+
+                    if (num % 2 == 0) {
+                        result = targetDto.getNickname() + "는 마피아가 맞습니다.";
+                    } else {
+                        result = targetDto.getNickname() + "는 마피아가 아닙니다.";
+                    }
+                }
+
+                resultDto.setMessage(result);
+            } else if(job.equals("스파이")) {
+                ParticipantDto targetDto = gameMapper.getParticipantWithPId(abilityResult.getAbility());
+                
+                if(abilityResult.getFlagNight() == 0) {
+                    //낮이라면
+                    resultDto.setMessage(targetDto.getNickname() + "님의 직업은 " + targetDto.getJobId() + "입니다.");
+                } else {
+                    //밤이라면
+                    resultDto.setMessage("내일 " + targetDto.getNickname() + "의 직업을 알아냅니다.");
+                }
+            } else if (job.equals("건달")) {
+                ParticipantDto targetDto = gameMapper.getParticipantWithPId(abilityResult.getAbility());
+                if(abilityResult.getFlagNight() == 0) {
+                    //낮이라면
+                    resultDto.setMessage(targetDto.getNickname() + "님의 표를 빼앗았습니다. " + targetDto.getNickname() + "님은 오늘 투표할 수 없습니다.");
+                } else {
+                    //밤이라면
+                    resultDto.setMessage(targetDto.getNickname() + "님의 표를 빼앗았습니다. " + targetDto.getNickname() + "님은 내일 투표할 수 없습니다.");
+                }
+            } else if(job.equals("판사")){
+                resultDto.setMessage("판사의 능력을 사용했습니다. 당신이 선택한 사람이 마피아로 지목됩니다.");
+            } else if(job.equals("변장술사")){
+                resultDto.setMessage("변장술사의 능력을 사용했습니다. 오늘 당신이 마피아로 지목당하면 당신이 투표한 사람으로 되살아납니다.");
+            } else if(job.equals("훼방꾼")){
+                resultDto.setMessage("훼방꾼 능력을 사용했습니다. 내일 시민들은 마피아 미션을 수행하게 됩니다.");
+            }
+            else {
+                resultDto.setStatus(false);
+                resultDto.setMessage("능력을 이미 사용했습니다.");
+            }
+
         } else if (abilityResult.getAbility() == 0) {
             //능력을 사용하기 전
             log.info("getAbilityTarget() 능력 사용 전");
