@@ -6,12 +6,10 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Data
+@Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Builder
-public class MyVoteDto {
-    private String normalVote;
-    private String mafiaVote;
-    private String doctorVote;
-    private String reporterVote;
+public class GetAbilityParamDto {
+    private int participantId;
+    private int day;
 }

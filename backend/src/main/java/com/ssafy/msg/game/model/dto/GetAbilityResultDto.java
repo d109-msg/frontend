@@ -6,12 +6,13 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Data
+@Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Builder
-public class MyVoteDto {
-    private String normalVote;
-    private String mafiaVote;
-    private String doctorVote;
-    private String reporterVote;
+public class GetAbilityResultDto {
+    private int flagSuccess;
+    private int flagDie;
+    private String jobId;
+    private int ability;
+    private int flagNight;
 }
