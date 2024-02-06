@@ -60,7 +60,7 @@ const routes = [
             },
             {
                 name: "room",
-                path: "/game/:roomId",
+                path: "/game/room/:data",
                 component: RoomDetailPage,
             },
             {

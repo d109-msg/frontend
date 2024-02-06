@@ -1,13 +1,13 @@
 <template>
   <div class="detail-container">
-    <RoomFeed/>
+    <RoomFeed :room-data="roomData"/>
     <div class="chat-container">
       <div class="chat-title-box">
-        <div class="is-chat" @click="isChat"></div>
+        <div class="is-chat" @click="isChat" ></div>
         <div class="is-guide" @click="isGuide"></div>
         <div class="is-vote" @click="isVote"></div>
     </div>
-      <RoomChat v-if="isOpen==1" ></RoomChat>
+      <RoomChat v-if="isOpen==1" :room-data="roomData"></RoomChat>
       <RoomGuide v-else-if="isOpen==2" ></RoomGuide>
       <RoomVote v-else-if="isOpen==3" ></RoomVote>
     </div>
@@ -27,6 +27,7 @@ export default {
     data(){
       return{
         isOpen : '1',
+        roomData : {}
         
       }
     },
@@ -37,6 +38,11 @@ export default {
         RoomVote
     },
     mounted(){
+      this.roomData = JSON.parse(this.$route.params.data)
+      console.log(this.roomData)
+    },
+    watch:{
+      $route(to,from){}
     },
     methods:{
       isChat(){

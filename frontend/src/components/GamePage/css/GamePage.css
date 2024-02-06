@@ -68,7 +68,8 @@
 
     .game-room-box{
         display: flex;
-        flex-wrap: wrap;
+        flex-direction: column;
+
         width: 100%;
         height: auto;
         background-color: #FFFDF3;
@@ -178,7 +179,7 @@
 
     .game-room-box{
         display: flex;
-        flex-wrap: wrap;
+        flex-direction: column;
         width: 100%;
         height: auto;
         background-color: #FFFDF3;
@@ -295,7 +296,8 @@
 
     .game-room-box{
         display: flex;
-        flex-wrap: wrap;
+        flex-direction: column;
+
         width: 970px;
         height: auto;
         margin: 0px 10px;
