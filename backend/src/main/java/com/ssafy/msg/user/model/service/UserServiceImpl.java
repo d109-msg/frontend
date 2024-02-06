@@ -149,4 +149,9 @@ public class UserServiceImpl implements UserService {
 		result.setIsFollow(userMapper.getIsFollow(targetId, id));
 		return result;
 	}
+
+	@Override
+	public List<String> getRooms(int id) throws Exception {
+		return userMapper.getRooms(id);
+	}
 }

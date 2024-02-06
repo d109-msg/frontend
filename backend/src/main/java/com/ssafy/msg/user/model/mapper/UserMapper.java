@@ -52,4 +52,6 @@ public interface UserMapper {
     TargetUserInfoDto getTargetUserInfo(int targetId) throws SQLException;
 
 	Integer getIsFollow(int targetId, int id) throws SQLException;
+
+	List<String> getRooms(int id) throws SQLException;
 }
