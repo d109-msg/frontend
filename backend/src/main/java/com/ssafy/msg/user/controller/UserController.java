@@ -632,6 +632,7 @@ public class UserController {
 	        List<FollowUserDto> followList = userService.getFollowList(followParamDto);
 			// 더이상 보여줄 리스트가 없으면 null 리턴
 			if (followList.isEmpty()) {
+				log.info("(UserController) 팔로우리스트 null 반환");
 				return null;
 			}
 
