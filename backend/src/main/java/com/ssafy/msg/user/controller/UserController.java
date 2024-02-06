@@ -630,6 +630,11 @@ public class UserController {
 
 	    try {
 	        List<FollowUserDto> followList = userService.getFollowList(followParamDto);
+			// 더이상 보여줄 리스트가 없으면 null 리턴
+			if (followList.isEmpty()) {
+				return null;
+			}
+
 	        int lastId = followList.get(followList.size() - 1).getId();
 	        
 	        String currentUrl = request.getRequestURL().toString();
