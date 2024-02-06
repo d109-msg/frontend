@@ -5,6 +5,8 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
+
 @Data
 @Builder
 @NoArgsConstructor
@@ -14,6 +16,8 @@ public class MessageDto {
     private String roomId;
     private int userId;
     private String noticeType;
-    private String sendTime;
+    private String createTime;
     private String dataType;
+
+    private List<MessageImageDto> messageImageDtos;
 }

@@ -3,6 +3,7 @@ package com.ssafy.msg.message.model.service;
 import com.ssafy.msg.game.model.dto.EnterGroupRoomDto;
 import com.ssafy.msg.game.model.dto.ParticipantDto;
 import com.ssafy.msg.message.model.dto.ImageMessageDto;
+import com.ssafy.msg.message.model.dto.MessageRequestDto;
 import com.ssafy.msg.message.model.dto.TextMessageDto;
 
 import java.io.IOException;

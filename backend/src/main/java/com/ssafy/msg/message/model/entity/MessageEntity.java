@@ -1,5 +1,6 @@
 package com.ssafy.msg.message.model.entity;
 
+import com.ssafy.msg.message.model.dto.MessageResponseDto;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -30,4 +31,22 @@ public class MessageEntity {
     private String content;
     private int flagMafia;
     private List<MessageImageEntity> messageImageEntities;
+
+    private String noticeType; // day, night
+    private String dataType; // chat, image, notice
+
+    public MessageResponseDto toDto() {
+        return MessageResponseDto.builder()
+                .id(Integer.parseInt(this.id))
+                .roomId(this.roomId)
+                .userId(this.userId)
+                .createTime(this.createTime)
+                .content(this.content)
+                .noticeType(this.noticeType)
+                .dataType(this.dataType)
+                .messageImageDtos(this.messageImageEntities != null ? this.messageImageEntities.stream()
+                        .map(MessageImageEntity::toDto)
+                        .toList() : null)
+                .build();
+    }
 }

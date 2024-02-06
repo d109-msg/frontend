@@ -13,6 +13,9 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class NotificationResponseDto {
     String id;
+    int userId;
     String content;
     String createTime;
+    int flagRead;
+    String dataType; // noti, sub
 }

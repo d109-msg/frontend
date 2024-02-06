@@ -6,6 +6,8 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
+
 @Schema(description = "메시지 수신에 대한 응답 DTO")
 @Data
 @Builder
@@ -15,10 +17,10 @@ public class MessageResponseDto {
     private int id;
     private String roomId;
     private int userId;
+    private String content;
     private String noticeType;
-    private String sendTime;
+    private String createTime;
     private String dataType;
-    private String text;
-    private String url;
-    private String uuid;
+
+    private List<MessageImageDto> messageImageDtos;
 }

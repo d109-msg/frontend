@@ -1,6 +1,7 @@
 package com.ssafy.msg.message.model.entity;
 
 
+import com.ssafy.msg.message.model.dto.MessageImageDto;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -20,4 +21,11 @@ public class MessageImageEntity {
     private String id;
     private String url;
     private String uuid;
+
+    public MessageImageDto toDto() {
+        return MessageImageDto.builder()
+                .url(this.url)
+                .uuid(this.uuid)
+                .build();
+    }
 }
