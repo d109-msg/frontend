@@ -12,10 +12,10 @@
     </div>
     <div v-if="editFlag==true" class="close-list" @click="editFlag=false"></div>
     <div class="feed-item">
-      <img class="user-img" :src="this.feed.imageUrl">
+      <img class="user-img" :src="feed.imageUrl">
       <div class="user-info">
-        <div class="user-name">{{ this.feed.nickname }}</div>
-        <div class="user-comment">{{ this.feed.content }}</div>
+        <div class="user-name" @click="userProfile">{{ feed.nickname }}</div>
+        <div class="user-comment">{{ feed.content }}</div>
       </div>
     </div>
     <div class="feed-comment">
@@ -51,6 +51,7 @@
 import { useFeedStore } from '@/store/feedStore';
 import DetailPage from '../DetailPage/DetailPage.vue';
 import { useAuthStore } from '@/store/authStore';
+import router from '@/router';
 
 export default {
     name: "FeedComp",
@@ -92,6 +93,9 @@ export default {
         } catch(err){
           console.log(err)
         }
+      },
+      userProfile : function(){
+        router.push(`/user/${this.userInfo.id}`)
       }
 
     },
@@ -106,6 +110,7 @@ export default {
       this.isLike = this.feed.isLike
       const auth = useAuthStore()
       this.userInfo = auth.getUserInfo
+      
     }
     
 }

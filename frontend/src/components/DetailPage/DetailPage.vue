@@ -9,7 +9,7 @@
             </div>
             <div class="detail-info">
                 <div class="user-info">
-                    <div class="info">
+                    <div class="info" @click="userProfile">
                         <img class="user-img" :src="itemData.imageUrl">
                         
                         <div style="display: flex; flex-direction: column; justify-content: space-around;">
@@ -248,6 +248,9 @@ export default {
         }catch(err){
             console.log(err)
         }
+      },
+      userProfile : function(){
+        this.$router.push(`/user/${this.itemData.userId}`)
       }
 
     },

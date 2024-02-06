@@ -16,6 +16,10 @@
             <div>팔로우 <span> {{ 10 }} </span></div>
             <div>팔로잉 <span> {{ 11 }}</span></div>
           </div>
+        <div class="button-box">
+          <div class="follow-button">팔로우하기</div>
+          <div class="message-button">메시지 보내기</div>
+        </div>
         </div>
       </div>
     </div>
@@ -85,6 +89,11 @@ export default {
     }
   },
   watch:{
+    $route(to,from){
+      if(to.path!==from.path){
+        this.startPage()
+      }
+    }
   },
   mounted(){
     this.startPage()
@@ -93,6 +102,6 @@ export default {
 }
 </script>
 
-<style scoped src="./css/MyPage.css">
+<style scoped src="./css/UserPage.css">
 
 </style>
