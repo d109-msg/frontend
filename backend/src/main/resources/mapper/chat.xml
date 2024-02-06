@@ -7,10 +7,19 @@
 
     <select id="getPersonalRoomsInfoById" parameterType="int"
             resultType="RoomDto">
-        select r.*
-        from rooms r
-                 join participants p on r.id  = p.room_id
-        where p.user_id =  #{id} and r.data_type = "개인";
+        SELECT r.id,
+               r.last_message_id,
+               r.data_type,
+               r.create_time,
+               r.end_time,
+               r.start_time,
+               p2.nickname AS title, -- 다른 참여자의 닉네임
+               p2.image_url, -- 다른 참여자의 이미지 URL
+               r.flag_available
+        FROM rooms r
+                 JOIN participants p ON r.id = p.room_id AND p.user_id = #{id}
+                 JOIN participants p2 ON r.id = p2.room_id AND p2.user_id != #{id}
+        WHERE r.data_type = "개인";
     </select>
 
     <select id="findRoom" parameterType="CreateRoomDto"
