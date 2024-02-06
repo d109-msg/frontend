@@ -96,9 +96,11 @@ import router from '@/router';
                     }
                     this.baseUrl = value.data.nextUrl
                     this.$nextTick(()=>{
-                        const last = document.getElementById(`${this.feedList.length-1}`)
-                        if(this.baseUrl !== null){
+                        if(this.baseUrl !== null && this.feedList.length != 0){
+                            const last = document.getElementById(`${this.feedList.length-1}`)
                             this.io.observe(last)
+                        }else{
+                            this.axiosGuest()
                         }
                     })
                 } else{
@@ -122,7 +124,6 @@ import router from '@/router';
                 }
             },
             axiosGuest : async function(){
-                console.log()
                 if(this.guestUrl != null){
                     const feed = useFeedStore()
                     let value = await feed.guestFeed(this.guestUrl)

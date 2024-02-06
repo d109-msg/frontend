@@ -20,7 +20,7 @@
                       plz add bio
                     </p>
                   </div>
-                  <div class="button-box">
+                  <div class="button-box" @click="chatRoom(item.id)">
                     <img src="./Img/icon_plus.png" class="make-message">
                   </div>
               </div>
@@ -29,7 +29,15 @@
         </div>
     </div>
     <div class="messagelist-content">
-
+        <div v-for="(item,key) in messageList" :key="key" class="chat-room" :id="key"
+        @click="clickChat(key)"
+        >
+          <img :src="item.imageUrl" alt="" class="chat-img">
+          <div class="chat-info" >
+            <span>{{ item.title }}</span>
+            <p>DM 확인 부탁 드려요 ~~~!</p>
+          </div>
+        </div>
             
         </div>
   </div>
@@ -38,6 +46,7 @@
 <script>
 import { useAuthStore } from '@/store/authStore'
 import { nextTick } from 'vue'
+import { useChatStore } from '@/store/chatStore'
 export default {
     name: 'MessageList',
     data(){
@@ -46,12 +55,22 @@ export default {
         userList : [],
         baseUrl : "http://localhost:8080/api/user/follow?type=from",
         io : {},
+        messageList : [],
       }
     },
     methods:{
       showList : function(){
         this.listFlag = true
         this.getFollowing()
+      },
+      readMessageList : async function(){
+        const chat = useChatStore()
+        try{
+          let value = await chat.chatList()
+          this.messageList = value.data
+        }catch(err){
+          console.log('조짐')
+        }
       },
       getFollowing : async function(){
         const auth = useAuthStore()
@@ -84,10 +103,35 @@ export default {
             await this.getFollowing()
           }
         })
+      },
+      chatRoom : async function(idx){
+        const chat = useChatStore()
+        try{
+          console.log(idx)
+          let value = await chat.makeChat(idx)
+          this.messageList.unshift(value.data)
+          console.log(value)
+        }catch(err){
+          console.log(err)
+        }
+      },
+      clickChat : async function(idx){
+        const rooms = document.querySelectorAll('.chat-room')
+        for(let i=0; i<rooms.length;i++){
+          if(rooms[i].classList.contains('click-chat')){
+            rooms[i].classList.remove('click-chat')
+          }
+        }
+        const elem = document.getElementById(`${idx}`)
+        elem.classList.add('click-chat')
+        this.$emit('chatInfo',this.messageList[idx])
       }
+
     },
+
     mounted(){
       this.io = new IntersectionObserver(this.ioCall,{threshold:0.7})
+      this.readMessageList()
     }
 }
 </script>

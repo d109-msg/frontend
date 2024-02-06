@@ -151,6 +151,7 @@ export default {
             } else{
                 try{
                     let value = await auth.searchUser(this.baseUrl,this.keyword,this.offset)
+                    this.isFollow = []
                     if(value.data.searchResult.length > 0){
                         value.data.searchResult.forEach(item=>{
                             this.userInfo.push(item)
