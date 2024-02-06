@@ -52,22 +52,24 @@
 		flag_private, flag_identifier, image_url, image_uuid
 		from users
 		where
-		id
-		=
+		id =
 		#{id}
 	</select>
 
 	<select id="getUserInfo" parameterType="int"
 		resultType="UserInfoDto">
-		select id, nickname, email_id, provider,
-		identifier,
-		flag_admin,
-		sign_in_time, sign_up_time,
-		flag_private, flag_identifier,
-		image_url,
-		image_uuid, bio
-		from users
-		where id =
+		select u.id, u.nickname, u.email_id, u.provider,
+			   u.identifier,
+			   u.flag_admin,
+			   u.sign_in_time, u.sign_up_time,
+			   u.flag_private, u.flag_identifier,
+			   u.image_url,
+			   u.image_uuid, u.bio,
+			   (select count(*) from articles where user_id = #{id}) as article_count,
+			   (select count(*) from follows where to_user_id = #{id}) as follower_count,
+			   (select count(*) from follows where from_user_id = #{id}) as following_count
+		from users as u
+		where u.id =
 		#{id}
 	</select>
 
@@ -161,10 +163,10 @@
 		resultType="FollowUserDto">
 		<choose>
 			<when test="type == 'to'">
-				select u.id, u.email_id, u.nickname, u.image_url,
+				select u.email_id, u.nickname, u.image_url,
 				u.image_uuid, u.identifier,
 				f.id
-				from follows f
+				from follows as f
 				join users u on
 				f.from_user_id = u.id
 				where f.to_user_id =
@@ -176,10 +178,10 @@
 				limit #{limit}
 			</when>
 			<when test="type == 'from'">
-				select u.id, u.email_id, u.nickname, u.image_url,
+				select u.email_id, u.nickname, u.image_url,
 				u.image_uuid, u.identifier,
 				f.id
-				from follows f
+				from follows as f
 				join users u on
 				f.to_user_id = u.id
 				where f.from_user_id =
@@ -209,17 +211,14 @@
 	<select id="getTargetUserInfo" parameterType="int"
 		resultType="TargetUserInfoDto">
 		select u.id, u.nickname, u.email_id,
-		u.identifier,
-		u.image_url,
-		u.image_uuid,
-		u.bio,
-		count(a.id) as article_count,
-		(select count(*) from follows where to_user_id = #{id}) as follower_count,
-		(select count(*) from follows where from_user_id = #{id}) as following_count
+		       u.identifier,
+		       u.image_url,
+			   u.image_uuid,
+			   u.bio,
+			   (select count(*) from articles where user_id = #{id}) as article_count,
+			   (select count(*) from follows where to_user_id = #{id}) as follower_count,
+			   (select count(*) from follows where from_user_id = #{id}) as following_count
 		from users u
-		left join articles a on u.id = a.user_id
-		left join follows f1 on u.id = f1.to_user_id
-		left join follows f2 on u.id = f2.from_user_id
 		where u.id = #{id}
 		group by u.id
 	</select>
@@ -235,5 +234,10 @@
 				) then 1 else 0 end as is_follow
 	</select>
 
+	<select id="getRooms" parameterType="int" resultType="string">
+		select p.room_id
+		from participants p
+		join rooms r on r.id = p.room_id
+		where user_id = #{id} and r.data_type != "대기방";
+	</select>
 </mapper>
-

@@ -3,6 +3,7 @@ package com.ssafy.msg.article.model.service;
 import com.ssafy.msg.article.model.dto.*;
 import com.ssafy.msg.article.model.mapper.ArticleMapper;
 import com.ssafy.msg.article.util.S3Util;
+import com.ssafy.msg.game.model.service.GameService;
 import com.ssafy.msg.user.exception.UserNotFoundException;
 import com.ssafy.msg.webpush.model.service.WebPushService;
 import jakarta.servlet.http.HttpServletRequest;
@@ -21,11 +22,14 @@ import com.ssafy.msg.user.model.mapper.UserMapper;
 @Slf4j
 public class ArticleServiceImpl implements ArticleService{
     private final ArticleMapper articleMapper;
+    private final GameService gameService;
     private final UserMapper userMapper;
 
     private final WebPushService webPushService;
 
     private final S3Util s3Util;
+
+
 
     // 게시물 작성
 
@@ -48,12 +52,12 @@ public class ArticleServiceImpl implements ArticleService{
                 String uuid = s3Util.saveFile(multipartFile);
                 String url = s3Util.getUrl(uuid);
 
-
                 // articleImage table 에 사진 정보 저장
                 articleMapper.insertArticleImage(new ArticleImageDto(articleDto.getId(), url, uuid, 0));
             }
         } else { // 미션 게시물 작성
             articleMapper.createArticle(articleDto);
+            gameService.completeMission(articleDto.getUserId(), articleDto.getRoomId());
             log.info("(service) 미션 게시물 작성 성공 articleId: {}", articleDto.getId());
             boolean isFirst = true; // 첫번째 사진인지를 구분
             for (MultipartFile multipartFile : articleDto.getArticleImageList()) {
