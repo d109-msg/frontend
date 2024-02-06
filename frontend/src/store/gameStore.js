@@ -47,6 +47,34 @@ export const useGameStore = defineStore('game',{
             }
             return axios.post(`${server}/game/group/join`,JSON.stringify(data),{ headers })
 
+        },
+        randomFlag : async function(){
+            const auth = useAuthStore()
+            await auth.useRefresh()
+            const headers = {
+                Authorization : `Bearer ${useAuthStore().getAccess}`
+            }
+            return axios.get(`${server}/game/random`,{headers})
+        },
+        enterRandomRoom : async function(){
+            const auth = useAuthStore()
+            await auth.useRefresh()
+            const headers = {
+                Authorization : `Bearer ${useAuthStore().getAccess}`,
+                // "Content-Type" : "application/json"
+            }
+            return axios.post(`${server}/game/random`,null,{ headers })
+
+        },
+        exitRandomRoom : async function(){
+            const auth = useAuthStore()
+            await auth.useRefresh()
+            const headers = {
+                Authorization : `Bearer ${useAuthStore().getAccess}`,
+                // "Content-Type" : "application/json"
+            }
+            return axios.delete(`${server}/game/random`,{ headers })
+
         }
 
 

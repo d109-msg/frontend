@@ -3,8 +3,11 @@
     <div class="create-room-btn" @click="createRoom()" >
       방만들기
     </div>
-    <div  class="enter-room-btn">
+    <div v-if="randomData == false"  class="enter-room-btn" @click="randomRoom()">
       입장하기
+    </div>
+    <div v-else  class="enter-room-btn" @click="randomRoom()">
+      취소하기
     </div>
     <div class="game-guide-btn">
       게임 가이드
@@ -23,6 +26,7 @@ export default {
       return{
         gameData: {},
         createFlag : false,
+        randomData :false,
       }
     },
     props:{
@@ -35,8 +39,15 @@ export default {
         }else{
           this.createFlag = false
         }
+      },
+      randomData(){
+        console.log(this.randomData)
       }
     },
+    mounted(){
+      this.checkRandomFlag()
+      
+     },
     methods:{
       getUser : async function(){
             const auth = useAuthStore()
@@ -79,6 +90,30 @@ export default {
           }else{
             alert('더이상 방을 생성할 수 없어요.')
           }
+        },
+        checkRandomFlag: async function(){
+          const game = useGameStore()
+
+          try{
+            let value = await game.randomFlag()
+            this.randomData = value.data
+            console.log(this.randomData)
+          }catch(err){
+            console.log(err)
+          }
+        },
+        randomRoom: async function(){
+          const game = useGameStore()
+            if (this.randomData === false){
+              console.log('입장하기 가능')
+              await game.enterRandomRoom()
+              this.randomData = true
+            }else{
+              console.log('입장하기 불가')
+              await game.exitRandomRoom()
+              this.randomData = false
+            }
+
         }
 
 
