@@ -1,27 +1,30 @@
 <template>
-  <div class="feed-container">
-    <RoomFeedReady v-if="startFlag === false" :room-data="roomData"></RoomFeedReady>
-    <RoomFeedStart v-else :room-data="roomData"></RoomFeedStart>
-
-  </div>
+    <div class="feed-title-box">
+      <div class="invite-code-title">{{ roomData.title }}</div>
+    </div>
+    <div class="feed-content">
+      <div>
+        <p class="invite-code-title">초대코드</p>
+        <p class="invite-code" >
+          {{ roomData.id }}
+        </p>
+        <div style="display: flex; justify-content: space-evenly; ">
+          <button id="invite-copy" class="invite-btn" @click="copyBtn()">초대코드 복사하기</button>
+          <button class="invite-btn">초대코드 공유하기</button>
+        </div>
+        <p class="invite-code-title">아직 멤버가 다 모이지 않았어요. <span>({{1}}/7)</span></p>
+      </div>
+    </div>
 </template>
 
 <script>
-import RoomFeedReady from './RoomFeedReady.vue';
-import RoomFeedStart from './RoomFeedStart.vue';
 export default {
-    name: 'RoomFeed',
+    name: 'RoomFeedReady',
     data(){
-      return{
-        startFlag : true
-      }
+
     },
     props:{
       roomData : Object,
-    },
-    components:{
-      RoomFeedReady,
-      RoomFeedStart
     },
     methods:{
       reload: function(){
@@ -50,6 +53,6 @@ export default {
 }
 </script>
 
-<style scoped src="./css/RoomFeed.css">
+<style scoped src="./css/RoomFeedReady.css">
 
 </style>

@@ -1,0 +1,75 @@
+
+
+.feed-title-box{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: absolute;
+    width: 100%;
+    height: 60px;
+    top: 0;
+    border-radius: 5px 5px 0 0;
+    background-color: #FFFDF3;
+    box-shadow: 1px 2px 5px rgba(0, 0, 0, 0.2);
+
+}
+
+.reset-icon{
+    background: url('../Img/icon_reset.png');
+    background-size: contain;
+    background-repeat: no-repeat;
+    width: 30px;
+    height: 30px;
+    margin-left: 20px;
+    cursor: pointer;
+}
+
+.create-icon{
+    background: url('../Img/icon_plus.png');
+    background-size: contain;
+    background-repeat: no-repeat;
+    width: 40px;
+    height: 40px;
+    margin-right: 15px;
+    cursor: pointer;
+
+}
+
+.feed-content{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    height: 80%;
+    margin-top: 100px;
+}
+
+.invite-code-title{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    font-size: 1.5em;
+}
+
+.invite-code{
+    text-align: center;
+    font-size: 2em;
+    margin-bottom: 50px;
+
+}
+
+.invite-btn{
+    text-align: center;
+    background-color: #4B6C83;
+    color: #FFFDF3;
+    height: 60px;
+    padding-left: 30px;
+    padding-right: 30px;
+    margin: 5px;
+    border: none;
+    border-radius: 10px;
+    margin-bottom: 50px;
+    cursor: pointer;
+}

@@ -3,14 +3,14 @@
     <div class="game-banner-box">
         <div class="game-banner">
             <div class="search-box">
-                <input class="search-bar" type="text" placeholder="초대코드 입력" >
-                <div class="search-btn">입장</div>
+                <input class="search-bar" type="text" v-model="inviteCode" placeholder="초대코드 입력" >
+                <div class="search-btn" @click="enterInviteRoom()">입장</div>
             </div>
         </div>
     </div>
-        <GameMidPageVue></GameMidPageVue>
+        <GameMidPageVue :room-list="roomList"></GameMidPageVue>
         <div class="game-bot-box">
-            <GameRoomPageVue class="game-room-box"></GameRoomPageVue>
+            <GameRoomPageVue class="game-room-box" :room-list="roomList"></GameRoomPageVue>
             <MiniProfile v-if="size == 'lg'" :userInfo="userInfo"/>
         </div>
   </div>
@@ -21,6 +21,9 @@ import GameMidPageVue from './GameMidPage.vue'
 import GameRoomPageVue from './GameRoomPage.vue'
 import MiniProfile from '../MiniProfile/MiniProfile.vue'
 import { useAuthStore } from '@/store/authStore'
+import { useGameStore } from '@/store/gameStore';
+
+import router from '@/router'
 
 export default {
     name: "GamePage",
@@ -30,7 +33,10 @@ export default {
             userInfo : {},
             width: 0,
             height: 0,
-            size : 'lg'
+            size : 'lg',
+            inviteCode: "",
+            roomList :{},
+            inviteRoom:{}
         }
     },
     components:{
@@ -49,13 +55,22 @@ export default {
                     // 잘못될 시 authStore의 logout function 작동 -> 세션에 저장된 정보들 다 비워줌
                     let value = await auth.getUser()
                     this.userInfo = value.data
-                    console.log(this.userInfo)
+                    // console.log(this.userInfo)
                 } catch(err){
                     await auth.logout()
                 }
             } // 어세스 토큰이 존재 할 시 이를 통해 getUser 미니 프로필 컴포넌트에 해당 객체값 props로 전해줌
         },
-
+        getRoomList: async function(){
+            const game = useGameStore()
+            try{
+              let value = await game.getRoomList()
+              this.roomList = value.data
+              console.log(this.roomList)
+            }catch(err){
+              console.log(err)
+            }
+        },
         startPage : async function(){
             await this.getUser()
             this.emitter.emit('pageChange',1)
@@ -74,6 +89,25 @@ export default {
                 else {this.size = "lg"}
             window.addEventListener('resize', this.handleResize);
         },
+        enterInviteRoom : async function(){
+            const game = useGameStore()
+            try{
+                let value = await game.enterInviteRoom(this.inviteCode)
+                this.inviteRoom = value.data
+                router.push({
+                name:'room',
+                params: {
+                  data: JSON.stringify(this.inviteRoom),
+                  
+                }
+                
+              })
+                console.log(this.inviteRoom)
+            }catch(err){
+                console.log(err)
+            }
+
+        }
     },
     beforeDestroy() {
         // console.log("beforeDestroy...");
@@ -82,6 +116,8 @@ export default {
     mounted(){
         this.startPage()
         this.reactiveSize()
+        this.getRoomList()
+
 
     },
     watch:{

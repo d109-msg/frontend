@@ -1,7 +1,7 @@
-@media screen and (max-width:510px){
+@media screen and (max-width:660px){
     .card-body{
         position: relative;
-        background: url('../Img/room_img1.png');
+        background: #000000;
         background-size: cover;
         background-position: bottom;
         background-repeat: no-repeat;
@@ -10,11 +10,20 @@
         border-radius: 10px;
         margin-bottom: 20px;
         margin: 1%;
-    }
+        cursor: pointer;
 
+    }
+    .card-content{
+        width: 100%;
+        height: 220px;
+        border-radius: 10px;        
+    }
     
     .card-title-box{
         position: absolute;
+        display: flex;
+        justify-content: center;
+        align-items: center;
         bottom: 0;
         background-color: #A1444A;
         height: 25%;
@@ -23,7 +32,18 @@
         box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.2);
     
     }
-    
+    .friend-group{
+        background-color: #A1444A;
+    }
+
+    .random-group{
+        background-color: #464C61;
+    }
+    .card-title{
+        color: #fff;
+        font-size: 0.8em;
+    }
+        
   
     .card-job-icon{
         position: absolute;
@@ -38,25 +58,36 @@
     }
 }
 
-@media screen and (min-width:511px){
+
+
+@media screen and (min-width:660px){
     .card-body{
         position: relative;
-        background: url('../Img/room_img1.png');
+        background: #000000;
         background-size: cover;
         background-position: center;
         background-repeat: no-repeat;
         height: 0;
-        width: 40%;
-        padding-bottom: 25%;
+        width: 250px;
+        padding-bottom: 20%;
         border-radius: 10px;
-        margin-bottom: 20px;
-        margin: 1%;
-    }
+        margin-bottom: 30px;
+        margin: 5%;
+        cursor: pointer;
 
+    }
+    .card-content{
+        width: 250px;
+        height: 150px;
+        border-radius: 10px;        
+    }
     
     .card-title-box{
         position: absolute;
-        bottom: 0;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        bottom: -30px;
         background-color: #A1444A;
         height: 25%;
         width: 100%;
@@ -64,7 +95,17 @@
         box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.2);
     
     }
-    
+    .card-title{
+        color: #fff;
+        font-size: 0.8em;
+    }
+    .friend-group{
+        background-color: #A1444A;
+    }
+
+    .random-group{
+        background-color: #464C61;
+    }       
     
     
     .card-job-icon{
@@ -82,11 +123,10 @@
 }
 
 
-
 @media screen and (min-width:980px){
     .card-body{
         position: relative;
-        background: url('../Img/room_img1.png');
+        background: #000000;
         background-size: cover;
         background-position: center;
         background-repeat: no-repeat;
@@ -95,21 +135,40 @@
         border-radius: 10px;
         margin-bottom: 20px;
         margin: 5px;
+        cursor: pointer;
     }
     
-
+    .card-content{
+        width: 100%;
+        height: 220px;
+        border-radius: 10px;        
+    }
     
     .card-title-box{
         position: absolute;
+        display: flex;
+        justify-content: center;
+        align-items: center;
         bottom: 0;
         background-color: #A1444A;
         height: 50px;
         width: 280px;
         border-radius: 5px;
         box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.2);
-    
+    }
+
+    .friend-group{
+        background-color: #A1444A;
+    }
+
+    .random-group{
+        background-color: #464C61;
     }
     
+    .card-title{
+        color: #fff;
+        font-size: 0.8em;
+    }
     
     
     .card-job-icon{
