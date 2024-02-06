@@ -110,6 +110,7 @@ export const useAuthStore = defineStore('auth',{
         },
         async getUser(){
             const token = this.getAccess
+            console.log('일단 여기 들어옴')
             const headers = {
                 Authorization : `Bearer ${token}`
             }
@@ -133,6 +134,11 @@ export const useAuthStore = defineStore('auth',{
                 Authorization : `Bearer ${token}`,
                 "Content-Type" : "application/json"
             }
+            const data = {
+                "userId": 0,
+                "bio": value
+              }
+            return axios.patch(`${server}/user/bio`,JSON.stringify(data),{ headers})
 
         },
         async editPhoto(value){

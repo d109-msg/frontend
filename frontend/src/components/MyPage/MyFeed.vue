@@ -1,9 +1,20 @@
 <template>
-  <div class="myfeed-box">
-    <p class="myfeed-title"> 
-      <img src="./Img/icon_myfeed.png" alt="">
-      My Feed
-    </p>
+  <div  class="myfeed-box">
+    <div style="display: flex; justify-content: space-between;">
+      <div>
+        <p class="myfeed-title" @click="goMyfeed" >
+          <img src="./Img/icon_myfeed.png" alt="">
+          My Feed
+        </p>
+      </div>
+      <div v-if="size=='xs'">
+        <p class="myfeed-title" @click="goGameRecord">
+          <img src="./Img/icon_gamerecord.png" alt="">
+          Game Record
+        </p>
+      </div>
+    </div>
+
     <div class="myfeed-content" >
       <div class="content" v-for="(item,key) in myFeed" :key="key">
         <img :src="item.url" class="img" @click="onDetail(item)">
@@ -30,6 +41,17 @@ export default {
         detail : {}
       }
     },
+    props:{
+      pageNum : String,
+      size : String,
+    },
+    watch: {
+      size(){
+        if(this.size=="xs"){
+
+        }
+      }
+    },
     methods:{
       getFeed : async function(){
       const feed = useFeedStore()
@@ -47,6 +69,13 @@ export default {
       onDetail : function(item){
         this.detail = item
         this.detailFlag = true
+      },
+      goGameRecord(){
+        this.$emit('changePage', '2')
+
+      },
+      goMyfeed(){
+        this.$emit('changePage', '1')
       }
     },
     components:{
