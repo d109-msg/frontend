@@ -1,7 +1,7 @@
 <template>
   <div class="message-container">
-    <MessageList></MessageList>
-    <MessageDetail @user-info="userInfo"></MessageDetail>
+    <MessageList @chat-info="getInfo"></MessageList>
+    <MessageDetail @user-info="userInfo" :chatInfo="detail"></MessageDetail>
     <div>
       <MiniProfile :userInfo="user"/>
     </div>
@@ -26,11 +26,15 @@ export default {
         message: "",
         recvList:[],
         user: {},
+        detail: {},
       }
     },
     methods: {
       userInfo : function(data){
         this.user = data
+      },
+      getInfo(chat){
+        this.detail = chat
       }
     },
     components:{

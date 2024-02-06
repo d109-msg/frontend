@@ -6,10 +6,10 @@ import axios from "axios"
 import { useAuthStore } from "./authStore"
 
 const cookies = useCookies().cookies
-const server =  'https://i10d109.p.ssafy.io/api'
-const server2 = 'http://localhost:8080/api'
-// const server = 'http://localhost:8080/api'
-// const server2 = 'https://i10d109.p.ssafy.io/api'
+// const server =  'https://i10d109.p.ssafy.io/api'
+// const server2 = 'http://localhost:8080/api'
+const server = 'http://localhost:8080/api'
+const server2 = 'https://i10d109.p.ssafy.io/api'
 
 export const useFeedStore = defineStore('feed',{
     state: ()=>({
@@ -91,13 +91,13 @@ export const useFeedStore = defineStore('feed',{
             const headers={
                 Authorization : `Bearer ${useAuthStore().getAccess}`
             }
-            return axios.post(`${server}/article/commentLike?commentId=${idx}`,null,{ headers })
+            return axios.post(`${server}/article/comment-like?commentId=${idx}`,null,{ headers })
         },
         readRecomment : async function(idx,article){
             const headers={
                 Authorization : `Bearer ${useAuthStore().getAccess}`
             }
-            return axios.get(`${server}/article/childComment?commentId=${idx}&articleId=${article}`,{headers})
+            return axios.get(`${server}/article/child-comment?commentId=${idx}&articleId=${article}`,{headers})
         },
         editFeed : async function(userId,articleId,content){
             const headers={
@@ -114,6 +114,9 @@ export const useFeedStore = defineStore('feed',{
                 Authorization : `Bearer ${useAuthStore().getAccess}`,
             }
             axios.delete(`${server}/article?articleId=${articleId}`,{headers})
+        },
+        async guestFeed(server){
+            return axios.get(`${server}`)
         },
         
     },
