@@ -562,7 +562,6 @@ public class UserController {
 			 @Parameter(description = "페이지당 타겟 개수") @RequestParam(value = "limit", required = false, defaultValue = "10") Integer limit) {
 		log.info("searchUsers() start");
 
-		String currentUrl = request.getRequestURL().toString();
 		Integer userId = (Integer) request.getAttribute("id");
 
 		log.info("searchUsers() userId : {}", userId);
@@ -586,7 +585,7 @@ public class UserController {
 			else {
 				log.info("searchUsers() searched userList : {}", userList);
 				int nextOffset = offset + limit;
-				String nextUrl = currentUrl + "?keyword=" + keyword + "?offset=" + nextOffset + "?limit=" + limit;
+				String nextUrl = "?keyword=" + keyword + "?offset=" + nextOffset + "?limit=" + limit;
 				SearchUsersResponseDto result = SearchUsersResponseDto.builder()
 						.searchResult(userList)
 						.nextUrl(nextUrl)
@@ -637,9 +636,8 @@ public class UserController {
 			}
 
 	        int lastId = followList.get(followList.size() - 1).getId();
-	        
-	        String currentUrl = request.getRequestURL().toString();
-	        String nextUrl = currentUrl + "?offset=" + lastId + "&limit=" + limit+ "&type=" + type + "&keyword=" + keyword;
+
+	        String nextUrl = "?offset=" + lastId + "&limit=" + limit+ "&type=" + type + "&keyword=" + keyword;
 
 	        FollowResponseDto followResponseDto = FollowResponseDto.builder()
 	                .followUserList(followList)

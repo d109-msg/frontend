@@ -14,9 +14,10 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 public class MessageResponseDto {
-    private int id;
+    private String id;
     private String roomId;
     private int userId;
+    private int flagMafia;
     private String content;
     private String noticeType;
     private String createTime;
