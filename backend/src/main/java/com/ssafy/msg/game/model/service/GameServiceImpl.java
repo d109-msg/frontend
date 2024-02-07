@@ -1100,4 +1100,8 @@ public class GameServiceImpl implements GameService{
         createNewMission(roomId, day);
     }
 
+    @Override
+    public void createMsgArticle(CreateMsgArticleDto createMsgArticleDto) throws Exception {
+
+    }
 }
