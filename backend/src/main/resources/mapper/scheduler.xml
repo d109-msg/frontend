@@ -41,6 +41,15 @@
         where DATEDIFF(NOW(), end_time) = 1 and (data_type = '랜덤' or data_type  = '그룹');
     </update>
 
+    <select id="getReporterVoteResult" resultType="integer" parameterType="Map">
+        SELECT dm.reporter_vote
+        FROM daily_missions dm
+                 JOIN participants p ON dm.participant_id = p.id
+        WHERE p.room_id = #{roomId}
+          AND dm.day = #{day}
+          AND dm.reporter_vote IS NOT NULL;
+    </select>
+
     <select id="getNormalVoteResult" resultType="int" parameterType="string">
         SELECT dm.normal_vote
         FROM daily_missions dm
@@ -172,19 +181,19 @@
         WHERE room_id = #{roomId} and flag_die = 0;
     </select>
 
-    <select id="getAliveMafia" parameterType="string"
-            resultType="int">
+    <select id="getAliveMafia" parameterType="string" resultType="int">
         SELECT
             COUNT(id)
         FROM participants
-        WHERE room_id = #{roomId} and job_id = '마피아' and flag_die = 0;
+        WHERE room_id = #{roomId}
+          AND job_id IN ('마피아', '훼방꾼', '변장술사', '스파이', '건달')
+          AND flag_die = 0;
     </select>
 
-    <select id="isMafiaWin" parameterType="string"
-            resultType="int">
+    <select id="isMafiaWin" parameterType="string" resultType="int">
         SELECT
-            (COUNT(CASE WHEN job_id = '마피아' AND flag_die = 0 THEN 1 END) >=
-             COUNT(CASE WHEN job_id != '마피아' AND flag_die = 0 THEN 1 END)) AS isMafiaWin
+            (COUNT(CASE WHEN job_id IN ('마피아', '훼방꾼', '변장술사', '스파이', '건달') AND flag_die = 0 THEN 1 END) >=
+             COUNT(CASE WHEN job_id NOT IN ('마피아', '훼방꾼', '변장술사', '스파이', '건달') AND flag_die = 0 THEN 1 END)) AS isMafiaWin
         FROM
             participants
         WHERE room_id = #{roomId};
@@ -195,13 +204,15 @@
             <when test="isMafiaWin == 1">
                 UPDATE participants
                 SET flag_win = 0
-                WHERE room_id = #{roomId} AND job_id != '마피아'
+                WHERE room_id = #{roomId}
+                    AND job_id NOT IN ('마피아', '훼방꾼', '변장술사', '스파이', '건달')
             </when>
 
             <when test="isMafiaWin == 0">
                 UPDATE participants
                 SET flag_win = 0
-                WHERE room_id = #{roomId} AND job_id = '마피아'
+                WHERE room_id = #{roomId}
+                    AND job_id IN ('마피아', '훼방꾼', '변장술사', '스파이', '건달')
             </when>
 
             <when test="isMafiaWin == -1">
@@ -211,6 +222,7 @@
             </when>
         </choose>
     </update>
+
 
     <update id="updateEndTime" parameterType="string">
         UPDATE rooms

@@ -248,23 +248,47 @@ public class GameController {
 
     }
 
-    @GetMapping(value = "/ability")
-    @Operation(summary = "능력을 사용합니다.", description = "유저의 participantId를 입력받아 능력을 사용합니다.")
+    @GetMapping("/ability")
+    @Operation(summary = "능력 사용 여부", description = "유저의 participantId를 입력받아 능력을 사용할 수 있는지 리턴. 대상을 선택하는 능력이라면 flagTarget = true 입니다.")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "조회 성공", content = @Content),
+            @ApiResponse(responseCode = "200", description = "조회 성공", content = {
+                    @Content(mediaType = "application/json", schema = @Schema(implementation = AbilityTargetResponseDto.class)) }),
             @ApiResponse(responseCode = "400", description = "조회 실패", content = @Content)})
-    public ResponseEntity<?> userAbility(@RequestParam("participantId") int participantId){
-        log.info("getAbilityVote() start");
-        try {
+    public ResponseEntity<?> abilityAvailability(@RequestParam("participantId") int participantId){
+        log.info("abilityAvailability() start");
 
-            return null;
+        try {
+            AbilityTargetResponseDto resultDto = gameService.getAbilityTarget(participantId);
+            log.info("abilityAvailability() resultDto : {}", resultDto);
+
+            return new ResponseEntity<>(resultDto, HttpStatus.OK);
         } catch (Exception e) {
-            log.error("getMyVote() -> error : {}", e);
+            log.error("abilityAvailability() -> error : {}", e);
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         } finally {
-            log.info("getAbilityVote() end");
+            log.info("abilityAvailability() end");
         }
     }
+
+    @PatchMapping(value = "/ability", produces = "text/pain;charset=utf-8")
+    @Operation(summary = "능력을 사용합니다.", description = "유저의 participantId를 입력받아 능력을 사용합니다. 대상을 지정할 필요가 없는 능력은 default = 0")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "사용 성공", content = @Content),
+            @ApiResponse(responseCode = "400", description = "사용 실패", content = @Content)})
+    public ResponseEntity<?> useAbility(@RequestParam("participantId") Integer participantId, @RequestParam(value = "targetId", defaultValue = "0") Integer targetId){
+        log.info("useAbility() start");
+
+        try {
+            String result = gameService.useAbility(participantId, targetId);
+            return new ResponseEntity<>(result, HttpStatus.OK);
+        } catch (Exception e) {
+            log.error("useAbility() -> error : {}", e);
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        } finally {
+            log.info("useAbility() end");
+        }
+    }
+
 
     @GetMapping(value = "/vote/pick", produces = "text/pain;charset=utf-8")
     @Operation(summary = "내 투표현황 api", description = "유저의 participantId를 입력받아 리턴합니다. 유저가 죽었다면 participant is dead 를 리턴합니다")

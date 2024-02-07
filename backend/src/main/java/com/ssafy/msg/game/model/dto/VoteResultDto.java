@@ -16,4 +16,5 @@ public class VoteResultDto {
     private int normalVoteCount;
     private int mafiaVoteCount;
     private int doctorVoteCount;
+    private int reporterVoteCount;
 }
