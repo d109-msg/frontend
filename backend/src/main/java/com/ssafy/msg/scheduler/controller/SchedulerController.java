@@ -131,4 +131,19 @@ public class SchedulerController {
         }
     }
 
+    @Operation(summary = "낮, 밤 확인 API 1=밤", description = "낮이라면 0, 밤이라면 1을 리턴합니다.")
+    @GetMapping("/night")
+    public ResponseEntity<?> getFlagNight() {
+        try {
+            int flagNight = schedulerService.getFlagNight();
+            
+            return new ResponseEntity<>(flagNight, HttpStatus.OK);
+        } catch (Exception e) {
+            log.error("getFlagNight() -> error : {}", e);
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        } finally {
+            log.info("getFlagNight() end");
+        }
+    }
+
 }

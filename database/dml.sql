@@ -1,5 +1,7 @@
 use msg;
 
+INSERT INTO `static_flag` (`value`) VALUES (0);
+
 INSERT INTO `first_nicknames` (`id`) VALUES
 ('명석한'), ('사악한'), ('정의로운'), ('우울한'), ('냉철한'), ('기발한'), ('재치 있는'), ('재능 있는'),
 ('즐거운'), ('미스터리한'), ('불가사의한'), ('치밀한'), ('냉정한'), ('능숙한'), ('영악한'), ('음흉한'),
@@ -210,12 +212,11 @@ INSERT INTO article_images (article_id, url, uuid, flag_mission) VALUES
 (9, 'https://team109testbucket.s3.ap-northeast-2.amazonaws.com/player10.png', 'player10.png', 0),
 (10, 'https://team109testbucket.s3.ap-northeast-2.amazonaws.com/player10.png', 'player10.png', 0);
 
+
 -- SELECT * FROM follows;
 -- SELECT * FROM articles ;
 -- SELECT * FROM article_images ai ;
--- SELECT * FROM daily_missions; 
+-- SELECT * FROM daily_missions;
 -- SELECT * FROM participants;
 -- SELECT * FROM users;
 -- SELECT * FROM rooms;
-
-

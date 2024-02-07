@@ -11,7 +11,9 @@ import java.util.List;
 @Mapper
 public interface SchedulerMapper {
 
-    void updateFlagNight(String roomId, int nightFlag) throws SQLException;
+    int getFlagNight() throws SQLException;
+    void updateStaticFlagNight(int flagNight) throws SQLException;
+    void updateFlagNight(String roomId, int flagNight) throws SQLException;
     List<Integer> getWaitingUsersId() throws SQLException;
     void createRoom(RoomDto roomDto) throws SQLException;
 
@@ -20,6 +22,8 @@ public interface SchedulerMapper {
     List<String> getUnstartRoom() throws SQLException;
 
     void updateFlagAvailable() throws SQLException;
+
+    Integer getGangsterVoteResult(int participantId) throws SQLException;
 
     Integer getReporterVoteResult(String roomId, int day) throws SQLException;
 
