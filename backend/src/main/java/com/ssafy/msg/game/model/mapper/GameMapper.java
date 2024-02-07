@@ -47,11 +47,13 @@ public interface GameMapper {
 
     void createNewMission(NewMissionDto newMissionDto) throws SQLException;
 
-    int isAlive(int participantId) throws SQLException;
+    Integer isAlive(int participantId) throws SQLException;
 
     MissionResultDto getMyMission(int participantId, int day) throws SQLException;
 
     Integer getMaxDay(int participantId) throws SQLException;
+
+    Integer getMaxDayByRoomId(String roomId) throws SQLException;
 
     List<UserEndGameDto> getUserEndGame(int userId) throws SQLException;
 
@@ -68,4 +70,6 @@ public interface GameMapper {
     GetAbilityResultDto getAbilityAvailability(GetAbilityParamDto getAbilityParamDto) throws SQLException;
 
     Integer checkSaboteur(int participantId) throws SQLException;
+
+    void setAbility(int participantId, int value) throws SQLException;
 }
