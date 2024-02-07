@@ -4,6 +4,7 @@ import com.ssafy.msg.article.model.dto.*;
 import com.ssafy.msg.article.model.mapper.ArticleMapper;
 import com.ssafy.msg.article.util.S3Util;
 import com.ssafy.msg.game.model.service.GameService;
+import com.ssafy.msg.notification.model.service.NotificationService;
 import com.ssafy.msg.user.exception.UserNotFoundException;
 import com.ssafy.msg.webpush.model.service.WebPushService;
 import lombok.RequiredArgsConstructor;
@@ -25,6 +26,7 @@ public class ArticleServiceImpl implements ArticleService{
     private final UserMapper userMapper;
 
     private final WebPushService webPushService;
+    private final NotificationService notificationService;
 
     private final S3Util s3Util;
 
@@ -240,6 +242,7 @@ public class ArticleServiceImpl implements ArticleService{
 
         } else {
             articleMapper.insertArticleLike(articleDto);
+            notificationService.sendArticleLikeNotice(articleDto.getUserId(), articleDto.getId());
             // 누르는 사람 id 누르는 게시물 id만 넘겨주면 됨
             log.info("(ArticleServiceImpl) 좋아요 추가");
         }
@@ -268,6 +271,7 @@ public class ArticleServiceImpl implements ArticleService{
 
         } else {
             articleMapper.insertCommentLike(commentLikeDto);
+            notificationService.sendCommentLikeNotice(commentLikeDto);
 
             log.info("(ArticleServiceImpl) 댓글 좋아요 추가");
         }
@@ -285,6 +289,7 @@ public class ArticleServiceImpl implements ArticleService{
     public void createComment(CommentDto commentDto) throws Exception {
         log.info("(ArticleServiceImpl) 댓글 작성 서비스 시작");
         articleMapper.createComment(commentDto);
+        notificationService.sendCommentNotice(commentDto);
 //        if (commentDto.getParentCommentId() != null
 //                && articleMapper.countParentId(commentDto.getParentCommentId()) > 0) {
 //

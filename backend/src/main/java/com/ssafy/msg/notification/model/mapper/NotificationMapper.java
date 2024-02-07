@@ -6,4 +6,9 @@ import java.sql.SQLException;
 
 @Mapper
 public interface NotificationMapper {
+    String getNicknameById(int id);
+
+    int getUserIdByArticleId(int articleId);
+
+    int getUserIdByCommentId(int commentId);
 }

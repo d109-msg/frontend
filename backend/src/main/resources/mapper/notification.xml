@@ -5,6 +5,25 @@
 <mapper
         namespace="com.ssafy.msg.notification.model.mapper.NotificationMapper">
 
+    <select id="getNicknameById" parameterType="int"
+            resultType="String">
+        select nickname
+        from users
+        where id = #{fromId};
+    </select>
 
+    <select id="getUserIdByArticleId" parameterType="int"
+            resultType="int">
+        select user_id
+        from articles
+        where id = #{articleId};
+    </select>
+
+    <select id="getUserIdByCommentId" parameterType="int"
+            resultType="int">
+        select user_id
+        from comments
+        where id = #{commentId};
+    </select>
 </mapper>
 
