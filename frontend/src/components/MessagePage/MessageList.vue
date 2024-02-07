@@ -20,7 +20,7 @@
                       plz add bio
                     </p>
                   </div>
-                  <div class="button-box" @click="chatRoom(item.id)">
+                  <div class="button-box" @click="chatRoom(item.userId)">
                     <img src="./Img/icon_plus.png" class="make-message">
                   </div>
               </div>
@@ -47,10 +47,10 @@
 import { useAuthStore } from '@/store/authStore'
 import { nextTick } from 'vue'
 import { useChatStore } from '@/store/chatStore'
-const server =  'https://i10d109.p.ssafy.io/api'
-const server2 = 'http://localhost:8080/api'
-// const server = 'http://localhost:8080/api'
-// const server2 = 'https://i10d109.p.ssafy.io/api'
+// const server =  'https://i10d109.p.ssafy.io/api'
+// const server2 = 'http://localhost:8080/api'
+const server = 'http://localhost:8080/api'
+const server2 = 'https://i10d109.p.ssafy.io/api'
 
 export default {
     name: 'MessageList',
@@ -58,7 +58,8 @@ export default {
       return{
         listFlag : false,
         userList : [],
-        baseUrl : `${server}/user/follow?type=from`,
+        baseUrl : `${server}/user/follow`,
+        nextUrl : "?type=from",
         io : {},
         messageList : [],
       }
@@ -82,17 +83,17 @@ export default {
         await auth.useRefresh()
         if(this.baseUrl != null){
           try{
-            let value = await auth.searchFollowing(this.baseUrl)
+            let value = await auth.searchFollowing(this.baseUrl+this.nextUrl)
             if(value.data != ""){
               value.data.followUserList.forEach(item=>{
                 this.userList.push(item)
+                console.log(item)
               })
             }
-            this.baseUrl = value.data.nextUrl
+            this.nextUrl = value.data.nextUrl
             this.$nextTick(()=>{
-              if(this.baseUrl != null){
+              if(this.nextUrl != null){
                 const last = document.getElementById(`${this.userList.length-1}`)
-                console.log(this.baseUrl)
                 this.io.observe(last)
               } 
             })
@@ -111,11 +112,12 @@ export default {
       },
       chatRoom : async function(idx){
         const chat = useChatStore()
+        const auth = useAuthStore()
         try{
           console.log(idx)
           let value = await chat.makeChat(idx)
           this.messageList.unshift(value.data)
-          console.log(value)
+          await chat.subscribe(value.data.id)
         }catch(err){
           console.log(err)
         }

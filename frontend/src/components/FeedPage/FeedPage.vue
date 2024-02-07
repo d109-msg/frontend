@@ -44,10 +44,10 @@
     import { useFeedStore } from '@/store/feedStore';
     import { useAuthStore } from '@/store/authStore';
 import router from '@/router';
-const server =  'https://i10d109.p.ssafy.io/api'
-const server2 = 'http://localhost:8080/api'
-// const server = 'http://localhost:8080/api'
-// const server2 = 'https://i10d109.p.ssafy.io/api'
+// const server =  'https://i10d109.p.ssafy.io/api'
+// const server2 = 'http://localhost:8080/api'
+const server = 'http://localhost:8080/api'
+const server2 = 'https://i10d109.p.ssafy.io/api'
     export default {
         name: "FeedPage",
 
@@ -90,17 +90,18 @@ const server2 = 'http://localhost:8080/api'
                 
             },
             axiosRead : async function(){
-                if(this.baseUrl != null){
+                if(this.nextUrl != null){
                     const feed = useFeedStore()
-                    let value = await feed.readFeed(this.baseUrl)
+                    console.log(this.baseUrl+this.nextUrl)
+                    let value = await feed.readFeed(this.baseUrl+this.nextUrl)
                     if(value.data != ""){
                         value.data.articleDetailDtos.forEach(item=>{
                             this.feedList.push(item)
                         })
                     }
-                    this.baseUrl = value.data.nextUrl
+                    this.nextUrl = value.data.nextUrl
                     this.$nextTick(()=>{
-                        if(this.baseUrl !== null && this.feedList.length != 0){
+                        if(this.nextUrl !== null && this.feedList.length != 0){
                             const last = document.getElementById(`${this.feedList.length-1}`)
                             this.io.observe(last)
                         }else{
@@ -128,18 +129,18 @@ const server2 = 'http://localhost:8080/api'
                 }
             },
             axiosGuest : async function(){
-                if(this.guestUrl != null){
+                if(this.nextGuestUrl != null){
                     const feed = useFeedStore()
-                    let value = await feed.guestFeed(this.guestUrl)
+                    let value = await feed.guestFeed(this.guestUrl+this.nextGuestUrl)
                     if(value.data != ""){
                         value.data['articles'].forEach(article=>{
                             this.feedList.push(article)
                         })
                     }
-                    this.guestUrl = value.data.nextUrl
+                    this.nextGuestUrl = value.data.nextUrl
                     this.$nextTick(()=>{
                         const last = document.getElementById(`${this.feedList.length-1}`)
-                        if(this.guestUrl !== null){
+                        if(this.nextGuestUrl !== null){
                             this.guestio.observe(last)
                         }
                     })
