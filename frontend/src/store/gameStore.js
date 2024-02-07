@@ -6,10 +6,10 @@ import axios from "axios"
 import { useAuthStore } from "./authStore"
 
 
-const server =  'https://i10d109.p.ssafy.io/api'
-const server2 = 'http://localhost:8080/api'
-// const server = 'http://localhost:8080/api'
-// const server2 = 'https://i10d109.p.ssafy.io/api'
+// const server =  'https://i10d109.p.ssafy.io/api'
+// const server2 = 'http://localhost:8080/api'
+const server = 'http://localhost:8080/api'
+const server2 = 'https://i10d109.p.ssafy.io/api'
 
 export const useGameStore = defineStore('game',{
     state: ()=>({
@@ -76,7 +76,43 @@ export const useGameStore = defineStore('game',{
             }
             return axios.delete(`${server}/game/random`,{ headers })
 
-        }
+        },
+        getParticipant : async function(roomId){
+            const auth = useAuthStore()
+            await auth.useRefresh()
+            const headers = {
+                Authorization : `Bearer ${useAuthStore().getAccess}`,
+                // "Content-Type" : "application/json"
+            }
+            return axios.get(`${server}/game/participant?roomId=${roomId}`,{ headers })               
+        },
+        getMission : async function(id){
+            const auth = useAuthStore()
+            await auth.useRefresh()
+            const headers = {
+                Authorization : `Bearer ${useAuthStore().getAccess}`,
+                // "Content-Type" : "application/json"
+            }
+            return axios.get(`${server}/game/room/mission?participantId=${id}`,{ headers })               
+        },
+        getAbility : async function(id){
+            const auth = useAuthStore()
+            await auth.useRefresh()
+            const headers = {
+                Authorization : `Bearer ${useAuthStore().getAccess}`,
+                // "Content-Type" : "application/json"
+            }
+            return axios.get(`${server}/game/ability?participantId=${id}`,{ headers })               
+        },
+        getMemberList : async function(roomId){
+            const auth = useAuthStore()
+            await auth.useRefresh()
+            const headers = {
+                Authorization : `Bearer ${useAuthStore().getAccess}`,
+                // "Content-Type" : "application/json"
+            }
+            return axios.get(`${server}/game/room/participant?roomId=${roomId}`,{ headers })               
+          }
 
 
 

@@ -6,7 +6,7 @@
     </div>
     <div class="feed-content">
       <div>
-
+        {{ mission }}
       </div>
     </div>
     <FeedCreate v-if="create" @close="complete"/>
@@ -25,8 +25,11 @@ export default {
         }
     },
     props:{
-        roomData : Object,
-
+      roomData : Object,
+      participant:Object,
+      mission:Object,
+      ability:Object,
+      member: Object,
     },
     components:{
         FeedCreate

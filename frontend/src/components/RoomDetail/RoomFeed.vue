@@ -1,7 +1,20 @@
 <template>
   <div class="feed-container">
-    <RoomFeedReady v-if="startFlag === false" :room-data="roomData"></RoomFeedReady>
-    <RoomFeedStart v-else :room-data="roomData"></RoomFeedStart>
+    <RoomFeedReady v-if="startFlag === false" 
+    :room-data="roomData"
+    :participant="participant"
+    :mission="mission"
+    :ability="ability"
+    :member="member"
+    
+    ></RoomFeedReady>
+    <RoomFeedStart v-else 
+    :room-data="roomData"
+    :participant="participant"
+    :mission="mission"
+    :ability="ability"
+    :member="member"
+    ></RoomFeedStart>
 
   </div>
 </template>
@@ -18,6 +31,10 @@ export default {
     },
     props:{
       roomData : Object,
+      participant:Object,
+      mission:Object,
+      ability:Object,
+      member: Object
     },
     components:{
       RoomFeedReady,
