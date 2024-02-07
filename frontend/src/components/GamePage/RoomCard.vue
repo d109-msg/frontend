@@ -28,6 +28,6 @@ export default {
 }
 </script>
 
-<style src="./css/RoomCard.css">
+<style scoped  src="./css/RoomCard.css">
 
 </style>

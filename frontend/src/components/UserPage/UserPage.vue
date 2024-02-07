@@ -10,11 +10,11 @@
           <img class="profile-img" :src="userInfo.imageUrl" alt="">
           <div class="profile-section">
           <div class="">닉네임 <span> {{ userInfo.nickname  }} </span></div>
-          <div class="" >소개글 <span> {{ "아직 없음." }} </span></div>
+          <div class="" >소개글 <span> {{ userInfo.bio }} </span></div>
           <div class="profile-bot-section">
-            <div>게시물 <span> {{ 8 }} </span></div>
-            <div>팔로우 <span> {{ 10 }} </span></div>
-            <div>팔로잉 <span> {{ 11 }}</span></div>
+            <div>게시물 <span> {{ userInfo.articleCount }} </span></div>
+              <div>팔로우 <span> {{ userInfo.followerCount }} </span></div>
+              <div>팔로잉 <span> {{ userInfo.followingCount }}</span></div>
           </div>
         <div class="button-box">
           <div class="follow-button">팔로우하기</div>

@@ -14,25 +14,31 @@
             <div class="">닉네임 <span> {{ userInfo.nickname  }} </span></div>
             <div class="" >소개글 <span> {{ userInfo.bio }} </span></div>
             <div class="profile-bot-section">
-              <div>게시물 <span> {{ 8 }} </span></div>
-              <div>팔로우 <span> {{ 10 }} </span></div>
-              <div>팔로잉 <span> {{ 11 }}</span></div>
+              <div>게시물 <span> {{ userInfo.articleCount }} </span></div>
+              <div>팔로우 <span> {{ userInfo.followerCount }} </span></div>
+              <div>팔로잉 <span> {{ userInfo.followingCount }}</span></div>
             </div>
         </div>
       </div>
     </div>
-    <div class="feed-game-box" v-if="size=='xs'">
-      <MyFeedVue v-if="pageNum=='1'" class="myfeed-box" :size="size" @change-page="changePage"></MyFeedVue>
-      <MyGameVue v-else class="mygame-box" :size="size"  @change-page="changePage"></MyGameVue>
+    <div class="feed-game-box" v-if="size=='xs'" style="display: flex; flex-direction: column;">
+      <div style="display: flex; justify-content: flex-end; margin-bottom: 5px;">
+        <label class="toggle_switch">
+          <input type="checkbox" @click="changePage">
+          <span class="slider"></span>
+        </label>
+      </div>
+      <MyFeedVue v-if="pageNum=='1'"  ></MyFeedVue>
+      <MyGameVue v-else-if="pageNum=='2'" ></MyGameVue>
     </div>
 
     <div class="feed-game-box" v-if="size=='md'">
-      <MyFeedVue  class="myfeed-box" style="width: 100%;"></MyFeedVue>
-      <MyGameVue  class="mygame-box"></MyGameVue>
+      <MyFeedVue   style="width: 100%;"></MyFeedVue>
+      <MyGameVue ></MyGameVue>
     </div>
     <div class="feed-game-box" v-if="size=='lg'">
-      <MyFeedVue  class="myfeed-box"></MyFeedVue>
-      <MyGameVue  class="mygame-box"></MyGameVue>
+      <MyFeedVue ></MyFeedVue>
+      <MyGameVue ></MyGameVue>
     </div>
 
   </div>
@@ -95,15 +101,22 @@ export default {
           this.userInfo = value.data
           auth.setUserInfo(this.userInfo)
           this.userId = this.userInfo.id
-          console.log(this.userInfo)
+          // console.log(this.userInfo)
         } catch (error) {
             alert('로그인 세션이 만료되었습니다.')
             router.push('/login')
           }
       },
-      changePage(value){
-        this.pageNum = value
-        console.log(value)
+      changePage(){
+        if (this.pageNum == 1){
+          this.pageNum = 2
+          console.log(this.pageNum)
+
+        }else{
+          this.pageNum = 1
+          console.log(this.pageNum)
+
+        }
       },
       
       openEdit(){
@@ -121,15 +134,13 @@ export default {
     width(){
             if (this.width<600) {
                 this.size =  "xs"
-                console.log(this.size)
             }
-            else if (this.width >= 600 && this.width < 890) {
+            else if (this.width >= 600 && this.width < 840) {
                 this.size = "md"}
             else {this.size = "lg"}
         },
   },
   beforeDestroy() {
-        // console.log("beforeDestroy...");
         window.removeEventListener('resize', this.handleResize);
     },
   mounted(){
