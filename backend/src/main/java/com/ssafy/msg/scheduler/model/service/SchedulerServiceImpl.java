@@ -3,6 +3,7 @@ package com.ssafy.msg.scheduler.model.service;
 import com.ssafy.msg.game.model.dto.ParticipantDto;
 import com.ssafy.msg.game.model.mapper.GameMapper;
 import com.ssafy.msg.game.model.service.GameService;
+import com.ssafy.msg.game.util.GameUtil;
 import com.ssafy.msg.message.model.service.MessageService;
 import com.ssafy.msg.scheduler.model.dto.UpdateWinFlagDto;
 import com.ssafy.msg.scheduler.model.mapper.SchedulerMapper;
@@ -33,9 +34,13 @@ public class SchedulerServiceImpl implements SchedulerService{
         // strart_time은 not null이지만 end_time이 null인 roomId 조회
         List<String> unendRoom = schedulerMapper.getUnendRoom();
         for (String roomId: unendRoom) {
+
             // 투표 결과 처리
             manageMafiaDoctorVote(roomId);
         }
+
+
+
 
         // 7명이 모두 모였지만 start_time이 null인 그룹방 roomId 조회
         List<String> unstartRoom = schedulerMapper.getUnstartRoom();
@@ -132,10 +137,10 @@ public class SchedulerServiceImpl implements SchedulerService{
                     nonCompleters.remove(index);
                 }
 
-                if (participantDto.getJobId().equals("마피아")){
-                    messageService.sendGameNotice(roomId, participantDto.getNickname()+"님은 마피아였습니다!");
+                if (GameUtil.getRoleType(participantDto.getJobId()).equals("마피아")){
+                    messageService.sendGameNotice(roomId, participantDto.getNickname() + "님은 마피아였습니다!");
                 } else{
-                    messageService.sendGameNotice(roomId, "선량한 시민 " +participantDto.getNickname()+"님이 처형당했습니다.");
+                    messageService.sendGameNotice(roomId, "선량한 시민 " + participantDto.getNickname() + "님이 처형당했습니다.");
                 }
             }
         }
@@ -143,9 +148,9 @@ public class SchedulerServiceImpl implements SchedulerService{
         for(ParticipantDto nonCompleter: nonCompleters){
             schedulerMapper.manageNonCompleter(nonCompleter.getId());
             if (nonCompleter.getJobId().equals("마피아")){
-                messageService.sendGameNotice(roomId, "마피아 " + nonCompleter.getNickname()+"님이 실종되었습니다.");
+                messageService.sendGameNotice(roomId, "마피아 " + nonCompleter.getNickname() + "님이 실종되었습니다.");
             } else{
-                messageService.sendGameNotice(roomId, "시민 " +nonCompleter.getNickname()+"님이 실종되었습니다.");
+                messageService.sendGameNotice(roomId, "시민 " + nonCompleter.getNickname() + "님이 실종되었습니다.");
             }
         }
 
@@ -153,6 +158,27 @@ public class SchedulerServiceImpl implements SchedulerService{
 
     }
 
+    /**
+     * 기자의 선택 결과 (AM 8)
+     * roomId를 입력받아 해당 방의 기자에게 선택당한 사람을 출력합니다.
+     * @param roomId
+     * @throws Exception
+     */
+    public void noticeReporterVote(String roomId) throws Exception {
+        log.info("noticeReporterVote() roomId : {}", roomId);
+        int day = gameMapper.getMaxDayByRoomId(roomId);
+        Integer targetId = schedulerMapper.getReporterVoteResult(roomId, day);
+        log.info("noticeReporterVote() target : {}", targetId);
+
+        if(targetId != null){
+            ParticipantDto target = gameMapper.getParticipantWithPId(targetId);
+
+            log.info("noticeReporterVote() target 이름 : {}", target.getNickname());
+            log.info("noticeReporterVote() target 직업 : {}", target.getJobId());
+            messageService.sendGameNotice(roomId, target.getNickname() + "님의 직업은 " + target.getJobId() + "입니다.");
+            //피드?
+        }
+    }
 
     /**
      * 의사와 타겟 지목 결과 (AM 8)
@@ -166,17 +192,33 @@ public class SchedulerServiceImpl implements SchedulerService{
         log.info(String.valueOf(mafiaVotes.size()));
 
         // 마피아 의견 갈림
-        if (mafiaVotes.size() != 1 || (mafiaVotes.size() == 1 && mafiaVotes.get(0) == null)){
+        if (mafiaVotes.size() != 1 || mafiaVotes.get(0) == null){
             messageService.sendGameNotice(roomId, "평화로운 밤이었습니다.");
+
+            //기자 발표
+            noticeReporterVote(roomId);
             gameService.newDayMission(roomId);
-        }else{
+        } else {
             log.info(mafiaVotes.toString());
+
             ParticipantDto target = schedulerMapper.getParticipant(mafiaVotes.get(0));
-            if (doctorVotes.size() == 1 && Objects.equals(doctorVotes.get(0), target.getId())){
+
+            if(target.getJobId().equals("군인") && target.getAbility() == 0){
+                //군인일 때
+                gameMapper.setAbility(target.getId(), -1);
+                messageService.sendGameNotice(roomId, "마피아가 " + target.getNickname() + "님을 죽이려 시도했지만 방탄복이 " + target.getNickname() + "님을 살렸습니다.");
+
+                //기자 발표
+                noticeReporterVote(roomId);
+                gameService.newDayMission(roomId);
+            } else if (doctorVotes.size() == 1 && Objects.equals(doctorVotes.get(0), target.getId())) {
                 // 의사 의견 통일 -> 살리기
                 messageService.sendGameNotice(roomId, "마피아가 " + target.getNickname() + "님을 죽이려 시도했지만 의사의 치료를 받아 살아났습니다!");
+
+                //기자 발표
+                noticeReporterVote(roomId);
                 gameService.newDayMission(roomId);
-            }else{
+            } else {
                 // 유저 flag_die 변경, 시민이었습니다 or 마피아였습니다
                 schedulerMapper.killParticipant(target.getId());
                 messageService.sendGameNotice(roomId, target.getNickname() + "님이 마피아에게 당했습니다.");
@@ -216,6 +258,8 @@ public class SchedulerServiceImpl implements SchedulerService{
                         messageService.sendGameNotice(roomId, "타겟을 지정해주세요.");
                         messageService.sendGameNotice(roomId, "살릴 사람을 선택해주세요.");
                     }else {
+                        //기자 발표
+                        noticeReporterVote(roomId);
                         gameService.newDayMission(roomId);
                     }
                 }

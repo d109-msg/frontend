@@ -53,6 +53,8 @@ public interface GameMapper {
 
     Integer getMaxDay(int participantId) throws SQLException;
 
+    Integer getMaxDayByRoomId(String roomId) throws SQLException;
+
     List<UserEndGameDto> getUserEndGame(int userId) throws SQLException;
 
     Integer completeMission(int participantId, int day) throws SQLException;

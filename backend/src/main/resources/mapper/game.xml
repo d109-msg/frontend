@@ -69,6 +69,13 @@
 			r.end_time IS NOT NULL;
 	</select>
 
+	<select id="getMaxDayByRoomId" resultType="integer" parameterType="string">
+		SELECT MAX(dm.day) AS max_day
+		FROM daily_missions dm
+				 JOIN participants p ON dm.participant_id = p.id
+		WHERE p.room_id = #{roomId}
+	</select>
+
 	<select id="getMaxDay" resultType="integer" parameterType="int">
 		SELECT
 			CASE

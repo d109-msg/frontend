@@ -107,11 +107,15 @@ VALUES
 ('room2', '그룹', NOW(), 'Sample Room2', 'https://team109testbucket.s3.ap-northeast-2.amazonaws.com/room_img2.png'), 
 ('room3', '개인', NOW(), 'Sample Room3', 'https://team109testbucket.s3.ap-northeast-2.amazonaws.com/room_img9.png'),
 ('room4', '랜덤', NOW(), 'Sample Room4', 'https://team109testbucket.s3.ap-northeast-2.amazonaws.com/room_img10.png');
+UPDATE rooms
+SET start_time = NOW()
+WHERE id = 'room4';
+
 
 INSERT INTO `participants` (`id`, `room_id`, `user_id`, `last_message_id`, `flag_die`, `job_id`, `image_url`, `nickname`) VALUES
-(1, 'room4', 1, NULL, 0, '시민', 'https://team109testbucket.s3.ap-northeast-2.amazonaws.com/player21.png', '거짓말쟁이 니콜슨'),
+(1, 'room4', 1, NULL, 0, '기자', 'https://team109testbucket.s3.ap-northeast-2.amazonaws.com/player21.png', '거짓말쟁이 니콜슨'),
 (2, 'room4', 2, NULL, 0, '마피아', 'https://team109testbucket.s3.ap-northeast-2.amazonaws.com/player18.png', '재능 있는 젠킨스'),
-(3, 'room4', 3, NULL, 0, '마피아', 'https://team109testbucket.s3.ap-northeast-2.amazonaws.com/player10.png', '능숙한 스틸'),
+(3, 'room4', 3, NULL, 0, '훼방꾼', 'https://team109testbucket.s3.ap-northeast-2.amazonaws.com/player10.png', '능숙한 스틸'),
 (4, 'room4', 4, NULL, 0, '의사', 'https://team109testbucket.s3.ap-northeast-2.amazonaws.com/player9.png', '우울한 터너'),
 (5, 'room4', 5, NULL, 0, '시민', 'https://team109testbucket.s3.ap-northeast-2.amazonaws.com/player11.png', '은밀한 데모네'),
 (6, 'room4', 6, NULL, 0, '시민', 'https://team109testbucket.s3.ap-northeast-2.amazonaws.com/player6.png', '비밀스러운 콜레오네'),
@@ -151,14 +155,15 @@ INSERT INTO `missions` (`normal`, `mafia`) VALUES
 ('도시 사진', '자동차 사진'),
 ('도시 사진', '가게 사진');
 
-INSERT INTO daily_missions (participant_id, mission_id, day, try, flag_success, normal_vote, mafia_vote, doctor_vote) VALUES
-(1, 1, 1, 1, 1, 1, 1, 1),
-(2, 1, 1, 1, 0, 1, 1, 1),
-(3, 1, 1, 1, 1, 1, 1, 1),
-(4, 1, 1, 1, 0, 1, 1, 1),
-(5, 1, 1, 1, 1, 1, 1, 1),
-(6, 1, 1, 1, 0, 1, 1, 1),
-(7, 1, 1, 1, 0, 2, 3, 4);
+INSERT INTO daily_missions (participant_id, mission_id, day, try, flag_success, normal_vote, mafia_vote, doctor_vote, reporter_vote) VALUES
+(1, 1, 1, 1, 1, 1, null, NULL, 4),
+(2, 1, 1, 1, 0, 1, 1, NULL, null),
+(3, 1, 1, 1, 1, 1, 1, NULL, null),
+(4, 1, 1, 1, 0, 1, null, 4, null),
+(5, 1, 1, 1, 1, 1, null, NULL, null),
+(6, 1, 1, 1, 0, 1, null, NULL, null),
+(7, 1, 1, 1, 0, 2, null, NULL, null);
+
 
 -- articles 테이블에 데이터 삽입
 INSERT INTO articles (user_id, content, create_time, flag_private, room_id)
@@ -208,7 +213,9 @@ INSERT INTO article_images (article_id, url, uuid, flag_mission) VALUES
 -- SELECT * FROM follows;
 -- SELECT * FROM articles ;
 -- SELECT * FROM article_images ai ;
--- SELECT * FROM daily_missions;
+-- SELECT * FROM daily_missions; 
 -- SELECT * FROM participants;
 -- SELECT * FROM users;
 -- SELECT * FROM rooms;
+
+
