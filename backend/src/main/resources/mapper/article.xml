@@ -7,8 +7,8 @@
 
     <insert id="createArticle" parameterType="ArticleCreateDto" useGeneratedKeys="true" keyProperty="id">
         insert into articles
-            (user_id, content, create_time, flag_private, room_id)
-        values ( #{userId}, #{content}, now(), #{flagPrivate}, #{roomId});
+            (user_id, content, create_time, room_id)
+        values ( #{userId}, #{content}, now(), #{roomId});
 
     </insert>
 
@@ -42,7 +42,7 @@
         ) as sub_ai on a.id = sub_ai.article_id
                  left join article_images ai on sub_ai.min_id = ai.id
         left join users on a.user_id = users.id
-        where a.user_id = #{userId};
+        where a.user_id = #{userId} and a.flag_private = 0;
 
     </select>
 
@@ -68,6 +68,7 @@
                         FROM article_likes
                         GROUP BY article_id) l ON a.id = l.article_id
                  LEFT JOIN article_images ai ON a.id = ai.article_id
+        where a.flag_private = 0
         GROUP BY a.id
         ORDER BY likes_count DESC, a.create_time desc
             LIMIT #{limit} OFFSET #{offset};
@@ -102,14 +103,6 @@
 
     </select>
 
-<!--    기본제공 게시물 조회-->
-    <select id="getDefaultFeedList" resultType="ArticleDetailDto">
-        select u.image_url, u.nickname, u.email_id, a.content, a.id as articleId, a.user_id
-        from articles a
-        left join users u on a.user_id = u.id
-        where a.id &lt; 6;
-    </select>
-
     <select id="getArticleImages" parameterType="int" resultType="ArticleImageDto">
         select *
         from article_images
@@ -135,6 +128,7 @@
             )
         or a.user_id = #{userId})
         and a.id &lt; #{offset}
+        and a.flag_private = 0
         order by a.create_time desc, a.id desc
         limit #{limit};
 

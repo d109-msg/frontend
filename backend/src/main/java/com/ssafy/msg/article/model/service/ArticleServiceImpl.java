@@ -6,7 +6,6 @@ import com.ssafy.msg.article.util.S3Util;
 import com.ssafy.msg.game.model.service.GameService;
 import com.ssafy.msg.user.exception.UserNotFoundException;
 import com.ssafy.msg.webpush.model.service.WebPushService;
-import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -223,29 +222,6 @@ public class ArticleServiceImpl implements ArticleService{
         }
         return feedArticleList;
 
-    }
-
-    // 비로그인 혹은 팔로워 없을 때 보여주는 게시물 가져오기 (구버전 5개만 보여주는것)
-    @Override
-    public List<ArticleDetailDto> getDefaultFeedList() throws Exception {
-        List<ArticleDetailDto> articleList = articleMapper.getDefaultFeedList();
-        List<ArticleDetailDto> defaultFeedList = new ArrayList<>();
-
-        for (ArticleDetailDto at : articleList) { // 받아온 게시물 리스트를 받아서 돌린다
-            ArticleDto articleDto = ArticleDto.builder()
-                    .id(at.getArticleId())
-                    .build();
-
-            ArticleDetailDto articleDetail = getArticleDetail(articleDto, 0);
-
-            at.setUrls(articleDetail.getUrls());
-            at.setIsLike(articleDetail.getIsLike());
-            at.setLikeCount(articleDetail.getLikeCount());
-
-            defaultFeedList.add(at);
-
-        }
-        return defaultFeedList;
     }
 
     // 게시물 좋아요 시작
