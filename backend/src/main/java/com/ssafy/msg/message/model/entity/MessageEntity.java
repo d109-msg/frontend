@@ -37,7 +37,7 @@ public class MessageEntity {
 
     public MessageResponseDto toDto() {
         return MessageResponseDto.builder()
-                .id(id)
+                .id(this.id)
                 .roomId(this.roomId)
                 .userId(this.userId)
                 .flagMafia(this.flagMafia)
