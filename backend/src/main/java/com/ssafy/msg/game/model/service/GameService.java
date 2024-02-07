@@ -70,5 +70,7 @@ public interface GameService {
     AbilityTargetResponseDto getAbilityTarget(int participantId) throws Exception;
 
     String useAbility(int participantId, int targetId) throws Exception;
+
+    void createMsgArticle(CreateMsgArticleDto createMsgArticleDto) throws Exception;
 }
 

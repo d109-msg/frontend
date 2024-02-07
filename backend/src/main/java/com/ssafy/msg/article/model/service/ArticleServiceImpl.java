@@ -294,7 +294,7 @@ public class ArticleServiceImpl implements ArticleService{
 //            log.warn("유효하지 않는 parentCommentId: " + commentDto.getParentCommentId());
 //            throw new Exception("유효하지 않는 parentCommentId");
 //        }
-        webPushService.sendCommentWebPush(commentDto);
+//        webPushService.sendCommentWebPush(commentDto);
 
     }
 
