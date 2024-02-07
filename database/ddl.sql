@@ -368,4 +368,10 @@ CREATE TABLE `user_reports` (
   CONSTRAINT `reports_users_FK` FOREIGN KEY (`to_user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
+CREATE TABLE `static_flag` (
+	`id` varchar(100) NOT NULL DEFAULT 'flag_night',
+	`value` int(11) NOT NULL DEFAULT 1,
+	PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
 SET FOREIGN_KEY_CHECKS=1;
