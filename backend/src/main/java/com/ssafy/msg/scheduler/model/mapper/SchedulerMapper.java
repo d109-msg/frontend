@@ -10,6 +10,8 @@ import java.util.List;
 
 @Mapper
 public interface SchedulerMapper {
+
+    void updateFlagNight(String roomId, int nightFlag) throws SQLException;
     List<Integer> getWaitingUsersId() throws SQLException;
     void createRoom(RoomDto roomDto) throws SQLException;
 
