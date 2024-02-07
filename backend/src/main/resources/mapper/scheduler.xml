@@ -5,6 +5,16 @@
 <mapper
         namespace="com.ssafy.msg.scheduler.model.mapper.SchedulerMapper">
 
+    <select id="getFlagNight">
+        SELECT value FROM static_flag WHERE id = 'flag_night';
+    </select>
+
+    <update id="updateStaticFlagNight" parameterType="int">
+        UPDATE static_flag
+        SET value = #{flagNight}
+        WHERE id = 'flag_night';
+    </update>
+
     <update id="updateFlagNight" parameterType="map">
         UPDATE rooms
         SET flag_night = #{flagNight}
@@ -54,6 +64,17 @@
         WHERE p.room_id = #{roomId}
           AND dm.day = #{day}
           AND dm.reporter_vote IS NOT NULL;
+    </select>
+
+    <select id="getGangsterVoteResult" resultType="Integer" parameterType="int">
+        SELECT p.ability
+        FROM participants p
+                 JOIN (
+            SELECT room_id
+            FROM participants
+            WHERE id = #{participantId}
+        ) pr ON p.room_id = pr.room_id
+        WHERE p.job_id = '건달' AND p.flag_die = 0;
     </select>
 
     <select id="getNormalVoteResult" resultType="int" parameterType="string">

@@ -946,10 +946,17 @@ public class GameServiceImpl implements GameService{
             return "mission uncompleted";
         }
 
-
 //        if(getTime(8, 20)){
         if(abilityDto.getFlagNight() == 0) {
             //낮 08:00 - 20:00
+
+            Integer gangsterVote = schedulerMapper.getGangsterVoteResult(voteReceiveDto.getParticipantId());
+            if(gangsterVote != null && gangsterVote == voteReceiveDto.getParticipantId()){
+                //건달에게 표를 빼앗겼을 때
+                log.info("vote() 건달에게 표를 빼앗김");
+                return "you lost your vote to a gangster.";
+            }
+
             //시민 투표
             log.info("vote() -> normalVote : {}", voteReceiveDto.getTargetId());
             gameMapper.normalVote(voteReceiveDto.getParticipantId(), voteReceiveDto.getTargetId(), day);
