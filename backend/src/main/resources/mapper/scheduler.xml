@@ -211,6 +211,19 @@
         where id = #{id}
     </select>
 
+    <select id="getMyNormalVoteId" parameterMap="Map" resultType="ParticipantDto">
+        SELECT
+            p.*
+        FROM
+            participants p
+                JOIN
+            daily_missions dm ON p.id = dm.normal_vote
+        WHERE
+            dm.participant_id = #{participantId}
+          AND dm.day = #{day};
+
+    </select>
+
     <select id="getAliveParticipant" parameterType="string"
             resultType="int">
         SELECT

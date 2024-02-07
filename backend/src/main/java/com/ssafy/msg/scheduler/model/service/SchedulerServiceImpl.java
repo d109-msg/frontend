@@ -2,6 +2,7 @@ package com.ssafy.msg.scheduler.model.service;
 
 import com.ssafy.msg.game.model.dto.AliveParticipantDto;
 import com.ssafy.msg.game.model.dto.MissionResultDto;
+import com.ssafy.msg.game.model.dto.MyVoteDto;
 import com.ssafy.msg.game.model.dto.ParticipantDto;
 import com.ssafy.msg.game.model.mapper.GameMapper;
 import com.ssafy.msg.game.model.service.GameService;
@@ -134,7 +135,7 @@ public class SchedulerServiceImpl implements SchedulerService{
      * @param flagMission
      * @throws Exception
      */
-    public void killByVote(String roomId, ParticipantDto participantDto, boolean flagMission) throws Exception {
+    public void killByVote(String roomId, ParticipantDto participantDto, boolean flagMission, Integer day) throws Exception {
         if(flagMission) {
             //미션을 했을 때
             if(participantDto.getJobId().equals("정치인") && participantDto.getAbility() == 0){
@@ -145,6 +146,10 @@ public class SchedulerServiceImpl implements SchedulerService{
             } else if (participantDto.getJobId().equals("변장술사") && participantDto.getAbility() > 0) {
                 //변장술사일 때
                 //변장 로직
+                ParticipantDto targetDto = schedulerMapper.getMyNormalVoteId(participantDto.getId(), day);
+
+
+
                 messageService.sendGameNotice(roomId, participantDto.getNickname() + "님은 변장술사였습니다. 처형을 피하고 다른 사람의 신분으로 활동을 재개합니다.");
                 gameMapper.setAbility(participantDto.getId(), -1);
                 return;
@@ -208,7 +213,7 @@ public class SchedulerServiceImpl implements SchedulerService{
 
             messageService.sendGameNotice(roomId, "판사가 권력을 이용해 " + participantDto.getNickname() + "님에게 사형을 선고했습니다.");
 
-            killByVote(roomId, participantDto, flagMission);
+            killByVote(roomId, participantDto, flagMission, day);
         }
         else if (countNormalVote != 1) {
             //판사 능력 안씀
@@ -238,7 +243,7 @@ public class SchedulerServiceImpl implements SchedulerService{
 
                 messageService.sendGameNotice(roomId, participantDto.getNickname() + "님이 마피아로 지목 당했습니다.");
 
-                killByVote(roomId, participantDto, flagMission);
+                killByVote(roomId, participantDto, flagMission, day);
             }
 
 

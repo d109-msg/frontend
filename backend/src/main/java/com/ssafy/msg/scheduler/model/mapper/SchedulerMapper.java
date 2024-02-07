@@ -38,6 +38,8 @@ public interface SchedulerMapper {
 
     void killParticipant(int id) throws SQLException;
 
+    ParticipantDto getMyNormalVoteId(int participantId, int day) throws SQLException;
+
     void manageNonCompleter(int id) throws SQLException;
 
     ParticipantDto getParticipant(int id) throws  SQLException;
