@@ -66,5 +66,9 @@ public interface GameService {
     void startGroupGame(String roomId, List<Integer> participantList) throws Exception;
 
     void newDayMission(String roomId) throws Exception;
+
+    AbilityTargetResponseDto getAbilityTarget(int participantId) throws Exception;
+
+    String useAbility(int participantId, int targetId) throws Exception;
 }
 

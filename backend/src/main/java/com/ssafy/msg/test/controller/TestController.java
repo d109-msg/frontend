@@ -3,7 +3,9 @@ package com.ssafy.msg.test.controller;
 
 import com.ssafy.msg.message.model.dto.MessageIdDto;
 import com.ssafy.msg.message.model.dto.MessageRequestDto;
+import com.ssafy.msg.message.model.dto.TextMessageDto;
 import com.ssafy.msg.message.model.entity.MessageEntity;
+import com.ssafy.msg.message.model.service.MessageService;
 import com.ssafy.msg.message.util.DateTimeUtil;
 import com.ssafy.msg.notification.model.entity.NotificationEntity;
 import com.ssafy.msg.message.model.repo.MessageRepository;
@@ -13,6 +15,7 @@ import com.ssafy.msg.notification.model.dto.NotificationRequestDto;
 import com.ssafy.msg.notification.model.dto.NotificationUserIdDto;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -50,6 +53,7 @@ public class TestController {
     private final MessageRepository messageRepository;
     private final NotificationRepository notificationRepository;
     private final DateTimeUtil dateTimeUtil;
+    private final MessageService messageService;
 
     /*
     서버 상태 확인 start =============================================================
@@ -79,6 +83,17 @@ public class TestController {
     /*
     메시지 api start =============================================================
      */
+    @Operation(summary = "메시지 저장", description = "메시지 저장")
+    @PostMapping("/send/message")
+    public ResponseEntity<?> sendMessage( @RequestBody TextMessageDto textMessageDto) {
+
+        int id = 1;
+
+        messageService.sendTextMessage(textMessageDto, id);
+
+        return ResponseEntity.ok("success");
+    }
+
     @Operation(summary = "메시지 저장", description = "메시지 저장")
     @PostMapping("/mongodb/message/save")
     public ResponseEntity<?> saveMessage(@RequestBody MessageRequestDto messageRequestDto) {

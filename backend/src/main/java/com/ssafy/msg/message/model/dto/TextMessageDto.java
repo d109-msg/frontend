@@ -14,5 +14,6 @@ import org.springframework.web.multipart.MultipartFile;
 @AllArgsConstructor
 public class TextMessageDto {
     private String roomId;
+    private int flagMafia;
     private String text;
 }

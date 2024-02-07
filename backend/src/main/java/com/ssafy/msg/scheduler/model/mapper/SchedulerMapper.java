@@ -19,6 +19,8 @@ public interface SchedulerMapper {
 
     void updateFlagAvailable() throws SQLException;
 
+    Integer getReporterVoteResult(String roomId, int day) throws SQLException;
+
     List<Integer> getNormalVoteResult(String roomId) throws SQLException;
 
     List<Integer> getMafiaVoteResult(String roomId) throws SQLException;
