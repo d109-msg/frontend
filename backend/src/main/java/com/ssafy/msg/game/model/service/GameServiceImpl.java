@@ -939,7 +939,7 @@ public class GameServiceImpl implements GameService{
             return "participant is dead";
         }
 
-        GetAbilityResultDto abilityDto = gameMapper.getAbilityAvailability(new GetAbilityParamDto(day, voteReceiveDto.getParticipantId()));
+        GetAbilityResultDto abilityDto = gameMapper.getAbilityAvailability(new GetAbilityParamDto(voteReceiveDto.getParticipantId(), day));
 
         if(abilityDto.getFlagSuccess() == 0){
             log.info("vote() mission uncompleted");

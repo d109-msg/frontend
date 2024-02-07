@@ -2,6 +2,7 @@ package com.ssafy.msg.scheduler.model.mapper;
 
 import com.ssafy.msg.chat.model.dto.RoomDto;
 import com.ssafy.msg.game.model.dto.ParticipantDto;
+import com.ssafy.msg.scheduler.model.dto.JudgeResultDto;
 import com.ssafy.msg.scheduler.model.dto.UpdateWinFlagDto;
 import org.apache.ibatis.annotations.Mapper;
 
@@ -22,6 +23,8 @@ public interface SchedulerMapper {
     List<String> getUnstartRoom() throws SQLException;
 
     void updateFlagAvailable() throws SQLException;
+
+    JudgeResultDto getJudgeAbility(String roomId, Integer day) throws SQLException;
 
     Integer getGangsterVoteResult(int participantId) throws SQLException;
 
