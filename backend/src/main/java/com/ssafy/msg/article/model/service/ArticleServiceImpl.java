@@ -93,7 +93,7 @@ public class ArticleServiceImpl implements ArticleService{
         }
 
         int offset = articleByRoomIdDto.getOffset() + articleByRoomIdDto.getLimit();
-        String nextUrl = articleByRoomIdDto.getCurrentUrl() +"?roomId=" + articleByRoomIdDto.getRoomId() + "&offset=" + offset + "&limit=" + articleByRoomIdDto.getLimit();
+        String nextUrl ="?roomId=" + articleByRoomIdDto.getRoomId() + "&offset=" + offset + "&limit=" + articleByRoomIdDto.getLimit();
 
         return RoomFeedResponseDto.builder().articles(resultList).nextUrl(nextUrl).build();
     }
@@ -124,13 +124,10 @@ public class ArticleServiceImpl implements ArticleService{
             guestArticleResponseDtos.add(dto);
         }
 
-
-        log.info("(ArticleServiceImpl) 테스트{}", feedParamDto);
         int offset = feedParamDto.getOffset() + feedParamDto.getLimit();
-        log.info("(offset){} ", offset);
-        String nextUrl = feedParamDto.getCurrentUrl() + "?offset=" + offset + "&limit=" + feedParamDto.getLimit();
-        log.info("(url) {}", nextUrl);
-        log.info("(currentUrl) {}", feedParamDto.getCurrentUrl());
+
+        String nextUrl = "?offset=" + offset + "&limit=" + feedParamDto.getLimit();
+
         return GusetFeedResponseDto.builder().articles(guestArticleResponseDtos).nextUrl(nextUrl).build();
     }
 
