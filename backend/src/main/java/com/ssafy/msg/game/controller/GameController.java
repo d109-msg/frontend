@@ -115,7 +115,7 @@ public class GameController {
         int userId = (int) request.getAttribute("id");
 
         log.info("getParticipant() -> roomId : {}", roomId);
-        ParticipantDto participantDto = null;
+        ParticipantResponseDto participantDto = null;
 
         try {
             participantDto = gameService.getParticipant(userId, roomId);

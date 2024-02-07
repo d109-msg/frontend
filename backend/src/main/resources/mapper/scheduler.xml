@@ -5,6 +5,12 @@
 <mapper
         namespace="com.ssafy.msg.scheduler.model.mapper.SchedulerMapper">
 
+    <update id="updateFlagNight" parameterType="map">
+        UPDATE rooms
+        SET flag_night = #{flagNight}
+        WHERE id = #{roomId};
+    </update>
+
     <select id="getWaitingUsersId"
             resultType="int">
         SELECT user_id
