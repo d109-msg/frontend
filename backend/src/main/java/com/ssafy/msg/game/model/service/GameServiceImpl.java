@@ -423,7 +423,7 @@ public class GameServiceImpl implements GameService{
     @Override
     public int completeMission(int userId, String roomId) throws Exception {
         //유저 검증
-        ParticipantDto participant = getParticipant(userId, roomId);
+        ParticipantDto participant = gameMapper.getParticipant(new ParticipantReceiveDto(userId, roomId));
 
         if(participant == null){
             log.info("completeMission() can not find participant");
@@ -795,8 +795,10 @@ public class GameServiceImpl implements GameService{
      * @return participant 리턴
      */
     @Override
-    public ParticipantDto getParticipant(int userId, String roomId) throws Exception {
-        return gameMapper.getParticipant(new ParticipantReceiveDto(userId, roomId));
+    public ParticipantResponseDto getParticipant(int userId, String roomId) throws Exception {
+        ParticipantDto participantDto = gameMapper.getParticipant(new ParticipantReceiveDto(userId, roomId));
+
+        return new ParticipantResponseDto(participantDto);
     }
 
     /**

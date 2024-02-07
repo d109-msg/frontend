@@ -34,7 +34,8 @@ public class SchedulerServiceImpl implements SchedulerService{
         // strart_time은 not null이지만 end_time이 null인 roomId 조회
         List<String> unendRoom = schedulerMapper.getUnendRoom();
         for (String roomId: unendRoom) {
-
+            //낮으로 바꾸기
+            schedulerMapper.updateFlagNight(roomId, 0);
             // 투표 결과 처리
             manageMafiaDoctorVote(roomId);
         }
@@ -83,6 +84,8 @@ public class SchedulerServiceImpl implements SchedulerService{
         List<String> unendRoom = schedulerMapper.getUnendRoom();
 
         for (String roomId: unendRoom) {
+            //밤으로 바꾸기
+            schedulerMapper.updateFlagNight(roomId, 1);
             // 투표 결과 처리 및 미션 미수행자 관리
             manageNormalVote(roomId);
         }
