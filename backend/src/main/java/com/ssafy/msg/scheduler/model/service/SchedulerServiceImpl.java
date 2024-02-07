@@ -30,6 +30,8 @@ public class SchedulerServiceImpl implements SchedulerService{
     @Scheduled(cron = "0 0 8 * * ?")
     @Override
     public void gameAM8() throws Exception {
+        //낮으로 바꾸기
+        schedulerMapper.updateStaticFlagNight(0);
 
         // strart_time은 not null이지만 end_time이 null인 roomId 조회
         List<String> unendRoom = schedulerMapper.getUnendRoom();
@@ -39,8 +41,6 @@ public class SchedulerServiceImpl implements SchedulerService{
             // 투표 결과 처리
             manageMafiaDoctorVote(roomId);
         }
-
-
 
 
         // 7명이 모두 모였지만 start_time이 null인 그룹방 roomId 조회
@@ -79,7 +79,9 @@ public class SchedulerServiceImpl implements SchedulerService{
     @Scheduled(cron = "0 0 20 * * ?")
     @Override
     public void gamePM8() throws Exception {
-
+        //밤으로 바꾸기
+        schedulerMapper.updateStaticFlagNight(1);
+        
         // end_time이 null인 roomId 조회
         List<String> unendRoom = schedulerMapper.getUnendRoom();
 
@@ -159,6 +161,11 @@ public class SchedulerServiceImpl implements SchedulerService{
 
         manageGameEnd(roomId, true);
 
+    }
+
+    @Override
+    public int getFlagNight() throws Exception {
+        return schedulerMapper.getFlagNight();
     }
 
     /**
