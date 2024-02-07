@@ -32,11 +32,13 @@
             <hr>
             <div>
               <p>소개글</p>
-              <input class="input-style" type="text" v-model="userIntro" placeholder="소개글을 입력해주세요." required>
-              <button class="edit-btn" @click="updateIntro">수정</button>
+              <div style="display: flex; justify-content: space-between;">
+                <input class="input-style" type="text" v-model="userIntro" placeholder="소개글을 입력해주세요." required>
+                <button class="edit-btn" @click="updateIntro">수정</button>
+              </div>
             </div>
             <hr>
-            <div style="display: flex; justify-content: end;">
+            <div class="btn-box">
               <button class="withdraw-btn" @click="deleteUser" >회원탈퇴</button>
               <button @click="$router.push('/change-password')" class="password-btn">비밀번호 변경</button>
             </div>

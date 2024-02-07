@@ -1,5 +1,5 @@
 /* mibile */
-@media  screen and (max-width:440px) {
+@media  screen and (max-width:600px) {
     .mypage-banner-box{
         display: flex;
         justify-content: center;
@@ -25,7 +25,7 @@
         flex-direction: column;
         margin: 0;
         padding: 0;
-        height: 800px;
+        height: 600px;
         width: 90%;
         margin-left: 5%;
     }
@@ -108,53 +108,66 @@
     .feed-game-box{
         display: flex;
         flex-direction: row;
-        margin-top: 50px;
+        margin-top: 10px;
         justify-content: space-between;
         width: 90%;
         margin-left: 5%;
 
     }
-    
-    .myfeed-box{
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        flex-direction: column;
-        background-color: white;
+
+    .myfeed-box, .mygame-box{
+        margin-top: 10px;
         width: 100%;
-        border-radius: 20px;
-        box-shadow: 2px 2px 2px rgba(0, 0, 0, 0.2);
-        padding: 30px;
-        margin-bottom: 20px;
     }
-    
-    .myfeed-title{
-        display: flex;
-        align-items: center;
-        height: 30px;
-        width: 100%;
-        justify-content: space-between;
-    
-    }    
-    .mygame-box{
-        display: flex;
-        flex-direction: column;
-        background-color: white;
-        width: 100%;
-        border-radius: 20px;
-        box-shadow: 2px 2px 2px rgba(0, 0, 0, 0.2);
-        padding: 30px;
-        margin-bottom: 20px;
-    
-    }
-    
-    .mygame-title{
-        display: flex;
-        align-items: center;
-    }    
+
+
+
+    .toggle_switch { 
+        display: inline-block; 
+        position: relative; 
+        width: 70px; 
+        height: 34px; 
+    } 
+    .toggle_switch input[type="checkbox"] { 
+        overflow: hidden; 
+        position: absolute; 
+        width: 1px; 
+        height: 1px; 
+        margin: -1px; 
+        font-size: initial; 
+        clip: rect(0 0 0 0); 
+    } 
+    .toggle_switch .slider { 
+        position: absolute; 
+        top: 0; right: 0; 
+        bottom: 0; left: 0; 
+        background-color: #E8A089; 
+        border-radius: 34px; 
+        cursor: pointer; 
+        transition: 0.4s; 
+    } 
+    .toggle_switch input[type="checkbox"]:checked + .slider { 
+        background-color: #4B6C83; 
+    } 
+    .toggle_switch .slider::before { 
+        content: ""; 
+        position: absolute; 
+        top: 4px; 
+        left: 4px; 
+        width: 26px; 
+        height: 26px; 
+        background-color: #fff; 
+        border-radius: 50%; 
+        transition: 0.4s; 
+    } 
+    .toggle_switch input[type="checkbox"]:checked + .slider::before { 
+        transform:translateX(36px); 
+    } 
+
+
 }
 
-@media  screen and (min-width:441px) {
+@media  screen and (min-width:601px) {
     .mypage-banner-box{
         display: flex;
         justify-content: center;
@@ -178,7 +191,7 @@
         justify-content: center;
         flex-direction: column;
         position: absolute;
-        top: 450px;
+        top: 350px;
         left: 7%;
         height: 300px;
         width: 90%;
@@ -265,43 +278,7 @@
         width: 90%;
         margin-left: 2.5%;
     }
-    .myfeed-box{
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        flex-direction: column;
-        background-color: white;
-        width: 100%;
-        border-radius: 20px;
-        box-shadow: 2px 2px 2px rgba(0, 0, 0, 0.2);
-        padding: 30px;
-        margin-bottom: 20px;
-    }
-    
-    .myfeed-title{
-        display: flex;
-        align-items: center;
-        height: 30px;
-        width: 100%;
-        justify-content: space-between;
-    
-    }    
-    .mygame-box{
-        display: flex;
-        flex-direction: column;
-        background-color: white;
-        width: 100%;
-        border-radius: 20px;
-        box-shadow: 2px 2px 2px rgba(0, 0, 0, 0.2);
-        padding: 30px;
-        margin-bottom: 20px;
-    
-    }
-    
-    .mygame-title{
-        display: flex;
-        align-items: center;
-    }    
+
 }
     /* PC */
 @media screen and (min-width:701px) {
@@ -328,7 +305,7 @@
         justify-content: center;
         flex-direction: column;
         position: absolute;
-        top: 350px;
+        top: 250px;
         left: 5%;
         height: 400px;
         width: 95%;
@@ -410,31 +387,8 @@
         width: 90%;
         margin-left: 2.5%;
     }
-    
-    .mygame-box{
-        display: flex;
-        flex-direction: column;
-        background-color: white;
-        width: 28%;
-        border-radius: 20px;
-        box-shadow: 2px 2px 2px rgba(0, 0, 0, 0.2);
-        padding: 30px;
-        margin-bottom: 20px;
-    
-    }    
 
-    .myfeed-box{
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        flex-direction: column;
-        background-color: white;
-        width: 70%;
-        border-radius: 20px;
-        box-shadow: 2px 2px 2px rgba(0, 0, 0, 0.2);
-        padding: 30px;
-        margin-bottom: 20px;
-    }
+
 }
 
 @media screen and (min-width:840px) {
@@ -546,29 +500,6 @@
         margin-left: 2.5%;
     }
     
-    .mygame-box{
-        display: flex;
-        flex-direction: column;
-        background-color: white;
-        width: 28%;
-        border-radius: 20px;
-        box-shadow: 2px 2px 2px rgba(0, 0, 0, 0.2);
-        padding: 30px;
-        margin-bottom: 20px;
-    
-    }    
 
-    .myfeed-box{
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        flex-direction: column;
-        background-color: white;
-        width: 70%;
-        border-radius: 20px;
-        box-shadow: 2px 2px 2px rgba(0, 0, 0, 0.2);
-        padding: 30px;
-        margin-bottom: 20px;
-    }    
     
 }

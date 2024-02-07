@@ -3,13 +3,15 @@
     <div class="create-room-btn" @click="createRoom()" >
       방만들기
     </div>
+
     <div v-if="randomData == false"  class="enter-room-btn" @click="randomRoom()">
       입장하기
     </div>
     <div v-else  class="enter-room-btn" @click="randomRoom()">
       취소하기
     </div>
-    <div class="game-guide-btn">
+
+    <div class="game-guide-btn" @click="gameguide()">
       게임 가이드
     </div>
   </div>
@@ -114,6 +116,9 @@ export default {
               this.randomData = false
             }
 
+        },
+        gameguide(){
+          router.push({name: 'guide'})
         }
 
 
@@ -122,6 +127,6 @@ export default {
 }
 </script>
 
-<style src="./css/GameMidPage.css">
+<style scoped src="./css/GameMidPage.css">
 
 </style>

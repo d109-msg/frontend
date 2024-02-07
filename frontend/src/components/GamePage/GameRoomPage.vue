@@ -94,6 +94,6 @@ export default {
 }
 </script>
 
-<style src="./css/GameRoomPage.css">
+<style scoped  src="./css/GameRoomPage.css">
 
 </style>
