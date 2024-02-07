@@ -1,6 +1,8 @@
 package com.ssafy.msg.article.util;
 
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.util.Base64;
 import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Value;
@@ -40,6 +42,23 @@ public class S3Util {
 
         amazonS3.putObject(bucket, fileName, multipartFile.getInputStream(), metadata);
         return fileName;
+    }
+
+    public String saveMessageImage(String base64Image){
+
+        byte[] imageBytes = Base64.getDecoder().decode(base64Image);
+
+        ByteArrayInputStream inputStream = new ByteArrayInputStream(imageBytes);
+
+        String fileName = UUID.randomUUID().toString();
+
+        ObjectMetadata metadata = new ObjectMetadata();
+        metadata.setContentLength(imageBytes.length);
+        metadata.setContentType("image/png");
+
+        amazonS3.putObject(bucket, fileName, inputStream, metadata);
+        return fileName;
+
     }
 
     /**

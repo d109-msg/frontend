@@ -4,6 +4,7 @@ import com.ssafy.msg.article.util.S3Util;
 import com.ssafy.msg.game.model.dto.ParticipantDto;
 import com.ssafy.msg.message.model.dto.*;
 import com.ssafy.msg.message.model.entity.MessageEntity;
+import com.ssafy.msg.message.model.entity.MessageImageEntity;
 import com.ssafy.msg.message.model.mapper.MessageMapper;
 import com.ssafy.msg.message.model.repo.MessageRepository;
 import com.ssafy.msg.message.util.DateTimeUtil;
@@ -14,6 +15,9 @@ import org.springframework.stereotype.Service;
 
 import java.io.IOException;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Service
@@ -27,49 +31,44 @@ public class MessageServiceImpl implements MessageService{
     private final MessageMapper messageMapper;
 
     @Override
-    public void sendTextMessage(TextMessageDto textMessageDto, int userId) {
+    public void sendMessage(MessageRequestDto messageRequestDto, int userId){
         MessageEntity messageEntity = MessageEntity.builder()
-                .roomId(textMessageDto.getRoomId())
+                .roomId(messageRequestDto.getRoomId())
                 .userId(userId)
-                .flagMafia(textMessageDto.getFlagMafia())
-                .dataType("chat")
+                .flagMafia(messageRequestDto.getFlagMafia())
                 .createTime(dateTimeUtil.getCurrentDateTime())
-                .content(textMessageDto.getText()).build();
+                .build();
+
+        // 텍스트 메시지
+        if (messageRequestDto.getBase64Images().isEmpty()){
+            messageEntity.setDataType("chat");
+            messageEntity.setContent(messageRequestDto.getContent());
+        }
+        // 이미지 메시지
+        else{
+            messageEntity.setDataType("image");
+
+            List<MessageImageEntity> messageImageEntities = new ArrayList<>();
+
+            for (String base64Image: messageRequestDto.getBase64Images()){
+                String uuid = s3Util.saveMessageImage(base64Image);
+                String url = s3Util.getUrl(uuid);
+
+                MessageImageEntity messageImageEntity = MessageImageEntity.builder()
+                        .uuid(uuid)
+                        .url(url)
+                        .build();
+
+                messageImageEntities.add(messageImageEntity);
+            }
+
+            messageEntity.setMessageImageEntities(messageImageEntities);
+        }
 
         messageRepository.save(messageEntity);
 
         sendingOperations.convertAndSend("/sub/"+messageEntity.toDto().getRoomId(), messageEntity.toDto());
-        log.info(messageEntity.toDto().getRoomId() + " - " + messageEntity.toDto().getContent());
-    }
-
-    @Override
-    public void sendImageMessage(ImageMessageDto imageMessageDto, int userId) throws IOException {
-        String uuid = s3Util.saveFile(imageMessageDto.getImage());
-        String url = s3Util.getUrl(uuid);
-
-        MessageEntity messageEntity = MessageEntity.builder()
-                .roomId(imageMessageDto.getRoomId())
-                .userId(userId)
-                .flagMafia(imageMessageDto.getFlagMafia())
-                .dataType("chat")
-                .createTime(dateTimeUtil.getCurrentDateTime())
-                .build();
-
-        MessageImageDto messageImageDto = MessageImageDto.builder()
-                .uuid(uuid)
-                .url(url)
-                .build();
-
-        // DB 저장 로직 구현 필요
-//        MessageResponseDto messageResponseDto = MessageResponseDto.builder()
-//                .id(0)
-//                .roomId(imageMessageDto.getRoomId())
-//                .userId(userId)
-//                .sendTime("")
-//                .dataType("image")
-//                .url(url)
-//                .uuid(uuid).build();
-//        sendingOperations.convertAndSend("/sub/"+messageResponseDto.getRoomId(), messageResponseDto);
+        log.info(messageEntity.toDto().getRoomId() + " - " + messageEntity.toDto());
     }
 
     @Override
@@ -95,7 +94,7 @@ public class MessageServiceImpl implements MessageService{
                 .userId(userId)
                 .dataType("invite")
                 .createTime(dateTimeUtil.getCurrentDateTime())
-                .content("초대 코드를 확인하세요. " + gameRoomId).build();
+                .content(gameRoomId).build();
 
         messageRepository.save(messageEntity);
 
@@ -122,7 +121,7 @@ public class MessageServiceImpl implements MessageService{
     }
 
     @Override
-    public void sendStartNotice(String roomId) throws SQLException {
+    public void sendStartNotice(String roomId){
         MessageEntity messageEntity = MessageEntity.builder()
                 .roomId(roomId)
                 .userId(1)
@@ -138,7 +137,7 @@ public class MessageServiceImpl implements MessageService{
     }
 
     @Override
-    public void sendEndNotice(String roomId) throws SQLException {
+    public void sendEndNotice(String roomId){
         MessageEntity messageEntity = MessageEntity.builder()
                 .roomId(roomId)
                 .userId(1)
@@ -154,7 +153,7 @@ public class MessageServiceImpl implements MessageService{
     }
 
     @Override
-    public void sendGameNotice(String roomId, String text) throws SQLException {
+    public void sendGameNotice(String roomId, String text){
         MessageEntity messageEntity = MessageEntity.builder()
                 .roomId(roomId)
                 .userId(1)

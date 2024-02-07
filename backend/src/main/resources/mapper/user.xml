@@ -163,9 +163,9 @@
 		resultType="FollowUserDto">
 		<choose>
 			<when test="type == 'to'">
-				select u.email_id, u.nickname, u.image_url,
-				u.image_uuid, u.identifier,
-				f.id
+				select u.id as user_id, u.email_id, u.nickname, u.image_url,
+				u.image_uuid,
+				u.identifier, f.id
 				from follows as f
 				join users u on
 				f.from_user_id = u.id
@@ -178,9 +178,9 @@
 				limit #{limit}
 			</when>
 			<when test="type == 'from'">
-				select u.email_id, u.nickname, u.image_url,
-				u.image_uuid, u.identifier,
-				f.id
+				select u.id as user_id, u.email_id, u.nickname, u.image_url,
+				u.image_uuid,
+				u.identifier, f.id
 				from follows as f
 				join users u on
 				f.to_user_id = u.id
