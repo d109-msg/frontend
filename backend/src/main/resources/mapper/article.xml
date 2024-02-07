@@ -7,8 +7,8 @@
 
     <insert id="createArticle" parameterType="ArticleCreateDto" useGeneratedKeys="true" keyProperty="id">
         insert into articles
-            (user_id, content, create_time, flag_private, room_id)
-        values ( #{userId}, #{content}, now(), #{flagPrivate}, #{roomId});
+            (user_id, content, create_time, room_id)
+        values ( #{userId}, #{content}, now(), #{roomId});
 
     </insert>
 

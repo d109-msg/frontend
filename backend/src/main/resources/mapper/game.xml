@@ -384,7 +384,10 @@
 		where id = #{id}
 	</update>
 	
-	<update id="updateModeratorArticle" parameterType=""
+<!--	<update id="insertModeratorArticle" parameterType="CreateMsgArticleDto">-->
+<!--		insert into articles-->
+<!--			(user_id, content, create_time, image_url, room_id, )-->
+<!--	</update>-->
 
 </mapper>
 
