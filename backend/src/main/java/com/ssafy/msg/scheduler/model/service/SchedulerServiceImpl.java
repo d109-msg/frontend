@@ -1,5 +1,6 @@
 package com.ssafy.msg.scheduler.model.service;
 
+import com.ssafy.msg.game.model.dto.AliveParticipantDto;
 import com.ssafy.msg.game.model.dto.MissionResultDto;
 import com.ssafy.msg.game.model.dto.ParticipantDto;
 import com.ssafy.msg.game.model.mapper.GameMapper;
@@ -95,8 +96,7 @@ public class SchedulerServiceImpl implements SchedulerService{
             manageNormalVote(roomId);
 
             //밤 능력 초기화
-
-
+            nightAbilityReset(roomId);
         }
 
         //밤으로 바꾸기
@@ -112,9 +112,19 @@ public class SchedulerServiceImpl implements SchedulerService{
     }
 
     public void nightAbilityReset(String roomId) throws Exception{
-        //스파이, 훼방꾼, 건달의 ability가 1 보다 크다면(능력을 사용했다면) -1으로 바꾼다
+        //스파이, 훼방꾼, 건달의 ability가 0 보다 크다면(능력을 사용했다면) -1으로 바꾼다
         //경찰, 미치광이 ability 0으로 초기화
-        gameMapper.getAliveParticipants(roomId);
+        List<AliveParticipantDto> aliveParticipants= gameMapper.getAliveParticipants(roomId);
+
+        for(AliveParticipantDto dto : aliveParticipants) {
+            if(dto.getJobId().equals("경찰") || dto.getJobId().equals("미치광이")){
+                //경찰이나 미치광이 라면
+                gameMapper.setAbility(dto.getId(), 0);
+            } else if ((dto.getJobId().equals("스파이") || dto.getJobId().equals("훼방꾼") || dto.getJobId().equals("건달")) && dto.getAbility() > 0) {
+                //스파이, 훼방꾼, 건달의 ability가 0 보다 크다면
+                gameMapper.setAbility(dto.getId(), -1);
+            }
+        }
     }
 
     /**
