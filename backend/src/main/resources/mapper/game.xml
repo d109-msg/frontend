@@ -370,5 +370,8 @@
 		    image_url = #{imageUrl}
 		where id = #{id}
 	</update>
+	
+	<update id="updateModeratorArticle" parameterType=""
+
 </mapper>
 
