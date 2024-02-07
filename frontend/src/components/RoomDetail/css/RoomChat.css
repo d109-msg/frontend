@@ -72,3 +72,16 @@
     margin-top: 60px;
     overflow: hidden;
 }
+
+.job-box{
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    width: 97.5%;
+    height: 80px;
+    border-radius: 5px;
+    margin: 5px;
+    background: #FFD2A9;
+    font-size: 0.8em;
+    padding: 5%;
+}
