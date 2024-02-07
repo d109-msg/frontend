@@ -33,13 +33,14 @@ public class MessageEntity {
     private List<MessageImageEntity> messageImageEntities;
 
     private String noticeType; // day, night
-    private String dataType; // chat, image, notice
+    private String dataType; // chat, image, notice, invite
 
     public MessageResponseDto toDto() {
         return MessageResponseDto.builder()
-                .id(Integer.parseInt(this.id))
+                .id(this.id)
                 .roomId(this.roomId)
                 .userId(this.userId)
+                .flagMafia(this.flagMafia)
                 .createTime(this.createTime)
                 .content(this.content)
                 .noticeType(this.noticeType)
