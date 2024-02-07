@@ -16,28 +16,28 @@ import java.util.stream.Collectors;
 @AllArgsConstructor
 public class MessageRequestDto {
 
-    String roomId;
-    int userId;
-    String content;
-    List<MessageImageDto> messageImageDtos;
+    private String roomId;
+    private int flagMafia;
+    private String content;
+    private List<String> base64Images;
 
-    public MessageEntity toEntity() {
-        MessageEntity messageEntity = MessageEntity.builder()
-                .roomId(this.roomId)
-                .userId(this.userId)
-                .content(this.content)
-                .build();
-
-        if (this.messageImageDtos != null) {
-            List<MessageImageEntity> messageImageEntities = this.messageImageDtos.stream()
-                    .map(imageDto -> MessageImageEntity.builder()
-                            .url(imageDto.getUrl())
-                            .uuid(imageDto.getUuid())
-                            .build())
-                    .collect(Collectors.toList());
-            messageEntity.setMessageImageEntities(messageImageEntities);
-        }
-
-        return messageEntity;
-    }
+//    public MessageEntity toEntity() {
+//        MessageEntity messageEntity = MessageEntity.builder()
+//                .roomId(this.roomId)
+//                .userId(this.userId)
+//                .content(this.content)
+//                .build();
+//
+//        if (this.messageImageDtos != null) {
+//            List<MessageImageEntity> messageImageEntities = this.messageImageDtos.stream()
+//                    .map(imageDto -> MessageImageEntity.builder()
+//                            .url(imageDto.getUrl())
+//                            .uuid(imageDto.getUuid())
+//                            .build())
+//                    .collect(Collectors.toList());
+//            messageEntity.setMessageImageEntities(messageImageEntities);
+//        }
+//
+//        return messageEntity;
+//    }
 }

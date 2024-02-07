@@ -32,12 +32,12 @@ public class MessageEntity {
     private int flagMafia;
     private List<MessageImageEntity> messageImageEntities;
 
-    private String noticeType; // day, night
+    private String noticeType; // enter / day / game
     private String dataType; // chat, image, notice, invite
 
     public MessageResponseDto toDto() {
         return MessageResponseDto.builder()
-                .id(this.id)
+                .id(id)
                 .roomId(this.roomId)
                 .userId(this.userId)
                 .flagMafia(this.flagMafia)
