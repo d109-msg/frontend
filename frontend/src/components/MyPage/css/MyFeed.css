@@ -1,20 +1,30 @@
-@media  screen and (max-width:700px) {
+
     .myfeed-box{
-        display: flex;
-        justify-content: center;
-        align-items: center;
+        /* display: flex;
         flex-direction: column;
         background-color: white;
+        align-items: center;
         width: 100%;
         border-radius: 20px;
         box-shadow: 2px 2px 2px rgba(0, 0, 0, 0.2);
         padding: 30px;
+        margin-bottom: 20px; */
+        display: flex;
+        flex-direction: column;
+        background-color: white;
+        border-radius: 20px;
+        width: 65%;
+        box-shadow: 2px 2px 2px rgba(0, 0, 0, 0.2);
+        padding: 30px;
         margin-bottom: 20px;
+        margin-right: 10px;
+
     }
 
     .myfeed-title{
         display: flex;
         align-items: center;
+        /* align-items: left; */
 
     }
 
@@ -32,7 +42,6 @@
         height: 100%;
         display: flex;
         flex-wrap: wrap;
-    
     }
     .content{
         padding: 3px;
@@ -48,8 +57,8 @@
         background-size: cover;
         border-radius: 12px;
     }
-}
-@media  screen and (min-width:701px) {
+
+/* @media  screen and (min-width:701px) {
 
 
     .myfeed-box{
@@ -67,13 +76,11 @@
 
     .myfeed-title{
         display: flex;
-        align-items: center;
+        justify-content: flex-start;
         height: 30px;
         width: 100%;
         margin-top: 5px;
         margin-left: 10px;
-        justify-content: flex-start;
-
     }
 
     .myfeed-title>img, .mygame-title>img{
@@ -106,4 +113,4 @@
         background-size: cover;
         border-radius: 12px;
     }
-}
+} */

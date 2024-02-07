@@ -8,14 +8,14 @@
         <div class="my-mini-content" v-if="userFlag">
             <img class="mini-image" :src="userInfo.imageUrl">
             <div class="mini-name">{{ userInfo.nickname }}</div>
-            <div class="mini-comment">fun, daily, mafia game</div>
+            <div class="mini-comment">{{ userInfo.bio }}</div>
             <div class="mini-following-count">
                 <span class="following">Following</span>
-                <span class="count">22</span>
+                <span class="count">{{ userInfo.followingCount }}</span>
             </div>
             <div class="mini-following-count">
                 <span class="following">Followers</span>
-                <span class="count">24</span>
+                <span class="count">{{ userInfo.followerCount }}</span>
             </div>
         </div>
         <div class="my-mini-content" v-if="!userFlag">
