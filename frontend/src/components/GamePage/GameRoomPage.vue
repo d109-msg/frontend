@@ -1,12 +1,14 @@
 <template>
-  <div>
-    <div>
+  <div >
+    <div class="game-room-page-title">
       My Room
     </div>
-    <div class="room-box" v-for="(slide,idx) in items" :key="idx">
+    <div class="room-box" >
       <!-- <Carousel :items-to-show="3.0"> -->
         <!-- <Slide v-for="(slide,idx) in items" :key="idx"> -->
-            <RoomCard/>
+            <RoomCard 
+            v-for="(room,idx) in roomList" :key="idx"
+            @click="enterRoom(room)" :room="room"/>
         <!-- </Slide> -->
       <!-- </Carousel> -->
     </div>
@@ -17,11 +19,10 @@
 import router from '@/router';
 import RoomCard from './RoomCard.vue';
 import { Carousel, Slide } from "vue3-carousel";
-import room_1 from "./Img/Room_image/room_img1.png"
-import room_2 from "./Img/Room_image/room_img2.png";
-import room_3 from "./Img/Room_image/room_img3.png";
+
 
 import 'vue3-carousel/dist/carousel.css'
+import { useGameStore } from '@/store/gameStore';
 
 export default {
     name: 'GameRoomPage',
@@ -31,7 +32,6 @@ export default {
       width: 0,
       height: 0,
       size : 'lg',
-      items: [room_1, room_2, room_3]
     }
     },
     components:{
@@ -39,9 +39,20 @@ export default {
       Carousel,
       Slide,
     },
+    props:{
+      roomList : Object,
+    },
     methods:{
-      enterRoom : function(){
-        router.push(`/game/${this.roomId}`)
+      enterRoom : function(room){
+        router.push({
+                name:'room',
+                params: {
+                  data: JSON.stringify(room),
+                  
+                }
+                
+              }
+              )
       },
       handleResize(event) {
             this.width = window.innerWidth;
@@ -57,6 +68,8 @@ export default {
                 else {this.size = "lg"}
             window.addEventListener('resize', this.handleResize);
         },
+
+
 
     },
     beforeDestroy() {
@@ -81,6 +94,6 @@ export default {
 }
 </script>
 
-<style src="./css/GameRoomPage.css">
+<style scoped  src="./css/GameRoomPage.css">
 
 </style>

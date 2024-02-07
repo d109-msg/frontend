@@ -2,7 +2,7 @@
     <!-- 웹 버전 -->
     <div class="nav-container" >
         <div   v-if="size == 'lg'" class="lg-style" >
-            <div class="nav-logo"></div>
+            <div class="nav-logo"  @click="$router.push('/')" id="/" style="cursor: pointer;"></div>
             <div class="right-bar" >
                 <div class="tag"  @click="$router.push('/')" id="/">HOME</div>
                 <div class="tag"  @click="$router.push('/game')"  id="/game">GAME</div>
@@ -41,8 +41,8 @@
         </div>
 
         <!-- 태블릿 버전 -->
-        <div v-else-if="size == 'md'"  class="md-style">
-            <div class="nav-logo" ></div>
+        <div v-else-if="size == 'md'"  class="md-style" style="cursor: pointer;">
+            <div class="nav-logo" @click="$router.push('/')" id="/" ></div>
 
             <div class="right-bar">
                 <div class="tag"  @click="$router.push('/')" id="/">HOME</div>

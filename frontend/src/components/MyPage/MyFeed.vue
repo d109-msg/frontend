@@ -1,16 +1,10 @@
 <template>
-  <div  class="myfeed-box">
+  <div class="myfeed-box"> 
     <div style="display: flex; justify-content: space-between;">
-      <div>
-        <p class="myfeed-title" @click="goMyfeed" >
+      <div >
+        <p class="myfeed-title" @click="goGameRecord">
           <img src="./Img/icon_myfeed.png" alt="">
           My Feed
-        </p>
-      </div>
-      <div v-if="size=='xs'">
-        <p class="myfeed-title" @click="goGameRecord">
-          <img src="./Img/icon_gamerecord.png" alt="">
-          Game Record
         </p>
       </div>
     </div>

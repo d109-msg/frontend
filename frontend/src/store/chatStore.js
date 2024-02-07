@@ -4,11 +4,13 @@ import axios from "axios"
 import SockJS from "sockjs-client"
 import Stomp from 'webstomp-client'
 import { createPersistedState } from "pinia-plugin-persistedstate"
+import servers from "@/server"
 
 // const server =  'https://i10d109.p.ssafy.io/api'
 // const server2 = 'http://localhost:8080/api'
-const server = 'http://localhost:8080/api'
+const server = servers
 const server2 = 'https://i10d109.p.ssafy.io/api'
+
 
 export const useChatStore = defineStore('chat',{
     state:()=>({

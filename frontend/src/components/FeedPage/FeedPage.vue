@@ -43,10 +43,11 @@
     import FeedCreate from './FeedCreate.vue';
     import { useFeedStore } from '@/store/feedStore';
     import { useAuthStore } from '@/store/authStore';
-import router from '@/router';
+    import router from '@/router';
+    import servers from '@/server';
 // const server =  'https://i10d109.p.ssafy.io/api'
 // const server2 = 'http://localhost:8080/api'
-const server = 'http://localhost:8080/api'
+const server = servers
 const server2 = 'https://i10d109.p.ssafy.io/api'
     export default {
         name: "FeedPage",
