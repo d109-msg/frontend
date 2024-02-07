@@ -3,7 +3,6 @@ package com.ssafy.msg.test.controller;
 
 import com.ssafy.msg.message.model.dto.MessageIdDto;
 import com.ssafy.msg.message.model.dto.MessageRequestDto;
-import com.ssafy.msg.message.model.dto.TextMessageDto;
 import com.ssafy.msg.message.model.entity.MessageEntity;
 import com.ssafy.msg.message.model.service.MessageService;
 import com.ssafy.msg.message.util.DateTimeUtil;
@@ -11,17 +10,16 @@ import com.ssafy.msg.notification.model.entity.NotificationEntity;
 import com.ssafy.msg.message.model.repo.MessageRepository;
 import com.ssafy.msg.notification.model.repo.NotificationRepository;
 import com.ssafy.msg.notification.model.dto.NotificationIdDto;
-import com.ssafy.msg.notification.model.dto.NotificationRequestDto;
 import com.ssafy.msg.notification.model.dto.NotificationUserIdDto;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.IOException;
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
@@ -83,35 +81,39 @@ public class TestController {
     /*
     메시지 api start =============================================================
      */
-    @Operation(summary = "메시지 저장", description = "메시지 저장")
+    @Operation(summary = "메시지 저장 및 전송", description = "메시지 저장 및 전송")
     @PostMapping("/send/message")
-    public ResponseEntity<?> sendMessage( @RequestBody TextMessageDto textMessageDto) {
+    public ResponseEntity<?> sendMessage( @RequestBody MessageRequestDto messageRequestDto) {
 
         int id = 1;
 
-        messageService.sendTextMessage(textMessageDto, id);
+        try {
+            messageService.sendMessage(messageRequestDto, id);
+            return ResponseEntity.ok("success");
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
 
-        return ResponseEntity.ok("success");
     }
 
-    @Operation(summary = "메시지 저장", description = "메시지 저장")
-    @PostMapping("/mongodb/message/save")
-    public ResponseEntity<?> saveMessage(@RequestBody MessageRequestDto messageRequestDto) {
-
-        // MessageRequestDto를 MessageEntity로 변환
-        MessageEntity messageEntity = messageRequestDto.toEntity();
-        
-        // 실제로는 프론트 측에서 dataType을 적어서 줘야 할 듯함 (아님 말고..)
-        // 공지의 경우 여기에서 set하고 저장
-        messageEntity.setDataType("chat"); // chat, image, notice
-        
-        messageEntity.setCreateTime(dateTimeUtil.getCurrentDateTime());
-
-        // messageRepository를 이용하여 messageEntity를 저장
-        messageRepository.save(messageEntity);
-
-        return ResponseEntity.ok("success");
-    }
+//    @Operation(summary = "메시지 저장", description = "메시지 저장")
+//    @PostMapping("/mongodb/message/save")
+//    public ResponseEntity<?> saveMessage(@RequestBody MessageRequestDto messageRequestDto) {
+//
+//        // MessageRequestDto를 MessageEntity로 변환
+//        MessageEntity messageEntity = messageRequestDto.toEntity();
+//
+//        // 실제로는 프론트 측에서 dataType을 적어서 줘야 할 듯함 (아님 말고..)
+//        // 공지의 경우 여기에서 set하고 저장
+//        messageEntity.setDataType("chat"); // chat, image, notice
+//
+//        messageEntity.setCreateTime(dateTimeUtil.getCurrentDateTime());
+//
+//        // messageRepository를 이용하여 messageEntity를 저장
+//        messageRepository.save(messageEntity);
+//
+//        return ResponseEntity.ok("success");
+//    }
 
     @Operation(summary = "roomId에 해당하는 채팅 전체 조회", description = "roomId에 해당하는 채팅 전체 조회")
     @GetMapping("/mongodb/message/{roomId}")
