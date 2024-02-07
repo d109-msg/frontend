@@ -72,4 +72,6 @@ public interface GameMapper {
     Integer checkSaboteur(int participantId) throws SQLException;
 
     void setAbility(int participantId, int value) throws SQLException;
+
+    void createMsgArticle(CreateMsgArticleDto createMsgArticleDto) throws SQLException;
 }

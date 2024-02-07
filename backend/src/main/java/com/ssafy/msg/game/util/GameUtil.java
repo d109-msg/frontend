@@ -65,6 +65,7 @@ public class GameUtil {
      * @return 입력받은 직업의 세력을 리턴
      */
     public static String getRoleType(String roleName) {
+
         return roles.getOrDefault(roleName, "알 수 없는 직업");
     }
 
@@ -74,6 +75,7 @@ public class GameUtil {
      * @return 해당 직업의 능력이 따로 선택이 필요하다면 true 아니라면 false 를 리턴
      */
     public static boolean isChoosingAbility(String roleName) {
+
         return abilityRoles.getOrDefault(roleName, false);
     }
 
@@ -108,4 +110,59 @@ public class GameUtil {
 
         return result;
     }
+
+    // 다음날 게임 시작 시 피드 알림 메세지
+
+    /**
+     * 시민투표로 인해 사망한 유저에 대한 결과 정보 전달.
+     * @param name 시민투표에서 최고득점자 닉네임을 입력
+     * @return "name님이 시민투표로 인해 사망했습니다." 리턴
+     */
+    public static String getCivilKill(String name) {
+        return name + "님이 시민투표로 인해 사망했습니다.";
+    }
+
+    /**
+     * 마피아 지목으로 인해 사망한 시민 결과 정보 전달.
+     * @param name 마피아에게 지목당한 사람의 닉네임을 입력
+     * @return "name 님이 마피아에게 당했습니다." 리턴
+     */
+    public static String getMafialKill(String name) {
+        return name + "님이 마피아에게 당했습니다 :(";
+    }
+
+    /**
+     * 의사의 지목으로 죽을 뻔 한 사람이 살게 된 정보를 전달.
+     * @param name 의사에게 지목받아 살게 된 사람의 닉네임을 입력
+     * @return "name님이 의사에게 치료받아 살았습니다." 리턴
+     */
+    public static String getDoctorHeal(String name) {
+        return name + "님이 마피아에게 지목받았지만, 의사에게 치료받아 살았습니다.";
+    }
+
+    /**
+     * 시민직업 중 기자가 지목한 사람의 직업 정보를 전달.
+     * @param name 기자가 지목한 사람의 닉네임을 입력
+     * @param job 기자에게 지목당한 사람의 직업 입력
+     * @return "기자 조사 결과 name님의 직업은 job 입니다" 리턴
+     */
+    public static String getReporterInfo(String name, String job) {
+        return "기자 조사 결과 " + name + "님의 직업은 " + job + "입니다.";
+    }
+
+    /**
+     * 마피아 직업 중 변장술사의 부활 정보를 전달.
+     * @param name 시민투표에 의해 죽임을 당한 변장술사의 닉네임을 입력
+     * @param nextName 내가 전날 시민투표 때 지목한 사람의 닉네임 입력
+     * @return "name님은 변장술사 능력을 활용해 nextName님으로 부활 했습니다. 기존 nextName님은 사망하셨습니다." 리턴
+     */
+    public static String getChangeInfo(String name, String nextName) {
+        return name + "님은 변장술사 능력을 활용해" + nextName + "님으로 부활 했습니다. "
+                + "기존 " + nextName + "님은 사망했습니다.";
+    }
+
+    public static String getJudgeInfo(String name, String nextName) {
+        return name + "님이 판사 능력을 활용하여 기존 투표를 무시하고" + nextName + "님이 사망했습니다. ";
+    }
+
 }
