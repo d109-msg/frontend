@@ -742,11 +742,12 @@ public class GameServiceImpl implements GameService{
      * @return 모든 유저가 각 몇 표를 받았는지의 정보가 담긴 list return
      */
     @Override
-    public List<VoteResponseDto> getRoomVote(int userId, String roomId) throws Exception {
+    public GetRoomVoteResult getRoomVote(int userId, String roomId) throws Exception {
         ParticipantDto participantDto = gameMapper.getParticipant(new ParticipantReceiveDto(userId, roomId));
 
         String job = participantDto.getJobId();
         List<VoteResultDto> list = gameMapper.getRoomVote(roomId);
+        String voteTitle = "마피아로 의심되는 사람을 선택하세요.";
 
         log.info("getRoomVote() -> job : {}", job);
         log.info("getRoomVote() -> list : {}", list);
@@ -768,8 +769,10 @@ public class GameServiceImpl implements GameService{
                 voteResult.setVoteCount(vote.getNormalVoteCount());
             } else { //밤일 때
                 if (job.equals("의사")) { //의사일 때
+                    voteTitle = "치료할 사람을 선택하세요.";
                     voteResult.setVoteCount(vote.getDoctorVoteCount());
                 } else if (job.equals("기자")) { //기자일 때
+                    voteTitle = "조사하고 싶은 사람을 선택하세요.";
                     voteResult.setVoteCount(vote.getReporterVoteCount());
                 } else if (GameUtil.getRoleType(job).equals("마피아")) { //마피아일 때
                     voteResult.setVoteCount(vote.getMafiaVoteCount());
@@ -784,8 +787,9 @@ public class GameServiceImpl implements GameService{
 
 
         log.info("getRoomVote() resultList : {}", responseList);
+        log.info("getRoomVote() title : {}", voteTitle);
 
-        return responseList;
+        return new GetRoomVoteResult(voteTitle, responseList);
     }
 
     /**

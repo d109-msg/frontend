@@ -313,6 +313,7 @@ public class SchedulerServiceImpl implements SchedulerService{
 
             ParticipantDto target = schedulerMapper.getParticipant(mafiaVotes.get(0));
 
+
             if(target.getJobId().equals("군인") && target.getAbility() == 0){
                 //군인일 때
                 gameMapper.setAbility(target.getId(), -1);

@@ -164,7 +164,7 @@ public class GameController {
         int userId = (int) request.getAttribute("id");
 
         try {
-            List<VoteResponseDto> result = gameService.getRoomVote(userId, roomId);
+            GetRoomVoteResult result = gameService.getRoomVote(userId, roomId);
             log.info("getRoomVote() -> result : {}", result);
 
             return new ResponseEntity<>(result, HttpStatus.OK);

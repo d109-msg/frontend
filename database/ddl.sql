@@ -185,6 +185,7 @@ CREATE TABLE `articles` (
   `flag_private` int(11) DEFAULT NULL,
   `modify_time` datetime NOT NULL DEFAULT current_timestamp(),
   `room_id` varchar(100) DEFAULT NULL,
+  `room_nickname` varchar(100) DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `articles_users_FK` (`user_id`),
   KEY `articles_rooms_FK` (`room_id`),
