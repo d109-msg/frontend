@@ -25,7 +25,6 @@ INSERT INTO last_room_names  (`id`) VALUES
 INSERT INTO jobs (`id`, `info`, `image_url`) VALUES
 ('훼방꾼', '시민들도 마피아 미션을 진행하게 만듭니다.', 'tmp_image_url'),
 ('마피아', '마피아입니다.', 'tmpurl'),
-('시민', '시민입니다.', 'tmpurl'),
 ('기자', '밤에 사람을 선택해 직업을 밝혀냅니다.', 'tmpurl'),
 ('의사', '의사입니다.', 'tmpurl'),
 ('경찰', '경찰입니다.', 'tmpurl'),
@@ -129,8 +128,7 @@ INSERT INTO `participants` (`id`, `room_id`, `user_id`, `last_message_id`, `nick
 (13, 'room1', 3, NULL, '능숙한 스틸'),
 (14, 'room1', 4, NULL, '우울한 터너'),
 (15, 'room1', 5, NULL, '은밀한 데모네'),
-(16, 'room1', 6, NULL, '비밀스러운 콜레오네'),
-(17, 'room1', 7, NULL, '기발한 윈터스');
+(16, 'room1', 6, NULL, '비밀스러운 콜레오네');
 
 INSERT INTO `missions` (`normal`, `mafia`) VALUES
 ('자연 사진', '나무 사진'),
