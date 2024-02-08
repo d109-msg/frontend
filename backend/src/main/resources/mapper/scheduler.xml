@@ -211,7 +211,7 @@
         where id = #{id}
     </select>
 
-    <select id="getMyNormalVoteId" parameterMap="Map" resultType="ParticipantDto">
+    <select id="getMyNormalVoteId" parameterType="Map" resultType="ParticipantDto">
         SELECT
             p.*
         FROM
