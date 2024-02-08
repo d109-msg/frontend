@@ -66,6 +66,17 @@
           AND dm.reporter_vote IS NOT NULL;
     </select>
 
+    <select id="getJudgeAbility" parameterType="Map" resultType="JudgeResultDto">
+        SELECT p.id AS participantId
+             ,dm.normal_vote AS vote
+             , p.ability
+        FROM daily_missions dm
+                 INNER JOIN participants p ON dm.participant_id = p.id
+        WHERE p.room_id = #{roomId}
+          AND p.job_id = '판사'
+          AND dm.day = #{day};
+    </select>
+
     <select id="getGangsterVoteResult" resultType="Integer" parameterType="int">
         SELECT p.ability
         FROM participants p
@@ -198,6 +209,19 @@
         select *
         from participants
         where id = #{id}
+    </select>
+
+    <select id="getMyNormalVoteId" parameterMap="Map" resultType="ParticipantDto">
+        SELECT
+            p.*
+        FROM
+            participants p
+                JOIN
+            daily_missions dm ON p.id = dm.normal_vote
+        WHERE
+            dm.participant_id = #{participantId}
+          AND dm.day = #{day};
+
     </select>
 
     <select id="getAliveParticipant" parameterType="string"

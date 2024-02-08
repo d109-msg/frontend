@@ -20,4 +20,5 @@ public class AliveParticipantDto {
     private String nickname;
     private String imageUrl;
     private int flagSuccess;
+    private int ability;
 }

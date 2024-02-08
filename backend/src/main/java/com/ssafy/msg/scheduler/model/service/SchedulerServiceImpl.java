@@ -1,10 +1,14 @@
 package com.ssafy.msg.scheduler.model.service;
 
+import com.ssafy.msg.game.model.dto.AliveParticipantDto;
+import com.ssafy.msg.game.model.dto.MissionResultDto;
+import com.ssafy.msg.game.model.dto.MyVoteDto;
 import com.ssafy.msg.game.model.dto.ParticipantDto;
 import com.ssafy.msg.game.model.mapper.GameMapper;
 import com.ssafy.msg.game.model.service.GameService;
 import com.ssafy.msg.game.util.GameUtil;
 import com.ssafy.msg.message.model.service.MessageService;
+import com.ssafy.msg.scheduler.model.dto.JudgeResultDto;
 import com.ssafy.msg.scheduler.model.dto.UpdateWinFlagDto;
 import com.ssafy.msg.scheduler.model.mapper.SchedulerMapper;
 import lombok.RequiredArgsConstructor;
@@ -30,8 +34,7 @@ public class SchedulerServiceImpl implements SchedulerService{
     @Scheduled(cron = "0 0 8 * * ?")
     @Override
     public void gameAM8() throws Exception {
-        //낮으로 바꾸기
-        schedulerMapper.updateStaticFlagNight(0);
+
 
         // strart_time은 not null이지만 end_time이 null인 roomId 조회
         List<String> unendRoom = schedulerMapper.getUnendRoom();
@@ -51,6 +54,8 @@ public class SchedulerServiceImpl implements SchedulerService{
 
         // 대기방 인원 체크 및 게임 시작
         gameService.startRandomGame();
+        //낮으로 바꾸기
+        schedulerMapper.updateStaticFlagNight(0);
 
     }
 
@@ -79,19 +84,24 @@ public class SchedulerServiceImpl implements SchedulerService{
     @Scheduled(cron = "0 0 20 * * ?")
     @Override
     public void gamePM8() throws Exception {
-        //밤으로 바꾸기
-        schedulerMapper.updateStaticFlagNight(1);
-        
+
+
         // end_time이 null인 roomId 조회
         List<String> unendRoom = schedulerMapper.getUnendRoom();
 
         for (String roomId: unendRoom) {
             //밤으로 바꾸기
             schedulerMapper.updateFlagNight(roomId, 1);
+
             // 투표 결과 처리 및 미션 미수행자 관리
             manageNormalVote(roomId);
+
+            //밤 능력 초기화
+            nightAbilityReset(roomId);
         }
 
+        //밤으로 바꾸기
+        schedulerMapper.updateStaticFlagNight(1);
     }
 
     @Scheduled(cron = "0 0 0 * * ?")
@@ -102,6 +112,59 @@ public class SchedulerServiceImpl implements SchedulerService{
 
     }
 
+    public void nightAbilityReset(String roomId) throws Exception{
+        //스파이, 훼방꾼, 건달의 ability가 0 보다 크다면(능력을 사용했다면) -1으로 바꾼다
+        //경찰, 미치광이 ability 0으로 초기화
+        List<AliveParticipantDto> aliveParticipants= gameMapper.getAliveParticipants(roomId);
+
+        for(AliveParticipantDto dto : aliveParticipants) {
+            if(dto.getJobId().equals("경찰") || dto.getJobId().equals("미치광이")){
+                //경찰이나 미치광이 라면
+                gameMapper.setAbility(dto.getId(), 0);
+            } else if ((dto.getJobId().equals("스파이") || dto.getJobId().equals("훼방꾼") || dto.getJobId().equals("건달")) && dto.getAbility() > 0) {
+                //스파이, 훼방꾼, 건달의 ability가 0 보다 크다면
+                gameMapper.setAbility(dto.getId(), -1);
+            }
+        }
+    }
+
+    /**
+     * 마피아로 지목되어 처형당할 때 처리
+     * @param roomId
+     * @param participantDto
+     * @param flagMission
+     * @throws Exception
+     */
+    public void killByVote(String roomId, ParticipantDto participantDto, boolean flagMission, Integer day) throws Exception {
+        if(flagMission) {
+            //미션을 했을 때
+            if(participantDto.getJobId().equals("정치인") && participantDto.getAbility() == 0){
+                //정치인일 때
+                messageService.sendGameNotice(roomId, participantDto.getNickname() + "님은 부패한 힘을 이용해 처형의 위기에서 벗어났습니다.");
+                gameMapper.setAbility(participantDto.getId(), -1);
+                return;
+            } else if (participantDto.getJobId().equals("변장술사") && participantDto.getAbility() > 0) {
+                //변장술사일 때
+                //변장 로직
+                ParticipantDto targetDto = schedulerMapper.getMyNormalVoteId(participantDto.getId(), day);
+
+
+
+                messageService.sendGameNotice(roomId, participantDto.getNickname() + "님은 변장술사였습니다. 처형을 피하고 다른 사람의 신분으로 활동을 재개합니다.");
+                gameMapper.setAbility(participantDto.getId(), -1);
+                return;
+            } else {
+                //둘 다 아니라면 죽습니다.
+                schedulerMapper.killParticipant(participantDto.getId());
+            }
+        }
+
+        if (GameUtil.getRoleType(participantDto.getJobId()).equals("마피아")){
+            messageService.sendGameNotice(roomId, participantDto.getNickname() + "님은 마피아였습니다!");
+        } else {
+            messageService.sendGameNotice(roomId, participantDto.getNickname() + "님은 선량한 시민이었습니다.");
+        }
+    }
 
     /**
      * 마피아 지목 결과 (PM 8)
@@ -117,7 +180,43 @@ public class SchedulerServiceImpl implements SchedulerService{
         List<ParticipantDto> nonCompleters = schedulerMapper.getNonCompleter(roomId);
         List<Integer> nonCompletersId = nonCompleters.stream().map(ParticipantDto::getId).toList();
 
-        if (countNormalVote != 1) {
+        Integer day = gameMapper.getMaxDayByRoomId(roomId);
+        JudgeResultDto judgeResult = null;
+
+        if(day != null) {
+            judgeResult = schedulerMapper.getJudgeAbility(roomId, day);
+            log.info("manageNormalVote() 판사의 선택 : {}", judgeResult);
+        }
+
+        if(judgeResult != null && judgeResult.getAbility() > 0) {
+            //판사가 능력을 사용했을 때
+            int targetId = judgeResult.getVote();
+
+            ParticipantDto participantDto = null;
+            int index = nonCompletersId.indexOf(targetId);
+
+            //판사 ability -1
+            gameMapper.setAbility(judgeResult.getParticipantId(), -1);
+            boolean flagMission = false;
+            // 판사가 선택한 대상이 미션 수행자인 경우
+            if (index == -1) {
+                flagMission = true;
+                participantDto = schedulerMapper.getParticipant(targetId);
+            }
+            // 판사가 선택한 대상이 미션 미수행자인 경우
+            else {
+                log.info("manageNormalVote() 판사 선택도 받고 미션도 안하고");
+                schedulerMapper.manageNonCompleter(targetId);
+                participantDto = nonCompleters.get(index);
+                nonCompleters.remove(index);
+            }
+
+            messageService.sendGameNotice(roomId, "판사가 권력을 이용해 " + participantDto.getNickname() + "님에게 사형을 선고했습니다.");
+
+            killByVote(roomId, participantDto, flagMission, day);
+        }
+        else if (countNormalVote != 1) {
+            //판사 능력 안씀
             // 최종 마피아 의심 대상 다수
             messageService.sendGameNotice(roomId, "아무도 죽지 않았습니다.");
         } else {
@@ -129,10 +228,10 @@ public class SchedulerServiceImpl implements SchedulerService{
                 ParticipantDto participantDto;
 
                 int index = nonCompletersId.indexOf(targetId);
-
+                boolean flagMission = false;
                 // 최종 마피아 의심 대상이 미션 수행자인 경우
                 if (index == -1) {
-                    schedulerMapper.killParticipant(targetId);
+                    flagMission = true;
                     participantDto = schedulerMapper.getParticipant(targetId);
                 }
                 // 최종 마피아 의심 대상이 미션 미수행자인 경우
@@ -142,13 +241,14 @@ public class SchedulerServiceImpl implements SchedulerService{
                     nonCompleters.remove(index);
                 }
 
-                if (GameUtil.getRoleType(participantDto.getJobId()).equals("마피아")){
-                    messageService.sendGameNotice(roomId, participantDto.getNickname() + "님은 마피아였습니다!");
-                } else{
-                    messageService.sendGameNotice(roomId, "선량한 시민 " + participantDto.getNickname() + "님이 처형당했습니다.");
-                }
+                messageService.sendGameNotice(roomId, participantDto.getNickname() + "님이 마피아로 지목 당했습니다.");
+
+                killByVote(roomId, participantDto, flagMission, day);
             }
+
+
         }
+
 
         for(ParticipantDto nonCompleter: nonCompleters){
             schedulerMapper.manageNonCompleter(nonCompleter.getId());

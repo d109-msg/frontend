@@ -119,9 +119,9 @@ INSERT INTO `participants` (`id`, `room_id`, `user_id`, `last_message_id`, `flag
 (2, 'room4', 2, NULL, 0, '마피아', 'https://team109testbucket.s3.ap-northeast-2.amazonaws.com/player18.png', '재능 있는 젠킨스'),
 (3, 'room4', 3, NULL, 0, '훼방꾼', 'https://team109testbucket.s3.ap-northeast-2.amazonaws.com/player10.png', '능숙한 스틸'),
 (4, 'room4', 4, NULL, 0, '의사', 'https://team109testbucket.s3.ap-northeast-2.amazonaws.com/player9.png', '우울한 터너'),
-(5, 'room4', 5, NULL, 0, '시민', 'https://team109testbucket.s3.ap-northeast-2.amazonaws.com/player11.png', '은밀한 데모네'),
-(6, 'room4', 6, NULL, 0, '시민', 'https://team109testbucket.s3.ap-northeast-2.amazonaws.com/player6.png', '비밀스러운 콜레오네'),
-(7, 'room4', 7, NULL, 0, '시민', 'https://team109testbucket.s3.ap-northeast-2.amazonaws.com/player1.png', '기발한 윈터스');
+(5, 'room4', 5, NULL, 0, '경찰', 'https://team109testbucket.s3.ap-northeast-2.amazonaws.com/player11.png', '은밀한 데모네'),
+(6, 'room4', 6, NULL, 0, '미치광이', 'https://team109testbucket.s3.ap-northeast-2.amazonaws.com/player6.png', '비밀스러운 콜레오네'),
+(7, 'room4', 7, NULL, 0, '판사', 'https://team109testbucket.s3.ap-northeast-2.amazonaws.com/player1.png', '기발한 윈터스');
 
 INSERT INTO `participants` (`id`, `room_id`, `user_id`, `last_message_id`, `nickname`) VALUES
 (11, 'room1', 1, NULL,'거짓말쟁이 니콜슨'),
@@ -159,12 +159,12 @@ INSERT INTO `missions` (`normal`, `mafia`) VALUES
 
 INSERT INTO daily_missions (participant_id, mission_id, day, try, flag_success, normal_vote, mafia_vote, doctor_vote, reporter_vote) VALUES
 (1, 1, 1, 1, 1, 1, null, NULL, 4),
-(2, 1, 1, 1, 0, 1, 1, NULL, null),
+(2, 1, 1, 1, 1, 1, 1, NULL, null),
 (3, 1, 1, 1, 1, 1, 1, NULL, null),
-(4, 1, 1, 1, 0, 1, null, 4, null),
+(4, 1, 1, 1, 1, 1, null, 4, null),
 (5, 1, 1, 1, 1, 1, null, NULL, null),
-(6, 1, 1, 1, 0, 1, null, NULL, null),
-(7, 1, 1, 1, 0, 2, null, NULL, null);
+(6, 1, 1, 1, 1, 1, null, NULL, null),
+(7, 1, 1, 1, 1, 2, null, NULL, null);
 
 
 -- articles 테이블에 데이터 삽입
@@ -220,3 +220,4 @@ INSERT INTO article_images (article_id, url, uuid, flag_mission) VALUES
 -- SELECT * FROM participants;
 -- SELECT * FROM users;
 -- SELECT * FROM rooms;
+
