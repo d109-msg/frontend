@@ -1,5 +1,9 @@
 <template>
     <div class="messageDetail-container">
+      <LoadingSpinner v-if="loading"/>
+        <div class="preview-img-back" @click="turnOff" v-if="imgFlag">
+          <img :src="preImg" alt="" style="width: 500px; height: 500px;">
+        </div>
         <div class="message-user-profile">
             <img class="message-user-profile-img" :src="chatInfo.imageUrl" v-if="Object.keys(chatInfo).length != 0">
             <div class="message-user-name"  v-if="Object.keys(chatInfo).length != 0">{{chatInfo.title}}</div>
@@ -9,36 +13,48 @@
               <div v-for="(item,key) in chatStore.getMessage[chatInfo.id]" :key="key" :id="'message'+key">
                 <div class="chat-my-box" v-if="userInfo.id === item.userId">
                   <div class="chat-my-text">
-                    {{ item.content }}
+                    <span v-if="item.content != null">{{ item.content }}</span>
+                    <img v-else :src="item.messageImageDtos[0].url" @click="turnOn(item.messageImageDtos[0].url)"
+                    class="preview-img"
+                    >
                   </div>
                 </div>
                 <div class="chat-other-box" v-else>
                   <div class="chat-other-text">
-                    {{ item.content }}
-
+                    <span v-if="item.content != null">{{ item.content }}</span>
+                    <img v-else :src="item.messageImageDtos[0].url" @click="turnOn(item.messageImageDtos[0].url)"
+                    class="preview-img"
+                    >
                   </div>
                 </div>
               </div>
             </div>
             <textarea type="text" class="message-textarea" id="" cols="30" rows="10" v-model="message" @keyup.enter.prevent="send" 
-            v-if="Object.keys(chatInfo).length != 0">
+            v-if="Object.keys(chatInfo).length != 0" maxlength="200">
             </textarea>
-            <div class="message-textarea" v-else></div>
+            <textarea class="message-textarea" v-else></textarea>
+            <label for="imageInput" class="btn-label">
+              <div class="btn-upload"></div>
+            </label>
+            <input type="file" id="imageInput" @change="convertToBase64" v-if="Object.keys(chatInfo).length != 0">
+            
             <button class="message-submit-btn" @click.prevent="send" v-if="Object.keys(chatInfo).length != 0"></button>
             <button class="message-submit-btn" v-else></button>
+            
         </div>
+        
 
     </div>
 </template>
 
 <script>
-import { mapState } from 'pinia';
 import { useChatStore } from '@/store/chatStore';
 import SockJs from 'sockjs-client'
 import Stomp from 'webstomp-client'
 import { useAuthStore } from '@/store/authStore'
 import router from '@/router'
-import { nextTick } from 'vue'
+import { nextTick } from 'vue';
+import LoadingSpinner from '../LoadingSpinner/LoadingSpinner.vue';
 
 export default {
     name: 'MessageDetail',
@@ -53,21 +69,42 @@ export default {
       receive : "",
       messageInfo : {},
       messageList : [],
-      chatStore : useChatStore()
+      chatStore : useChatStore(),
+      base64 : "",
+      loading : false,
+      imgFlag : false,
+      preImg : "",
     }
   },
   props:{
     chatInfo : Object,
   },
+  components:{
+    LoadingSpinner,
+  },
+  computed:{
+    listLength(){
+      const chat = useChatStore()
+
+        return chat.countMessage[this.chatInfo.id]
+      
+    }
+  },
   watch:{
-    chatInfo(nv,ov){
-      console.log(this.chatInfo.id)
-      // this.connect(this.chatInfo.id)
+    listLength(nv,ov){
+      this.scrollToBottom()
     }
   },
 
   methods:{
-
+    turnOff : function(){
+      this.imgFlag = false
+      this.preImg = ""
+    },
+    turnOn : function(img){
+      this.imgFlag = true,
+      this.preImg = img
+    },
     getUser : async function(){
       const myAuth = useAuthStore()
       try{
@@ -78,73 +115,42 @@ export default {
         console.log(err)
       }
     },
-    // scrollToBottom(){
-    //   const messageContent = document.querySelector('.message-content');
-    //   messageContent.scrollTop = messageContent.scrollHeight;
-    // },
-    // showMessage : function(data){
-    //   this.messageList.push(data)
-    //   this.$nextTick(()=>{
-    //     const elem = document.getElementById(`message${this.messageList.length-1}`)
-    //     if(data.userId == this.userInfo.id){
-    //       elem.classList.add('chat-my-box')
-    //       elem.childNodes[0].classList.add('chat-my-text')
-    //     }
-    //     else{
-    //       elem.classList.add('chat-other-box')
-    //       elem.childNodes[0].classList.add('chat-other-text')
-    //     }
-    //   })
-      // if(data.userId == this.userInfo.id){
-      //   chatBox.classList.add('chat-my-box')
-      //   chatText.classList.add('chat-my-text')
-        
-      // }else{
-      //   chatBox.classList.add('chat-other-box')
-      //   chatText.classList.add('chat-other-text')
-      // }
-      // document.querySelector('.message-content').appendChild(chatBox)
-      // const chatTime = document.createElement('div')
-      // chatTime.style.position = 'absolute';
-      // chatTime.style.left = '-55px';
-      // chatTime.style.top = '15px';
-      // chatTime.style.color = '#B1AFAF';
-      // chatTime.style.fontSize = '12px'
-      // chatTime.innerHTML = '오후 2:43';
-      // chatBox.appendChild(chatText)
-      // chatText.appendChild(chatTime)
-    //   this.scrollToBottom();
-    // },
-    // callBack : function(){
-    //   // console.log(data)
-    // },
-    // connect :  function(roomId){
-    //   this.messageList = []
-                                                                    
-    //   this.stompClient = Stomp.over(socket)
-    //   const auth = useAuthStore()
-    //   let value = auth.getAccess
-
-    //   const headers = {"Authorization": value}
-    //   this.stompClient.connect(headers,()=>{
-    //     this.sub = this.stompClient.subscribe('/sub/'+roomId, (e)=>{
-    //       // console.log(JSON.parse(e.body))
-    //       this.showMessage(JSON.parse(e.body))
-    //     })
-    //   },
-    //   function(e){
-    //     alert('에러발생!')
-    //   })
-    // },
+    scrollToBottom(){
+      this.$nextTick(()=>{
+        const messageContent =  document.querySelector('.message-content')
+        messageContent.scrollTop = messageContent.scrollHeight
+      })
+    },
     send : function(){
-      let now = new Date()
-      let time = now.getMilliseconds;
       let data = {
         'roomId' : this.chatInfo.id,
-        'text' : this.message,
+        'flagMafia' : 0,
+        'content' : this.message,
+        'base64Images' : [],
       }
-      this.chatStore.getStomp[this.chatInfo.id].send("/pub/message/text",JSON.stringify(data))
+      this.chatStore.getStomp.send("/pub/message",JSON.stringify(data))
       this.message = ""
+    },
+    sendImg : function(info){
+      let sst = ""
+      let temp = ''
+      for(let i=0; i<info.length;i++){
+        if(sst == ','){
+          temp += info[i]
+        }
+        if(info[i] == ','){
+          sst = info[i]
+        }
+      }
+      console.log('변환하거',temp)
+      let data = {
+        'roomId' : this.chatInfo.id,
+        'flagMafia' : 0,
+        'content' : "",
+        'base64Images' : [temp],
+      }
+      this.chatStore.getStomp.send("/pub/message",JSON.stringify(data))
+
     },
     startPage: async function(){
       const auth = useAuthStore()
@@ -155,15 +161,30 @@ export default {
         } catch(err){
            console.log(err)
         }
+    },
+    convertToBase64: function(event){
+      this.loading = true
+      const file = event.target.files[0]
+      if(file){
+        const reader = new FileReader()
+        reader.onload = (e)=>{
+          this.sendImg(e.target.result)
+          this.loading = false
+        }
+        reader.readAsDataURL(file)
+      }else{
+        this.loading = false
+      }
     }
   },
   mounted(){
     this.startPage()
+    
   },
 
 }
 </script>
 
-<style src="./css/MessageDetail.css">
+<style scoped src="./css/MessageDetail.css">
 
 </style>

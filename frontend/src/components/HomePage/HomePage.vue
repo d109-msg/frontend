@@ -17,13 +17,37 @@ export default {
   name:"HomePage",
   data(){
     return{
-      page : ''
+      page : '',
+      data : []
     }
   },
+  computed:{
+      isConnect(){
+        const chat = useChatStore()
+        return chat.getConnect
+      }
+    },
+    watch:{
+      isConnect(nv,ov){
+        const chat = useChatStore()
+          if(nv == true){
+            try{
+              chat.sub(this.data)
+              chat.notifyConnect()
+              console.log('완료')
+            }catch(err){
+              console.log('조짐')
+            }
+          }else{
+            console.log('연결이 왜 해제되었나요...')
+          }
+      }
+    },
   methods:{
     change : function(value){
       this.page = value
     },
+    
     startPage : async function(){
       const auth = useAuthStore()
       const chat = useChatStore()
@@ -33,11 +57,10 @@ export default {
         try{
           await auth.useRefresh()
           let value = await chat.userRoom()
-          value.data.forEach(async roomId=>{
-            await chat.subscribe(roomId)
-          })
+          this.data = value.data
+          await chat.makeConnect()
         }catch(err){
-          console.log('앱뷰 조짐')
+          console.log('에러내용',err)
         }
       }
     },

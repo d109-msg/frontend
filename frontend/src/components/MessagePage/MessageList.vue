@@ -6,7 +6,7 @@
         <div class="list-back" v-if="listFlag" @click.self="listFlag=false">
           <div class="list-modal">
             <div class="search-container">
-                    <input type="text" class="search-bar" placeholder="search" maxlength="30" >
+                    <input type="text" class="search-bar" placeholder="search" maxlength="30" v-model="searchResult">
                     <div class="search-icon"></div>
             </div>
             <div class="search-result">
@@ -63,6 +63,8 @@ export default {
         nextUrl : "?type=from",
         io : {},
         messageList : [],
+        searchResult : "",
+        last : {},
       }
     },
     methods:{
@@ -82,7 +84,7 @@ export default {
       getFollowing : async function(){
         const auth = useAuthStore()
         await auth.useRefresh()
-        if(this.baseUrl != null){
+        if(this.nextUrl != null){
           try{
             let value = await auth.searchFollowing(this.baseUrl+this.nextUrl)
             if(value.data != ""){
@@ -94,8 +96,8 @@ export default {
             this.nextUrl = value.data.nextUrl
             this.$nextTick(()=>{
               if(this.nextUrl != null){
-                const last = document.getElementById(`${this.userList.length-1}`)
-                this.io.observe(last)
+                this.last = document.getElementById(`${this.userList.length-1}`)
+                this.io.observe(this.last)
               } 
             })
           }catch(err){
@@ -135,6 +137,23 @@ export default {
         this.$emit('chatInfo',this.messageList[idx])
       }
 
+    },
+    watch:{
+      async searchResult(nv,ov){
+        this.userList = []
+        const auth = useAuthStore()
+        if(nv.length!=0){
+          let value = await auth.searchUser("",nv,0)
+          console.log(value)
+          value.data.searchResult.forEach(item=>{
+            this.userList.push(item)
+          })
+        } else{
+          this.nextUrl = "?type=from"
+          this.last = {}
+          await this.getFollowing()
+        }
+      }
     },
 
     mounted(){

@@ -23,12 +23,13 @@
     <img class="feed-img" :src="feed.urls[0]" @click.prevent="onDetail">
     <div class="feed-btn">
       <img class="heart-icon" src="./Icon/heart.png" 
-      v-if="isLike==false"
+      v-if="item.isLike==0"
       @click.prevent="likeArticle">
       <img class="heart-icon" src="./Icon/fullheart.png" 
-      v-if="isLike==true"
-      @click.prevent="likeArticle">
+      v-if="item.isLike == 1" @click.prevent="likeArticle">
+
       <div class="chat-icon" @click.prevent="onDetail"></div>
+
       <div class="share-icon"></div>
     </div>
     <div class="feed-chat">
@@ -79,8 +80,12 @@ export default {
         const feed = useFeedStore()
         try{
           await feed.likeArticle(idx)
-          this.isLike = !(this.isLike)
-          console.log(this.isLike)
+          if(this.feed.isLike==0){
+            this.feed.isLike = 1
+          } else{
+            this.feed.isLike = 0
+
+          }
         }catch(err){
           console.log(err)
         }
@@ -95,7 +100,7 @@ export default {
         }
       },
       userProfile : function(){
-        router.push(`/user/${this.userInfo.id}`)
+        router.push(`/user/${this.feed.userId}`)
       }
 
     },
