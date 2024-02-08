@@ -50,6 +50,6 @@ export default {
 }
 </script>
 
-<style src="./css/MessagePage.css">
+<style scoped src="./css/MessagePage.css">
 
 </style>

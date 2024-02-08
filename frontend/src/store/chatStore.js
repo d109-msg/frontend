@@ -16,6 +16,9 @@ export const useChatStore = defineStore('chat',{
     state:()=>({
         stompClient : {},
         message : {},
+        countMessage : {},
+        notify : [],
+        isConnect : false,
     }),
     getters:{
         getStomp : (state)=>{
@@ -23,9 +26,18 @@ export const useChatStore = defineStore('chat',{
         },
         getMessage : (state)=>{
             return state.message
+        },
+        getConnect : (state)=>{
+            return state.isConnect
+        },
+        getNotify : (state)=>{
+            return state.notify
         }
     },
     actions:{
+        messageRange : function(roomId){
+            return this.message[roomId]
+        },
         makeChat : async function(idx){
             const auth = useAuthStore()
             await auth.useRefresh()
@@ -58,28 +70,51 @@ export const useChatStore = defineStore('chat',{
         addRoom : function(room){
             this.messsageRoom.push(room)
         },
-        setStomp : function(roomId,obj){
-            this.stompClient[roomId] = obj
+        setStomp : function(obj){
+            this.stompClient = obj
         },
         setMessage : function(roomId,value){
             if( roomId in this.message){
                 this.message[roomId].push(value)
+                this.countMessage[roomId]+=1
+
             }else{
                 this.message[roomId] = [value]
+                this.countMessage[roomId] = 0
             }
         },
-        subscribe : async function(roomId){
-            let socket = new SockJS(`${server}/ws-stomp`)
-            this.setStomp(roomId,Stomp.over(socket))
-            const headers = {"Authorization": useAuthStore().getAccess}
-            this.stompClient[roomId].connect(headers,()=>{
-                this.stompClient[roomId].subscribe('/sub/'+roomId,(e)=>{
+        sub : async function(data){
+            data.forEach(roomId=>{
+                this.stompClient.subscribe('/sub/'+roomId,(e)=>{
                     this.setMessage(roomId,JSON.parse(e.body))
                 })
-            }, function(e){
-                console.log('연결 끊어짐')
-            }
-            )
+            })
+                
+        },
+        makeConnect : async function(data){
+            let socket = new SockJS(`${server}/ws-stomp`)
+            const headers = {"Authorization": useAuthStore().getAccess}
+            this.setStomp(Stomp.over(socket))
+            const client = this.getStomp
+            await client.connect(headers,()=>{
+                this.isConnect = true
+            },
+            ()=>{
+                this.isConnect = false
+            })
+        },
+        notifyConnect : async function(){
+            const auth = useAuthStore()
+            const userId = auth.getUserInfo.id
+            const client = this.getStomp
+            client.subscribe(`/sub/`+userId,(e)=>{
+                const data = JSON.parse(e.body)
+                if(data.dataType == "noti"){
+                    this.notify.push(data)
+                } else if(data.dataType == "sub"){
+                    this.sub(data.content)
+                }
+            })
         }
     },
 
