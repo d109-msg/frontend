@@ -775,6 +775,7 @@ public class GameServiceImpl implements GameService{
                     voteTitle = "조사하고 싶은 사람을 선택하세요.";
                     voteResult.setVoteCount(vote.getReporterVoteCount());
                 } else if (GameUtil.getRoleType(job).equals("마피아")) { //마피아일 때
+                    voteTitle = "처형할 사람을 선택하세요.";
                     voteResult.setVoteCount(vote.getMafiaVoteCount());
                 } else if (GameUtil.getRoleType(job).equals("시민")) {
                     log.info("getRoomVote() 시민에게 보여줄 투표가 없음");
