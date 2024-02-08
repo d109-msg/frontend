@@ -10,4 +10,5 @@ import java.util.List;
 public interface NotificationRepository extends MongoRepository<NotificationEntity, String> {
 
     List<NotificationEntity> findByUserId(int userId);
+    List<NotificationEntity> findByUserIdAndFlagRead(int userId, int flagRead);
 }
