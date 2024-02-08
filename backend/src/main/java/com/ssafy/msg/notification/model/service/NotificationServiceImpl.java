@@ -3,12 +3,15 @@ package com.ssafy.msg.notification.model.service;
 import com.ssafy.msg.article.model.dto.CommentDto;
 import com.ssafy.msg.article.model.dto.CommentLikeDto;
 import com.ssafy.msg.message.util.DateTimeUtil;
+import com.ssafy.msg.notification.model.dto.NotificationIdDto;
 import com.ssafy.msg.notification.model.dto.NotificationResponseDto;
 import com.ssafy.msg.notification.model.entity.NotificationEntity;
 import com.ssafy.msg.notification.model.mapper.NotificationMapper;
 import com.ssafy.msg.notification.model.repo.NotificationRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.bson.types.ObjectId;
+import org.springframework.http.ResponseEntity;
 import org.springframework.messaging.simp.SimpMessageSendingOperations;
 import org.springframework.stereotype.Service;
 
@@ -27,12 +30,31 @@ public class NotificationServiceImpl implements NotificationService {
 
     @Override
     public List<NotificationResponseDto> getNotificationsById(int userId) {
-        List<NotificationEntity> notifications = notificationRepository.findByUserId(userId);
+        List<NotificationEntity> notifications = notificationRepository.findByUserIdAndFlagRead(userId, 0);
 
         return notifications.stream()
                 .map(NotificationEntity::toDto)
                 .collect(Collectors.toList());
 
+    }
+
+    @Override
+    public void updateAllNotificationsFlagRead(int userId) {
+        List<NotificationEntity> notifications = notificationRepository.findByUserIdAndFlagRead(userId, 0);
+        for (NotificationEntity notification : notifications) {
+            notification.setFlagRead(1);
+        }
+
+        notificationRepository.saveAll(notifications);
+    }
+
+    @Override
+    public void updateNotificationFlagRead(NotificationIdDto notificationIdDto) {
+        NotificationEntity notificationEntity = notificationRepository.findById(notificationIdDto.getId()).orElse(null);
+
+        notificationEntity.setFlagRead(1);
+
+        notificationRepository.save(notificationEntity);
     }
 
     @Override
