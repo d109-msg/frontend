@@ -33,9 +33,8 @@ export default {
         try{
           await auth.useRefresh()
           let value = await chat.userRoom()
-          value.data.forEach(async roomId=>{
-            await chat.subscribe(roomId)
-          })
+          await chat.makeConnect(value.data)
+          // await chat.notifyConnect()
         }catch(err){
           console.log('앱뷰 조짐')
         }
