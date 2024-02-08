@@ -110,7 +110,7 @@ public class MessageServiceImpl implements MessageService{
                 .roomId(roomId)
                 .userId(1)
                 .dataType("notice")
-                .noticeType("day")
+                .noticeType("game")
                 .createTime(dateTimeUtil.getCurrentDateTime())
                 .content(day+"일차 " + dayOrNight + "이 되었습니다.").build();
 
