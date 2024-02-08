@@ -18,6 +18,7 @@ export const useChatStore = defineStore('chat',{
         message : {},
         countMessage : {},
         notify : [],
+        isConnect : false,
     }),
     getters:{
         getStomp : (state)=>{
@@ -25,6 +26,12 @@ export const useChatStore = defineStore('chat',{
         },
         getMessage : (state)=>{
             return state.message
+        },
+        getConnect : (state)=>{
+            return state.isConnect
+        },
+        getNotify : (state)=>{
+            return state.notify
         }
     },
     actions:{
@@ -76,32 +83,34 @@ export const useChatStore = defineStore('chat',{
                 this.countMessage[roomId] = 0
             }
         },
-        sub : async function(roomId){
+        sub : async function(data){
+            data.forEach(roomId=>{
                 this.stompClient.subscribe('/sub/'+roomId,(e)=>{
                     this.setMessage(roomId,JSON.parse(e.body))
                 })
+            })
+                
         },
         makeConnect : async function(data){
             let socket = new SockJS(`${server}/ws-stomp`)
             const headers = {"Authorization": useAuthStore().getAccess}
             this.setStomp(Stomp.over(socket))
             const client = this.getStomp
-            client.connect(headers,()=>{
-                data.forEach(roomId=>{
-                    this.sub(roomId)
-                })
+            await client.connect(headers,()=>{
+                this.isConnect = true
+            },
+            ()=>{
+                this.isConnect = false
             })
-            
         },
         notifyConnect : async function(){
             const auth = useAuthStore()
             const userId = auth.getUserInfo.id
-            this.stompClient.subscribe('/sub/'+userId,(e)=>{
+            const client = this.getStomp
+            client.subscribe(`/sub/`+userId,(e)=>{
                 const data = JSON.parse(e.body)
                 if(data.dataType == "noti"){
-                    if(this.notify<10){
-                        this.notify.push(data)
-                    }
+                    this.notify.push(data)
                 } else if(data.dataType == "sub"){
                     this.sub(data.content)
                 }
