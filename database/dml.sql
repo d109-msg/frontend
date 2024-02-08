@@ -29,11 +29,11 @@ INSERT INTO jobs (`id`, `info`, `image_url`) VALUES
 ('의사', '의사입니다.', 'tmpurl'),
 ('경찰', '경찰입니다.', 'tmpurl'),
 ('정치인', '정치인입니다.', 'tmpurl'),
+('자경단', '자경단입니다.', 'tmpurl'),
 ('군인', '군인입니다.', 'tmpurl'),
 ('판사', '판사입니다.', 'tmpurl'),
 ('미치광이', '미치광이입니다.', 'tmpurl'),
 ('불침번', '불침번입니다.', 'tmpurl'),
-('청소부', '청소부입니다.', 'tmpurl'),
 ('변장술사', '변장술사입니다.', 'tmpurl'),
 ('스파이', '스파이입니다.', 'tmpurl'),
 ('건달', '건달입니다.', 'tmpurl');
@@ -49,7 +49,8 @@ INSERT INTO users (email_id, email_password, nickname, image_url, sign_up_time) 
 ('test7@naver.com', '$2a$10$8C8PCUov//Edd6tWzdvvTupTLkAXiIOPn/OZMioTWNx5NOtgHl6rq', 'test7', 'https://team109testbucket.s3.ap-northeast-2.amazonaws.com/player1.png', NOW()),
 ('test8@naver.com', '$2a$10$8C8PCUov//Edd6tWzdvvTupTLkAXiIOPn/OZMioTWNx5NOtgHl6rq', 'test8', 'https://team109testbucket.s3.ap-northeast-2.amazonaws.com/player1.png', NOW()),
 ('test9@naver.com', '$2a$10$8C8PCUov//Edd6tWzdvvTupTLkAXiIOPn/OZMioTWNx5NOtgHl6rq', 'test9', 'https://team109testbucket.s3.ap-northeast-2.amazonaws.com/player1.png', NOW()),
-('test10@naver.com', '$2a$10$8C8PCUov//Edd6tWzdvvTupTLkAXiIOPn/OZMioTWNx5NOtgHl6rq', 'test10', 'https://team109testbucket.s3.ap-northeast-2.amazonaws.com/player1.png', NOW()); 
+('test10@naver.com', '$2a$10$8C8PCUov//Edd6tWzdvvTupTLkAXiIOPn/OZMioTWNx5NOtgHl6rq', 'test10', 'https://team109testbucket.s3.ap-northeast-2.amazonaws.com/player1.png', NOW()),
+('hhh259@naver.com', '$2a$10$8C8PCUov//Edd6tWzdvvTupTLkAXiIOPn/OZMioTWNx5NOtgHl6rq', '현지혜', 'https://team109testbucket.s3.ap-northeast-2.amazonaws.com/player1.png', NOW()); 
 
 -- follow
 INSERT INTO follows (from_user_id, to_user_id) VALUES (1, 2);
@@ -212,10 +213,10 @@ INSERT INTO article_images (article_id, url, uuid, flag_mission) VALUES
 
 
 -- SELECT * FROM follows;
--- SELECT * FROM articles ;
+SELECT * FROM articles ;
 -- SELECT * FROM article_images ai ;
 -- SELECT * FROM daily_missions;
 -- SELECT * FROM participants;
 -- SELECT * FROM users;
--- SELECT * FROM rooms;
+SELECT * FROM rooms;
 
