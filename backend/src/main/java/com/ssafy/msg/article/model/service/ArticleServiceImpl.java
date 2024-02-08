@@ -182,9 +182,6 @@ public class ArticleServiceImpl implements ArticleService{
         articleDetailDto.setIsLike(isLike(articleDto)); // 좋아요 여부 알려주기
 
 
-
-        articleDetailDto.setIsLike(userMapper.getIsFollow(articleDto.getUserId(), id));
-
         // 댓글 리스트 넣어주기
         articleDetailDto.setCommentList(getComments(CommentDto.builder().articleId(articleDto.getId()).build()));
 
