@@ -236,7 +236,7 @@ public class TestController {
         }
 
         // 다음 요청 URL
-        String nextUrl = "?room-id=" + roomId + "&offset=" + messages.get(0).getId() + "&limit=" + limit;
+        String nextUrl = "?room-id=" + roomId + "&offset=" + messages.get(messages.size() - 1).getId() + "&limit=" + limit;
         MessageScrollResponseDto messageScrollResponseDto = MessageScrollResponseDto.builder()
                 .messageResponseDtos(messages.stream()
                         .map(MessageEntity::toDto)
@@ -245,8 +245,6 @@ public class TestController {
                 .build();
         return ResponseEntity.ok(messageScrollResponseDto);
     }
-
-
     /*
     채팅 무한스크롤 end =============================================================
      */

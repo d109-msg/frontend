@@ -1,5 +1,6 @@
-package com.ssafy.msg.user.handler;
+package com.ssafy.msg.handler;
 
+import org.springframework.context.annotation.Profile;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -19,45 +20,47 @@ import lombok.extern.slf4j.Slf4j;
 
 @ControllerAdvice
 @Slf4j
-public class UserExceptionHandler {
-	
-	
+@Profile("local")
+public class LocalExceptionHandler {
+
 	@ExceptionHandler({TokenInvalidException.class, UserUnauthorizedException.class, TokenExpiredException.class,
 		UserNotFoundException.class, PasswordNotMatchException.class, MethodArgumentNotValidException.class,
-		UserDuplicateException.class, IdentifierException.class, FollowException.class})
+		UserDuplicateException.class, IdentifierException.class, FollowException.class, Exception.class})
 	public ResponseEntity<?> handleException(Exception e) {
-		
+
+		log.info("=======================< THROW >===============================");
+
 		HttpStatus httpStatus = null;
 		
 		if (e instanceof TokenInvalidException) {
-			log.error("handleException() -> Exception : {}", e);
+			log.error("error = {}", e);
 			httpStatus = HttpStatus.BAD_REQUEST;
 		} else if (e instanceof UserUnauthorizedException) {
-			log.error("handleException() -> Exception : {}", e);
+			log.error("error = {}", e);
 			httpStatus = HttpStatus.BAD_REQUEST;
 		} else if (e instanceof TokenExpiredException) {
-			log.error("handleException() -> Exception : {}", e);
+			log.error("error = {}", e);
 			httpStatus = HttpStatus.BAD_REQUEST;
 		} else if (e instanceof UserNotFoundException) {
-		    log.error("handleException() -> Exception : {}", e);
+			log.error("error = {}", e);
 			httpStatus = HttpStatus.NOT_FOUND;
 		} else if (e instanceof PasswordNotMatchException) {
-			log.error("handleException() -> Exception : {}", e);
+			log.error("error = {}", e);
 			httpStatus = HttpStatus.BAD_REQUEST;
 		} else if (e instanceof UserDuplicateException) {
-			log.error("handleException() -> Exception : {}", e);
+			log.error("error = {}", e);
 			httpStatus = HttpStatus.BAD_REQUEST;
 		} else if (e instanceof IdentifierException) {
-			log.error("handleException() -> Exception : {}", e);
+			log.error("error = {}", e);
 			httpStatus = HttpStatus.BAD_REQUEST;
 		} else if (e instanceof MethodArgumentNotValidException) {
-			log.error("handleException() -> Exception : {}", e);
+			log.error("error = {}", e);
 			httpStatus = HttpStatus.BAD_REQUEST;
 		} else if (e instanceof FollowException) {
-			log.error("handleException() -> Exception : {}", e);
+			log.error("error = {}", e);
 			httpStatus = HttpStatus.BAD_REQUEST;
 		} else {
-			log.error("handleException() -> Exception : {}", e);
+			log.error("error = {}", e);
 			httpStatus = HttpStatus.INTERNAL_SERVER_ERROR;
         }
 		
