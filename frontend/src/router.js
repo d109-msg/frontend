@@ -26,7 +26,7 @@ const routes = [
                 component: Mainpage
             },
             {   
-                name: "messgage",
+                name: "message",
                 path: "/message",
                 component: MessagePage,
                 beforeEnter: (to, from, next) => {

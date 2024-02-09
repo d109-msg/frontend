@@ -32,9 +32,14 @@
 .banner-down-event{
     animation: banner-down forwards 0.2s;
 }
-
+@media screen and (min-width:1040px){
+    .main-container{
+        margin: 50px 100px 100px 100px;
+        display: flex;
+    }
+}
 .main-container{
-    margin: 50px 100px 100px 100px;
+    /* margin: 50px 100px 100px 100px; */
     display: flex;
 }
 
