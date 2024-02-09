@@ -117,7 +117,7 @@ const server2 = 'https://i10d109.p.ssafy.io/api'
             axiosRead : async function(){
                 if(this.baseUrl != null){
                     const feed = useFeedStore()
-                    let value = await feed.readFeed(this.baseUrl)
+                    let value = await feed.readFeed(this.baseUrl+this.nextUrl)
                     if(value.data != ""){
                         value.data.articleDetailDtos.forEach(item=>{
                             this.feedList.push(item)
@@ -155,7 +155,7 @@ const server2 = 'https://i10d109.p.ssafy.io/api'
             axiosGuest : async function(){
                 if(this.guestUrl != null){
                     const feed = useFeedStore()
-                    let value = await feed.guestFeed(this.guestUrl)
+                    let value = await feed.guestFeed(this.guestUrl+this.nextGuestUrl)
                     if(value.data != ""){
                         value.data['articles'].forEach(article=>{
                             this.feedList.push(article)

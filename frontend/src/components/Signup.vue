@@ -96,7 +96,7 @@ export default {
 
 
         checkPassword : function(){
-            const valid = /^(?=.[A-Za-z])(?=.\\d)(?=.[@$!%#?&])[A-Za-z\\d@$!%*#?&]{8,20}$/; 
+            const valid = /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,20}$/; 
             if(!valid.test(this.password)|| !this.password){
                 this.passwordCheck = true
                 return
