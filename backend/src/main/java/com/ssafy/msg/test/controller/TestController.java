@@ -215,32 +215,28 @@ public class TestController {
     @GetMapping("/mongodb/message/scroll")
     public ResponseEntity<?> getMessagesByScroll(
             @Parameter(description = "방 아이디") @RequestParam(value = "room-id", required = true) String roomId,
-            @Parameter(description = "로딩한 누적 메시지 수") @RequestParam(value = "offset", required = false, defaultValue = "-1") Integer offset,
-            @Parameter(description = "요청당 로딩할 메시지 수") @RequestParam(value = "limit", required = false, defaultValue = "29") Integer limit) {
+            @Parameter(description = "로딩한 누적 메시지 수") @RequestParam(value = "offset", required = false, defaultValue = "start") String offset,
+            @Parameter(description = "요청당 로딩할 메시지 수") @RequestParam(value = "limit", required = false, defaultValue = "20") Integer limit) {
         log.info("roomId: " + roomId);
         log.info("offset: " + offset);
         log.info("limit: " + limit);
 
         List<MessageEntity> messages = null;
-        Pageable pageable = null;
 
         // offset이 -1이면 첫 요청이므로 첫 번째 메시지부터 limit개의 메시지를 가져옴 (역순으로 정렬시킨 상태에서 limit개의 메시지를 가져와서 최신 메시지부터 보여줌)
-        if (offset == -1) {
-            pageable = PageRequest.of(0, limit);
+        if ("start".equals(offset)) {
+            messages = messageRepository.findMessagesByRoomIdOrderByDescending(roomId, limit);
         } else {
-            // offset이 -1이 아니면 offset부터 limit개의 메시지를 가져옴
-            pageable = PageRequest.of(offset, limit);
+            ObjectId objectId = new ObjectId(offset);
+            messages = messageRepository.findMessagesByRoomIdAndIdLessThan(roomId, objectId, limit);
         }
-        messages = messageRepository.findMessagesByRoomIdWithLimit(roomId, pageable);
         // 메시지가 없으면 null 반환 (무한스크롤 끝)
         if (messages.isEmpty()) {
             return null;
         }
 
-        Collections.reverse(messages);
-
         // 다음 요청 URL
-        String nextUrl = "?room-id=" + roomId + "&offset=" + (offset + limit) + "&limit=" + limit;
+        String nextUrl = "?room-id=" + roomId + "&offset=" + messages.get(0).getId() + "&limit=" + limit;
         MessageScrollResponseDto messageScrollResponseDto = MessageScrollResponseDto.builder()
                 .messageResponseDtos(messages.stream()
                         .map(MessageEntity::toDto)
