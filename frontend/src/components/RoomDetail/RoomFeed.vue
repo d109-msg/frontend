@@ -26,7 +26,7 @@ export default {
     name: 'RoomFeed',
     data(){
       return{
-        startFlag : true
+        startFlag : false
       }
     },
     props:{
@@ -63,6 +63,13 @@ export default {
     },
     mounted(){
       this.emitter.emit('pageChange',1)
+    },
+    watch:{
+      member(){
+        if (this.member.length == 7){
+          this.startFlag = true
+        }
+      }
     }
 }
 </script>

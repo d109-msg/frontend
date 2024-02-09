@@ -38,10 +38,20 @@
     height: 45px;
     width: 45px;
     margin-right: 10px;
-    background: url('../Img/icon_chat_active.png');
     background-size: cover;
     background-repeat: no-repeat;
     cursor: pointer;
+    /* background: url('../Img/icon_chat.png'); */
+}
+
+.is-chat-active{
+    height: 40px;
+    width: 40px;
+    margin-right: 10px;
+    background-size: cover;
+    background-repeat: no-repeat;
+    cursor: pointer;
+    /* background: url('../Img/icon_chat_active.png'); */
 }
 
 .is-guide{
@@ -53,11 +63,29 @@
     background-repeat: no-repeat;
     cursor: pointer;
 }
+.is-guide-active{
+    height: 40px;
+    width: 40px;
+    margin-right: 10px;
+    background: url('../Img/icon_guide_active.png');
+    background-size: contain;
+    background-repeat: no-repeat;
+    cursor: pointer;
+}
 .is-vote{
     height: 40px;
     width: 40px;
     margin-right: 10px;
     background: url('../Img/icon_vote.png');
+    background-size: contain;
+    background-repeat: no-repeat;
+    cursor: pointer;
+}
+.is-vote-active{
+    height: 40px;
+    width: 40px;
+    margin-right: 10px;
+    background: url('../Img/icon_vote_active.png');
     background-size: contain;
     background-repeat: no-repeat;
     cursor: pointer;

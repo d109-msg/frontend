@@ -3,13 +3,14 @@ import { defineStore } from "pinia"
 import { createPersistedState } from "pinia-plugin-persistedstate"
 import { useCookies } from "vue3-cookies"
 import axios from "axios"
-import servers from "@/server"
 
-const cookies = useCookies().cookies
+
+// const cookies = useCookies().cookies
 // const server =  'https://i10d109.p.ssafy.io/api'
 // const server2 = 'http://localhost:8080/api'
-const server = servers
+const server = 'http://localhost:8080/api'
 const server2 = 'https://i10d109.p.ssafy.io/api'
+
 export const useAuthStore = defineStore('auth',{
     state: ()=>({
         access: "",

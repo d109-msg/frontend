@@ -2,7 +2,7 @@
   <div class="chat-container">
 
     <div class="chat-content">
-        room guide
+      <img class="job-guide" src="./Img/job_guide.png" alt="">
     </div>
 
   </div>
