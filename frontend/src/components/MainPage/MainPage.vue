@@ -4,10 +4,12 @@
         <div class="banner"></div>
         <div class="main-container">
             <!-- 추후 컴포넌트로 분리 가능(피드) -->
-            <FeedPage @user-info="sendUser"/>
+            <FeedPage @user-info="sendUser" :size="size"/>
 
             <!-- 추후 컴포넌트로 분리 가능(작은 프로필) -->
-            <MiniProfile :userInfo="user"/>
+            <MiniProfile :userInfo="user"
+            v-if="size == 'lg'"
+            />
 
         </div>
     </div>
@@ -23,6 +25,9 @@ export default {
         return {
             prevScrollY : '',
             user : {},
+            size : "",
+            width : 0,
+            height : "",
         }
     },
     components :{
@@ -32,27 +37,44 @@ export default {
     methods:{
         sendUser: function(data){
             this.user = data
-        }
+        },
+        handleResize(event) {
+            this.width = window.innerWidth;
+            this.height = window.innerHeight;
+        },
+        reactiveSize : function(){
+            const viewportWidth = window.innerWidth
+            if (viewportWidth<1070) {
+                    this.size =  "xs"
+                }
+                else if (viewportWidth >= 1070 && viewportWidth < 1440
+                ) {
+                    this.size = "md"}
+                else {this.size = "lg"}
+            window.addEventListener('resize', this.handleResize);
+        },
     },  
+    watch:{
+        width(nv,ov){
+            if(nv<1070){
+                this.size = "xs"
+            console.log('사이즈',this.size)
 
+            } else if(nv >= 1070 && nv < 1440){
+                this.size = "md"
+            console.log('사이즈',this.size)
+
+            }else{
+                this.size = "lg"
+            console.log('사이즈',this.size)
+
+            }
+        }
+    },
     mounted(){
         this.emitter.emit('pageChange',0)
-        // this.$emit('pageChange',0)
+        this.reactiveSize()
 
-        // 스크롤 이벤트에 따른 배너 margin 조정
-        let banner = document.querySelector('.banner')
-        this.prevScrollY = window.scrollY
-        window.addEventListener('scroll',()=>{
-            let nowScrollY = window.scrollY
-            if(this.prevScrollY < nowScrollY){
-                banner.classList.remove('banner-up-event')
-                banner.classList.add('banner-down-event')
-            }else{
-                banner.classList.add('banner-up-event')
-                banner.classList.remove('banner-down-event')
-            }
-            this.prevScrollY = nowScrollY
-        })
 
 
 

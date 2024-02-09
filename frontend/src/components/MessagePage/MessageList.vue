@@ -119,9 +119,21 @@ export default {
         try{
           console.log(idx)
           let value = await chat.makeChat(idx)
-          this.messageList.unshift(value.data)
-          await chat.subscribe(value.data.id)
+          let flag = true
+          this.messageList.forEach(item=>{
+            if(item.id == value.data.id){
+              flag = false
+            }
+          })
+          if(flag){
+            this.messageList.unshift(value.data)
+            await chat.sub([value.data.id])
+          }else{
+            alert('이미 존재하는 채팅방입니다.')
+          }
         }catch(err){
+          alert('잘못된 요청입니다.')
+
           console.log(err)
         }
       },
@@ -145,9 +157,11 @@ export default {
         if(nv.length!=0){
           let value = await auth.searchUser("",nv,0)
           console.log(value)
-          value.data.searchResult.forEach(item=>{
-            this.userList.push(item)
-          })
+          if(value.data !=''){
+            value.data.searchResult.forEach(item=>{
+              this.userList.push(item)
+            })
+          }
         } else{
           this.nextUrl = "?type=from"
           this.last = {}

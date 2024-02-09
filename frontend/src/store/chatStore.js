@@ -109,9 +109,11 @@ export const useChatStore = defineStore('chat',{
             const client = this.getStomp
             client.subscribe(`/sub/`+userId,(e)=>{
                 const data = JSON.parse(e.body)
+                console.log(data)
                 if(data.dataType == "noti"){
                     this.notify.push(data)
                 } else if(data.dataType == "sub"){
+                    console.log(data)
                     this.sub(data.content)
                 }
             })

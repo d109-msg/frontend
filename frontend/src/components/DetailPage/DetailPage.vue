@@ -145,8 +145,8 @@ export default {
         send : async function(){
             const feed = useFeedStore()
             try{
-                await feed.writeComment(this.idx.articleId,this.writeComment,0)
-                await this.readDetail(this.idx.articleId)
+                await feed.writeComment(this.idx,this.writeComment,0)
+                await this.readDetail(this.idx)
                 this.writeComment = ""
             } catch(err){
                 console.log(err)
@@ -197,7 +197,7 @@ export default {
         const feed = useFeedStore()
         try{
           await feed.likeComment(value)
-          this.readDetail(this.idx.articleId)
+          this.readDetail(this.idx)
         }catch(err){
           console.log(err)
         }
@@ -205,7 +205,7 @@ export default {
       showRecomment : async function(idx,commentId){
         const feed = useFeedStore()
         try{
-            let value = await feed.readRecomment(commentId,this.itemIdx.articleId)
+            let value = await feed.readRecomment(commentId,this.itemData.articleId)
             this.recommentList[idx]= value.data
             this.recommentView[idx] = !(this.recommentView[idx])
         } catch(err){
@@ -216,7 +216,7 @@ export default {
         const feed = useFeedStore()
         const auth = useAuthStore()
         try{
-            let value = await feed.writeComment(this.itemIdx.articleId,this.recomment[idx],commentId)
+            let value = await feed.writeComment(this.itemData.articleId,this.recomment[idx],commentId)
             this.showRecomment(idx,commentId)
             this.recomment[idx] = ""
         } catch(err){
@@ -231,10 +231,10 @@ export default {
       editFeed : async function(){
         const feed =useFeedStore()
         try{
-            let value = await feed.editFeed(this.me.id,this.idx.articleId,this.editComment)
+            let value = await feed.editFeed(this.me.id,this.idx,this.editComment)
             alert('게시글 수정이 완료되었습니다.')
             this.editFlag = false
-            this.readDetail(this.idx.articleId)
+            this.readDetail(this.idx)
         } catch(err){
             console.log(err)
         }
@@ -242,7 +242,7 @@ export default {
       deleteFeed: async function(){
         const feed = useFeedStore()
         try{
-            await feed.deleteFeed(this.idx.articleId)
+            await feed.deleteFeed(this.idx)
             alert("게시글 삭제가 완료되었습니다.")
             window.location.reload()
         }catch(err){
@@ -255,7 +255,7 @@ export default {
 
     },
     props: {
-        idx : Object,
+        idx : Number,
     },
     watch:{
         step(){
@@ -267,7 +267,7 @@ export default {
     },
     mounted(){
         // console.log(this.idx.articleId)
-        this.readDetail(this.idx.articleId)
+        this.readDetail(this.idx)
         this.getUser()
     }
 

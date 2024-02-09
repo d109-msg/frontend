@@ -7,7 +7,16 @@
                 </div>
                 <div class="notification-body">
                     <div v-for="(item,key) in chat.notify" :key="key">
-                        {{ item }}
+                        <div class="profile" @click="visit(key)">
+                            <div class="profile-box">
+                                <img src="" alt="" class="profile-img">
+                                <div class="profile-content">{{ item.content }}</div>
+                            </div>
+                            <div class="create-time">{{ item.createTime }}</div>
+                            <!-- {{ item }} -->
+                            <!-- <span class="create-time">{{ item.createTime }}</span> -->
+                            
+                        </div>
                     </div>
 
                 </div>
@@ -88,6 +97,9 @@ export default {
             const auth = useAuthStore()
             auth.logout()
             window.location.reload()
+        },
+        visit : function(idx){
+            this.chat.notify.splice(idx)
         }
     },
     props:{
