@@ -48,6 +48,7 @@ public class MessageController {
         }
     }
 
+
     @Operation(summary = "roomId에 해당하는 채팅 무한스크롤 조회", description = "roomId에 해당하는 채팅 무한스크롤 조회")
     @GetMapping("/message/scroll")
     public ResponseEntity<?> getMessagesByScroll(
