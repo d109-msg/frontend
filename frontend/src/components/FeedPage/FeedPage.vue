@@ -70,8 +70,9 @@
 import router from '@/router';
 // const server =  'https://i10d109.p.ssafy.io/api'
 // const server2 = 'http://localhost:8080/api'
-const server = 'http://localhost:8080/api'
+import servers from '@/server';
 const server2 = 'https://i10d109.p.ssafy.io/api'
+
     export default {
         name: "FeedPage",
 
@@ -81,7 +82,7 @@ const server2 = 'https://i10d109.p.ssafy.io/api'
                 colSapce : 16,
                 arr : [1,2,3],
                 create : false,
-                baseUrl : `${server}/article/feed`,
+                baseUrl : `${servers}/article/feed`,
                 feedList : [],
                 detailFlag : false,
                 last : {},
@@ -92,7 +93,7 @@ const server2 = 'https://i10d109.p.ssafy.io/api'
                 userInfo : {},
                 nextUrl : "",
                 guestio : {},
-                guestUrl : `${server}/article/guest`,
+                guestUrl : `${servers}/article/guest`,
                 nextGuestUrl : "",
             }
         },  

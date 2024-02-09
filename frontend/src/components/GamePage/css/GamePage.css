@@ -9,8 +9,8 @@
         overflow: hidden;
     }
     .game-banner-box .game-banner{
-        position: absolute;
         background: url(../Img/banner.png), lightgray 50%;
+        position: absolute;
         background-repeat: no-repeat;
         background-position: center;
         background-size:cover;
