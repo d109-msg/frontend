@@ -53,7 +53,7 @@ public class MessageController {
     @GetMapping("/message/scroll")
     public ResponseEntity<?> getMessagesByScroll(
             @Parameter(description = "방 아이디") @RequestParam(value = "room-id", required = true) String roomId,
-            @Parameter(description = "로딩한 누적 메시지 수") @RequestParam(value = "offset", required = false, defaultValue = "start") String offset,
+            @Parameter(description = "로딩 기준이 되는 메시지 아이디") @RequestParam(value = "offset", required = false, defaultValue = "start") String offset,
             @Parameter(description = "요청당 로딩할 메시지 수") @RequestParam(value = "limit", required = false, defaultValue = "20") Integer limit) {
         log.info("roomId: " + roomId);
         log.info("offset: " + offset);
