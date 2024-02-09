@@ -40,7 +40,9 @@ export default {
       participant:Object,
       mission:Object,
       ability:Object,
-      member: Object
+      member: Object,
+      roomTime:Number,
+
     },
     watch:{
       chatInput(newValue,oldValue){

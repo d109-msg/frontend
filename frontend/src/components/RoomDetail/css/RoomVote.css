@@ -52,20 +52,14 @@
 }
 
 .vote-hint{
-    position: absolute;
     display: flex;
     flex-direction: column;
     justify-content: center;
-    width: 250px;
-    right: 3%;
-    bottom: 10%;
-}
-
-.vote-hint>p{
-    text-align: center;
     font-size: 0.8em;
     color: #787171;
 }
+
+
 
 .vote-btn{
     display: flex;

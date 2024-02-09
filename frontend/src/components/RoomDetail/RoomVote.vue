@@ -2,29 +2,46 @@
   <div class="chat-container">
 
     <div class="chat-content">
-      <div  class="vote-title">[투표] {{voteData.voteTitle}}</div>
-      <!-- <div v-else class="vote-title">{{ ability.message }}</div> -->
-
-      <div class=" member-list" v-for="(mem, idx) in voteData.voteList" :key=idx>
-        <div class="member">
-          <input type="radio" :id="`member-${idx}`" 
-          name="member" 
-          v-model="votedMember" 
-          :value="mem.nickname"
-          @click="postVote(participant.id,participant.jobId,mem.id)"
-          >
-          <img :src="mem.imageUrl" alt="">
-          <label :for="`member-${idx}`" class="member-name">{{ mem.nickname }} </label>
-          <div class="vote-graph"><div :id="idx+'graph'" class="graph"></div></div>
-          <div class="vote-count">{{ mem.voteCount }}</div>
+      <template v-if="participant.jobId != '판사'"> 
+        <div class="vote-title">[투표] {{voteData.voteTitle}}</div>
+        <div v-if="!roomTime" class="vote-hint">주어진 시간 내에 투표하지 않으면 본인으로 투표됩니다.</div>   
+        
+        <div  class=" member-list" v-for="(mem, idx) in voteData.voteList" :key=idx>
+          <div class="member">
+            <input type="radio" :id="`member-${idx}`" 
+            name="member" 
+            v-model="votedMember" 
+            :value="mem.nickname"
+            @click="postVote(participant.id,participant.jobId,mem.id)"
+            >
+            <img :src="mem.imageUrl" alt="">
+            <label :for="`member-${idx}`" class="member-name">{{ mem.nickname }} </label>
+            <div v-if="!roomTime" class="vote-graph"><div :id="idx+'graph'" class="graph"></div></div>
+            <div v-if="!roomTime" class="vote-count">{{ mem.voteCount }}</div>
+          </div>
         </div>
+      </template>
+      <template v-if="participant.jobId == '판사' && ability.status"> 
+        <div class="vote-title">[투표] {{voteData.voteTitle}}</div>
+        <div  class="vote-hint">주어진 시간 내에 투표하지 않으면 본인으로 투표됩니다.</div>   
+        
+        <div  class=" member-list" v-for="(mem, idx) in voteData.voteList" :key=idx>
+          <div class="member">
+            <input type="radio" :id="`member-${idx}`" 
+            name="member" 
+            v-model="votedMember" 
+            :value="mem.nickname"
+            @click="postVote(participant.id,participant.jobId,mem.id)"
+            >
+            <img :src="mem.imageUrl" alt="">
+            <label :for="`member-${idx}`" class="member-name">{{ mem.nickname }} </label>
+            <div v-if="!roomTime" class="vote-graph"><div :id="idx+'graph'" class="graph"></div></div>
+            <div v-if="!roomTime" class="vote-count">{{ mem.voteCount }}</div>
+          </div>
+        </div>
+      </template>
+        
       </div>
-      <div v-if="roomTime == 0" class="vote-hint">
-        <p>주어진 시간 내에 투표하지 않으면</p>
-        <p>본인으로 투표됩니다.</p>
-      </div>   
-      </div>
-      
   </div>
 </template>
 
@@ -38,6 +55,8 @@ export default {
         votedMember: {},
         voteResult :'',
         voteData : {},
+        judgeResult : '',
+        abilityResult:''
       }
     },
     props:{
@@ -47,9 +66,12 @@ export default {
       mission:Object,
       ability:Object,
       member: Object,
-      roomTime:Object
+      roomTime:Number,
+      aliveMember:Object
     },
+
     methods: {
+      // 낮 : 마피아 지목 투표, 저녁 : 살인 투표
       postVote: async function(id,jobId,targetId){
         const game = useGameStore()
         try{
@@ -69,6 +91,8 @@ export default {
           console.log('투표 실패')
         }
       },
+
+      // 내 투표 결과
       getMyPick: async function(id){
         const game = useGameStore()
         try{
@@ -86,14 +110,19 @@ export default {
           console.log(err)
       }
     },
+    // 실시간 투표 현황 보여주기
     graphShow : function(){
       for(let i=0; i<this.voteData.voteList.length;i++){
         const item = document.getElementById(`${i}graph`)
+        if(item == null){
+          break
+        }
         const voteCount = this.voteData.voteList[i].voteCount
         const per = Math.round(voteCount/this.voteData.voteList.length*100,1)
         item.style.width = `${per}%`
       }
-    }
+    },
+
 },
 async mounted(){
       await this.getMyPick(this.participant.id)

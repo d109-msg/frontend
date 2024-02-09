@@ -90,3 +90,22 @@
     background-repeat: no-repeat;
     cursor: pointer;
 }
+
+.is-ability{
+    height: 45px;
+    width: 45px;
+    margin-right: 10px;
+    background: url('../Img/icon_ability.png');
+    background-size: contain;
+    background-repeat: no-repeat;
+    cursor: pointer;
+}
+.is-ability-active{
+    height: 45px;
+    width: 45px;
+    margin-right: 10px;
+    background: url('../Img/icon_ability_active.png');
+    background-size: contain;
+    background-repeat: no-repeat;
+    cursor: pointer;
+}
