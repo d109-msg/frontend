@@ -72,6 +72,7 @@ import router from '@/router';
 // const server2 = 'http://localhost:8080/api'
 import servers from '@/server';
 const server2 = 'https://i10d109.p.ssafy.io/api'
+
     export default {
         name: "FeedPage",
 

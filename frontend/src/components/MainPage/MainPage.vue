@@ -1,7 +1,9 @@
 <template>
     <!-- 메인 페이지 -->
     <div>
-        <div class="banner"></div>
+        <div class="main-banner-box">
+            <div class="main-banner"></div>
+        </div>
         <div class="main-container">
             <!-- 추후 컴포넌트로 분리 가능(피드) -->
             <FeedPage @user-info="sendUser" :size="size"/>

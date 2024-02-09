@@ -1,3 +1,436 @@
+@media screen and (max-width:800px){
+    .detail-back{
+        position: fixed;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        width: 100%;
+        height: 100%;
+        top: 0;
+        left: 0;
+        background-color: rgba(0, 0, 0, 0.7);
+        z-index: 1000;
+    }
+    .detail-container{
+        display: flex;
+        flex-direction: column;
+        width: 70%;
+        height: 80%;
+        background-color: rgb(255, 255, 255);
+        z-index: 1111;
+        border-radius: 5px;
+    
+    }
+    
+    .detail-img{
+        width: 100%;
+        height: 100%;
+        position: relative;
+    }
+    .left-arrow{
+        position: absolute;
+        top: 45%;
+        left: 10px;
+        border-radius: 10px;
+        cursor: pointer;
+        background: url(../Icon/left-arrow.png);
+        background-repeat: no-repeat;
+        width: 37px;
+        height: 37px;
+    }
+    .right-arrow{
+        position: absolute;
+        top: 45%;
+        right: 10px;
+        border-radius: 10px;
+        cursor: pointer;
+        background: url(../Icon/right-arrow.png);
+        background-repeat: no-repeat;
+        width: 37px;
+        height: 37px;
+    }
+    .detail-info{
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        overflow-y: scroll;
+        width: 100%;
+    }
+
+    .detail-info::-webkit-scrollbar {
+        width: 6px;
+    }
+    
+    /* 스크롤바 막대 꾸미기 */
+    .detail-info::-webkit-scrollbar-thumb {
+        background: #E3AB9A;
+        border-radius: 25px;
+    }
+    
+    /* 스크롤바 트랙 꾸미기 */
+    .detail-info::-webkit-scrollbar-track {
+        background-color: rgba(0,0,0,0);
+    }
+    
+    .line{
+        margin-top: 20px;
+        width: 90%;
+        height: 1.2px;
+        background-color: rgba(0, 0, 0, 0.11);
+    }
+    .line2{
+        margin-bottom: 10px;
+        width: 90%;
+        height: 1.2px;
+        background-color: rgba(0, 0, 0, 0.11);
+    }
+    .user-info{
+        width: 90%;
+        height: 55px;
+        display: flex;
+        margin-top: 20px;
+        justify-content: space-between;
+        
+    }
+    .info{
+        display: flex;
+        align-items: flex-end;
+        cursor: pointer;
+    }
+    .user-img{
+        width: 50px;
+        height: 50px;
+        border-radius: 10px;
+        margin-left: 10px;
+        background-repeat: no-repeat;
+        background-size: contain;
+    }
+    .nick{
+        color: #838080;
+        margin-left: 10px;
+    }
+    .list{
+        background: url(../Icon/list.svg);
+        width: 30px;
+        height: 20px;
+        background-repeat: no-repeat;
+        margin-top: 10px;
+        cursor: pointer;
+        position: relative;
+    }
+    .comment-list{
+        width: 100%;
+        height: 290px;
+        overflow-y: scroll;
+        padding-left: 40px;
+        padding-top: 10px;
+    }
+    .comment-list::-webkit-scrollbar-track{
+        background: #fff;
+    }
+    .comment-list::-webkit-scrollbar {
+        width: 5px;
+    }
+    .comment-list::-webkit-scrollbar-thumb {
+        border-radius: 20px;
+        background-color: #555;
+    }
+    .comment-list>p{
+        font-size: 13px;
+        line-height: 15px;
+    }
+    .bottom{
+        width: 100%;
+        padding-left: 40px;
+    }
+    .bottom>p{
+        font-size: 10px;
+    }
+    .time{
+        color: #8B8B8B;
+        margin-top: 5px;
+        font-weight: lighter;
+    }
+    .write-comment{
+        width: 100%;
+        height: 100%;
+        resize: none;
+        border : 1px solid rgba(238, 235, 235, 1);
+        border-radius: 10px;
+        outline: none;
+    }
+    .submit{
+        position: absolute;
+        bottom: 0;
+        right: 0;
+        font-size: 10px;
+        width: 60px;
+        height: 19px;
+        border-radius: 5px;
+        background: #B1AFAF;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        color: white;
+        cursor: pointer;
+    }
+    .write{
+        width: 90%;
+        height: 50px;
+        position: relative;
+        margin-top: 10px;
+    
+    }
+    .comment{
+        display: flex;
+        margin-top: 15px;
+    }
+    .comment-img{
+        width: 30px;
+        height: 30px;
+        border-radius: 10px;
+        background-repeat: no-repeat;
+        background-size: contain;
+    }
+    .info-container{
+        margin-left: 5px;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-around;
+    }
+    .info-container>p{
+        font-size: 13px;
+    }
+    
+    
+    .heart-img{
+        width: 10px;
+        height: 10px;
+        background-repeat: no-repeat;
+        background-size: contain;
+        background-position: 50% 50%;
+        cursor: pointer;
+    }
+    
+    .chat-img{
+        margin-left: 10px;
+        width: 10px;
+        height: 10px;
+        background-repeat: no-repeat;
+        background-size: contain;
+        background-position: 50% 50%;
+        cursor: pointer;
+    }
+    
+    .re-comment{
+        margin-left: 20px;
+    }
+    .resend{
+        width: 90%;
+        height: 10%;
+        outline: none;
+        border: 1px solid rgba(0,0,0,0.2);
+        border-radius: 10px ;
+        font-size: 10px;
+    }
+    
+    .resend-form{
+        display: flex;
+        align-items: center;
+        margin-top: 3px;
+    }
+    .resend-button{
+        margin-left: 5px;
+        height: 15px;
+        width: 30px;
+        font-size: 10px;
+        border-radius: 10px;
+        background: #B1AFAF;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        color: white;
+        cursor: pointer;
+    }
+    .re-content{
+        display: flex;
+        margin-top: 10px;
+        margin-bottom: 10px;
+    }
+    
+    .list-container{
+        position: absolute;
+        width: 130px;
+        height: 60px;
+        background: #fff;
+        top: 10px;
+        left: -100px;
+        border-radius: 5px;
+        filter: drop-shadow(0px 4px 4px rgba(0,0,0,0.25));
+        cursor: auto;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+    }
+    
+    .list-container>p{
+        font-size: 10px;
+        font-weight: lighter;
+        color: #777272;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        cursor: pointer;
+    }
+    .list-container>p>img{
+        width: 20px;
+        height: 20px;
+        margin-right: 5px;
+        cursor: pointer;
+    
+    }
+    
+    .edit-back{
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0,0,0,0.7);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        z-index: 9999;
+    }
+    
+    .edit-content{
+        width: 300px;
+        height: 200px;
+        background-color: white;
+        border-radius: 5px;
+        position: relative;
+    }
+    
+    .edit-header{
+        font-size: 20px;
+        display: flex;
+        align-items: center;
+        padding: 20px;
+    }
+    .edit-header>img{
+    
+    }
+    
+    .edit-write{
+        resize: none;
+        outline: none;
+        width: 200px;
+        height: 50px;
+        border-radius: 10px;
+        padding: 10px;
+       border : 1px solid rgba(0,0,0,0.3)
+    
+    }
+    .edit-body{
+        height: 100px;
+       display: flex;
+       justify-content: center;
+       align-items: center;
+       border : 1px solid rgba(238, 235, 235, 1)
+    
+    }
+    .edit-button{
+        position: absolute;
+        bottom: 10px;
+        right: 30px;
+        height: 15px;
+        width: 50px;
+        font-size: 10px;
+        border-radius: 10px;
+        background: #B1AFAF;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        color: white;
+        cursor: pointer;
+    }
+    
+    .edit-write:focus{
+        border: 1px solid black;
+    }
+    
+    .edit-button:hover{
+        transform: scale(1.1);
+        transition: 0.4s ease;
+    }
+    
+    .delete-content{
+        width: 300px;
+        height: 100px;
+        background-color: white;
+        position: relative;
+        padding: 20px;
+    }
+    
+    .delete-body{
+        height: 50px;
+       display: flex;
+       justify-content: center;
+       align-items: center;
+       border : 1px solid rgba(238, 235, 235, 1)
+    
+    }
+    
+    .delete-body>p{
+        width: 300px;
+        display: flex;
+        align-items: center;
+    }
+    
+    .delete-button{
+        position: absolute;
+        bottom: 10px;
+        right: 30px;
+        height: 15px;
+        width: 50px;
+        font-size: 10px;
+        border-radius: 10px;
+        background: rgb(180, 41, 41);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        color: white;
+        cursor: pointer;
+    }
+    
+    .delete-false{
+        position: absolute;
+        bottom: 10px;
+        right: 90px;
+        height: 15px;
+        width: 50px;
+        font-size: 10px;
+        border-radius: 10px;
+        background: #B1AFAF;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        color: white;
+        cursor: pointer;
+    }
+    
+    .delete-false:hover{
+        transform: scale(0.93);
+        transition: 0.2s ease;
+    }
+    
+    .delete-button:hover{
+        transform: scale(0.93);
+        transition: 0.2s ease;
+    }
+}
+@media screen and (min-width:801px){
+
 .detail-back{
     position: fixed;
     width: 100%;
@@ -12,7 +445,7 @@
 }
 .detail-container{
     width: 70%;
-    height: 70%;
+    height: 80%;
     background-color: rgb(255, 255, 255);
     display: flex;
     z-index: 1111;
@@ -141,7 +574,7 @@
 }
 .submit{
     position: absolute;
-    bottom: 0;
+    bottom: 20%;
     right: 0;
     font-size: 10px;
     width: 60px;
@@ -206,8 +639,8 @@
     margin-left: 20px;
 }
 .resend{
-    width: 150px;
-    height: 10px;
+    width: 90%;
+    height: 10%;
     outline: none;
     border: 1px solid rgba(0,0,0,0.2);
     border-radius: 10px ;
@@ -220,14 +653,14 @@
     margin-top: 3px;
 }
 .resend-button{
+    display: flex;
+    justify-content: center;
     margin-left: 5px;
     height: 15px;
     width: 30px;
     font-size: 10px;
     border-radius: 10px;
     background: #B1AFAF;
-    display: flex;
-    justify-content: center;
     align-items: center;
     color: white;
     cursor: pointer;
@@ -407,4 +840,6 @@
 .delete-button:hover{
     transform: scale(0.93);
     transition: 0.2s ease;
+}
+
 }

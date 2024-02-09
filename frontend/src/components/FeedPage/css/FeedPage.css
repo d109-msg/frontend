@@ -1,3 +1,84 @@
+@media screen and (max-width:500px){
+
+    .feed-container{
+        display: flex;
+        flex-direction: row;
+        justify-content: center;
+        /* align-items: flex-start; */
+        width: 100%;
+        margin: 30px ;
+        margin: 0px;
+    }
+    .first-col{
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        
+    }
+    
+    .second-col{
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        
+    }
+    
+    .feed-create{
+        display: flex;
+        flex-direction: column;
+        width: 95%;
+        height: 200px;
+        background-color: #FFFDF3;
+        padding: 40px 20px;
+        border-radius: 10px;
+        box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.25);
+
+        margin: 20px 10px;
+    }
+    
+    .create-container{
+        display: flex; 
+        flex-direction: row;
+        align-items: center; 
+    }
+    
+    .create-img{
+        width: 60px;
+        height: 60px;
+        border-radius: 10px;
+        margin-right: 17px;
+    }
+    .create-comment{
+        font-size: 18px;
+        color: #838080;
+    }
+    .create-btn-box{
+        display: flex;
+        justify-content: flex-end;
+        padding-top: 15px;
+    }
+    .create-btn{
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        font-size: 18px;
+        color: #FFFFFF;
+        border-radius: 10px;
+        width: 141px;
+        height: 44px;
+        background-color: #32536B;
+        cursor: pointer;
+    }
+    
+    .create-btn:hover{
+        transition: 0.2s ease ;
+        transform: scale(1.1);
+    }
+    
+    }
+
+@media screen and (min-width:501px){
+
 .feed-container{
     display: flex;
     flex-direction: row;
@@ -72,6 +153,4 @@
     transform: scale(1.1);
 }
 
-
-
-
+}
