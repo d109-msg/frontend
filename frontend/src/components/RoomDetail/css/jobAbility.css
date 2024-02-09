@@ -1,0 +1,73 @@
+.ability-content{
+    width: 100%;
+    height: 550px;    
+    margin-top: 60px;
+    padding: 5%;
+}
+
+.member-list{
+    display: inline-flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    margin: 2.5% ;
+    cursor: pointer;
+    /* border: 1px gray solid; */
+    width: 100px;
+    height: 155px;
+    border-radius: 5px;
+
+}
+
+.member{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    position: relative;
+    width: 100%;
+    height: 100%;
+    /* border: 1px red solid; */
+
+}
+
+.member>img{
+    width:100px;
+    height: 100px;
+}
+
+.member>input{
+    outline: none;
+}
+
+
+
+.member-name{
+    margin-top: 2px;
+    text-align: center;
+    font-size: 0.6em;
+}
+
+.ability-hint{
+    position: absolute;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    width: 100%;
+    bottom: 13%;
+}
+
+.ability-hint>p{
+    text-align: center;
+    font-size: 0.8em;
+    color: #787171;
+}
+
+.ability-btn{
+    width: 100%;
+    background: #E3AB9A;
+    height: 50px;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    margin-top: 20px;
+    cursor: pointer;
+}
