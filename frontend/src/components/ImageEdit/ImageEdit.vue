@@ -21,7 +21,7 @@
         <div class="wrapper" v-show="!writeFlag">
             <div class="img-wrapper">
                 <div class="save-wrapper">
-                    <img class="first-img img-list" >
+                    <img class="first-img img-list">
                     <img class="second-img selected-img img-list" >
                     <img class="third-img selected-img img-list" >
                 </div>
@@ -89,6 +89,7 @@
 import btof from './base64ToFile'
 import MissonConfirm from './MissonConfirm.vue'
 import WriteContent from './WriteContent.vue'
+import alt_img from './alt_img.png'
 
 export default {
     name: "ImageEdit",

@@ -19,6 +19,8 @@ export const useChatStore = defineStore('chat',{
         countMessage : {},
         notify : [],
         isConnect : false,
+        reloadFlag : {},
+        nextRoom : {},
     }),
     getters:{
         getStomp : (state)=>{
@@ -32,6 +34,12 @@ export const useChatStore = defineStore('chat',{
         },
         getNotify : (state)=>{
             return state.notify
+        },
+        getReload : (state)=>{
+            return state.reloadFlag
+        },
+        getNextRoom : (state)=>{
+            return state.nextRoom
         }
     },
     actions:{
@@ -84,12 +92,18 @@ export const useChatStore = defineStore('chat',{
             }
         },
         sub : async function(data){
-            data.forEach(roomId=>{
-                this.stompClient.subscribe('/sub/'+roomId,(e)=>{
-                    this.setMessage(roomId,JSON.parse(e.body))
+                data.forEach(roomId=>{
+                    this.stompClient.subscribe('/sub/'+roomId,(e)=>{
+                        this.setMessage(roomId,JSON.parse(e.body))
+                    })
                 })
+        },
+        subRequest : async function(data){
+            console.log(data)
+            this.stompClient.subscribe('/sub/'+data.content,(e)=>{
+                this.setMessage(data.content,JSON.parse(e.body))
             })
-                
+            // this.stompClient.subscribe('/sub/'+data.)
         },
         makeConnect : async function(data){
             let socket = new SockJS(`${server}/ws-stomp`)
@@ -116,8 +130,7 @@ export const useChatStore = defineStore('chat',{
                 if(data.dataType == "noti"){
                     this.notify.unshift(data)
                 } else if(data.dataType == "sub"){
-                    console.log(data)
-                    this.sub(data.content)
+                    this.subRequest(data)
                 }
             })
         },
@@ -127,6 +140,25 @@ export const useChatStore = defineStore('chat',{
                 Authorization : `Bearer ${auth.getAccess}`
             }
             return axios.get(`${server}/notification`,{headers})
+        },
+        readNotification : async function(idx){
+            console.log('여기까진 오니?')
+            const auth = useAuthStore()
+            const headers = {
+                Authorization : `Bearer ${auth.getAccess}`,
+                'Content-Type' : 'application/json'
+            }
+            const data = {
+                id : idx
+            }
+            return axios.patch(`${server}/notification/single`,JSON.stringify(data),{headers})
+        },
+        readMessage : async function(nextUrl){
+            const auth = useAuthStore()
+            const headers = {
+                Authorization : `Bearer ${auth.getAccess}`
+            }
+            return axios.get(`${servers}/test/mongodb/message/scroll${nextUrl}`,{headers})
         }
     },
 
