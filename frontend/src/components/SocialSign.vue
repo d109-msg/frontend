@@ -15,7 +15,6 @@ export default {
         return{
             code : this.$route.query.code,
             provider : this.$route.params.id,
-            state : "http://localhost:80/"
         }
     },
     components: {

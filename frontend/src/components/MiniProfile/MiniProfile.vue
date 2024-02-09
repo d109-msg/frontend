@@ -1,7 +1,30 @@
 <template>
     <div class="my-mini"> 
+        <div class="notification-back" @click.self="showFlag = false" v-if="showFlag">
+            <div class="notification-content">
+                <div class="notification-title">
+                    <span class="notification-title">My Notification</span>
+                </div>
+                <div class="notification-body">
+                    <div v-for="(item,key) in chat.notify" :key="key">
+                        {{ item }}
+                    </div>
+
+                </div>
+            </div>
+        </div>
         <div class="mini-title">
-            <p class="mini-title-message">My Profile</p>
+            <div class="mini-title-message">
+                <span style="position: relative; cursor: pointer;" v-if="notify>0"
+                    @click="showFlag = true"
+                    >
+                    My Profile 
+                    <div class="notify" >{{ notify }}</div>
+                </span>
+                <span v-else>
+                    My Profile 
+                </span>
+            </div>
             <img class="logout" src="./logout.png" v-if="isLogin" @click="logout" @mouseover="toolFlag=true" @mouseleave="toolFlag=false">
             <div class="tool-tip" v-if="toolFlag"><span>Logout</span></div>
         </div>
@@ -36,6 +59,7 @@
 
 <script>
 import { useAuthStore } from '@/store/authStore'
+import { useChatStore } from '@/store/chatStore'
 export default {
     name: 'MiniProfile',
     data(){
@@ -44,6 +68,18 @@ export default {
             toolFlag : false,
             user : {},
             userFlag : false,
+            chat : useChatStore(),
+            notifyLength : "0",
+            showFlag : false,
+        }
+    },
+    computed:{
+        notify(){
+            return this.chat.notify.length
+        }
+    },
+    watch:{
+        notify(nv,ov){
         }
     },
     methods:{
