@@ -9,8 +9,8 @@
 
           <div class="name-form">
               <input type="text" class="name-input" required v-model="name">
-              <p class="name-label">Name</p>
-              <p class="name-warn" v-if="nameCheck">올바른 형식의 이름을 기입해주세요.</p>
+              <p class="name-label">nickname</p>
+              <p class="name-warn" v-if="nameCheck">올바른 형식의 닉네임을 기입해주세요.</p>
           </div>
           <div class="email-form">
               <input type="text" class="email-input" required v-model="email">
@@ -75,7 +75,8 @@ export default {
     },
     methods : {
         checkName : function(){
-            const valid = /^[가-힣]{2,6}$/
+            console.log(this.nameCheck)
+            const valid = /^[a-zA-Z0-9ㄱ-힣 ]{1,20}$/
             if(!valid.test(this.name)|| !this.name){
                 this.nameCheck = true
                 return
@@ -85,7 +86,7 @@ export default {
 
 
         checkEmail : function(){
-            const valid = /^[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*.[a-zA-Z]{2,3}$/i;
+            const valid = /^[a-zA-Z0-9+-\_.]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$/;
             if(!valid.test(this.email)|| !this.email) {
                 this.emailCheck = true
                 return
@@ -95,7 +96,7 @@ export default {
 
 
         checkPassword : function(){
-            const valid = /^(?=.*[a-zA-Z])(?=.*[!@#$%^*+=-])(?=.*[0-9]).{8,15}$/; 
+            const valid = /^(?=.[A-Za-z])(?=.\\d)(?=.[@$!%#?&])[A-Za-z\\d@$!%*#?&]{8,20}$/; 
             if(!valid.test(this.password)|| !this.password){
                 this.passwordCheck = true
                 return
@@ -113,25 +114,21 @@ export default {
             }
         },
 
-
-        isDuplicateEmail : function(){
-            axios.get(this.server + "")
-            .then((result)=>{
-                console.log(result)
-            })
-            .catch((err)=>{
-                console.log(err)
-            })
-        },
-
         signUp : async function(){
-            try{
-                const auth = useAuthStore()
-                await auth.signUp(this.name, this.email, this.password)
-                router.push('/login')
-                alert(`${this.name}님 회원가입에 축하드립니다.`)
-            } catch(err){
-                alert('예기치 못한 오류가 발생했습니다.')
+            if(!this.nameCheck && !this.emailCheck && !this.passwordCheck && !this.validationCheck && this.name!="" && this.email != "" && this.password != "" && this.validation != ""){
+                try{
+                    const auth = useAuthStore()
+                    await auth.signUp(this.name, this.email, this.password)
+                    router.push('/login')
+                    alert(`${this.name}님 회원가입에 축하드립니다.`)
+                } catch(err){
+                    alert('예기치 못한 오류가 발생했습니다.')
+                }
+            }else{
+                if(this.nameCheck){this.name = ""}
+                if(this.emailCheck){this.email = ""}
+                if(this.passwordCheck){this.password = ""}
+                if(this.validationCheck){this.validation = ""}
             }
         }
 

@@ -104,17 +104,29 @@ export const useChatStore = defineStore('chat',{
             })
         },
         notifyConnect : async function(){
+            let value = await this.getNotification()
+            value.data.forEach(item=>{
+                this.notify.push(item)
+            })            
             const auth = useAuthStore()
             const userId = auth.getUserInfo.id
             const client = this.getStomp
             client.subscribe(`/sub/`+userId,(e)=>{
                 const data = JSON.parse(e.body)
                 if(data.dataType == "noti"){
-                    this.notify.push(data)
+                    this.notify.unshift(data)
                 } else if(data.dataType == "sub"){
+                    console.log(data)
                     this.sub(data.content)
                 }
             })
+        },
+        getNotification : async function(){
+            const auth = useAuthStore()
+            const headers = {
+                Authorization : `Bearer ${auth.getAccess}`
+            }
+            return axios.get(`${server}/notification`,{headers})
         }
     },
 

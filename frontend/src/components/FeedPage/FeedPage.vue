@@ -1,6 +1,6 @@
 <template>
     <div class="feed-container">
-        <div class="first-col">
+        <div class="first-col" v-if="size!='xs'">
             <div class="feed-create">
                 <div class="create-container">
                     <img class="create-img" :src="userImage" v-if="isLogin">
@@ -18,14 +18,14 @@
                     >Login</div>
                 </div>
             </div>
-            <template  v-for="(feed,idx) in feedList" :key="idx" >
+            <template  v-for="(feed,idx) in feedList" :key="idx">
                 <div v-if="idx%2===1">
                     <Feed :id="idx" v-if="idx%2===1" :item="feed"
                     ></Feed>
                 </div>
             </template>
         </div>
-        <div class="second-col">
+        <div class="second-col" v-if="size != 'xs'">
             <template  v-for="(feed,idx) in feedList" :key="idx" >
                 <div v-if="idx%2===0">
                     <Feed :id="idx" v-if="idx%2===0" :item="feed"
@@ -34,7 +34,31 @@
             </template>
             <FeedCreate v-if="create" @close="complete"/>
         </div>
-        
+        <div class="first-col" v-else>
+            <div class="feed-create">
+                <div class="create-container">
+                    <img class="create-img" :src="userImage" v-if="isLogin">
+                    <img class="create-img" src="./Icon/default.png" v-if="!isLogin">
+                    <div class="create-comment">What are you thinking?</div>
+                </div>
+                <div class="create-btn-box">
+                    <div class="create-btn"
+                    @click="create=true"
+                    v-if="isLogin"
+                    >Create</div>
+                    <div class="create-btn"
+                    @click="goLogin"
+                    v-if="!isLogin"
+                    >Login</div>
+                </div>
+            </div>
+            <template  v-for="(feed,idx) in feedList" :key="idx">
+                <div>
+                    <Feed :id="idx" :item="feed"
+                    ></Feed>
+                </div>
+            </template>
+        </div>
     </div>
 </template>
 
@@ -97,16 +121,16 @@ const server2 = 'https://i10d109.p.ssafy.io/api'
                         value.data.articleDetailDtos.forEach(item=>{
                             this.feedList.push(item)
                         })
-                    }
-                    this.baseUrl = value.data.nextUrl
-                    this.$nextTick(()=>{
-                        if(this.baseUrl !== null && this.feedList.length != 0){
-                            const last = document.getElementById(`${this.feedList.length-1}`)
-                            this.io.observe(last)
-                        }else{
-                            this.axiosGuest()
-                        }
-                    })
+                        this.nextUrl = value.data.nextUrl
+                        this.$nextTick(()=>{
+                            if(this.nextUrl !== null && this.feedList.length != 0){
+                                const last = document.getElementById(`${this.feedList.length-1}`)
+                                this.io.observe(last)
+                            }
+                        })
+                    }   else{
+                                this.axiosGuest()
+                            }
                 } else{
                     this.axiosGuest()
                 }
@@ -135,15 +159,15 @@ const server2 = 'https://i10d109.p.ssafy.io/api'
                         value.data['articles'].forEach(article=>{
                             this.feedList.push(article)
                         })
-                    }
-                    this.guestUrl = value.data.nextUrl
+                    
+                    this.nextGuestUrl = value.data.nextUrl
                     this.$nextTick(()=>{
                         const last = document.getElementById(`${this.feedList.length-1}`)
                         if(this.guestUrl !== null){
                             this.guestio.observe(last)
                         }
                     })
-
+                }
                     // const last = document.getElementById(`${this.feedList.length-1}`)
                     // console.log(last)
                     // this.guestio.observe(last)
@@ -179,6 +203,9 @@ const server2 = 'https://i10d109.p.ssafy.io/api'
                     }
             }
             
+        },
+        props:{
+            size : String,
         },
         components: {
             Feed,

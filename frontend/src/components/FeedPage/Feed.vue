@@ -41,9 +41,10 @@
 
       </div>
     </div>
+    
     <DetailPage v-if="detailFlag"
         @close-detail="offDetail"
-        :idx="feed"
+        :idx="feed.articleId"
         />
   </div>
 </template>

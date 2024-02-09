@@ -17,8 +17,8 @@
               <div>팔로잉 <span> {{ userInfo.followingCount }}</span></div>
           </div>
         <div class="button-box">
-          <div class="follow-button">팔로우하기</div>
-          <div class="message-button">메시지 보내기</div>
+          <div class="follow-button" v-if="userInfo.isFollow == 0" @click="followUser">팔로우하기</div>
+          <div class="message-button" @click="goMessage">메시지 보내기</div>
         </div>
         </div>
       </div>
@@ -80,12 +80,29 @@ export default {
         console.log(error)  
       }
     },
+    followUser: async function(){
+      const auth = useAuthStore()
+      try{
+        await auth.useRefresh()
+
+        await auth.follow(this.userInfo.id)
+        this.userInfo.isFollow = 1
+
+      }catch(err){
+        
+      }
+    },
+    goMessage: async function(){
+      router.push({name : 'message'})
+    } ,
     startPage : async function(){
       const auth = useAuthStore()
       try{
           await auth.useRefresh()
           await this.getUser()
-      } catch(err){console.log(err)}
+      } catch(err){
+        console.log('팔로우 정보를 가져오지 못했습니다.')
+      }
     }
   },
   watch:{
