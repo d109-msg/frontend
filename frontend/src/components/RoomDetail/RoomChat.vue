@@ -2,8 +2,9 @@
   <div>
     <div class="chat-content">
       <div class="job-box">
-        <div>내 직업 : {{participant.jobId }}</div>
-        <div>내 능력 : {{ ability.message }}</div>
+        <div>내 이름 : {{ participant.nickname }}</div>
+        <div v-if="participant.jobId == '미치광이'">내 직업 : 경찰</div>
+        <div v-else>내 직업 : {{participant.jobId }}</div>
       </div>
     </div>
     <div class="chat-input-box">
