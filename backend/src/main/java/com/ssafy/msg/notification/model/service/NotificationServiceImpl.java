@@ -3,6 +3,8 @@ package com.ssafy.msg.notification.model.service;
 import com.ssafy.msg.article.model.dto.CommentDto;
 import com.ssafy.msg.article.model.dto.CommentLikeDto;
 import com.ssafy.msg.message.util.DateTimeUtil;
+import com.ssafy.msg.notification.model.dto.ArticleInfoDto;
+import com.ssafy.msg.notification.model.dto.CommentInfoDto;
 import com.ssafy.msg.notification.model.dto.NotificationIdDto;
 import com.ssafy.msg.notification.model.dto.NotificationResponseDto;
 import com.ssafy.msg.notification.model.entity.NotificationEntity;
@@ -10,11 +12,10 @@ import com.ssafy.msg.notification.model.mapper.NotificationMapper;
 import com.ssafy.msg.notification.model.repo.NotificationRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.bson.types.ObjectId;
-import org.springframework.http.ResponseEntity;
 import org.springframework.messaging.simp.SimpMessageSendingOperations;
 import org.springframework.stereotype.Service;
 
+import javax.xml.stream.events.Comment;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -62,15 +63,18 @@ public class NotificationServiceImpl implements NotificationService {
         // 누른 사람의 닉네임 조회
         String fromNickname = notificationMapper.getNicknameById(fromId);
 
-        // 게시자 아이디 조회
-        int toId = notificationMapper.getUserIdByArticleId(articleId);
+        // 게시글 정보 조회
+        ArticleInfoDto articleInfoDto = notificationMapper.getArticleInfoById(articleId);
 
         // 본인의 게시글에 본인이 좋아요를 누른 경우 제외
-        if (fromId != toId){
+        if (fromId != articleInfoDto.getToId()){
             // MongoDB 저장
             NotificationEntity notificationEntity = NotificationEntity.builder()
-                    .userId(toId)
-                    .content(fromNickname + " 님이 회원님의 게시글을 좋아합니다.")
+                    .userId(articleInfoDto.getToId())
+                    .fromNickname(fromNickname)
+                    .articleId(articleId)
+                    .imageUrl(articleInfoDto.getImageUrl())
+                    .content(" 님이 회원님의 게시글을 좋아합니다.")
                     .createTime(dateTimeUtil.getCurrentDateTime())
                     .flagRead(0)
                     .dataType("noti") // noti, sub
@@ -97,12 +101,15 @@ public class NotificationServiceImpl implements NotificationService {
         // -> 게시자 아이디와, 댓글 작성자 아이디가 일치하지 않을 때만 알림
         if (commentDto.getParentCommentId() == null){
             // 게시자 아이디 조회
-            int toId = notificationMapper.getUserIdByArticleId(commentDto.getArticleId());
+            ArticleInfoDto articleInfoDto = notificationMapper.getArticleInfoById(commentDto.getArticleId());
 
-            if (commentDto.getUserId() != toId) {
+            if (commentDto.getUserId() != articleInfoDto.getToId()) {
                 notificationEntity = NotificationEntity.builder()
-                        .userId(toId)
-                        .content(fromNickname + " 님이 회원님의 게시글에 댓글을 남겼습니다.\n\"" + commentDto.getContent() + "\"")
+                        .userId(articleInfoDto.getToId())
+                        .fromNickname(fromNickname)
+                        .articleId(commentDto.getArticleId())
+                        .imageUrl(articleInfoDto.getImageUrl())
+                        .content(" 님이 회원님의 게시글에 댓글을 남겼습니다.\n\"" + commentDto.getContent() + "\"")
                         .createTime(dateTimeUtil.getCurrentDateTime())
                         .flagRead(0)
                         .dataType("noti") // noti, sub
@@ -113,12 +120,15 @@ public class NotificationServiceImpl implements NotificationService {
         // -> parent 댓글 작성자 아이디와, 댓글 작성자 아이디가 일치하지 않을 때만 알림
         else{
             // parent 댓글 작성자 아이디 조회
-            int parentId = notificationMapper.getUserIdByCommentId(commentDto.getParentCommentId());
+            CommentInfoDto commentInfoDto = notificationMapper.getCommentInfoById(commentDto.getParentCommentId());
 
-            if (commentDto.getUserId() != parentId){
+            if (commentDto.getUserId() != commentInfoDto.getToId()){
                 notificationEntity = NotificationEntity.builder()
-                        .userId(parentId)
-                        .content(fromNickname + " 님이 회원님의 댓글에 답글을 남겼습니다.\n\""+commentDto.getContent()+"\"")
+                        .userId(commentInfoDto.getToId())
+                        .fromNickname(fromNickname)
+                        .articleId(commentDto.getArticleId())
+                        .imageUrl(commentInfoDto.getImageUrl())
+                        .content(" 님이 회원님의 댓글에 답글을 남겼습니다.\n\""+commentDto.getContent()+"\"")
                         .createTime(dateTimeUtil.getCurrentDateTime())
                         .flagRead(0)
                         .dataType("noti") // noti, sub
@@ -144,14 +154,17 @@ public class NotificationServiceImpl implements NotificationService {
         String fromNickname = notificationMapper.getNicknameById(commentLikeDto.getUserId());
 
         // 댓글 작성자 아이디 조회
-        int toId = notificationMapper.getUserIdByCommentId(commentLikeDto.getCommentId());
+        CommentInfoDto commentInfoDto = notificationMapper.getCommentInfoById(commentLikeDto.getCommentId());
 
         // 본인의 댓글에 본인이 좋아요를 누른 경우 제외
-        if (commentLikeDto.getUserId() != toId){
+        if (commentLikeDto.getUserId() != commentInfoDto.getToId()){
             // MongoDB 저장
             NotificationEntity notificationEntity = NotificationEntity.builder()
-                    .userId(toId)
-                    .content(fromNickname + " 님이 회원님의 댓글을 좋아합니다.")
+                    .userId(commentInfoDto.getToId())
+                    .fromNickname(fromNickname)
+                    .articleId(commentInfoDto.getArticleId())
+                    .imageUrl(commentInfoDto.getImageUrl())
+                    .content(" 님이 회원님의 댓글을 좋아합니다.")
                     .createTime(dateTimeUtil.getCurrentDateTime())
                     .flagRead(0)
                     .dataType("noti") // noti, sub
@@ -170,5 +183,19 @@ public class NotificationServiceImpl implements NotificationService {
     @Override
     public void sendGameStartNotice() {
 
+    }
+
+    @Override
+    public void sendRoomSubscribeRequest(int userId, String roomId) {
+
+        NotificationResponseDto notificationResponseDto = NotificationResponseDto.builder()
+                .userId(userId)
+                .content(roomId)
+                .dataType("sub") // noti, sub
+                .build();
+
+        // WebSocket/STOMP 메시지 전송
+        sendingOperations.convertAndSend("/sub/"+userId, notificationResponseDto);
+        log.info(notificationResponseDto.getUserId() + " - " + notificationResponseDto);
     }
 }

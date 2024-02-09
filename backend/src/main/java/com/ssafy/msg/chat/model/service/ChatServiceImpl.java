@@ -4,10 +4,12 @@ import com.ssafy.msg.chat.model.dto.CreateRoomDto;
 import com.ssafy.msg.chat.model.dto.RoomDto;
 import com.ssafy.msg.chat.model.mapper.ChatMapper;
 import com.ssafy.msg.game.model.dto.ParticipantDto;
+import com.ssafy.msg.notification.model.service.NotificationService;
 import com.ssafy.msg.user.model.dto.UserDto;
 import com.ssafy.msg.user.model.mapper.UserMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.messaging.simp.SimpMessageSendingOperations;
 import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
@@ -18,6 +20,8 @@ import java.util.UUID;
 @Service
 @RequiredArgsConstructor
 public class ChatServiceImpl implements  ChatService{
+
+    private final NotificationService notificationService;
 
     private final ChatMapper chatMapper;
     private final UserMapper userMapper;
@@ -67,6 +71,9 @@ public class ChatServiceImpl implements  ChatService{
                 .build();
         chatMapper.enterRoom(participant1);
         chatMapper.enterRoom(participant2);
+
+        // WebSocket/STOMP 메시지 전송
+        notificationService.sendRoomSubscribeRequest(createRoomDto.getUserId2(), roomId);
 
         return chatMapper.getRoom(roomId);
     }

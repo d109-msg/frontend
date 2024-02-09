@@ -35,4 +35,10 @@ public interface NotificationService {
     void sendGameStartNotice();
 
 
+
+
+
+    // 채팅방 구독 요청 STOMP 메시지 전송
+    void sendRoomSubscribeRequest(int userId, String roomId);
+
 }

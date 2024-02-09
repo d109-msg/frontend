@@ -21,6 +21,13 @@ public class NotificationEntity {
 
     @Indexed
     private int userId;
+
+    private String fromNickname;
+
+    private int articleId;
+
+    private String imageUrl;
+
     private String content;
 
     private int flagRead;
@@ -33,6 +40,9 @@ public class NotificationEntity {
         return NotificationResponseDto.builder()
                 .id(id)
                 .userId(userId)
+                .fromNickname(fromNickname)
+                .articleId(articleId)
+                .imageUrl(imageUrl)
                 .content(content)
                 .createTime(createTime)
                 .flagRead(flagRead)

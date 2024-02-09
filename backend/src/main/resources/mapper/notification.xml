@@ -6,24 +6,30 @@
         namespace="com.ssafy.msg.notification.model.mapper.NotificationMapper">
 
     <select id="getNicknameById" parameterType="int"
-            resultType="String">
+            resultType="string">
         select nickname
         from users
         where id = #{fromId};
     </select>
 
-    <select id="getUserIdByArticleId" parameterType="int"
-            resultType="int">
-        select user_id
-        from articles
-        where id = #{articleId};
+    <select id="getArticleInfoById" parameterType="int"
+            resultType="ArticleInfoDto">
+        select a.user_id as to_id, ai.url as image_url
+        from articles a
+                 join article_images ai on a.id = ai.article_id
+        where a.id = #{articleId}
+        order by ai.id
+            limit 1;
     </select>
 
-    <select id="getUserIdByCommentId" parameterType="int"
-            resultType="int">
-        select user_id
-        from comments
-        where id = #{commentId};
+    <select id="getCommentInfoById" parameterType="int"
+            resultType="CommentInfoDto">
+        select c.user_id to_id, ai.url as image_url, c.article_id
+        from comments c
+                 join article_images ai on c.article_id = ai.article_id
+        where c.id = #{commentId}
+        order by ai.id
+            limit 1;
     </select>
 </mapper>
 
