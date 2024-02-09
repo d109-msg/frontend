@@ -5,9 +5,17 @@
       <div class="create-icon" @click="create=true"></div>
     </div>
     <div class="feed-content">
-      <div>
-        {{ mission }}
-      </div>
+        <div class="mission-box">
+            <div v-if="participant.flagMafia == false">
+                오늘의 미션 : {{ mission.normalMission }}
+            </div>
+            <div v-if="participant.flagMafia == true">
+                오늘의 미션 : {{ mission.mafiaMission }}
+            </div>
+            <div v-if="participant.flagMafia == true">
+                시민 미션 : {{ mission.normalMission }}
+            </div>
+        </div>
     </div>
     <FeedCreate v-if="create" @close="complete"/>
 </template>
@@ -35,7 +43,7 @@ export default {
         FeedCreate
     },
     methods:{
-        complete : function(value){
+        reload : function(){
                 this.create = false
                 if(value == 1){
                     window.location.reload()
