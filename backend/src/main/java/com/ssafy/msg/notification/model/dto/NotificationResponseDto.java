@@ -14,6 +14,9 @@ import lombok.NoArgsConstructor;
 public class NotificationResponseDto {
     String id;
     int userId;
+    String fromNickname;
+    int articleId;
+    String imageUrl;
     String content;
     String createTime;
     int flagRead;
