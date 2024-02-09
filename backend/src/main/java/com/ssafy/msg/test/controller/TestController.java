@@ -3,6 +3,7 @@ package com.ssafy.msg.test.controller;
 
 import com.ssafy.msg.message.model.dto.MessageIdDto;
 import com.ssafy.msg.message.model.dto.MessageRequestDto;
+import com.ssafy.msg.message.model.dto.MessageScrollResponseDto;
 import com.ssafy.msg.message.model.entity.MessageEntity;
 import com.ssafy.msg.message.model.service.MessageService;
 import com.ssafy.msg.message.util.DateTimeUtil;
@@ -12,10 +13,18 @@ import com.ssafy.msg.notification.model.repo.NotificationRepository;
 import com.ssafy.msg.notification.model.dto.NotificationIdDto;
 import com.ssafy.msg.notification.model.dto.NotificationUserIdDto;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.ibatis.annotations.Param;
+import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.mongodb.core.query.Criteria;
+import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -24,9 +33,8 @@ import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
-import java.util.List;
-import java.util.Map;
-import java.util.TreeMap;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/test")
@@ -200,6 +208,48 @@ public class TestController {
     알림 api end =============================================================
      */
 
+    /*
+    채팅 무한스크롤 start =============================================================
+     */
+    @Operation(summary = "roomId에 해당하는 채팅 무한스크롤 조회", description = "roomId에 해당하는 채팅 무한스크롤 조회")
+    @GetMapping("/mongodb/message/scroll")
+    public ResponseEntity<?> getMessagesByScroll(
+            @Parameter(description = "방 아이디") @RequestParam(value = "room-id", required = true) String roomId,
+            @Parameter(description = "로딩한 누적 메시지 수") @RequestParam(value = "offset", required = false, defaultValue = "start") String offset,
+            @Parameter(description = "요청당 로딩할 메시지 수") @RequestParam(value = "limit", required = false, defaultValue = "20") Integer limit) {
+        log.info("roomId: " + roomId);
+        log.info("offset: " + offset);
+        log.info("limit: " + limit);
+
+        List<MessageEntity> messages = null;
+
+        // offset이 -1이면 첫 요청이므로 첫 번째 메시지부터 limit개의 메시지를 가져옴 (역순으로 정렬시킨 상태에서 limit개의 메시지를 가져와서 최신 메시지부터 보여줌)
+        if ("start".equals(offset)) {
+            messages = messageRepository.findMessagesByRoomIdOrderByDescending(roomId, limit);
+        } else {
+            ObjectId objectId = new ObjectId(offset);
+            messages = messageRepository.findMessagesByRoomIdAndIdLessThan(roomId, objectId, limit);
+        }
+        // 메시지가 없으면 null 반환 (무한스크롤 끝)
+        if (messages.isEmpty()) {
+            return null;
+        }
+
+        // 다음 요청 URL
+        String nextUrl = "?room-id=" + roomId + "&offset=" + messages.get(0).getId() + "&limit=" + limit;
+        MessageScrollResponseDto messageScrollResponseDto = MessageScrollResponseDto.builder()
+                .messageResponseDtos(messages.stream()
+                        .map(MessageEntity::toDto)
+                        .collect(Collectors.toList()))
+                .nextUrl(nextUrl)
+                .build();
+        return ResponseEntity.ok(messageScrollResponseDto);
+    }
+
+
+    /*
+    채팅 무한스크롤 end =============================================================
+     */
 
 
     /*
