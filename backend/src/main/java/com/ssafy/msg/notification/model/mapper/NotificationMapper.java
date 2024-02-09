@@ -1,14 +1,17 @@
 package com.ssafy.msg.notification.model.mapper;
 
+import com.ssafy.msg.notification.model.dto.ArticleInfoDto;
+import com.ssafy.msg.notification.model.dto.CommentInfoDto;
 import org.apache.ibatis.annotations.Mapper;
 
-import java.sql.SQLException;
+import javax.xml.stream.events.Comment;
 
 @Mapper
 public interface NotificationMapper {
     String getNicknameById(int id);
 
-    int getUserIdByArticleId(int articleId);
+    ArticleInfoDto getArticleInfoById(int articleId);
 
-    int getUserIdByCommentId(int commentId);
+    CommentInfoDto getCommentInfoById(int commentId);
+
 }
