@@ -21,12 +21,12 @@
         <div class="wrapper" v-show="!writeFlag">
             <div class="img-wrapper">
                 <div class="save-wrapper">
-                    <img class="first-img img-list" src="">
-                    <img class="second-img selected-img img-list" src="">
-                    <img class="third-img selected-img img-list" src="">
+                    <img class="first-img img-list" >
+                    <img class="second-img selected-img img-list" >
+                    <img class="third-img selected-img img-list" >
                 </div>
                 <div class="preview-img">
-                    <img class="preview" src="" alt="">
+                    <img class="preview" >
                 </div>
             </div>
             <div class="editor-panel">
@@ -79,7 +79,7 @@
             <div class="row">
                 <input type="file" class="file-input" accept="image/*" hidden multiple>
                 <button class="choose-img" style="font-weight: bold;">Choose Image</button>
-                <button class="save-img" style="font-weight: bold;" @click="saveImg">Save Image</button>
+                <button class="save-img" style="font-weight: bold;" @click="saveImg">NEXT</button>
             </div>
         </div>
     </div>
@@ -113,6 +113,7 @@ export default {
             selectRoom : "",
             missionSrc : "",
             writeFlag : false,
+            fileLength : 0,
         }
     },
     components:{
@@ -159,7 +160,7 @@ export default {
             this.imgSrc = []
             let list = document.querySelectorAll('.img-list')
             console.log(list.length)
-            for(let i=0; i<list.length;i++){
+            for(let i=0; i<this.fileLength;i++){
                 if(i==0 && list[i].src==""){
                     alert("입력된 이미지가 없습니다.")
                     return
@@ -267,6 +268,7 @@ export default {
             let saveImg = document.querySelectorAll('.save-wrapper>img')
             if(!file || files.length>3) return; // user가 파일 선택하지 않았을때 돌아가.
             for(let i=0; i<files.length;i++){
+                this.fileLength = files.length
                 saveImg[i].src = URL.createObjectURL(files[i])
             }
             this.previewImg.src = URL.createObjectURL(file)

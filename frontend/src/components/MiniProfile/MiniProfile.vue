@@ -99,7 +99,7 @@ export default {
             window.location.reload()
         },
         visit : function(idx){
-            this.chat.notify.splice(idx)
+            this.chat.notify.splice(idx,1)
         }
     },
     props:{
