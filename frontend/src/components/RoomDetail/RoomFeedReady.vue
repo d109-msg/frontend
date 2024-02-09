@@ -12,7 +12,7 @@
           <button id="invite-copy" class="invite-btn" @click="copyBtn()">초대코드 복사하기</button>
           <button class="invite-btn">초대코드 공유하기</button>
         </div>
-        <p class="invite-code-title">아직 멤버가 다 모이지 않았어요. <span>({{1}}/7)</span></p>
+        <p class="invite-code-title">아직 멤버가 다 모이지 않았어요. <span>({{member.length}}/7)</span></p>
       </div>
     </div>
 </template>
@@ -21,10 +21,16 @@
 export default {
     name: 'RoomFeedReady',
     data(){
-
+      return{
+        
+      }
     },
     props:{
       roomData : Object,
+      participant:Object,
+      mission:Object,
+      ability:Object,
+      member: Object,
     },
     methods:{
       reload: function(){

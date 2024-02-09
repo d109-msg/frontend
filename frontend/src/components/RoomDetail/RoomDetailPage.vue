@@ -6,12 +6,21 @@
     :mission="mission"
     :ability="ability"
     :member="member"
+    :room-time="roomTime"
        />
     <div class="chat-container">
       <div class="chat-title-box">
-        <div class="is-chat" @click="isChat" ></div>
-        <div class="is-guide" @click="isGuide"></div>
-        <div class="is-vote" @click="isVote"></div>
+        <div @click="dayFlag()">낮</div>
+        <div @click="nightFlag()">밤</div>
+        <img v-if="isOpen==1" src="./Img/icon_chat_active.png" alt="" class="is-chat" @click="isChat" >
+        <img v-else src="./Img/icon_chat.png" alt="" class="is-chat" @click="isChat" >
+
+        <div v-if="isOpen==2" class="is-guide-active" @click="isGuide"></div>
+        <div v-else class="is-guide" @click="isGuide"></div>
+
+        <div v-if="isOpen==3" class="is-vote-active" @click="isVote"></div>
+        <div v-else class="is-vote" @click="isVote"></div>
+
     </div>
       <RoomChat v-if="isOpen==1" 
       :room-data="roomData"
@@ -19,6 +28,8 @@
       :mission="mission"
       :ability="ability"
       :member="member"
+      :room-time="roomTime"
+
 
       ></RoomChat>
       <RoomGuide v-else-if="isOpen==2" ></RoomGuide>
@@ -28,6 +39,8 @@
       :mission="mission"
       :ability="ability"
       :member="member"
+      :room-time="roomTime"
+
       ></RoomVote>
     </div>
 
@@ -39,7 +52,6 @@ import RoomFeed from './RoomFeed.vue';
 import RoomChat from './RoomChat.vue';
 import RoomGuide from './RoomGuide.vue';
 import RoomVote from './RoomVote.vue';
-import { useAuthStore } from '@/store/authStore';
 import { useGameStore } from '@/store/gameStore';
 export default {
   
@@ -51,8 +63,9 @@ export default {
         participant:{},
         mission:{},
         ability:{},
-        member:{}
-        
+        member:{},
+        roomTime : '',
+        aliveMember:{}
       }
     },
     components:{
@@ -63,27 +76,57 @@ export default {
     },
     mounted(){
       this.roomData = JSON.parse(this.$route.params.data)
-      console.log(this.roomData)
+      // console.log(this.roomData)
       this.startPage()
-    },
-    watch:{
-      $route(to,from){}
+      this.checkNight()
     },
     methods:{
       isChat(){
         this.isOpen = 1
-        console.log(this.isOpen)
 
       },
       isGuide(){
         this.isOpen = 2
-        console.log(this.isOpen)
 
       },
       isVote(){
         this.isOpen = 3
-        console.log(this.isOpen)
 
+      },
+      checkNight : async function(){
+        const game = useGameStore()
+        try{
+          let value = await game.checkNight()
+          this.roomTime = value.data
+          console.log('낮/밤 조회 성공')
+          if (value.data == 0){
+            console.log('낮입니다.',value.data)
+          }else{
+            console.log('밤입니다.', value.data)
+          }
+        }catch(err){
+          console.log(err)
+        }
+      },
+      nightFlag : async function(){
+        const game = useGameStore()
+        try{
+          let value = await game.nightFlag()
+          console.log('밤으로 변경')
+          console.log('value.data')
+        }catch(err){
+          console.log(err)
+        }
+      },
+      dayFlag : async function(){
+        const game = useGameStore()
+        try{
+          let value = await game.dayFlag()
+          console.log('아침으로 변경')
+          console.log('value.data')
+        }catch(err){
+          console.log(err)
+        }
       },
       getParticipant: async function(roomId){
         const game = useGameStore()
@@ -133,9 +176,23 @@ export default {
           console.log(err)
         }
       },
+      getAliveMember: async function(roomId){
+        const game = useGameStore()
+        try{
+          let value = await game.getAliveMember(roomId)
+          this.aliveMember = value.data
+          console.log('살아있는 유저 조회 성공')
+          console.log(this.aliveMember)
+        }catch(err){
+          console.log('살아있는 유저 조회 실패')
+
+          console.log(err)
+        }
+      },
       startPage : async function(){
         await this.getParticipant(this.roomData.id)
         await this.getMemberList(this.roomData.id)
+        await this.getAliveMember(this.roomData.id)
         await this.getMission(this.participant.id)
         await this.getAbility(this.participant.id)
       }
