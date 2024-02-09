@@ -22,13 +22,13 @@ public interface MessageRepository extends MongoRepository<MessageEntity, String
             "{ $match : { 'roomId' : ?0, '_id' : { '$lt': ?1 } } }",
             "{ $sort : { '_id' : -1 } }",
             "{ $limit : ?2 }",
-            "{ $sort : { '_id' : 1 } }" })
+            })
     List<MessageEntity> findMessagesByRoomIdAndIdLessThan(String roomId, ObjectId id, int limit);
 
     @Aggregation(pipeline = {
             "{ $match : { 'roomId' : ?0 } }",
             "{ $sort : { '_id' : -1 } }",
             "{ $limit : ?1 }",
-            "{ $sort : { '_id' : 1 } }" })
+            })
     List<MessageEntity> findMessagesByRoomIdOrderByDescending(String roomId, int limit);
 }
