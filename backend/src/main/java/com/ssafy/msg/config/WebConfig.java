@@ -7,7 +7,7 @@ import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
-import com.ssafy.msg.user.interceptor.UserInterceptor;
+import com.ssafy.msg.interceptor.UserInterceptor;
 
 import lombok.RequiredArgsConstructor;
 

@@ -1,4 +1,4 @@
-package com.ssafy.msg.user.interceptor;
+package com.ssafy.msg.interceptor;
 
 
 import org.springframework.beans.factory.annotation.Value;
