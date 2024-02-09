@@ -9,18 +9,27 @@
     :room-time="roomTime"
        />
     <div class="chat-container">
-      <div class="chat-title-box">
-        <div @click="dayFlag()">낮</div>
-        <div @click="nightFlag()">밤</div>
-        <img v-if="isOpen==1" src="./Img/icon_chat_active.png" alt="" class="is-chat" @click="isChat" >
-        <img v-else src="./Img/icon_chat.png" alt="" class="is-chat" @click="isChat" >
-
-        <div v-if="isOpen==2" class="is-guide-active" @click="isGuide"></div>
-        <div v-else class="is-guide" @click="isGuide"></div>
-
-        <div v-if="isOpen==3" class="is-vote-active" @click="isVote"></div>
-        <div v-else class="is-vote" @click="isVote"></div>
-
+      <div class="chat-title-box" style="display: flex; justify-content: space-between;">
+        <div >
+          <img @click="dayFlag()" src="./Img/icon_sun.png" alt="" style="cursor: pointer;">
+          <img @click="nightFlag()" src="./Img/icon_moon.png" alt="" style="cursor: pointer;">
+        </div>
+        <p v-if="roomTime">밤</p>
+        <p v-else>낮</p>
+        <div style="display: flex; flex-direction: row; align-items: center;">
+          <img v-if="isOpen==1" src="./Img/icon_chat_active.png" alt="" class="is-chat" @click="isChat" >
+          <img v-else src="./Img/icon_chat.png" alt="" class="is-chat" @click="isChat" >
+          
+          <div v-if="isOpen==2" class="is-guide-active" @click="isGuide"></div>
+          <div v-else class="is-guide" @click="isGuide"></div>
+          
+          <div v-if="isOpen==3" class="is-vote-active" @click="isVote"></div>
+          <div v-else class="is-vote" @click="isVote"></div>
+          
+          <div v-if="isOpen==4" class="is-ability-active" @click="isAbility"></div>
+          <div v-else class="is-ability" @click="isAbility"></div>
+        </div>
+          
     </div>
       <RoomChat v-if="isOpen==1" 
       :room-data="roomData"
@@ -29,9 +38,8 @@
       :ability="ability"
       :member="member"
       :room-time="roomTime"
-
-
-      ></RoomChat>
+      :alive-member="aliveMember"
+      />
       <RoomGuide v-else-if="isOpen==2" ></RoomGuide>
       <RoomVote v-else-if="isOpen==3" 
       :room-data="roomData"
@@ -40,8 +48,18 @@
       :ability="ability"
       :member="member"
       :room-time="roomTime"
+      :alive-member="aliveMember"
+      />
+      <JobAbility v-else-if="isOpen==4"
+      :room-data="roomData"
+      :participant="participant"
+      :mission="mission"
+      :ability="ability"
+      :member="member"
+      :room-time="roomTime"
+      :alive-member="aliveMember"
+      />
 
-      ></RoomVote>
     </div>
 
   </div>
@@ -52,6 +70,7 @@ import RoomFeed from './RoomFeed.vue';
 import RoomChat from './RoomChat.vue';
 import RoomGuide from './RoomGuide.vue';
 import RoomVote from './RoomVote.vue';
+import JobAbility from './JobAbility.vue';
 import { useGameStore } from '@/store/gameStore';
 export default {
   
@@ -72,7 +91,8 @@ export default {
         RoomFeed,
         RoomChat,
         RoomGuide,
-        RoomVote
+        RoomVote,
+        JobAbility
     },
     mounted(){
       this.roomData = JSON.parse(this.$route.params.data)
@@ -83,15 +103,15 @@ export default {
     methods:{
       isChat(){
         this.isOpen = 1
-
       },
       isGuide(){
         this.isOpen = 2
-
       },
       isVote(){
         this.isOpen = 3
-
+      },
+      isAbility(){
+        this.isOpen = 4
       },
       checkNight : async function(){
         const game = useGameStore()
