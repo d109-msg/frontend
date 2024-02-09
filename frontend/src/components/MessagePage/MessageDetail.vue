@@ -38,8 +38,8 @@
             </label>
             <input type="file" id="imageInput" @change="convertToBase64" v-if="Object.keys(chatInfo).length != 0">
             
-            <button class="message-submit-btn" @click.prevent="send" v-if="Object.keys(chatInfo).length != 0"></button>
-            <button class="message-submit-btn" v-else></button>
+            <button class="message-submit-btn" @click.prevent="send" v-if="Object.keys(chatInfo).length != 0" @click="loadChat"></button>
+            <button class="message-submit-btn" v-else ></button>
             
         </div>
         
@@ -55,6 +55,8 @@ import { useAuthStore } from '@/store/authStore'
 import router from '@/router'
 import { nextTick } from 'vue';
 import LoadingSpinner from '../LoadingSpinner/LoadingSpinner.vue';
+import servers from '@/server';
+
 
 export default {
     name: 'MessageDetail',
@@ -74,6 +76,9 @@ export default {
       loading : false,
       imgFlag : false,
       preImg : "",
+      step : 0,
+      baseUrl : `${servers}/test/mongodb/message/scroll`,
+      io : {},
     }
   },
   props:{
@@ -85,17 +90,32 @@ export default {
   computed:{
     listLength(){
       const chat = useChatStore()
-
         return chat.countMessage[this.chatInfo.id]
-      
+    },
+    isNull(){
+      const chat = useChatStore()
+      if(this.chatInfo.id != null){
+        if(this.chatInfo.id in chat.getMessage){
+          return 1
+        } else{
+          return 0
+        }
+      } return 1
     }
+    
   },
   watch:{
     listLength(nv,ov){
       this.scrollToBottom()
-    }
+    },
+    async isNull(nv,ov){
+      if(nv == 0){
+        await this.loadChat()
+        this.scrollToBottom()
+      }
+    },
+    
   },
-
   methods:{
     turnOff : function(){
       this.imgFlag = false
@@ -152,6 +172,54 @@ export default {
       this.chatStore.getStomp.send("/pub/message",JSON.stringify(data))
 
     },
+    loadChat : async function(){
+      const chat = useChatStore()
+      const id = this.chatInfo.id
+      if(id in chat.getReload){
+        if(chat.getReload[id] == false){
+          return
+        }
+      }
+      const nextRoom = chat.getNextRoom
+      if(!(id in nextRoom)){
+        nextRoom[id] = `?room-id=${id}`
+      }
+      if(Object.keys(this.chatInfo).length != 0){
+        let elem = document.querySelector('.message-content')
+        let scrollElem = document.querySelector('#message0')
+        let value = await chat.readMessage(nextRoom[id])
+        if(value.data != ""){
+          nextRoom[id] = value.data.nextUrl
+          if(nextRoom[id] != null){
+            value.data.messageResponseDtos.forEach(item=>{
+              if(id in chat.getMessage){
+                chat.message[id].unshift(item)
+              }else{
+                chat.message[id] = [item]
+              }
+            })
+            this.scrollToBottom()
+            this.$nextTick(()=>{
+              let target = document.getElementById('message0')
+              this.io.observe(target)
+              console.log(scrollElem)
+            })
+          }
+        } else{
+          chat.getReload[this.chatInfo.id] = false
+        }
+      }else{  
+        return
+      }
+    },
+    call : async function(items,io){
+      items.forEach(async item=>{
+        if(item.isIntersecting){
+          io.unobserve(item.target)
+          await this.loadChat()
+        }
+      })
+    },
     startPage: async function(){
       const auth = useAuthStore()
         await auth.useRefresh()
@@ -178,6 +246,7 @@ export default {
     }
   },
   mounted(){
+    this.io = new IntersectionObserver(this.call,{threshold:1.0})
     this.startPage()
     
   },

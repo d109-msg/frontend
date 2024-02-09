@@ -1,7 +1,7 @@
 <template>
   <div class="message-container">
     <MessageList @chat-info="getInfo"></MessageList>
-    <MessageDetail @user-info="userInfo" :chatInfo="detail"></MessageDetail>
+    <MessageDetail @user-info="userInfo" :chatInfo="detail" :chatId="detail.id"></MessageDetail>
     <div>
       <MiniProfile :userInfo="user"/>
     </div>

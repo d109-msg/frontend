@@ -7,10 +7,10 @@
                 </div>
                 <div class="notification-body">
                     <div v-for="(item,key) in chat.notify" :key="key">
-                        <div class="profile" @click="visit(key)">
+                        <div class="profile" @click="visit(key,item.id)">
                             <div class="profile-box">
-                                <img src="" alt="" class="profile-img">
-                                <div class="profile-content">{{ item.content }}</div>
+                                <img :src="item.imageUrl" alt="" class="profile-img">
+                                <div class="profile-content"><span>{{item.fromNickname}}</span>{{ item.content }}</div>
                             </div>
                             <div class="create-time">{{ item.createTime }}</div>
                             <!-- {{ item }} -->
@@ -63,12 +63,14 @@
                 <span class="count">0</span>
             </div>
         </div>
+        <DetailPage v-if="detailFlag" @close-detail="detailFlag=false" :idx="idx" style="z-index: 999999999;"/>
     </div>
 </template>
 
 <script>
 import { useAuthStore } from '@/store/authStore'
 import { useChatStore } from '@/store/chatStore'
+import DetailPage from '../DetailPage/DetailPage.vue'
 export default {
     name: 'MiniProfile',
     data(){
@@ -80,7 +82,12 @@ export default {
             chat : useChatStore(),
             notifyLength : "0",
             showFlag : false,
+            detailFlag : false,
+            idx : 1,
         }
+    },
+    components:{
+        DetailPage
     },
     computed:{
         notify(){
@@ -98,9 +105,19 @@ export default {
             auth.logout()
             window.location.reload()
         },
-        visit : function(idx){
-            this.chat.notify.splice(idx,1)
-        }
+        visit : async function(idx,roomId){
+            try{
+                this.idx = this.chat.notify[idx].articleId
+                this.detailFlag = true
+                const chat = useChatStore()
+                await chat.readNotification(roomId)
+                this.chat.notify.splice(idx,1)
+            }catch(err){
+                console.log(err)
+                console.log('읽음처리가 정상적으로 종료되지 않음')
+            }
+        },
+      
     },
     props:{
         userInfo : Object,
