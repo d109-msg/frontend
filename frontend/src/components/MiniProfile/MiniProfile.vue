@@ -37,7 +37,7 @@
             <img class="logout" src="./logout.png" v-if="isLogin" @click="logout" @mouseover="toolFlag=true" @mouseleave="toolFlag=false">
             <div class="tool-tip" v-if="toolFlag"><span>Logout</span></div>
         </div>
-        <div class="my-mini-content" v-if="userFlag">
+        <div class="my-mini-content" v-if="Object.keys(userInfo).length > 0">
             <img class="mini-image" :src="userInfo.imageUrl">
             <div class="mini-name">{{ userInfo.nickname }}</div>
             <div class="mini-comment">{{ userInfo.bio }}</div>
@@ -50,7 +50,7 @@
                 <span class="count">{{ userInfo.followerCount }}</span>
             </div>
         </div>
-        <div class="my-mini-content" v-if="!userFlag">
+        <div class="my-mini-content" v-else>
             <img class="mini-image" src="./default.png">
             <div class="mini-name">Anonymous</div>
             <div class="mini-comment">fun, daily, mafia game!!!</div>

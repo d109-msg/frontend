@@ -87,7 +87,7 @@ export const useFeedStore = defineStore('feed',{
             const headers= {
                 Authorization : `Bearer ${useAuthStore().getAccess}`
             }
-
+            console.log(idx)
             return axios.post(`${server}/article/like?articleId=${idx}`,null,{ headers })
         },
         likeComment : async function(idx){
@@ -121,6 +121,12 @@ export const useFeedStore = defineStore('feed',{
         async guestFeed(server){
             return axios.get(`${server}`)
         },
+        async popularFeed(server){
+            const headers={
+                Authorization : `Bearer ${useAuthStore().getAccess}`,
+            }
+            return axios.get(`${server}`,{headers})
+        }
         
     },
     persist: [

@@ -27,7 +27,7 @@
       @click.prevent="likeArticle">
       <img class="heart-icon" src="./Icon/fullheart.png" 
       v-if="item.isLike == 1" @click.prevent="likeArticle">
-
+      
       <div class="chat-icon" @click.prevent="onDetail"></div>
 
       <div class="share-icon"></div>
