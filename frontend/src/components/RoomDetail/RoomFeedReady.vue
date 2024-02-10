@@ -20,17 +20,14 @@
 <script>
 export default {
     name: 'RoomFeedReady',
-    data(){
-      return{
-        
-      }
-    },
     props:{
       roomData : Object,
       participant:Object,
       mission:Object,
       ability:Object,
       member: Object,
+      roomTime:Number,
+
     },
     methods:{
       reload: function(){
