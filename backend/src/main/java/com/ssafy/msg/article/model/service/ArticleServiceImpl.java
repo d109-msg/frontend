@@ -183,7 +183,7 @@ public class ArticleServiceImpl implements ArticleService{
 
 
         // 댓글 리스트 넣어주기
-        articleDetailDto.setCommentList(getComments(CommentDto.builder().articleId(articleDto.getId()).build()));
+        articleDetailDto.setCommentList(getComments(CommentDto.builder().userId(id).articleId(articleDto.getId()).build()));
 
         List<String> urls = new ArrayList<>();
 
@@ -319,7 +319,8 @@ public class ArticleServiceImpl implements ArticleService{
         for (CommentDto cd : commentDtos) {
             cd.setCommentLikeCount(articleMapper.getCommentLikeCount(cd.getId()));
 
-            CommentLikeDto commentLikeDto = CommentLikeDto.builder().commentId(cd.getId()).userId(cd.getUserId()).build();
+            CommentLikeDto commentLikeDto = CommentLikeDto.builder().commentId(cd.getId()).userId(commentDto.getUserId()).build();
+            log.info("(ArticleServiceImpl) 0211 {}", commentLikeDto);
             cd.setIsCommentLike(isCommentLike(commentLikeDto));
 
             commentDtoList.add(cd);
