@@ -176,7 +176,7 @@ export default {
                 img.style.backgroundRepeat = 'no-repeat'
             } catch(err){
                 this.$emit('closeDetail')
-                alert('예기치 않은 오류가 발생했습니다.')
+                alert('로그인이 필요한 페이지입니다.')
             }
         },
         leftStep : function(){

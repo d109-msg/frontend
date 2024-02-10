@@ -267,6 +267,9 @@ export default {
             let files = fileInput.files
             let file = files[0] // user가 선택한 파일 1개(가장 처음)
             let saveImg = document.querySelectorAll('.save-wrapper>img')
+            for(let i=0; i<saveImg.length;i++){
+                saveImg[i].src = ""
+            }
             if(!file || files.length>3) return; // user가 파일 선택하지 않았을때 돌아가.
             for(let i=0; i<files.length;i++){
                 this.fileLength = files.length
