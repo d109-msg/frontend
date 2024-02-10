@@ -4,6 +4,7 @@ package com.ssafy.msg.chat.controller;
 import com.ssafy.msg.chat.model.dto.CreateRoomDto;
 import com.ssafy.msg.chat.model.dto.OpponentDto;
 import com.ssafy.msg.chat.model.dto.RoomDto;
+import com.ssafy.msg.chat.model.dto.RoomResponseDto;
 import com.ssafy.msg.chat.model.service.ChatService;
 import com.ssafy.msg.user.model.dto.FollowDto;
 import io.swagger.v3.oas.annotations.Operation;
@@ -110,7 +111,7 @@ public class ChatController {
         int id = (int) request.getAttribute("id");
         log.info("getPersonalRoomsInfoById() -> Receive id : {}", id);
 
-        List<RoomDto> roomDtoList = null;
+        List<RoomResponseDto> roomDtoList = null;
         try {
             roomDtoList = chatService.getPersonalRoomsInfoById(id);
             log.info("getPersonalRoomsInfoById() -> Success");

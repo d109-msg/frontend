@@ -1,23 +1,28 @@
 package com.ssafy.msg.message.controller;
 
+import com.ssafy.msg.message.model.dto.MessageIdDto;
 import com.ssafy.msg.message.model.dto.MessageRequestDto;
 import com.ssafy.msg.message.model.dto.MessageScrollResponseDto;
 import com.ssafy.msg.message.model.dto.StompPrincipalDto;
 import com.ssafy.msg.message.model.entity.MessageEntity;
 import com.ssafy.msg.message.model.repo.MessageRepository;
 import com.ssafy.msg.message.model.service.MessageService;
+import com.ssafy.msg.notification.model.dto.NotificationIdDto;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.bson.types.ObjectId;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.messaging.handler.annotation.MessageMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
 import java.security.Principal;
@@ -83,4 +88,28 @@ public class MessageController {
                 .build();
         return ResponseEntity.ok(messageScrollResponseDto);
     }
+
+
+//    @Operation(summary = "채팅방 lastMessageId 수정", description = "roomId와 messageId를 통해 유저가 마지막으로 본 메시지 업데이트")
+//    @ApiResponses(value = {
+//            @ApiResponse(responseCode = "200", description = "채팅방 lastMessageId 수정 성공", content = @Content),
+//            @ApiResponse(responseCode = "400", description = "채팅방 lastMessageId 수정 실패", content = @Content) })
+//    @PatchMapping("/message/lastMessageId")
+//    public ResponseEntity<?> updateLastMessageId(@Valid HttpServletRequest request, @RequestBody MessageIdDto messageIdDto) {
+//        log.info("updateLastMessageId() -> Start");
+//
+//        int userId = (int) request.getAttribute("id");
+//
+//
+//        try {
+//            notificationService.updateNotificationFlagRead(notificationIdDto);
+//            log.info("updateLastMessageId() -> Success");
+//            return new ResponseEntity<>(HttpStatus.OK);
+//        } catch (Exception e) {
+//            log.error("updateLastMessageId() -> Exception : {}", e);
+//            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+//        } finally {
+//            log.info("updateLastMessageId() -> End");
+//        }
+//    }
 }

@@ -6,9 +6,9 @@
         namespace="com.ssafy.msg.chat.model.mapper.ChatMapper">
 
     <select id="getPersonalRoomsInfoById" parameterType="int"
-            resultType="RoomDto">
+            resultType="RoomResponseDto">
         SELECT r.id,
-               r.last_message_id,
+               p.last_message_id,
                r.data_type,
                r.create_time,
                r.end_time,

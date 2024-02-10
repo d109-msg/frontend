@@ -2,6 +2,7 @@ package com.ssafy.msg.chat.model.mapper;
 
 import com.ssafy.msg.chat.model.dto.CreateRoomDto;
 import com.ssafy.msg.chat.model.dto.RoomDto;
+import com.ssafy.msg.chat.model.dto.RoomResponseDto;
 import com.ssafy.msg.game.model.dto.ParticipantDto;
 import org.apache.ibatis.annotations.Mapper;
 
@@ -24,7 +25,7 @@ public interface ChatMapper {
 	RoomDto getRoom(String roomId) throws SQLException;
 
 	// 사용자별 일대일 채팅방 목록 조회
-	List<RoomDto> getPersonalRoomsInfoById(int id) throws SQLException;
+	List<RoomResponseDto> getPersonalRoomsInfoById(int id) throws SQLException;
 
 
 }
