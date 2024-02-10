@@ -3,6 +3,7 @@ package com.ssafy.msg.scheduler.model.mapper;
 import com.ssafy.msg.chat.model.dto.RoomDto;
 import com.ssafy.msg.game.model.dto.ParticipantDto;
 import com.ssafy.msg.scheduler.model.dto.JudgeResultDto;
+import com.ssafy.msg.scheduler.model.dto.RandomMafiaDto;
 import com.ssafy.msg.scheduler.model.dto.UpdateWinFlagDto;
 import org.apache.ibatis.annotations.Mapper;
 
@@ -55,4 +56,6 @@ public interface SchedulerMapper {
     void updateEndTime(String roomId) throws SQLException;
 
     List<ParticipantDto> getNonCompleter(String roomId) throws SQLException;
+
+    RandomMafiaDto getOneRandomMafia(String roomId) throws SQLException;
 }

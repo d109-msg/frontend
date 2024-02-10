@@ -25,6 +25,7 @@ public class GameUtil {
         roles.put("청소부", "시민");
         roles.put("기자", "시민");
         roles.put("의사", "시민");
+        roles.put("자경단", "시민");
 //        roles.put("사냥꾼", "시민");
 //        roles.put("본인이 죽으면 마피아 공개시키기", "시민");
 
@@ -57,6 +58,7 @@ public class GameUtil {
         civilRoles.add("청소부");
         civilRoles.add("기자");
         civilRoles.add("의사");
+        civilRoles.add("자경단");
     }
 
     /**
