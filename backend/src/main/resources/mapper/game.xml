@@ -212,7 +212,7 @@
 
 	<update id="doctorVote" parameterType="Map">
 		UPDATE daily_missions
-		SET docotr_vote = #{targetId}
+		SET doctor_vote = #{targetId}
 		WHERE participant_id = #{participantId}
 				  AND day = #{day};
 	</update>
