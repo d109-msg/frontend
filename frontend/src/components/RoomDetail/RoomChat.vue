@@ -18,8 +18,7 @@
 </template>
  
 <script>
-import SockJs from 'sockjs-client'
-import Stomp from 'webstomp-client'
+
 import { useAuthStore } from '@/store/authStore'
 
 
@@ -30,7 +29,6 @@ export default {
         stompClient : Object,
         inputNum:0,
         roomId : this.roomData.id,
-        chatInput: "",
         receive :"",
       }
     },
@@ -42,12 +40,6 @@ export default {
       ability:Object,
       member: Object,
       roomTime:Number,
-
-    },
-    watch:{
-      chatInput(newValue,oldValue){
-        this.inputNum = newValue.length;
-      }
     },
     methods:{
       getUser : async function(){
@@ -60,10 +52,10 @@ export default {
             console.log(err)
           }
         },
-      scrollToBottom(){
-          const messageContent = document.querySelector('.chat-content');
-          messageContent.scrollTop = messageContent.scrollHeight;
-        },
+      // scrollToBottom(){
+      //     const messageContent = document.querySelector('.chat-content');
+      //     messageContent.scrollTop = messageContent.scrollHeight;
+      //   },
       // showMessage : function(data){
       //     this.receive = data.text 
       //     const chatBox = document.createElement('div')
@@ -129,7 +121,7 @@ export default {
             try{
               await this.getUser()
               this.$emit('userInfo',this.userInfo)
-              this.connect()
+              // this.connect()
             } catch(err){
               console.log(err)
             }

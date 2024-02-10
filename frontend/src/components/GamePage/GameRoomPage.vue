@@ -27,12 +27,12 @@ import { useGameStore } from '@/store/gameStore';
 export default {
     name: 'GameRoomPage',
     data(){
-     return{
-      roomId : "1",
-      width: 0,
-      height: 0,
-      size : 'lg',
-    }
+      return{
+        roomId : "1",
+        width: 0,
+        height: 0,
+        size : 'lg',
+      }
     },
     components:{
       RoomCard,
