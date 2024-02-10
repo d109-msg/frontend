@@ -77,9 +77,12 @@ export default {
         try{
           let value = await game.postVote(id,jobId,targetId)
           this.voteResult = value.data
-          // console.log('투표 성공')
-          // console.log(this.voteResult)
-          if (this.voteResult == 'mission uncompleted'){
+          console.log('투표 성공')
+          console.log(this.voteResult)
+          if (this.voteResult == 'you lost your vote to a gangster.'){
+            alert('투표권을 건달에게 압수당하여 오늘은 투표할 수 없습니다.')
+          }
+          else if (this.voteResult == 'mission uncompleted'){
             alert('오늘의 미션을 완료해주세요.')
           }else{
             await this.getvoteRoom(this.participant.roomId)

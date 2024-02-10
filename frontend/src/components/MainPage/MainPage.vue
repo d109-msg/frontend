@@ -2,7 +2,15 @@
     <!-- 메인 페이지 -->
     <div>
         <div class="main-banner-box">
-            <div class="main-banner"></div>
+            <div class="main-banner">
+                <div class="theme-switch-wrapper">
+                    <label class="theme-switch" for="checkbox">
+                        <input type="checkbox" id="checkbox" />
+                        <div class="slider round"></div>
+                    </label>
+                </div>
+
+            </div>
         </div>
         <div class="main-container">
             <!-- 추후 컴포넌트로 분리 가능(피드) -->
