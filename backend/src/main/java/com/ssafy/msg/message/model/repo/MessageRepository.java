@@ -31,4 +31,11 @@ public interface MessageRepository extends MongoRepository<MessageEntity, String
             "{ $limit : ?1 }",
             })
     List<MessageEntity> findMessagesByRoomIdOrderByDescending(String roomId, int limit);
+
+    @Aggregation(pipeline = {
+            "{ $match : { 'roomId' : ?0 } }",
+            "{ $sort : { '_id' : -1 } }",
+            "{ $limit : 1 }",
+    })
+    MessageEntity findLastMessageByRoomId(String roomId);
 }
