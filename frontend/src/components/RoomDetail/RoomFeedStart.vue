@@ -38,6 +38,8 @@ export default {
       mission:Object,
       ability:Object,
       member: Object,
+      roomTime:Number,
+
     },
     components:{
         FeedCreate

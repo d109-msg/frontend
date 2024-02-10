@@ -6,6 +6,8 @@
     :mission="mission"
     :ability="ability"
     :member="member"
+    :room-time="roomTime"
+
     
     ></RoomFeedReady>
     <RoomFeedStart v-else 
@@ -14,6 +16,7 @@
     :mission="mission"
     :ability="ability"
     :member="member"
+    :room-time="roomTime"
     ></RoomFeedStart>
 
   </div>
@@ -34,7 +37,8 @@ export default {
       participant:Object,
       mission:Object,
       ability:Object,
-      member: Object
+      member: Object,
+      roomTime:Number,
     },
     components:{
       RoomFeedReady,

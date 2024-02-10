@@ -17,9 +17,6 @@
 <script>
 export default {
     name: 'RoomCard',
-    data(){
-      
-    },
     props:{
         slide : String,
         room : Object,
