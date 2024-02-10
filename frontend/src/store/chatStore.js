@@ -158,7 +158,7 @@ export const useChatStore = defineStore('chat',{
             const headers = {
                 Authorization : `Bearer ${auth.getAccess}`
             }
-            return axios.get(`${servers}/test/mongodb/message/scroll${nextUrl}`,{headers})
+            return axios.get(`${servers}/message/scroll${nextUrl}`,{headers})
         }
     },
 

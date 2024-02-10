@@ -1,16 +1,46 @@
 <template>
   <div>
     <div class="chat-content">
-      <div class="job-box">
+      <img src="./Img/arrow_up.png" class="toggle-job" @click="boxFlag=!boxFlag" v-if="boxFlag == true">
+      <img src="./Img/arrow_down.png" class="toggle-job" @click="boxFlag=!boxFlag" v-else>
+      <div class="job-box" v-if="boxFlag">
         <div>내 이름 : {{ participant.nickname }}</div>
         <div v-if="participant.jobId == '미치광이'">내 직업 : 경찰</div>
         <div v-else>내 직업 : {{participant.jobId }}</div>
       </div>
+      <div class="chat-box">
+        <div v-for="(message,idx) in chat[roomId]" :key="idx">
+          <div v-if="message.userId != participant.userId">
+            <div v-for="(user,key) in member" :key="key" >
+              <div v-if="user.userId == message.userId">
+                <div style="display: flex;">
+                  <img :src="user.imageUrl" alt="" style="width: 35px; height: 35px;">
+                  <div>
+                    <p style="font-size: 13px; padding-left: 10px; font-weight: bold;">{{ user.nickname }}</p>
+                    <div class="chat-other-box">
+                      <div class="chat-other-text">
+                        {{ message.content }}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                  
+              </div>
+            </div>
+          </div>
+
+          <div class="chat-my-box">
+            <div class="chat-my-text">
+              {{ message.content }}
+            </div>
+          </div>
+        </div>
+    </div>
     </div>
     <div class="chat-input-box">
-      <textarea type="text" class="chat-input" id="content" cols="40" rows="3" maxlength="100" v-model="chatInput" @keyup.enter.prevent="send"
+      <textarea type="text" class="chat-input" id="content" cols="40" rows="3" maxlength="100" v-model="message" @keyup.enter.prevent="send"
       ></textarea>
-      <div  class="input-num" >{{ inputNum }}/100</div>
+      <div class="input-num" >{{ inputNum }}/100</div>
       <div class="photo-icon"></div>
       <div class="submit-icon" @click.prevent="send">보내기</div>
     </div>
@@ -20,6 +50,7 @@
 <script>
 
 import { useAuthStore } from '@/store/authStore'
+import { useChatStore } from '@/store/chatStore'
 
 
 export default {
@@ -30,6 +61,10 @@ export default {
         inputNum:0,
         roomId : this.roomData.id,
         receive :"",
+        message : "",
+        chatStore : useChatStore(),
+        chat : useChatStore().getMessage,
+        boxFlag : true,
       }
     },
     props:{
@@ -52,10 +87,12 @@ export default {
             console.log(err)
           }
         },
-      // scrollToBottom(){
-      //     const messageContent = document.querySelector('.chat-content');
-      //     messageContent.scrollTop = messageContent.scrollHeight;
-      //   },
+      scrollToBottom(){
+        this.$nextTick(()=>{
+          const messageContent =  document.querySelector('.chat-content')
+          messageContent.scrollTop = messageContent.scrollHeight
+        })
+      },
       // showMessage : function(data){
       //     this.receive = data.text 
       //     const chatBox = document.createElement('div')
@@ -105,16 +142,19 @@ export default {
       //       alert('에러발생!')
       //     })
       //   },
-      //   send : function(){
-      //     let now = new Date()
-      //     let time = now.getMilliseconds;
-      //     let data = {
-      //       'roomId' : this.roomData.id,
-      //       'text' : this.chatInput,
-      //     }
-      //     this.stompClient.send("/pub/message/text",JSON.stringify(data))
-      //     this.chatInput = ""
-      //   },
+      send : function(){
+        let data = {
+          'roomId' : this.roomId,
+          'flagMafia' : 0,
+          'content' : this.message,
+          'base64Images' : [],
+        }
+        this.chatStore.getStomp.send("/pub/message",JSON.stringify(data))
+        this.message = ""
+        setTimeout(()=>{
+          this.scrollToBottom()
+        },100)
+      },
         startPage: async function(){
           const auth = useAuthStore()
             await auth.useRefresh()

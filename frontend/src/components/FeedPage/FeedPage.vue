@@ -58,6 +58,7 @@
                     ></Feed>
                 </div>
             </template>
+            <FeedCreate v-if="create" @close="complete"/>
         </div>
     </div>
 </template>
@@ -95,6 +96,9 @@ const server2 = 'https://i10d109.p.ssafy.io/api'
                 guestio : {},
                 guestUrl : `${servers}/article/guest`,
                 nextGuestUrl : "",
+                popularUrl : `${servers}/article/popular-feed`,
+                nextPopularUrl : "",
+                popularIo : {},
             }
         },  
 
@@ -130,10 +134,10 @@ const server2 = 'https://i10d109.p.ssafy.io/api'
                             }
                         })
                     }   else{
-                                this.axiosGuest()
+                                this.axiosPopular()
                             }
                 } else{
-                    this.axiosGuest()
+                    this.axiosPopular()
                 }
                 },
 
@@ -169,9 +173,6 @@ const server2 = 'https://i10d109.p.ssafy.io/api'
                         }
                     })
                 }
-                    // const last = document.getElementById(`${this.feedList.length-1}`)
-                    // console.log(last)
-                    // this.guestio.observe(last)
                 } else{
                     console.log('피드 끝!!!')
                 }
@@ -185,6 +186,34 @@ const server2 = 'https://i10d109.p.ssafy.io/api'
                     }
                 })
 
+            },
+            axiosPopular : async function(){
+                if(this.popularUrl != null){
+                    const feed = useFeedStore()
+                    let value = await feed.popularFeed(this.popularUrl+this.nextPopularUrl)
+                    if(value.data != ""){
+                        value.data['articles'].forEach(article=>{
+                            this.feedList.push(article)
+                        })
+                        this.nextPopularUrl = value.data.nextUrl
+                        this.$nextTick(()=>{
+                            const last = document.getElementById(`${this.feedList.length-1}`)
+                            if(this.nextPopularUrl != null){
+                                this.popularIo.observe(last)
+                            }
+                        })
+                    }
+                } else{
+                    console.log('피드 끝')
+                }
+            },
+            popularCall : function(items,io){
+                items.forEach(async item=>{
+                    if(item.isIntersecting){
+                        io.unobserve(item.target)
+                        await this.axiosPopular()
+                    }
+                })
             },
             goLogin : function(){
                 router.push('/login')
@@ -221,10 +250,9 @@ const server2 = 'https://i10d109.p.ssafy.io/api'
             const auth = useAuthStore()
             this.io = new IntersectionObserver(this.callBack,{ threshold : 0.7})
             this.guestio = new IntersectionObserver(this.guestCall,{threshold : 0.7})
+            this.popularIo = new IntersectionObserver(this.popularCall, {threshold : 0.7})
             //요소의 가시성을 0.7로 설정, 요소가 70% 뷰포트에 가시 될 시 지정한 callBack 함수 실행
             this.startPage()
-        },
-        created(){
         },
     }
 </script>
