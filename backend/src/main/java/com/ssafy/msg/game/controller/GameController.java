@@ -271,11 +271,11 @@ public class GameController {
     }
 
     @PatchMapping(value = "/ability", produces = "text/pain;charset=utf-8")
-    @Operation(summary = "능력을 사용합니다.", description = "유저의 participantId를 입력받아 능력을 사용합니다. 대상을 지정할 필요가 없는 능력은 default = 0")
+    @Operation(summary = "능력을 사용합니다.", description = "유저의 participantId를 입력받아 능력을 사용합니다. 대상을 지정할 필요가 없는 능력은 default = -1")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "사용 성공", content = @Content),
             @ApiResponse(responseCode = "400", description = "사용 실패", content = @Content)})
-    public ResponseEntity<?> useAbility(@RequestParam("participantId") Integer participantId, @RequestParam(value = "targetId", defaultValue = "0") Integer targetId){
+    public ResponseEntity<?> useAbility(@RequestParam("participantId") Integer participantId, @RequestParam(value = "targetId", defaultValue = "-1") Integer targetId){
         log.info("useAbility() start");
 
         try {
