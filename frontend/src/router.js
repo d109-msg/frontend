@@ -31,7 +31,6 @@ const routes = [
                 component: MessagePage,
                 beforeEnter: (to, from, next) => {
                     const auth = useAuthStore()
-                    console.log(auth.getAccess)
                     if(auth.getAccess==""){
                         alert('로그인이 필요한 페이지입니다.')
                         return next(from.fullPath)

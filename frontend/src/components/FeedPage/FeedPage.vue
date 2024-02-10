@@ -58,6 +58,7 @@
                     ></Feed>
                 </div>
             </template>
+            <FeedCreate v-if="create" @close="complete"/>
         </div>
     </div>
 </template>
