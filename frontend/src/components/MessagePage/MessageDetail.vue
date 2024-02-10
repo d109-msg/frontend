@@ -77,12 +77,12 @@ export default {
       imgFlag : false,
       preImg : "",
       step : 0,
-      baseUrl : `${servers}/test/mongodb/message/scroll`,
       io : {},
     }
   },
   props:{
     chatInfo : Object,
+    chatId : String,
   },
   components:{
     LoadingSpinner,
@@ -92,28 +92,17 @@ export default {
       const chat = useChatStore()
         return chat.countMessage[this.chatInfo.id]
     },
-    isNull(){
-      const chat = useChatStore()
-      if(this.chatInfo.id != null){
-        if(this.chatInfo.id in chat.getMessage){
-          return 1
-        } else{
-          return 0
-        }
-      } return 1
-    }
+   
     
   },
   watch:{
     listLength(nv,ov){
       this.scrollToBottom()
     },
-    async isNull(nv,ov){
-      if(nv == 0){
-        await this.loadChat()
-        this.scrollToBottom()
-      }
-    },
+    async chatId(nv,ov){
+      await this.loadChat()
+      this.scrollToBottom()
+    }
     
   },
   methods:{
@@ -150,6 +139,9 @@ export default {
       }
       this.chatStore.getStomp.send("/pub/message",JSON.stringify(data))
       this.message = ""
+      setTimeout(()=>{
+        this.scrollToBottom()
+      },100)
     },
     sendImg : function(info){
       let sst = ""
@@ -162,7 +154,6 @@ export default {
           sst = info[i]
         }
       }
-      console.log('변환하거',temp)
       let data = {
         'roomId' : this.chatInfo.id,
         'flagMafia' : 0,
@@ -191,19 +182,26 @@ export default {
         if(value.data != ""){
           nextRoom[id] = value.data.nextUrl
           if(nextRoom[id] != null){
+            let itemCount = 0
             value.data.messageResponseDtos.forEach(item=>{
               if(id in chat.getMessage){
                 chat.message[id].unshift(item)
               }else{
                 chat.message[id] = [item]
               }
+              itemCount+=1
             })
-            this.scrollToBottom()
-            this.$nextTick(()=>{
-              let target = document.getElementById('message0')
-              this.io.observe(target)
-              console.log(scrollElem)
+            let target = null
+            await this.$nextTick(()=>{
+              // elem.scrollTop = totalHeight
+              target = document.getElementById('message0')
             })
+            let totalHeight = 0
+              for(let i=0; i<itemCount; i++){
+                totalHeight += document.getElementById(`message${i}`).offsetHeight
+              }
+            elem.scrollTop = totalHeight
+            this.io.observe(target)
           }
         } else{
           chat.getReload[this.chatInfo.id] = false
