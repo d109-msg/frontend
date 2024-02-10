@@ -9,6 +9,7 @@ import com.ssafy.msg.game.model.service.GameService;
 import com.ssafy.msg.game.util.GameUtil;
 import com.ssafy.msg.message.model.service.MessageService;
 import com.ssafy.msg.scheduler.model.dto.JudgeResultDto;
+import com.ssafy.msg.scheduler.model.dto.RandomMafiaDto;
 import com.ssafy.msg.scheduler.model.dto.UpdateWinFlagDto;
 import com.ssafy.msg.scheduler.model.mapper.SchedulerMapper;
 import lombok.RequiredArgsConstructor;
@@ -333,6 +334,16 @@ public class SchedulerServiceImpl implements SchedulerService{
                 // 유저 flag_die 변경, 시민이었습니다 or 마피아였습니다
                 schedulerMapper.killParticipant(target.getId());
                 messageService.sendGameNotice(roomId, target.getNickname() + "님이 마피아에게 당했습니다.");
+
+                if(target.getJobId().equals("자경단")) {
+                    //자경단 로직
+                    //살아있는 랜덤 마피아 한 명을 가져옴
+                    RandomMafiaDto mafiaDto = schedulerMapper.getOneRandomMafia(roomId);
+
+                    log.info("manageMafiaDoctorVote() 자경단 - 랜덤 마피아 : {}", mafiaDto);
+
+                    messageService.sendGameNotice(roomId, target.getNickname() + "님은 죽기 전 " + mafiaDto.getNickname() + "님이 마피아라는 증거를 남겨두었습니다.");
+                }
 
                 manageGameEnd(roomId, false);
             }

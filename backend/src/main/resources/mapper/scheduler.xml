@@ -189,6 +189,14 @@
             );
     </select>
 
+    <select id="getOneRandomMafia" resultType="RandomMafiaDto" parameterType="string">
+        SELECT id, job_id, nickname FROM participants
+        WHERE room_id = #{roomId}
+          AND flag_die = 0
+          AND (job_id = '훼방꾼' OR job_id = '스파이' OR job_id = '마피아' or job_id = '건달')
+        ORDER BY rand() LIMIT 1;
+    </select>
+
     <update id="killParticipant" parameterType="int">
         UPDATE participants
         SET
