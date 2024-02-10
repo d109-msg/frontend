@@ -22,7 +22,7 @@
         </template>
         <!-- 지목대상이 필요없는 능력이라면 -->
         <div v-if=" ability.flagTarget==false && ability.status">
-            <button class="ability-btn" @click="useAbility(participant.id,0)">능력 사용</button>
+            <button class="ability-btn" @click="useAbility(participant.id,-1)">능력 사용</button>
         </div>
         
         
