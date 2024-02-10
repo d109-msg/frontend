@@ -2,13 +2,17 @@ package com.ssafy.msg.chat.model.service;
 
 import com.ssafy.msg.chat.model.dto.CreateRoomDto;
 import com.ssafy.msg.chat.model.dto.RoomDto;
+import com.ssafy.msg.chat.model.dto.RoomResponseDto;
 import com.ssafy.msg.chat.model.mapper.ChatMapper;
 import com.ssafy.msg.game.model.dto.ParticipantDto;
+import com.ssafy.msg.message.model.entity.MessageEntity;
+import com.ssafy.msg.message.model.repo.MessageRepository;
 import com.ssafy.msg.notification.model.service.NotificationService;
 import com.ssafy.msg.user.model.dto.UserDto;
 import com.ssafy.msg.user.model.mapper.UserMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.bson.types.ObjectId;
 import org.springframework.messaging.simp.SimpMessageSendingOperations;
 import org.springframework.stereotype.Service;
 
@@ -20,6 +24,8 @@ import java.util.UUID;
 @Service
 @RequiredArgsConstructor
 public class ChatServiceImpl implements  ChatService{
+
+    private final MessageRepository messageRepository;
 
     private final NotificationService notificationService;
 
@@ -81,8 +87,27 @@ public class ChatServiceImpl implements  ChatService{
 
     // 유저 이메일 아이디에 따른 일대일 채팅방 목록 조회
     @Override
-    public List<RoomDto> getPersonalRoomsInfoById(int id) throws Exception {
-        List<RoomDto> personalRoomList = chatMapper.getPersonalRoomsInfoById(id);
+    public List<RoomResponseDto> getPersonalRoomsInfoById(int id) throws Exception {
+        List<RoomResponseDto> personalRoomList = chatMapper.getPersonalRoomsInfoById(id);
+
+        for (RoomResponseDto room: personalRoomList){
+            MessageEntity messageEntity = messageRepository.findLastMessageByRoomId(room.getId());
+
+            // 기존 메시지가 있는 경우
+            if (messageEntity != null){
+                // 새로운 메시지가 있는 경우
+                if (room.getLastMessageId() == null
+                || new ObjectId(messageEntity.getId()).getTimestamp() > new ObjectId(room.getLastMessageId()).getTimestamp()){
+                    room.setLastMessage(messageEntity.getContent());
+                    room.setLastMessageCreateTime(messageEntity.getCreateTime());
+                    room.setFlagNewMessage(1);
+                }else{
+                    room.setLastMessage(messageEntity.getContent());
+                    room.setLastMessageCreateTime(messageEntity.getCreateTime());
+                }
+
+            }
+        }
 
         return personalRoomList;
     }

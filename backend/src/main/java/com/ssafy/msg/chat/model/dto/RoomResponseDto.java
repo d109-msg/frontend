@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class RoomDto {
+public class RoomResponseDto {
     private String id;
     private String dataType;    // 개인, 그룹, 랜덤, 대기
     private String lastMessageId;
@@ -19,4 +19,8 @@ public class RoomDto {
     private String title;
     private String imageUrl;
     private int flagAvailable;
+
+    private String lastMessage = "";
+    private String lastMessageCreateTime = "";
+    private int flagNewMessage = 0;
 }
