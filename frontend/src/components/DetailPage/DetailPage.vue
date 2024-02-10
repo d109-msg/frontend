@@ -43,10 +43,10 @@
                             <p>{{ item.content }}</p>
                             <div style="display: flex; align-items: center; margin-left: 2px;">
                                 <img class="heart-img" src="./Icon/heart.png" alt="" v-if="item.isCommentLike==0"
-                                @click.prevent="likeComment(item.id)"
+                                @click.self.prevent="likeComment(item.id); item.isCommentLike = 1"
                                 >
                                 <img src="./Icon/fullheart.png" class="heart-img" v-if="item.isCommentLike==1"
-                                @click.prevent="likeComment(item.id)"
+                                @click.self.prevent="likeComment(item.id); item.isCommentLike = 0"
                                 >
                                 <img class="chat-img" src="./Icon/chat.png" alt="" @click="showRecomment(idx,item.id)">
                             </div>
@@ -157,7 +157,6 @@ export default {
             try{
                 let value = await feed.getDetail(idx)
                 this.itemData = value.data
-                console.log(this.itemData)
                 this.imgList = this.itemData.urls
                 this.likeCount = this.itemData.likeCount
                 this.createTime = this.itemData.createTime
