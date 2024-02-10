@@ -57,18 +57,19 @@
             a.content,
             a.create_time,
             a.modify_time,
-            COALESCE(l.likes_count, 0) AS likes_count, -- 좋아요 개수가 없는 경우 0으로 표시
+            COALESCE(l.likes_count, 0) AS likes_count,
             GROUP_CONCAT(ai.url ORDER BY ai.id SEPARATOR ',') AS urls
         FROM articles a
                  LEFT JOIN users u ON a.user_id = u.id
                  LEFT JOIN (
                         SELECT
                             article_id,
-                            COUNT(*) AS likes_count -- 각 article_id에 대한 좋아요의 수를 센다.
+                            COUNT(*) AS likes_count
                         FROM article_likes
                         GROUP BY article_id) l ON a.id = l.article_id
                  LEFT JOIN article_images ai ON a.id = ai.article_id
-        where a.flag_private = 0
+        where a.flag_private = 0 and a.user_id != #{userId}
+          and a.user_id not in (select f.to_user_id from follows f where f.from_user_id = #{userId})
         GROUP BY a.id
         ORDER BY likes_count DESC, a.create_time desc
             LIMIT #{limit} OFFSET #{offset};
