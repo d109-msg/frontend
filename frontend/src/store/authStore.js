@@ -76,7 +76,7 @@ export const useAuthStore = defineStore('auth',{
             const headers = {
                 "Content-Type": `application/json`
             }
-            axios.post(`${server}/user/sign-up`,JSON.stringify(data),{ headers })
+            return axios.post(`${server}/user/sign-up`,JSON.stringify(data),{ headers })
         },
         async login(email,password){
             const data = {

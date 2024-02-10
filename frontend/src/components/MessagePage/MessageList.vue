@@ -35,7 +35,7 @@
           <img :src="item.imageUrl" alt="" class="chat-img">
           <div class="chat-info" >
             <span>{{ item.title }}</span>
-            <p>DM 확인 부탁 드려요 ~~~!</p>
+            <p>{{item}}</p>
           </div>
         </div>
             
