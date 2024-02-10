@@ -202,7 +202,7 @@ public class ArticleController {
         }
     }
 
-    // 메인페이지에서 피드 조회 하기 ( 내가 팔로우 하고 있는 사람만 )
+    // 메인페이지에서 피드 조회 하기 ( 나 포함, 내가 팔로우 하고 있는 사람만 )
     @GetMapping(value = "/feed")
     @Operation(summary = "피드 게시물 리스트", description = "피드에 보여줄 게시물 리스트")
     @ApiResponses(value = {
@@ -213,10 +213,9 @@ public class ArticleController {
             @Parameter(description = "마지막으로 로딩한 타겟") @RequestParam(value = "offset", required = false, defaultValue = "0") Integer offset,
             @Parameter(description = "페이지당 타겟 개수") @RequestParam(value = "limit", required = false, defaultValue = "5") Integer limit) {
         log.info("getFollowList() -> Start");
-        log.info("getFollowList() -> Receive offset : {}", offset);
-        log.info("getFollowList() -> Receive limit : {}", limit);
 
         int userId = (Integer) request.getAttribute("id");
+
         if (offset == 0) {
             offset = Integer.MAX_VALUE;
         }
@@ -267,13 +266,10 @@ public class ArticleController {
                     @Content(mediaType = "application/json", schema = @Schema(implementation = GuestArticleResponseDto.class)) }),
             @ApiResponse(responseCode = "400", description = "게스트 피드 조회 실패", content = @Content) })
     public ResponseEntity<?> getGuestFeed(@RequestParam(value = "offset", required = false, defaultValue = "0") Integer offset,
-                                          @RequestParam(value = "limit", required = false, defaultValue = "5") Integer limit,
-                                          HttpServletRequest request) {
+                                          @RequestParam(value = "limit", required = false, defaultValue = "5") Integer limit) {
         log.info("(ArticleController) 게스트 피드 리스트");
-        String currentUrl = request.getRequestURL().toString();
-        log.info("{}  ", currentUrl);
-        FeedParamDto feedParamDto = FeedParamDto.builder().offset(offset).limit(limit).currentUrl(currentUrl).build();
 
+        FeedParamDto feedParamDto = FeedParamDto.builder().offset(offset).limit(limit).build();
         try {
             GusetFeedResponseDto result = articleService.getGuestFeed(feedParamDto);
             return new ResponseEntity<>(result, HttpStatus.OK);
@@ -282,6 +278,34 @@ public class ArticleController {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         } finally {
             log.info("(ArticleController) 게스트 피드 조회 끝");
+        }
+
+    }
+
+    // 인기 게시물
+    // 비회원 메인 페이지
+    @GetMapping("/popular-feed")
+    @Operation(summary = "인기 피드", description = "내 피드 모두 조회 후 인기 피드 조회")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "인기 피드 조회 성공", content ={
+                    @Content(mediaType = "application/json", schema = @Schema(implementation = GuestArticleResponseDto.class)) }),
+            @ApiResponse(responseCode = "400", description = "인기 피드 조회 실패", content = @Content) })
+    public ResponseEntity<?> getPopularFeed(@RequestParam(value = "offset", required = false, defaultValue = "0") Integer offset,
+                                          @RequestParam(value = "limit", required = false, defaultValue = "5") Integer limit,
+                                          HttpServletRequest request) {
+        log.info("(ArticleController) 인기 피드 리스트");
+
+        int userId = (Integer) request.getAttribute("id");
+        FeedParamDto feedParamDto = FeedParamDto.builder().userId(userId).offset(offset).limit(limit).build();
+
+        try {
+            GusetFeedResponseDto result = articleService.getGuestFeed(feedParamDto);
+            return new ResponseEntity<>(result, HttpStatus.OK);
+        } catch (Exception e) {
+            log.error("(ArticleController) 인기 피드 조회 실패", e);
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        } finally {
+            log.info("(ArticleController) 인기 피드 조회 끝");
         }
 
     }
