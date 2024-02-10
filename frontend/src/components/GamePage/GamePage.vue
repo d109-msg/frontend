@@ -93,18 +93,26 @@ export default {
             const game = useGameStore()
             try{
                 let value = await game.enterInviteRoom(this.inviteCode)
-                this.inviteRoom = value.data
-                router.push({
-                name:'room',
-                params: {
-                  data: JSON.stringify(this.inviteRoom),
-                  
+                console.log(value)
+                if (value.status == 200){
+                    this.inviteRoom = value.data
+                    router.push({
+                        name:'room',
+                        params: {
+                            data: JSON.stringify(this.inviteRoom),
+                        }
+                    })
+                }else if (value.status == 204){
+                    alert('존재하지 않는 방입니다.')
                 }
-                
-              })
-                console.log(this.inviteRoom)
+
+
             }catch(err){
-                console.log(err)
+                console.log(err.response.status)
+                if(err.response.status == 409){
+                    alert('이미 참여 중인 게임방입니다.')
+                }else if(err.response.status == 403)
+                    alert('인원이 다 찬 방입니다.')
             }
 
         }

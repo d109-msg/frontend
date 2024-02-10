@@ -11,11 +11,13 @@
     <div class="chat-container">
       <div class="chat-title-box" style="display: flex; justify-content: space-between;">
         <div >
-          <img @click="dayFlag()" src="./Img/icon_sun.png" alt="" style="cursor: pointer;">
-          <img @click="nightFlag()" src="./Img/icon_moon.png" alt="" style="cursor: pointer;">
+          <img v-if="!roomTime" @click="dayFlag()" src="./Img/icon_sun_active.png" alt="" style="cursor: pointer;">
+          <img v-else @click="dayFlag()" src="./Img/icon_sun.png" alt="" style="cursor: pointer;">
+
+          <img v-if="roomTime" @click="nightFlag()" src="./Img/icon_moon_active.png" alt="" style="cursor: pointer;">
+          <img v-else @click="nightFlag()" src="./Img/icon_moon.png" alt="" style="cursor: pointer;">
         </div>
-        <p v-if="roomTime">밤</p>
-        <p v-else>낮</p>
+
         <div style="display: flex; flex-direction: row; align-items: center;">
           <img v-if="isOpen==1" src="./Img/icon_chat_active.png" alt="" class="is-chat" @click="isChat" >
           <img v-else src="./Img/icon_chat.png" alt="" class="is-chat" @click="isChat" >
@@ -83,7 +85,7 @@ export default {
         mission:{},
         ability:{},
         member:{},
-        roomTime : '',
+        roomTime : 0,
         aliveMember:{}
       }
     },
@@ -99,6 +101,9 @@ export default {
       // console.log(this.roomData)
       this.startPage()
       this.checkNight()
+    },
+    watch:{
+
     },
     methods:{
       isChat(){
@@ -118,12 +123,7 @@ export default {
         try{
           let value = await game.checkNight()
           this.roomTime = value.data
-          console.log('낮/밤 조회 성공')
-          if (value.data == 0){
-            console.log('낮입니다.',value.data)
-          }else{
-            console.log('밤입니다.', value.data)
-          }
+          console.log(typeof(this.roomTime))
         }catch(err){
           console.log(err)
         }
@@ -133,7 +133,7 @@ export default {
         try{
           let value = await game.nightFlag()
           console.log('밤으로 변경')
-          console.log('value.data')
+          window.location.reload()
         }catch(err){
           console.log(err)
         }
@@ -143,7 +143,8 @@ export default {
         try{
           let value = await game.dayFlag()
           console.log('아침으로 변경')
-          console.log('value.data')
+          window.location.reload()
+
         }catch(err){
           console.log(err)
         }
