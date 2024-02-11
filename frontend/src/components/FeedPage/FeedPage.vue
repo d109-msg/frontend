@@ -32,7 +32,7 @@
                     ></Feed>                    
                 </div>
             </template>
-            <FeedCreate v-if="create" @close="complete"/>
+            <FeedCreate v-if="create" @close="complete" :roomId="''"/>
         </div>
         <div class="first-col" v-else>
             <div class="feed-create">
@@ -58,7 +58,7 @@
                     ></Feed>
                 </div>
             </template>
-            <FeedCreate v-if="create" @close="complete"/>
+            <FeedCreate v-if="create" @close="complete" :roomId="''"/>
         </div>
     </div>
 </template>

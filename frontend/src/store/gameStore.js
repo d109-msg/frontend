@@ -190,6 +190,14 @@ export const useGameStore = defineStore('game',{
 
             return axios.patch(`${server}/game/ability?participantId=${id}&targetId=${targetId}`,null,{ headers })
 
+        },
+        readFeed : async function(nextUrl){
+            const auth = useAuthStore()
+            await auth.useRefresh()
+            const headers = {
+                Authorization : `Bearer ${useAuthStore().getAccess}`,
+            }
+            return axios.get(`${server}/article/feed/room${nextUrl}`,{headers})
         }
 
 

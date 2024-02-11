@@ -11,10 +11,10 @@
         @close-modal="missionConfirm=false;"
         @mission-true="missionTrue"
         @mission-false="missionFalse"
-        :confirmInfo="[imgData[0], missionSrc, selectRoom]"
+        :confirmInfo="[imgData[0], missionSrc, roomId]"
         />
         <WriteContent v-if="writeFlag"
-        :dataInfo="{imgData,imgSrc,selectRoom}"
+        :dataInfo="{imgData,imgSrc,roomId}"
         @close-write="writeFlag=false"
         @create-feed="closeImage(1)"
         />
@@ -31,13 +31,8 @@
             </div>
             <div class="editor-panel">
                 <div class="select-container">
-                    <button @click.prevent="openOptions">
-                        <span>{{ selectRoom }}</span>
-                        <div class="down"></div>
-                    </button>
-                    <ul class="option-box" v-if="optionFlag">
-                        <li class="option-select" v-for="(room,idx) in userRoom" :key="idx" @click.prevent="()=>{selectRoom = room; optionFlag = false}">{{ room }}</li>
-                    </ul>
+                        <p v-if="roomId==''">일상 게시물</p>
+                        <p v-else>미션 게시물</p>
                 </div>
                 
                 <div class="filter">
@@ -121,12 +116,15 @@ export default {
         MissonConfirm,
         WriteContent,
     },
+    props:{
+        roomId : String,
+    },
     methods:{
         openOptions : function(){
             this.optionFlag = !(this.optionFlag)
         },
         confirm : function(){
-            if(this.selectRoom=="일상 게시물"){
+            if(this.roomId == ""){
                 this.missionConfirm = false
                 this.writeFlag = true
             } else{
@@ -220,7 +218,6 @@ export default {
         this.selectRoom = this.userRoom[0]
         this.selected = document.querySelector('.first-img')
         this.previewImg = document.querySelector('.preview')
-
         const fileInput = document.querySelector('.file-input'),
         chooseImgBtn = document.querySelector('.choose-img'),
         brightSlider = document.querySelector(".bright-slider"),
