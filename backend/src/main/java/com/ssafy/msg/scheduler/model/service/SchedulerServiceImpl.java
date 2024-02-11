@@ -278,7 +278,10 @@ public class SchedulerServiceImpl implements SchedulerService{
      */
     public void noticeReporterVote(String roomId) throws Exception {
         log.info("noticeReporterVote() roomId : {}", roomId);
-        int day = gameMapper.getMaxDayByRoomId(roomId);
+        Integer day = gameMapper.getMaxDayByRoomId(roomId);
+        if(day == null){
+            return;
+        }
         Integer targetId = schedulerMapper.getReporterVoteResult(roomId, day);
         log.info("noticeReporterVote() target : {}", targetId);
 

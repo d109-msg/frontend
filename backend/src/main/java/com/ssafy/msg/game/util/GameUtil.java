@@ -22,7 +22,7 @@ public class GameUtil {
         roles.put("판사", "시민");
         roles.put("미치광이", "시민");
         roles.put("불침번", "시민");
-        roles.put("청소부", "시민");
+//        roles.put("청소부", "시민");
         roles.put("기자", "시민");
         roles.put("의사", "시민");
         roles.put("자경단", "시민");
@@ -31,7 +31,7 @@ public class GameUtil {
 
         //마피아 직업
         roles.put("훼방꾼", "마피아");
-        roles.put("변장술사", "마피아");
+//        roles.put("변장술사", "마피아");
         roles.put("스파이", "마피아");
         roles.put("건달", "마피아");
         roles.put("마피아", "마피아");
@@ -43,7 +43,7 @@ public class GameUtil {
         //랜덤 출력을 위한 list
         //마피아
         mafiaRoles.add("훼방꾼");
-        mafiaRoles.add("변장술사");
+//        mafiaRoles.add("변장술사");
         mafiaRoles.add("스파이");
         mafiaRoles.add("건달");
         mafiaRoles.add("마피아");
@@ -55,7 +55,7 @@ public class GameUtil {
         civilRoles.add("판사");
         civilRoles.add("미치광이");
         civilRoles.add("불침번");
-        civilRoles.add("청소부");
+//        civilRoles.add("청소부");
         civilRoles.add("기자");
         civilRoles.add("의사");
         civilRoles.add("자경단");
