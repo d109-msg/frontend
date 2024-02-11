@@ -43,6 +43,7 @@ import MyGameVue from './UserGame.vue'
 import router from '@/router'
 import { useFeedStore } from '@/store/feedStore'
 import { watch } from 'vue'
+import { useChatStore } from '@/store/chatStore'
 
 export default {
     name : 'UserPage',
@@ -62,9 +63,7 @@ export default {
     getUser : async function(){
       const auth = useAuthStore()
       try{
-        console.log(this.$route.params.id)
         let value = await auth.getOtherUser(this.$route.params.id)
-        console.log(value)
         this.userInfo = value.data
         if(value.data === ""){
           alert('존재하지 않는 회원 정보입니다.')
@@ -93,7 +92,18 @@ export default {
       }
     },
     goMessage: async function(){
-      router.push({name : 'message'})
+      const auth= useAuthStore()
+      try{
+        await auth.useRefresh()
+        const chat = useChatStore()
+        let value = await chat.makeChat(this.$route.params.id)
+        if(value.status == 201){
+          await chat.sub([value.data.id])
+        }
+        router.push({name : 'message'})
+      }catch(err){
+        console.log(err)
+      }
     } ,
     startPage : async function(){
       const auth = useAuthStore()
@@ -115,6 +125,7 @@ export default {
   mounted(){
     this.startPage()
     this.$route.params.id
+    const chat = useChatStore()
   }
 }
 </script>

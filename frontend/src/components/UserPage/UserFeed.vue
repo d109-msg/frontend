@@ -45,9 +45,7 @@ export default {
         
         let value = await feed.getUserProfile(this.id)
         this.myFeed = value.data
-        console.log(this.myFeed)
       } catch(error) {
-        console.log(error)
       }
     },
       offDetail : function(){
