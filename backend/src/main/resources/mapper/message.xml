@@ -20,5 +20,11 @@
         WHERE p.room_id = #{roomId}
     </select>
 
+    <update id="updateLastMessageId" parameterType="LastMessageUpdateDto">
+        update participants
+        set last_message_id = #{messageId}
+        where room_id = #{roomId} and user_id = #{userId}
+    </update>
+
 </mapper>
 

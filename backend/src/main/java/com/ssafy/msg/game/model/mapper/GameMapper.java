@@ -1,6 +1,7 @@
 package com.ssafy.msg.game.model.mapper;
 
 import com.ssafy.msg.chat.model.dto.RoomDto;
+import com.ssafy.msg.chat.model.dto.RoomResponseDto;
 import com.ssafy.msg.game.model.dto.*;
 import com.ssafy.msg.user.model.dto.UserDto;
 import org.apache.ibatis.annotations.Mapper;
@@ -26,7 +27,7 @@ public interface GameMapper {
 
     void deleteParticipant(int userId) throws SQLException;
 
-    List<RoomDto> getUserRooms(int userId) throws SQLException;
+    List<RoomResponseDto> getUserRooms(int userId) throws SQLException;
 
     List<VoteResultDto> getRoomVote(String roomId) throws SQLException;
 

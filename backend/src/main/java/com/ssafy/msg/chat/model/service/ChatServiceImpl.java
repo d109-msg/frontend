@@ -98,11 +98,20 @@ public class ChatServiceImpl implements  ChatService{
                 // 새로운 메시지가 있는 경우
                 if (room.getLastMessageId() == null
                 || new ObjectId(messageEntity.getId()).getTimestamp() > new ObjectId(room.getLastMessageId()).getTimestamp()){
-                    room.setLastMessage(messageEntity.getContent());
+                    // 이미지 메시지인 경우
+                    if(messageEntity.getContent() == null){
+                        room.setLastMessage("사진");
+                    }else{
+                        room.setLastMessage(messageEntity.getContent());
+                    }
                     room.setLastMessageCreateTime(messageEntity.getCreateTime());
                     room.setFlagNewMessage(1);
                 }else{
-                    room.setLastMessage(messageEntity.getContent());
+                    if (messageEntity.getContent() == null){
+                        room.setLastMessage("사진");
+                    }else{
+                        room.setLastMessage(messageEntity.getContent());
+                    }
                     room.setLastMessageCreateTime(messageEntity.getCreateTime());
                 }
 

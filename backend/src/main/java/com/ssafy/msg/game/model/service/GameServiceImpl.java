@@ -3,6 +3,7 @@ package com.ssafy.msg.game.model.service;
 import com.ssafy.msg.article.util.OpenAiUtil;
 import com.ssafy.msg.chat.model.dto.CreateRoomDto;
 import com.ssafy.msg.chat.model.dto.RoomDto;
+import com.ssafy.msg.chat.model.dto.RoomResponseDto;
 import com.ssafy.msg.chat.model.mapper.ChatMapper;
 import com.ssafy.msg.chat.model.service.ChatService;
 import com.ssafy.msg.game.exception.GroupRoomDuplicateException;
@@ -12,8 +13,10 @@ import com.ssafy.msg.game.model.dto.*;
 import com.ssafy.msg.game.model.mapper.GameMapper;
 import com.ssafy.msg.game.util.GameUtil;
 
+import com.ssafy.msg.message.model.entity.MessageEntity;
 import com.ssafy.msg.message.model.mapper.MessageMapper;
 //import com.ssafy.msg.message.model.service.MessageService;
+import com.ssafy.msg.message.model.repo.MessageRepository;
 import com.ssafy.msg.message.model.service.MessageService;
 import com.ssafy.msg.notification.model.service.NotificationService;
 import com.ssafy.msg.scheduler.model.mapper.SchedulerMapper;
@@ -21,6 +24,7 @@ import com.ssafy.msg.user.model.dto.UserDto;
 import com.ssafy.msg.user.model.mapper.UserMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.bson.types.ObjectId;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -43,6 +47,8 @@ public class GameServiceImpl implements GameService{
     private final ChatService chatService;
     private final MessageService messageService;
     private final NotificationService notificationService;
+
+    private final MessageRepository messageRepository;
 
     private final OpenAiUtil openAiUtil;
 
@@ -733,8 +739,38 @@ public class GameServiceImpl implements GameService{
      * @return Rooms list를 반환
      */
     @Override
-    public List<RoomDto> getUserRooms(int userId) throws Exception{
-        return gameMapper.getUserRooms(userId);
+    public List<RoomResponseDto> getUserRooms(int userId) throws Exception{
+        List<RoomResponseDto> userRooms = gameMapper.getUserRooms(userId);
+
+        for (RoomResponseDto room: userRooms){
+            MessageEntity messageEntity = messageRepository.findLastMessageByRoomId(room.getId());
+
+            // 기존 메시지가 있는 경우
+            if (messageEntity != null){
+                // 새로운 메시지가 있는 경우
+                if (room.getLastMessageId() == null
+                        || new ObjectId(messageEntity.getId()).getTimestamp() > new ObjectId(room.getLastMessageId()).getTimestamp()){
+                    // 이미지 메시지인 경우
+                    if(messageEntity.getContent() == null){
+                        room.setLastMessage("사진");
+                    }else{
+                        room.setLastMessage(messageEntity.getContent());
+                    }
+                    room.setLastMessageCreateTime(messageEntity.getCreateTime());
+                    room.setFlagNewMessage(1);
+                }else{
+                    if (messageEntity.getContent() == null){
+                        room.setLastMessage("사진");
+                    }else{
+                        room.setLastMessage(messageEntity.getContent());
+                    }
+                    room.setLastMessageCreateTime(messageEntity.getCreateTime());
+                }
+
+            }
+        }
+
+        return userRooms;
     }
 
     /**

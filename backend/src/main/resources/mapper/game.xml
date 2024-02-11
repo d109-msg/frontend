@@ -284,8 +284,16 @@
 			p.id, p.image_url, p.nickname;
 	</select>
 
-	<select id="getUserRooms" parameterType="integer" resultType="RoomDto">
-		SELECT r.*
+	<select id="getUserRooms" parameterType="integer" resultType="RoomResponseDto">
+		SELECT r.id,
+			   p.last_message_id,
+			   r.data_type,
+			   r.create_time,
+			   r.end_time,
+			   r.start_time,
+			   r.title,
+			   r.image_url,
+			   r.flag_available
 		FROM rooms r
 				 JOIN participants p ON r.id = p.room_id
 		WHERE (r.data_type = '랜덤' OR r.data_type = '그룹') AND end_time IS  NULL
