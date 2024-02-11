@@ -1,70 +1,18 @@
-/* ---------------------- 다크모드 토글 ---------------------- */
 
-.theme-switch-wrapper {
-    position: absolute;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    margin: 20px;
-}
-
-.theme-switch {
-    display: inline-block;
-    height: 34px;
-    position: relative;
-    width: 60px;
-}
-
-.theme-switch input {
-    display:none;
-}
-
-.slider {
-    background-color: #F0C401;
-    background: url('./Img/background_toggle_day.png');
-    background-size: contain;
-    width: 100%;
-    bottom: 0;
-    cursor: pointer;
-    left: 0;
-    position: absolute;
-    right: 0;
-    top: 0;
-    transition: .4s;
-}
-
-.slider:before {
-    background-color: #fff;
-    bottom: 4px;
-    content: "";
-    height: 26px;
-    left: 4px;
-    position: absolute;
-    transition: .4s;
-    width: 26px;
-}
-
-input:checked + .slider {
-    background-color: #2C2836;
-    background: url('./Img/background_toggle_night.png');
-    background-size: contain;
+@media screen and (max-width:860px){
+    .main-banner-box{
+        display: flex;
+        justify-content: center;
+        position: relative;
+        width: 100%;
+        height: 0;
+        padding-bottom: 35%;
+        overflow: hidden;
+    }
+    
 
 }
-
-input:checked + .slider:before {
-    transform: translateX(26px);
-}
-
-.slider.round {
-    border-radius: 34px;
-
-}
-
-.slider.round:before {
-    border-radius: 50%;
-}
-
-/* ---------------------------------------------------- */
+@media screen and (min-width:861px){
 .main-banner-box{
     display: flex;
     justify-content: center;
@@ -75,9 +23,20 @@ input:checked + .slider:before {
     overflow: hidden;
     margin-top: 80px;
 }
-
-.main-banner{
+}
+.main-banner-light{
     background: url(./Img/banner_day.png), lightgray 50%;
+    position: absolute;
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size:cover;
+    height: 100%;
+    width: 100%;
+    top: 0;
+    left: 0;
+}
+.main-banner-dark{
+    background: url(./Img/banner_night.png), lightgray 50%;
     position: absolute;
     background-repeat: no-repeat;
     background-position: center;
@@ -123,15 +82,6 @@ input:checked + .slider:before {
     /* margin: 50px 100px 100px 100px; */
     display: flex;
 }
-
-/* .feed-page{
-    width: 70%;
-    border: 1px solid black;
-    margin: 30px;
-    margin-top: 0;
-    margin-left: 0;
-} */
-
 
 
 

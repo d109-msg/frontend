@@ -1,7 +1,7 @@
 <template>
     <div class="feed-container">
         <div class="first-col" v-if="size!='xs'">
-            <div class="feed-create">
+            <div :class="{'feed-create':!isDarkMode, 'feed-create-dark':isDarkMode}">
                 <div class="create-container">
                     <img class="create-img" :src="userImage" v-if="isLogin">
                     <img class="create-img" src="./Icon/default.png" v-if="!isLogin">
@@ -20,7 +20,7 @@
             </div>
             <template  v-for="(feed,idx) in feedList" :key="idx">
                 <div v-if="idx%2===1">
-                    <Feed :id="idx" v-if="idx%2===1" :item="feed"
+                    <Feed :id="idx" v-if="idx%2===1" :item="feed" :is-dark-mode="isDarkMode"
                     ></Feed>
                 </div>
             </template>
@@ -28,14 +28,14 @@
         <div class="second-col" v-if="size != 'xs'">
             <template  v-for="(feed,idx) in feedList" :key="idx" >
                 <div v-if="idx%2===0">
-                    <Feed :id="idx" v-if="idx%2===0" :item="feed"
+                    <Feed :id="idx" v-if="idx%2===0" :item="feed" :is-dark-mode="isDarkMode"
                     ></Feed>                    
                 </div>
             </template>
-            <FeedCreate v-if="create" @close="complete"/>
+            <FeedCreate v-if="create" @close="complete" :is-dark-mode="isDarkMode"/>
         </div>
         <div class="first-col" v-else>
-            <div class="feed-create">
+            <div :class="{'feed-create':!isDarkMode, 'feed-create-dark':isDarkMode}">
                 <div class="create-container">
                     <img class="create-img" :src="userImage" v-if="isLogin">
                     <img class="create-img" src="./Icon/default.png" v-if="!isLogin">
@@ -54,11 +54,11 @@
             </div>
             <template  v-for="(feed,idx) in feedList" :key="idx">
                 <div>
-                    <Feed :id="idx" :item="feed"
+                    <Feed :id="idx" :item="feed" :is-dark-mode="isDarkMode"
                     ></Feed>
                 </div>
             </template>
-            <FeedCreate v-if="create" @close="complete"/>
+            <FeedCreate v-if="create" @close="complete" :is-dark-mode="isDarkMode"/>
         </div>
     </div>
 </template>
@@ -236,6 +236,7 @@ const server2 = 'https://i10d109.p.ssafy.io/api'
         },
         props:{
             size : String,
+            isDarkMode: Boolean
         },
         components: {
             Feed,

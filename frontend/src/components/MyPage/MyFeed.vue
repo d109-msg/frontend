@@ -1,10 +1,9 @@
 <template>
-  <div class="myfeed-box"> 
+  <div :class="{'myfeed-box':!isDarkMode, 'myfeed-box-dark':isDarkMode}"> 
     <div style="display: flex; justify-content: space-between;">
       <div >
-        <p class="myfeed-title" @click="goGameRecord">
-          <img src="./Img/icon_myfeed.png" alt="">
-          My Feed
+        <p :class="{'myfeed-title':!isDarkMode, 'myfeed-title-dark':isDarkMode}" @click="goGameRecord">
+          My Feed 
         </p>
       </div>
     </div>
@@ -38,6 +37,7 @@ export default {
     props:{
       pageNum : String,
       size : String,
+      isDarkMode : Boolean
     },
     watch: {
       size(){
@@ -52,7 +52,6 @@ export default {
       try{
         let value = await feed.getUserProfile(this.myInfo.id)
         this.myFeed = value.data
-        console.log(this.myFeed)
       } catch(error) {
         console.log(error)
       }

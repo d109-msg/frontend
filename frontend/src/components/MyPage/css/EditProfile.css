@@ -1,4 +1,4 @@
-@media  screen and (max-width:600px) {
+@media  screen and (max-width:800px) {
     .edit-profile-back{
         display: flex;
         justify-content: center;
@@ -9,14 +9,24 @@
         background: rgba(0, 0, 0, 0.3);
         height: 100%;
         width: 100%;
-        z-index: 1000;
+        z-index: 20001;
     }
     
     .edit-profile-box{
-        z-index: 1001;
+        z-index: 20002;
         width: 80%;
-        height: 95%;
+        height: 80%;
         background: #ffffff;
+        border-radius: 10px;
+        padding: 15px;
+        box-shadow: 3px 3px 5px rgba(0, 0, 0, 0.2);
+    }
+
+    .edit-profile-box-dark{
+        z-index: 20002;
+        width: 80%;
+        height: 80%;
+        background: #292829;
         border-radius: 10px;
         padding: 15px;
         box-shadow: 3px 3px 5px rgba(0, 0, 0, 0.2);
@@ -25,8 +35,17 @@
     .edit-profile-nav{
         display: flex;
         justify-content: space-between;
+        align-items: center;
     }
-    
+
+    .edit-profile-nav-dark{
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+    .edit-profile-nav-dark>p{
+        color: #838383;
+    }
     .close-edit-box{
         cursor: pointer;
     }
@@ -49,23 +68,36 @@
     .edit-profile-content{
         width: 100%;
     }
-    
     .edit-profile-content>div{
         display: flex;
         flex-direction: column;
         margin-top: 10px;
         margin-bottom: 10px;
     }
-    
-    
     .edit-profile-content>div>p{
         width: 120px;
     }
-    
-    .btn-box{
-        display: flex;
-        flex-direction: row;
+
+
+    .edit-profile-content-dark{
+        width: 100%;
     }
+    .edit-profile-content-dark>div{
+        display: flex;
+        flex-direction: column;
+        margin-top: 10px;
+        margin-bottom: 10px;
+    }
+    .edit-profile-content-dark>div>p{
+        /* width: 120px; */
+        color: #C79C9C;
+    }
+    .edit-profile-content-dark>div>div{
+        /* width: 120px; */
+        color: #838080;
+    }
+
+
     .withdraw-btn, .edit-btn{
         height: 30px;
         width: 90px;
@@ -83,18 +115,39 @@
     }
     
     .edit-btn{
-        color: #B13139;
-        border: #B13139 solid 1px;
+        color: #D45B62;
+        border: #D45B62 solid 1px;
+        height: 30px;
+        width: 90px;
+        border-radius: 5px;
+        cursor: pointer;
+        background: none;
+        cursor: pointer;
+    }
+
+    .input-box{
+        display: flex;
+        justify-content: space-between;
+        width: 100%;
     }
     .input-style{
         border: none;
-        width: 295px;
+        width: 200px;
+    }
+
+    .input-style-dark{
+        border: none;
+        width: 200px;
+        outline: none;
+        background: none;
+        color: #838080;
     }
     
     .btn-box{
-        display: flex;
-        flex-direction: column;
-        justify-content: flex-end
+        display: inline-flex;
+        flex-direction: row;
+        justify-content: flex-end;
+        /* width: 100%; */
     }
     
     .password-btn{
@@ -105,7 +158,6 @@
         background: none;
         color: #4B6C83;
         border: #4B6C83 solid 1px;
-        margin-right: 20px;
     }
     
     .edit-profile-img-btn{
@@ -118,8 +170,8 @@
         cursor: pointer;
         background: none;
         cursor: pointer;
-        color: #B13139;
-        border: #B13139 solid 1px;
+        color: #D45B62;
+        border: #D45B62 solid 1px;
         margin: 5px;
         font-size: 0.8em;
     }
@@ -138,7 +190,7 @@
         border: 0;
     }
 }
-@media  screen and (min-width:601px) {
+@media  screen and (min-width:801px) {
 
 
 .edit-profile-back{
@@ -151,14 +203,24 @@
     background: rgba(0, 0, 0, 0.2);
     height: 100%;
     width: 100%;
-    z-index: 1000;
+    z-index: 20001;
 }
 
 .edit-profile-box{
-    z-index: 1001;
+    z-index: 20002;
     width: 800px;
     height: 300px;
     background: #ffffff;
+    border-radius: 10px;
+    padding: 15px;
+    box-shadow: 3px 3px 5px rgba(0, 0, 0, 0.2);
+}
+
+.edit-profile-box-dark{
+    z-index: 20002;
+    width: 800px;
+    height: 300px;
+    background: #292829;
     border-radius: 10px;
     padding: 15px;
     box-shadow: 3px 3px 5px rgba(0, 0, 0, 0.2);
@@ -169,8 +231,19 @@
     justify-content: space-between;
 }
 
+.edit-profile-nav-dark{
+    display: flex;
+    justify-content: space-between;
+}
+
+.edit-profile-nav-dark>p{
+    color: #838383;
+}
+
 .close-edit-box{
     cursor: pointer;
+    width: 20px;
+    height: 20px;
 }
 
 .edit-profile-content-box{
@@ -193,7 +266,6 @@
     width: 550px;
     margin-left: 30px;
 }
-
 .edit-profile-content>div{
     display: flex;
     flex-direction: row;
@@ -201,17 +273,50 @@
     margin-bottom: 10px;
 }
 
-
-.edit-profile-content>div>p{
+.title-style{
     width: 120px;
+    color: #C79C9C;
 }
+
+.edit-profile-content-dark{
+    width: 550px;
+    margin-left: 30px;
+}
+.edit-profile-content-dark>div{
+    display: flex;
+    flex-direction: row;
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+
+.content-style-dark{
+    width: 120px;
+    color: #838080;
+}
+
+
 .btn-box{
     display: flex;
-    flex-direction: column;
-    justify-content: flex-end
+    flex-direction: row;
+    justify-content: flex-end;
+    width: 100%;
 }
 
-.withdraw-btn, .edit-btn{
+.withdraw-btn{
+    height: 30px;
+    width: 90px;
+    border-radius: 5px;
+    cursor: pointer;
+    background: none;
+    cursor: pointer;
+    color: #A9A5A5;
+    border: #A9A5A5 solid 1px;
+    margin-right: 30px;
+}
+
+.edit-btn{
+    color: #D45B62;
+    border: #D45B62 solid 1px;
     height: 30px;
     width: 90px;
     border-radius: 5px;
@@ -220,20 +325,25 @@
     cursor: pointer;
 }
 
-.withdraw-btn{
-    color: #A9A5A5;
-    border: #A9A5A5 solid 1px;
-    margin-right: 30px;
-    cursor: pointer;
+.input-box{
+    display: flex;
+    justify-content: space-between;
+    width: 80%;
 }
 
-.edit-btn{
-    color: #B13139;
-    border: #B13139 solid 1px;
-}
 .input-style{
     border: none;
-    width: 295px;
+    width: 200px;
+    outline: none;
+    
+}
+
+.input-style-dark{
+    border: none;
+    width: 200px;
+    outline: none;
+    background: none;
+    color: #838080;
 }
 
 
@@ -246,7 +356,6 @@
     background: none;
     color: #4B6C83;
     border: #4B6C83 solid 1px;
-    margin-right: 20px;
 }
 
 .edit-profile-img-btn{
@@ -259,8 +368,8 @@
     cursor: pointer;
     background: none;
     cursor: pointer;
-    color: #B13139;
-    border: #B13139 solid 1px;
+    color: #D45B62;
+    border: #D45B62 solid 1px;
     margin: 5px;
     font-size: 0.8em;
 }
