@@ -34,7 +34,7 @@ INSERT INTO jobs (`id`, `info`, `image_url`) VALUES
 ('판사', '판사입니다.', 'tmpurl'),
 ('미치광이', '미치광이입니다.', 'tmpurl'),
 ('불침번', '불침번입니다.', 'tmpurl'),
-('변장술사', '변장술사입니다.', 'tmpurl'),
+-- ('변장술사', '변장술사입니다.', 'tmpurl'),
 ('스파이', '스파이입니다.', 'tmpurl'),
 ('건달', '건달입니다.', 'tmpurl');
 
@@ -129,7 +129,9 @@ INSERT INTO `participants` (`id`, `room_id`, `user_id`, `last_message_id`, `nick
 (13, 'room1', 3, NULL, '능숙한 스틸'),
 (14, 'room1', 4, NULL, '우울한 터너'),
 (15, 'room1', 5, NULL, '은밀한 데모네'),
-(16, 'room1', 6, NULL, '비밀스러운 콜레오네');
+(16, 'room1', 6, NULL, '비밀스러운 콜레오네')
+-- (17, 'room1', 7, NULL, '바보')
+;
 
 INSERT INTO `missions` (`normal`, `mafia`) VALUES
 ('자연 사진', '나무 사진'),
@@ -216,7 +218,7 @@ INSERT INTO article_images (article_id, url, uuid, flag_mission) VALUES
 SELECT * FROM articles ;
 -- SELECT * FROM article_images ai ;
 -- SELECT * FROM daily_missions;
--- SELECT * FROM participants;
+SELECT * FROM participants;
 -- SELECT * FROM users;
 SELECT * FROM rooms;
 
