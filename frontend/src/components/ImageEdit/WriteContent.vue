@@ -7,7 +7,7 @@
         <div class="right-arrow" @click.prevent="nextImg" v-if="imgSrc.length>1"></div>
     </div>
     <div class="text-wrapper">
-        <p>게시물 게시 범위 : {{ selectRoom }}</p>
+        <p>게시물 게시 범위 : <span v-if="roomId==''">일상 게시물</span> <span v-else>미션 게시물</span></p>
         <p class="description">설명</p>
         <div class="description-text">
             <textarea type="text" placeholder="설명을 입력해주세요.(300자)" maxlength="300" v-model="content"></textarea>
@@ -67,7 +67,7 @@ export default {
     mounted(){
         this.imgData = this.$props.dataInfo['imgData']
         this.imgSrc = this.$props.dataInfo['imgSrc']
-        this.selectRoom= this.$props.dataInfo['selectRoom']
+        this.roomId= this.$props.dataInfo['roomId']
     }
 }
 </script>

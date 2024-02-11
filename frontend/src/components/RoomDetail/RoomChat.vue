@@ -9,11 +9,11 @@
         <div v-else>내 직업 : {{participant.jobId }}</div>
       </div>
       <div class="chat-box">
-        <div v-for="(message,idx) in chat[roomId]" :key="idx">
+        <div v-for="(message,idx) in chatStore.getMessage[roomData.id]" :key="idx" style="margin-top: 10px;" :id="'message'+idx">
           <div v-if="message.userId != participant.userId">
             <div v-for="(user,key) in member" :key="key" >
               <div v-if="user.userId == message.userId">
-                <div style="display: flex;">
+                <div style="display: flex;"  v-if="message.flagMafia==0">
                   <img :src="user.imageUrl" alt="" style="width: 35px; height: 35px;">
                   <div>
                     <p style="font-size: 13px; padding-left: 10px; font-weight: bold;">{{ user.nickname }}</p>
@@ -24,13 +24,27 @@
                     </div>
                   </div>
                 </div>
-                  
+                <div style="display: flex;"  v-if="(participant.flagMafia==true || participant.jobId=='불침번') && message.flagMafia==1">
+                  <img src="./Img/mafia.png" alt="" style="width: 35px; height: 35px;">
+                  <div>
+                    <p style="font-size: 13px; padding-left: 10px; font-weight: bold;" v-if="participant.jobId == '불침번'">마피아</p>
+                    <p style="font-size: 13px; padding-left: 10px; font-weight: bold;" v-if="participant.flagMafia==true">{{ user.nickname }}</p>
+
+                    <div class="chat-other-box">
+                      <div class="chat-other-mafia">
+                        {{ message.content }}
+                      </div>
+                    </div>
+                  </div>
+                  </div>
               </div>
             </div>
           </div>
-
-          <div class="chat-my-box">
-            <div class="chat-my-text">
+          <div class="chat-my-box" style="margin-top: 10px;" v-else-if="message.userId == participant.userId">
+            <div class="chat-my-text" v-if="message.flagMafia == 0">
+              {{ message.content }}
+            </div>
+            <div class="chat-my-mafia" v-if="message.flagMafia == 1">
               {{ message.content }}
             </div>
           </div>
@@ -39,11 +53,18 @@
     </div>
     <div class="chat-input-box">
       <textarea type="text" class="chat-input" id="content" cols="40" rows="3" maxlength="100" v-model="message" @keyup.enter.prevent="send"
+      v-if="mafiaFlag==false"
       ></textarea>
+      <textarea type="text" class="chat-input-mafia" id="content" cols="40" rows="3" maxlength="100" v-model="message" @keyup.enter.prevent="sendMafia"
+      v-if="participant.flagMafia && mafiaFlag==true"></textarea>
       <div class="input-num" >{{ inputNum }}/100</div>
       <div class="photo-icon"></div>
-      <div class="submit-icon" @click.prevent="send">보내기</div>
-    </div>
+      <div class="mafia-chat" v-if="participant.flagMafia "
+      @click="mafiaChat"
+      ></div>
+      <div class="submit-icon" @click.prevent="send" v-if="mafiaFlag == false">보내기</div>
+      <div class="submit-mafia" @click.prevent="sendMafia" v-if="participant.flagMafia  && mafiaFlag==true">보내기</div>
+  </div>
   </div>
 </template>
  
@@ -63,8 +84,9 @@ export default {
         receive :"",
         message : "",
         chatStore : useChatStore(),
-        chat : useChatStore().getMessage,
         boxFlag : true,
+        mafiaFlag : false,
+        io : {},
       }
     },
     props:{
@@ -89,63 +111,79 @@ export default {
         },
       scrollToBottom(){
         this.$nextTick(()=>{
-          const messageContent =  document.querySelector('.chat-content')
+          const messageContent =  document.querySelector('.chat-box')
           messageContent.scrollTop = messageContent.scrollHeight
         })
       },
-      // showMessage : function(data){
-      //     this.receive = data.text 
-      //     const chatBox = document.createElement('div')
-      //     chatBox.style.marginTop = '10px';
-      //     chatBox.style.marginRight = '20px';
-      //     chatBox.style.textAlign = 'right';
-      //     const chatText = document.createElement('div')
-      //     chatText.style.display = 'inline-block';
-      //     chatText.style.position = 'relative';
-      //     chatText.style.backgroundColor = '#486880';
-      //     chatText.style.borderRadius = '20px 0px 20px 20px';
-      //     chatText.style.color = '#fff';
-      //     chatText.style.padding = '10px 15px';
-      //     chatText.style.marginBottom = '10px;'
-      //     chatText.style.maxWidth = '230px'
-      //     chatText.innerHTML = this.receive
-      //     document.querySelector('.chat-content').appendChild(chatBox)
-
-      //     const chatTime = document.createElement('div')
-      //     chatTime.style.position = 'absolute';
-      //     chatTime.style.left = '-55px';
-      //     chatTime.style.top = '15px';
-      //     chatTime.style.color = '#B1AFAF';
-      //     chatTime.style.fontSize = '12px'
-      //     chatTime.innerHTML = '오후 2:43';
-      //     chatBox.appendChild(chatText)
-      //     chatText.appendChild(chatTime)
-
-      //     this.scrollToBottom();
-      //   },
-      //   callBack : function(){
-      //   },
-      //   connect :  function(){
-      //     let socket = new SockJs("http://localhost:8080/api/ws-stomp")
-      //     this.stompClient = Stomp.over(socket)
-      //     const auth = useAuthStore()
-      //     let value = auth.getAccess
-
-      //     const headers = {"Authorization": value}
-      //     this.stompClient.connect(headers,()=>{
-      //       this.sub = this.stompClient.subscribe('/sub/'+this.roomId, (e)=>{
-      //         this.showMessage(JSON.parse(e.body))
-
-      //       })
-      //     },
-      //     function(e){
-      //       alert('에러발생!')
-      //     })
-      //   },
+      mafiaChat(){
+        this.mafiaFlag = !(this.mafiaFlag)
+      },
       send : function(){
         let data = {
-          'roomId' : this.roomId,
+          'roomId' : JSON.parse(this.$route.params.data).id,
           'flagMafia' : 0,
+          'content' : this.message,
+          'base64Images' : [],
+        }
+        this.chatStore.getStomp.send("/pub/message",JSON.stringify(data))
+        this.message = ""
+        setTimeout(()=>{
+          this.scrollToBottom()
+        },100)
+      },
+      loadChat : async function(){
+        const chat = useChatStore()
+        const id = JSON.parse(this.$route.params.data).id
+        if(id in chat.getReload){
+          if(chat.getReload[id] == false){
+            return
+          }
+        }
+        const nextRoom = chat.getNextRoom
+        if(!(id in nextRoom)){
+          nextRoom[id] = `?room-id=${id}`
+        }
+        let elem = document.querySelector('.chat-box')
+        let value = await chat.readMessage(nextRoom[id])
+        if(value.data != ""){
+          nextRoom[id] = value.data.nextUrl
+          if(nextRoom[id] != null){
+            let itemCount = 0
+            value.data.messageResponseDtos.forEach(item=>{
+              if(id in chat.getMessage){
+                chat.message[id].unshift(item)
+              }else{
+                chat.message[id] = [item]
+              }
+              itemCount += 1
+            })
+            let target = null
+            await this.$nextTick(()=>{
+              target = document.getElementById('message0')
+            })
+            let totalHeight = 0
+            for(let i=0; i<itemCount; i++){
+              totalHeight += document.getElementById(`message${i}`).offsetHeight
+            }
+            elem.scrollTop = totalHeight
+            this.io.observe(target)
+          }else{
+            chat.getReload[id] = false
+          }
+        }
+      },
+      call : async function(items,io){
+        items.forEach(async item=>{
+          if(item.isIntersecting){
+            io.unobserve(item.target)
+            await this.loadChat()
+          }
+        })
+      },
+      sendMafia : function(){
+        let data = {
+          'roomId' : JSON.parse(this.$route.params.data).id,
+          'flagMafia' : 1,
           'content' : this.message,
           'base64Images' : [],
         }
@@ -161,6 +199,10 @@ export default {
             try{
               await this.getUser()
               this.$emit('userInfo',this.userInfo)
+              await this.loadChat()
+              setTimeout(()=>{
+              this.scrollToBottom()
+              },100)
               // this.connect()
             } catch(err){
               console.log(err)
@@ -168,6 +210,7 @@ export default {
         }
       },
       mounted(){
+        this.io = new IntersectionObserver(this.call,{threshold : 1.0})
         this.startPage()
       },
 

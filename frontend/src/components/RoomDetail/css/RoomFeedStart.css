@@ -34,17 +34,23 @@
     cursor: pointer;
 
 }
-
+.toggle-job{
+    position: absolute;
+    width: 20px;
+    height: 20px;
+    right: 20px;
+    top: 20px;
+    z-index: 999;
+    cursor: pointer;
+}
 .feed-content{
     position: relative;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
     width: 100%;
     height: 80%;
     margin-top: 70px;
 }
+
+
 
 .invite-code-title{
     display: flex;
@@ -76,6 +82,7 @@
 }
 
 .mission-box{
+    z-index: 99;
     position: absolute;
     display: flex;
     flex-direction: column;
@@ -88,4 +95,24 @@
     font-size: 0.9em;
     padding: 2%;
     top: 0;
+}
+.feed-content-box{
+    position: relative;
+    width: 100%;
+    height: 100%;
+    overflow-y: scroll;
+}
+
+.feed-content-box::-webkit-scrollbar{
+    width: 8px;
+}
+
+.feed-content-box::-webkit-scrollbar-thumb{
+    height: 30%;
+    background: #486880;
+    border-radius: 10px;
+}
+
+.feed-content-box::-webkit-scrollbar-track{
+    background: transparent; 
 }

@@ -15,12 +15,17 @@ const server2 = 'https://i10d109.p.ssafy.io/api'
 
 export const useFeedStore = defineStore('feed',{
     state: ()=>({
- 
+        mission : "",
     }),
     getters: {
-
+        getMission :(state)=>{
+            return state.mission
+        }
     },
     actions: {
+        setMission : function(value){
+            this.mission = value
+        },
         axiosFeed : async function(content,roomId,imgData){
             const authStore = useAuthStore()
             const data = new FormData()
