@@ -364,8 +364,8 @@
 	</select>
 
 	<select id="getParticipantsInRoom" parameterType="string"
-			resultType="int">
-		select id
+			resultType="ParticipantIdDto">
+		select id, user_id
 		from participants
 		where room_id = #{roomId};
 	</select>

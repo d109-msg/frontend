@@ -59,7 +59,7 @@ public interface GameMapper {
 
     Integer completeMission(int participantId, int day) throws SQLException;
 
-    List<Integer> getParticipantsInRoom(String roomId) throws SQLException;
+    List<ParticipantIdDto> getParticipantsInRoom(String roomId) throws SQLException;
 
     void updateStartTime(String roomId) throws SQLException;
 

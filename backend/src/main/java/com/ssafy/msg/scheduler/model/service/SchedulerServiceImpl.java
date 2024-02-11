@@ -10,6 +10,7 @@ import com.ssafy.msg.game.util.GameUtil;
 import com.ssafy.msg.message.model.service.MessageService;
 import com.ssafy.msg.scheduler.model.dto.JudgeResultDto;
 import com.ssafy.msg.scheduler.model.dto.RandomMafiaDto;
+import com.ssafy.msg.scheduler.model.dto.RoomIdTitleDto;
 import com.ssafy.msg.scheduler.model.dto.UpdateWinFlagDto;
 import com.ssafy.msg.scheduler.model.mapper.SchedulerMapper;
 import lombok.RequiredArgsConstructor;
@@ -48,9 +49,9 @@ public class SchedulerServiceImpl implements SchedulerService{
 
 
         // 7명이 모두 모였지만 start_time이 null인 그룹방 roomId 조회
-        List<String> unstartRoom = schedulerMapper.getUnstartRoom();
-        for (String roomId: unstartRoom){
-            gameService.startGroupGame(roomId, gameMapper.getParticipantsInRoom(roomId));
+        List<RoomIdTitleDto> unstartRoom = schedulerMapper.getUnstartRoom();
+        for (RoomIdTitleDto room: unstartRoom){
+            gameService.startGroupGame(room.getRoomId(), room.getTitle(), gameMapper.getParticipantsInRoom(room.getRoomId()));
         }
 
         // 대기방 인원 체크 및 게임 시작

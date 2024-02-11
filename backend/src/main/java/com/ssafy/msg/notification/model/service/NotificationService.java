@@ -31,11 +31,9 @@ public interface NotificationService {
     void sendCommentLikeNotice(CommentLikeDto commentLikeDto);
 
 
+
     // 게임 시작
-    void sendGameStartNotice();
-
-
-
+    void sendGameStartNotice(int userId, String title, String type);
 
 
     // 채팅방 구독 요청 STOMP 메시지 전송
