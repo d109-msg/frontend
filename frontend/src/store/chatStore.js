@@ -99,11 +99,9 @@ export const useChatStore = defineStore('chat',{
                 })
         },
         subRequest : async function(data){
-            console.log(data)
             this.stompClient.subscribe('/sub/'+data.content,(e)=>{
                 this.setMessage(data.content,JSON.parse(e.body))
             })
-            // this.stompClient.subscribe('/sub/'+data.)
         },
         makeConnect : async function(data){
             let socket = new SockJS(`${server}/ws-stomp`)
