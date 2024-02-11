@@ -61,11 +61,7 @@
                     ></Feed>
                 </div>
             </template>
-<<<<<<< HEAD
-            <FeedCreate v-if="create" @close="complete" :is-dark-mode="isDarkMode"/>
-=======
-            <FeedCreate v-if="create" @close="complete" :roomId="''"/>
->>>>>>> b9b1b3e61d96a8788049d5c9eb9ec37d0fc14458
+            <FeedCreate v-if="create" @close="complete" :is-dark-mode="isDarkMode"  :roomId="''"/>
         </div>
     </div>
 </template>
