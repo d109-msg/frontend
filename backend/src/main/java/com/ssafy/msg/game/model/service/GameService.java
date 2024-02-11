@@ -63,7 +63,7 @@ public interface GameService {
 
     void startRandomGame() throws Exception;
 
-    void startGroupGame(String roomId, List<Integer> participantList) throws Exception;
+    void startGroupGame(String roomId, String roomTitle, List<ParticipantIdDto> participantList) throws Exception;
 
     void newDayMission(String roomId) throws Exception;
 
