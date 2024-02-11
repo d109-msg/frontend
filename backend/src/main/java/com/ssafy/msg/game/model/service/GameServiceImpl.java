@@ -15,6 +15,7 @@ import com.ssafy.msg.game.util.GameUtil;
 import com.ssafy.msg.message.model.mapper.MessageMapper;
 //import com.ssafy.msg.message.model.service.MessageService;
 import com.ssafy.msg.message.model.service.MessageService;
+import com.ssafy.msg.notification.model.service.NotificationService;
 import com.ssafy.msg.scheduler.model.mapper.SchedulerMapper;
 import com.ssafy.msg.user.model.dto.UserDto;
 import com.ssafy.msg.user.model.mapper.UserMapper;
@@ -41,6 +42,7 @@ public class GameServiceImpl implements GameService{
 
     private final ChatService chatService;
     private final MessageService messageService;
+    private final NotificationService notificationService;
 
     private final OpenAiUtil openAiUtil;
 
@@ -594,7 +596,7 @@ public class GameServiceImpl implements GameService{
             if (isParticipantInRoom){
                 throw new GroupRoomDuplicateException();
             }else {
-                List<Integer> participants = gameMapper.getParticipantsInRoom(roomId);
+                List<ParticipantIdDto> participants = gameMapper.getParticipantsInRoom(roomId);
                 if (participants.size() >= 7){
                     throw new GroupRoomFullException();
                 }else {
@@ -612,7 +614,7 @@ public class GameServiceImpl implements GameService{
 
                     if (participants.size() == 6){
                         if (getTime(8, 13)){
-                            startGroupGame(roomId, participants);
+                            startGroupGame(roomId, roomDto.getTitle(), participants);
                         }
                     }
                 }
@@ -1061,9 +1063,14 @@ public class GameServiceImpl implements GameService{
                     .build();
             schedulerMapper.createRoom(roomDto);
 
-            RoomStartReceiveDto roomStartReceiveDto = new RoomStartReceiveDto(roomId, waitingUsersId.subList(i*7, i*7+7));
+            RoomStartReceiveDto roomStartReceiveDto = new RoomStartReceiveDto(roomId, roomDto.getTitle(), waitingUsersId.subList(i*7, i*7+7));
 
-            randomGameStart(roomStartReceiveDto);
+            List<ParticipantDto> participantDtos = randomGameStart(roomStartReceiveDto);
+
+            for(ParticipantDto participantDto: participantDtos){
+                notificationService.sendRoomSubscribeRequest(participantDto.getUserId(), roomStartReceiveDto.getRoomId());
+                notificationService.sendGameStartNotice(participantDto.getUserId(), roomStartReceiveDto.getRoomTitle(), "랜덤");
+            }
             messageService.sendStartNotice(roomId);
 
             newDayMission(roomId);
@@ -1072,7 +1079,7 @@ public class GameServiceImpl implements GameService{
     }
 
     @Override
-    public void startGroupGame(String roomId, List<Integer> participantList) throws Exception{
+    public void startGroupGame(String roomId, String roomTitle, List<ParticipantIdDto> participantList) throws Exception{
         int numOfPlayers = participantList.size();
         List<RandomNameDto> randomNicknames = null;
 
@@ -1084,7 +1091,7 @@ public class GameServiceImpl implements GameService{
 
         for(int i = 0; i  < numOfPlayers; i++) {
             UpdateParticipantDto updateParticipantDto = UpdateParticipantDto.builder()
-                    .id(participantList.get(i))
+                    .id(participantList.get(i).getId())
                     .nickname(randomNicknames.get(i).getFirstName() + " " + randomNicknames.get(i).getLastName())
                     .jobId(randomJobs.get(i))
                     .imageUrl(randomNicknames.get(i).getImgUrl())
@@ -1094,6 +1101,10 @@ public class GameServiceImpl implements GameService{
         }
 
         gameMapper.updateStartTime(roomId);
+
+        for(int i = 0; i < numOfPlayers; i++){
+            notificationService.sendGameStartNotice(participantList.get(i).getUserId(), roomTitle, "그룹");
+        }
         messageService.sendStartNotice(roomId);
         newDayMission(roomId);
     }

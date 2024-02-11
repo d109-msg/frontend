@@ -42,8 +42,8 @@
     </select>
 
     <select id="getUnstartRoom"
-            resultType="string">
-        select p.room_id
+            resultType="RoomIdTitleDto">
+        select p.room_id, r.title
         from participants p
                  join rooms r on p.room_id = r.id
         where r.start_time is null and r.data_type = '그룹'
