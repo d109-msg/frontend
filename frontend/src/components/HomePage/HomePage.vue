@@ -1,8 +1,11 @@
 <template>
-  <div class="container">
-    <NavBarVue :page="page"/>
-    <router-view @page-change="change"></router-view>
-  </div>
+  <body :class="{'body-light': !isDarkMode, 'body-dark': isDarkMode}">
+    <div :class="{'container-light':!isDarkMode, 'container-dark':isDarkMode}">
+      <NavBarVue :page="page" :is-dark-mode="isDarkMode"/>
+      <router-view @page-change="change" :is-dark-mode="isDarkMode" ></router-view>
+
+    </div>
+  </body>
 </template>
 
 <script>
@@ -10,22 +13,26 @@ import NavBarVue from '@/components/NavBar/NavBar.vue'
 import MainPage from '../MainPage/MainPage.vue';
 import { useChatStore } from '@/store/chatStore';
 import { useAuthStore } from '@/store/authStore';
-import Stomp from 'webstomp-client'
-import SockJS from "sockjs-client"
+
 
 export default {
   name:"HomePage",
   data(){
     return{
       page : '',
-      data : []
+      data : [],
+
     }
+  },
+  props:{
+    isDarkMode : Boolean
   },
   computed:{
       isConnect(){
         const chat = useChatStore()
         return chat.getConnect
-      }
+      },
+
     },
     watch:{
       isConnect(nv,ov){
@@ -44,10 +51,10 @@ export default {
       }
     },
   methods:{
+
     change : function(value){
       this.page = value
     },
-    
     startPage : async function(){
       const auth = useAuthStore()
       const chat = useChatStore()

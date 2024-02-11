@@ -1,13 +1,19 @@
-/* Web */
-@media screen and (min-width:990px) {
 
-    .container {
-        /* overflow: scroll; */
-        width: 100%;        
-        height: 100vh;
-        font-family: 'Viga', sans-serif;
-        background-color: #FFF8ED;
-    }
+
+/* ----------------------------------------- */
+
+.container-light {
+    position: relative;
+    width: 100%;        
+    height: 100vh;
+    font-family: 'Viga', sans-serif;
+    background-color: #FFF8ED;
+}
   
-    
+.container-dark {
+    position: relative;
+    width: 100%;        
+    height: 100vh;
+    font-family: 'Viga', sans-serif;
+    background-color: #212020;
 }

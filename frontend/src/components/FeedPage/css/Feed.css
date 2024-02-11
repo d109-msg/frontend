@@ -8,6 +8,16 @@
         margin: 0px 10px 45px 10px;
         position: relative;
     }
+
+    .feed-card-dark{
+        width: 95%;
+        border-radius: 10px;
+        border: 1px solid #292829;
+        background-color: #292829;
+        box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.25);
+        margin: 0px 10px 45px 10px;
+        position: relative;
+    }
     .feed-item{
         margin: 30px 25px 0px 20px;
         display: flex;
@@ -30,6 +40,11 @@
     .user-name{
         font-size: 18px;
         color: #474646;
+        cursor: pointer;
+    }
+    .user-name-dark{
+        font-size: 18px;
+        color: #fff;
         cursor: pointer;
     }
     .user-comment{
@@ -94,15 +109,17 @@
         width: 24px;
         height: 23px;
     }
-    .share-icon{
-        background-position: 50% 50%;
-        cursor: pointer;
-        background: url(../Icon/share.png);
+    .chat-icon-dark{
+        background: url(../Icon/chat_dark.png);
         background-size: contain;
         background-repeat: no-repeat;
-        width: 22px;
+        background-position: 50% 50%;
+        cursor: pointer;
+        margin-right: 10px;
+        width: 24px;
         height: 23px;
     }
+
     
     .latest-chat{
         font-size: 10px;
@@ -157,11 +174,43 @@
         justify-content: center;
         z-index: 1000;
     }
+    .list-container{
+        position: absolute;
+        width: 130px;
+        height: 60px;
+        background: #474646;
+        top: 10px;
+        left: -100px;
+        border-radius: 5px;
+        filter: drop-shadow(0px 4px 4px rgba(0,0,0,0.25));
+        cursor: auto;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        z-index: 1000;
+    }
     
     .list-container>p{
         font-size: 10px;
         font-weight: lighter;
         color: #777272;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        cursor: pointer;
+    }
+    .list-container>p>img{
+        width: 20px;
+        height: 20px;
+        margin-right: 5px;
+        cursor: pointer;
+    
+    }
+
+    .list-container>p{
+        font-size: 0.8em;
+        font-weight: lighter;
+        color: #FFFDF3;
         display: flex;
         justify-content: center;
         align-items: center;
@@ -197,6 +246,15 @@
     margin: 0px 10px 45px 10px;
     position: relative;
 }
+.feed-card-dark{
+    width: 450px;
+    border-radius: 10px;
+    border: 1px solid #292829;
+    background-color: #292829;
+    box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.25);
+    margin: 0px 10px 45px 10px;
+    position: relative;
+}
 .feed-item{
     margin: 30px 25px 0px 20px;
     display: flex;
@@ -221,10 +279,14 @@
     color: #474646;
     cursor: pointer;
 }
+.user-name-dark{
+    font-size: 18px;
+    color: #fff;
+    cursor: pointer;
+}
 .user-comment{
     font-size: 15px;
     color: #A9A5A5;
-
 }
 .list-svg{
     position: absolute;
@@ -273,6 +335,8 @@
     cursor: pointer;
     animation: heart 0.3s forwards ;
 }
+
+
 .chat-icon{
     background: url(../Icon/chat.png);
     background-size: contain;
@@ -283,15 +347,17 @@
     width: 24px;
     height: 23px;
 }
-.share-icon{
-    background-position: 50% 50%;
-    cursor: pointer;
-    background: url(../Icon/share.png);
+.chat-icon-dark{
+    background: url(../Icon/chat_dark.png);
     background-size: contain;
     background-repeat: no-repeat;
-    width: 22px;
+    background-position: 50% 50%;
+    cursor: pointer;
+    margin-right: 10px;
+    width: 24px;
     height: 23px;
 }
+
 
 .latest-chat{
     font-size: 10px;
@@ -346,9 +412,24 @@
     justify-content: center;
     z-index: 1000;
 }
+.list-container-dark{
+    position: absolute;
+    width: 130px;
+    height: 60px;
+    background: #474646;
+    top: 10px;
+    left: -100px;
+    border-radius: 5px;
+    filter: drop-shadow(0px 4px 4px rgba(0,0,0,0.25));
+    cursor: auto;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    z-index: 1000;
+}
 
 .list-container>p{
-    font-size: 10px;
+    font-size: 0.8em;
     font-weight: lighter;
     color: #777272;
     display: flex;
@@ -357,6 +438,23 @@
     cursor: pointer;
 }
 .list-container>p>img{
+    width: 20px;
+    height: 20px;
+    margin-right: 5px;
+    cursor: pointer;
+
+}
+
+.list-container-dark>p{
+    font-size: 0.8em;
+    font-weight: lighter;
+    color: #FFFDF3;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+}
+.list-container-dark>p>img{
     width: 20px;
     height: 20px;
     margin-right: 5px;

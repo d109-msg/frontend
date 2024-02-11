@@ -1,5 +1,5 @@
 <template>
-    <div class="my-mini"> 
+    <div :class="{'my-mini':!isDarkMode,'my-mini-dark':isDarkMode}"> 
         <div class="notification-back" @click.self="showFlag = false" v-if="showFlag">
             <div class="notification-content">
                 <div class="notification-title">
@@ -39,8 +39,8 @@
         </div>
         <div class="my-mini-content" v-if="Object.keys(userInfo).length > 0">
             <img class="mini-image" :src="userInfo.imageUrl">
-            <div class="mini-name">{{ userInfo.nickname }}</div>
-            <div class="mini-comment">{{ userInfo.bio }}</div>
+            <div :class="{'mini-name':!isDarkMode,'mini-name-dark':isDarkMode}">{{ userInfo.nickname }}</div>
+            <div :class="{'mini-comment':!isDarkMode,'mini-comment-dark':isDarkMode}">{{ userInfo.bio }}</div>
             <div class="mini-following-count">
                 <span class="following">Following</span>
                 <span class="count">{{ userInfo.followingCount }}</span>
@@ -52,8 +52,8 @@
         </div>
         <div class="my-mini-content" v-else>
             <img class="mini-image" src="./default.png">
-            <div class="mini-name">Anonymous</div>
-            <div class="mini-comment">fun, daily, mafia game!!!</div>
+            <div :class="{'mini-name':!isDarkMode,'mini-name-dark':isDarkMode}">Anonymous</div>
+            <div :class="{'mini-comment':!isDarkMode,'mini-comment-dark':isDarkMode}">Play the Mafia game!!!</div>
             <div class="mini-following-count">
                 <span class="following">Following</span>
                 <span class="count">0</span>
@@ -121,6 +121,7 @@ export default {
     },
     props:{
         userInfo : Object,
+        isDarkMode : Boolean
     },
 
     watch:{

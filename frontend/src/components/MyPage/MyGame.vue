@@ -1,10 +1,9 @@
 <template>
-  <div class="mygame-box"> 
+  <div :class="{'mygame-box':!isDarkMode, 'mygame-box-dark':isDarkMode}"> 
     <div style="display: flex; justify-content: space-between;">
       <div >
-        <p class="mygame-title" @click="goGameRecord">
-          <img src="./Img/icon_gamerecord.png" alt="">
-          Game Record4
+        <p :class="{'mygame-title':!isDarkMode,'mygame-title-dark':isDarkMode}" @click="goGameRecord">
+          Game Record
         </p>
       </div>
     </div>
@@ -14,13 +13,13 @@
       </div>
       <div class="bar-chart">
         <div>
-          <span>시민 ({{ civilRange }})</span>
+          <span :class="{'job-title':!isDarkMode, 'job-title-dark':isDarkMode}">시민 ({{ civilRange }})</span>
           <div class="bar">
             <div class="civil"></div>
           </div>
         </div>
         <div>
-          <span>마피아 ({{ mafiaRange }})</span>
+          <span :class="{'job-title':!isDarkMode, 'job-title-dark':isDarkMode}" >마피아 ({{ mafiaRange }})</span>
           <div class="bar">
             <div class="mafia"></div>
           </div>
@@ -47,6 +46,8 @@ export default {
     props:{
       pageNum : String,
       size : String,
+      isDarkMode : Boolean
+
     },
     methods:{
       goGameRecord(){

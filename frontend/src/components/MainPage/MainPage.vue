@@ -2,22 +2,17 @@
     <!-- 메인 페이지 -->
     <div>
         <div class="main-banner-box">
-            <div class="main-banner">
-                <div class="theme-switch-wrapper">
-                    <label class="theme-switch" for="checkbox">
-                        <input type="checkbox" id="checkbox" />
-                        <div class="slider round"></div>
-                    </label>
-                </div>
+            <div :class="{'main-banner-light': !isDarkMode, 'main-banner-dark': isDarkMode}">
+                <!-- <div  :class="{'main-banner-light': isDarkMode, 'main-banner-dark': !isDarkMode}"> -->
 
             </div>
         </div>
         <div class="main-container">
             <!-- 추후 컴포넌트로 분리 가능(피드) -->
-            <FeedPage @user-info="sendUser" :size="size"/>
+            <FeedPage @user-info="sendUser" :size="size" :is-dark-mode="isDarkMode"/>
 
             <!-- 추후 컴포넌트로 분리 가능(작은 프로필) -->
-            <MiniProfile :userInfo="user"
+            <MiniProfile :userInfo="user" :is-dark-mode="isDarkMode"
             v-if="size == 'lg'"
             />
 
@@ -44,7 +39,11 @@ export default {
         MiniProfile,
         FeedPage,
     },
+    props:{
+        isDarkMode : Boolean
+    },
     methods:{
+
         sendUser: function(data){
             this.user = data
         },
@@ -92,6 +91,6 @@ export default {
 }
 </script>
 
-<style src="./MainPage.css">
+<style scoped src="./MainPage.css">
 
 </style>

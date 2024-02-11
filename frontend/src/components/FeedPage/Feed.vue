@@ -1,7 +1,7 @@
 <template>
-    <div class="feed-card">
+    <div :class="{'feed-card':!isDarkMode, 'feed-card-dark':isDarkMode}">
     <div class="list-svg" @click="editFlag=!editFlag">
-      <div class="list-container" v-if="userInfo.id==feed.userId && editFlag == true">
+      <div :class="{'list-container':!isDarkMode,'list-container-dark':isDarkMode}" v-if="userInfo.id==feed.userId && editFlag == true">
           <p style="width: 100px;"
           @click="deleteFeed"
           ><img src="./Icon/delete.png" alt="">게시물 삭제</p>
@@ -14,7 +14,7 @@
     <div class="feed-item">
       <img class="user-img" :src="feed.imageUrl">
       <div class="user-info">
-        <div class="user-name" @click="userProfile">{{ feed.nickname }}</div>
+        <div :class="{'user-name':!isDarkMode,'user-name-dark':isDarkMode}" @click="userProfile">{{ feed.nickname }}</div>
         <div class="user-comment">{{ feed.content }}</div>
       </div>
     </div>
@@ -23,14 +23,16 @@
     <img class="feed-img" :src="feed.urls[0]" @click.prevent="onDetail">
     <div class="feed-btn">
       <img class="heart-icon" src="./Icon/heart.png" 
-      v-if="item.isLike==0"
+      v-if="item.isLike==0 && !isDarkMode"
+      @click.prevent="likeArticle">
+      <img class="heart-icon" src="./Icon/heart_dark.png" 
+      v-if="item.isLike==0 && isDarkMode"
       @click.prevent="likeArticle">
       <img class="heart-icon" src="./Icon/fullheart.png" 
       v-if="item.isLike == 1" @click.prevent="likeArticle">
       
-      <div class="chat-icon" @click.prevent="onDetail"></div>
+      <div :class="{'chat-icon':!isDarkMode,'chat-icon-dark':isDarkMode}" @click.prevent="onDetail"></div>
 
-      <div class="share-icon"></div>
     </div>
     <div class="feed-chat">
       <div class="latest-chat">
@@ -107,6 +109,8 @@ export default {
     },
     props:{
       item : Object,
+      isDarkMode : Boolean
+
     },
     components:{
       DetailPage,
