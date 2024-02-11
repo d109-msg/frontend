@@ -1,19 +1,19 @@
 <template>
-  <div>
+  <div >
     <div class="mypage-banner-box">
-      <div class="mypage-banner">
+      <div :class="{'mypage-banner-light': !isDarkMode , 'mypage-banner-dark':isDarkMode}">
       </div>
     </div>
 
     <div class="mypage-box">
-      <div class="profile-box">
+      <div :class="{'profile-box-light':!isDarkMode, 'profile-box-dark':isDarkMode}">
         <div class="profile-content">
           <div class="edit-profile" @click="openEdit" ></div>
           <img class="profile-img" :src="userInfo.imageUrl" alt="">
-          <div class="profile-section">
+          <div :class="{'profile-section':!isDarkMode, 'profile-section-dark':isDarkMode}">
             <div class="">닉네임 <span> {{ userInfo.nickname  }} </span></div>
             <div class="" >소개글 <span> {{ userInfo.bio }} </span></div>
-            <div class="profile-bot-section">
+            <div :class="{'profile-bot-section':!isDarkMode, 'profile-bot-section-dark':isDarkMode}">
               <div>게시물 <span> {{ userInfo.articleCount }} </span></div>
               <div>팔로우 <span> {{ userInfo.followerCount }} </span></div>
               <div>팔로잉 <span> {{ userInfo.followingCount }}</span></div>
@@ -28,22 +28,28 @@
           <span class="slider"></span>
         </label>
       </div>
-      <MyFeedVue v-if="pageNum=='1'"  ></MyFeedVue>
-      <MyGameVue v-else-if="pageNum=='2'" ></MyGameVue>
+      <MyFeedVue v-if="pageNum=='1'" :is-dark-mode="isDarkMode" ></MyFeedVue>
+      <MyGameVue v-else-if="pageNum=='2'" :is-dark-mode="isDarkMode" ></MyGameVue>
     </div>
 
-    <div class="feed-game-box" v-if="size=='md'">
-      <MyFeedVue   style="width: 100%;"></MyFeedVue>
-      <MyGameVue ></MyGameVue>
+    <div class="feed-game-box" v-if="size=='md'" style="display: flex; flex-direction: column;">
+      <div style="display: flex; justify-content: flex-end; margin-bottom: 5px;">
+        <label class="toggle_switch">
+          <input type="checkbox" @click="changePage">
+          <span class="slider"></span>
+        </label>
+      </div>
+      <MyFeedVue v-if="pageNum=='1'" :is-dark-mode="isDarkMode" ></MyFeedVue>
+      <MyGameVue v-else-if="pageNum=='2'" :is-dark-mode="isDarkMode" ></MyGameVue>
     </div>
     <div class="feed-game-box" v-if="size=='lg'">
-      <MyFeedVue ></MyFeedVue>
-      <MyGameVue ></MyGameVue>
+      <MyFeedVue :is-dark-mode="isDarkMode" ></MyFeedVue>
+      <MyGameVue :is-dark-mode="isDarkMode" ></MyGameVue>
     </div>
 
   </div>
   <div v-if="isEdit==true"  >
-    <EditProfile @close-edit="isEdit=false" :userInfo="userInfo" />
+    <EditProfile @close-edit="isEdit=false" :userInfo="userInfo" :is-dark-mode="isDarkMode"/>
   </div>
   
   
@@ -78,6 +84,9 @@ export default {
       MyGameVue,
       EditProfile,
     },
+    props:{
+        isDarkMode : Boolean
+    },
     methods:{
       handleResize(event) {
             this.width = window.innerWidth;
@@ -88,7 +97,7 @@ export default {
             if (viewportWidth<700) {
                     this.size =  "xs"
                 }
-                else if (viewportWidth >= 700 && viewportWidth < 840
+                else if (viewportWidth >= 700 && viewportWidth < 860
                 ) {
                     this.size = "md"}
                 else {this.size = "lg"}
@@ -110,11 +119,9 @@ export default {
       changePage(){
         if (this.pageNum == 1){
           this.pageNum = 2
-          console.log(this.pageNum)
 
         }else{
           this.pageNum = 1
-          console.log(this.pageNum)
 
         }
       },
@@ -132,10 +139,10 @@ export default {
     },
   watch:{
     width(){
-            if (this.width<600) {
+            if (this.width<700) {
                 this.size =  "xs"
             }
-            else if (this.width >= 600 && this.width < 840) {
+            else if (this.width >= 700 && this.width < 860) {
                 this.size = "md"}
             else {this.size = "lg"}
         },

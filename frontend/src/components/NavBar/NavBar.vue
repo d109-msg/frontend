@@ -1,13 +1,13 @@
 <template>
     <!-- 웹 버전 -->
-    <div class="nav-container" >
+    <div class="nav-container" :class="{'nav-container-light': !isDarkMode, 'nav-container-dark': isDarkMode}" >
         <div   v-if="size == 'lg'" class="lg-style" >
-            <div class="nav-logo"  @click="$router.push('/')" id="/" style="cursor: pointer;"></div>
+            <div :class="{'nav-logo-light':!isDarkMode, 'nav-logo-dark': isDarkMode}"  @click="$router.push('/')" id="/" style="cursor: pointer;"></div>
             <div class="right-bar" >
-                <div class="tag"  @click="$router.push('/')" id="/">HOME</div>
-                <div class="tag"  @click="$router.push('/game')"  id="/game">GAME</div>
-                <div class="tag" @click="$router.push('/message')"  id="/message">MESSAGE</div>
-                <div class="tag"  @click="$router.push('/mypage')"  id="/mypage">MYPAGE</div>
+                <div :class="{'tag': !isDarkMode, 'tag-dark':isDarkMode}"  @click="$router.push('/')" id="/">HOME</div>
+                <div :class="{'tag': !isDarkMode, 'tag-dark':isDarkMode}"   @click="$router.push('/game')"  id="/game">GAME</div>
+                <div :class="{'tag': !isDarkMode, 'tag-dark':isDarkMode}"  @click="$router.push('/message')"  id="/message">MESSAGE</div>
+                <div :class="{'tag': !isDarkMode, 'tag-dark':isDarkMode}"   @click="$router.push('/mypage')"  id="/mypage">MYPAGE</div>
                 <div class="search-container">
                     <input type="text" class="search-bar" placeholder="검색" maxlength="30" v-model="keyword" @focus="searchFlag=true">
                     <div class="search-icon"></div>
@@ -42,13 +42,13 @@
 
         <!-- 태블릿 버전 -->
         <div v-else-if="size == 'md'"  class="md-style" style="cursor: pointer;">
-            <div class="nav-logo" @click="$router.push('/')" id="/" ></div>
+            <div :class="{'nav-logo':!isDarkMode, 'nav-logo-dark':isDarkMode}" @click="$router.push('/')" id="/" ></div>
 
             <div class="right-bar">
-                <div class="tag"  @click="$router.push('/')" id="/">HOME</div>
-                <div class="tag"  @click="$router.push('/game')"  id="/game">GAME</div>
-                <div class="tag" @click="$router.push('/message')"  id="/message">MESSAGE</div>
-                <div class="tag"  @click="$router.push('/mypage')"  id="/mypage">MYPAGE</div>
+                <div :class="{'tag': !isDarkMode, 'tag-dark':isDarkMode}"  @click="$router.push('/')" id="/">HOME</div>
+                <div :class="{'tag': !isDarkMode, 'tag-dark':isDarkMode}"   @click="$router.push('/game')"  id="/game">GAME</div>
+                <div :class="{'tag': !isDarkMode, 'tag-dark':isDarkMode}"  @click="$router.push('/message')"  id="/message">MESSAGE</div>
+                <div :class="{'tag': !isDarkMode, 'tag-dark':isDarkMode}"   @click="$router.push('/mypage')"  id="/mypage">MYPAGE</div>
                 <div class="search-container">
                     <input type="text" class="search-bar" placeholder="검색" maxlength="30" >
                     <div class="search-icon"></div>
@@ -59,11 +59,19 @@
         <!-- 모바일 버전 -->
         <div  v-else-if="size == 'xs'" class="xs-style">
             <div class="right-bar">
-                <img class="tag" src="./Img/icon_home.png" alt=""  @click="$router.push('/')" id="/" style="height: 40px; width: 40px;">
+                <img v-if="!isDarkMode" class="tag" src="./Img/icon_home.png" alt=""  @click="$router.push('/')" id="/" style="height: 40px; width: 40px;">
+                <img v-else class="tag" src="./Img/icon_home._darkpng.png" alt=""  @click="$router.push('/')" id="/" style="height: 40px; width: 40px;">
+
                 <!-- <div class="tag" >HOME</div> -->
-                <img class="tag" src="./Img/icon_game.png" alt=""  @click="$router.push('/game')" id="/game" style="height: 35px; width: 35px;">
-                <img class="tag" src="./Img/icon_message.png" alt=""  @click="$router.push('/message')" id="/message" style="height: 45px; width: 45px;">
-                <img class="tag" src="./Img/icon_mypage.png" alt=""  @click="$router.push('/mypage')" id="/mypage" style="height: 50px; width: 50px;">
+                <img v-if="!isDarkMode" class="tag" src="./Img/icon_game.png" alt=""  @click="$router.push('/game')" id="/game" style="height: 35px; width: 35px;">
+                <img v-else class="tag" src="./Img/icon_game_dark.png" alt=""  @click="$router.push('/')" id="/" style="height: 35px; width: 35px;">
+
+                <img v-if="!isDarkMode" class="tag" src="./Img/icon_message.png" alt=""  @click="$router.push('/message')" id="/message" style="height: 45px; width: 45px;">
+                <img v-else class="tag" src="./Img/icon_message_dark.png" alt=""  @click="$router.push('/')" id="/" style="height: 45px; width: 45px;">
+
+                <img v-if="!isDarkMode" class="tag" src="./Img/icon_mypage.png" alt=""  @click="$router.push('/mypage')" id="/mypage" style="height: 50px; width: 50px;">
+                <img v-else class="tag" src="./Img/icon_mypage_dark.png" alt=""  @click="$router.push('/')" id="/" style="height: 50px; width: 50px;">
+
             </div>
         </div>
     </div>
@@ -97,6 +105,9 @@ export default {
             followFlag : [],
             isFollow : [],
         }
+    },
+    props:{
+        isDarkMode: Boolean
     },
     methods : {
         handleResize(event) {
