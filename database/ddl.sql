@@ -273,51 +273,13 @@ CREATE TABLE `daily_missions` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 
--- msg.message_images definition
-
-CREATE TABLE `message_images` (
-  `url` varchar(300) NOT NULL,
-  `message_id` int(11) NOT NULL,
-  `uuid` varchar(100) NOT NULL,
-  PRIMARY KEY (`url`),
-  KEY `message_images_messages_FK` (`message_id`),
-  CONSTRAINT `message_images_messages_FK` FOREIGN KEY (`message_id`) REFERENCES `messages` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
-
--- msg.message_texts definition
-
-CREATE TABLE `message_texts` (
-  `message_id` int(11) NOT NULL AUTO_INCREMENT,
-  `content` varchar(500) NOT NULL,
-  PRIMARY KEY (`message_id`),
-  CONSTRAINT `message_texts_messages_FK` FOREIGN KEY (`message_id`) REFERENCES `messages` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
-
--- msg.messages definition
-
-CREATE TABLE `messages` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `room_id` varchar(100) NOT NULL,
-  `user_id` int(11) NOT NULL,
-  `create_time` datetime NOT NULL DEFAULT current_timestamp(),
-  `data_type` varchar(100) NOT NULL,
-  PRIMARY KEY (`id`),
-  KEY `messages_users_FK` (`user_id`),
-  KEY `messages_rooms_FK` (`room_id`),
-  CONSTRAINT `messages_rooms_FK` FOREIGN KEY (`room_id`) REFERENCES `rooms` (`id`),
-  CONSTRAINT `messages_users_FK` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
-
 -- msg.participants definition
 
 CREATE TABLE `participants` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `room_id` varchar(100) NOT NULL,
   `user_id` int(11) NOT NULL,
-  `last_message_id` int(11) DEFAULT NULL,
+  `last_message_id` varchar(100) DEFAULT NULL,
   `flag_die` int(11) NOT NULL DEFAULT 0,
   `flag_win` int(11) NOT NULL DEFAULT 1,
   `job_id` varchar(50) DEFAULT NULL,
@@ -339,7 +301,7 @@ CREATE TABLE `participants` (
 
 CREATE TABLE `rooms` (
   `id` varchar(100) NOT NULL,
-  `last_message_id` int(11) DEFAULT NULL,
+  `last_message_id` varchar(100) DEFAULT NULL,
   `data_type` varchar(100) NOT NULL,
   `create_time` datetime NOT NULL DEFAULT current_timestamp(),
   `end_time` datetime DEFAULT NULL,
@@ -349,9 +311,7 @@ CREATE TABLE `rooms` (
   `flag_available` int(11) NOT NULL DEFAULT 1,
   `flag_night` int(11) NOT NULL DEFAULT 0,
   PRIMARY KEY (`id`),
-  KEY `rooms_messages_FK` (`last_message_id`),
-  KEY `rooms_room_images_FK` (`image_url`),
-  CONSTRAINT `rooms_messages_FK` FOREIGN KEY (`last_message_id`) REFERENCES `messages` (`id`)
+  KEY `rooms_room_images_FK` (`image_url`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 
