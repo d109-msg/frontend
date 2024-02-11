@@ -1,6 +1,7 @@
 package com.ssafy.msg.message.model.service;
 
 import com.ssafy.msg.game.model.dto.ParticipantDto;
+import com.ssafy.msg.message.model.dto.LastMessageUpdateDto;
 import com.ssafy.msg.message.model.dto.MessageRequestDto;
 
 import java.io.IOException;
@@ -21,6 +22,6 @@ public interface MessageService {
     void sendEndNotice(String roomId) throws  SQLException;
     void sendGameNotice(String room_id, String text) throws  SQLException;
 
-    // 새로운 개인 채팅방 알림 -> 구독 필요
+    void updateLastMessageId(LastMessageUpdateDto lastMessageUpdateDto) throws SQLException;
 
 }

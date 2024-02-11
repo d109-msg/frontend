@@ -167,4 +167,9 @@ public class MessageServiceImpl implements MessageService{
         sendingOperations.convertAndSend("/sub/"+messageEntity.toDto().getRoomId(), messageEntity.toDto());
         log.info(messageEntity.toDto().getRoomId() + " - " + messageEntity.toDto().getContent());
     }
+
+    @Override
+    public void updateLastMessageId(LastMessageUpdateDto lastMessageUpdateDto) throws SQLException {
+        messageMapper.updateLastMessageId(lastMessageUpdateDto);
+    }
 }

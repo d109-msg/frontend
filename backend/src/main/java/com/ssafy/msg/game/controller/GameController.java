@@ -4,6 +4,7 @@ import ch.qos.logback.core.encoder.EchoEncoder;
 import com.ssafy.msg.chat.model.dto.CreateRoomDto;
 import com.ssafy.msg.chat.model.dto.OpponentDto;
 import com.ssafy.msg.chat.model.dto.RoomDto;
+import com.ssafy.msg.chat.model.dto.RoomResponseDto;
 import com.ssafy.msg.game.exception.GroupRoomDuplicateException;
 import com.ssafy.msg.game.exception.GroupRoomFullException;
 import com.ssafy.msg.game.exception.GroupRoomNotFoundException;
@@ -188,7 +189,7 @@ public class GameController {
 
         log.info("getUserRooms() -> id : {}", userId);
         try {
-            List<RoomDto> list = gameService.getUserRooms(userId);
+            List<RoomResponseDto> list = gameService.getUserRooms(userId);
             log.info("getUserRooms() list : {}", list);
             return new ResponseEntity<>(list, HttpStatus.OK);
         } catch (Exception  e){
