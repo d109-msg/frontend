@@ -32,7 +32,10 @@
                     ></Feed>                    
                 </div>
             </template>
-            <FeedCreate v-if="create" @close="complete" :is-dark-mode="isDarkMode"/>
+
+
+            <FeedCreate v-if="create" @close="complete" :roomId="''" :is-dark-mode="isDarkMode"/>
+
         </div>
         <div class="first-col" v-else>
             <div :class="{'feed-create':!isDarkMode, 'feed-create-dark':isDarkMode}">
@@ -58,7 +61,11 @@
                     ></Feed>
                 </div>
             </template>
+<<<<<<< HEAD
             <FeedCreate v-if="create" @close="complete" :is-dark-mode="isDarkMode"/>
+=======
+            <FeedCreate v-if="create" @close="complete" :roomId="''"/>
+>>>>>>> b9b1b3e61d96a8788049d5c9eb9ec37d0fc14458
         </div>
     </div>
 </template>

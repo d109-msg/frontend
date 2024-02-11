@@ -72,12 +72,12 @@ export default {
         axiosAi : async function(){
             try{
                 this.spinnerFlag = true
-                const value = await this.feedStore.missionConfirm(this.dataImg,"와인")
+                const value = await this.feedStore.missionConfirm(this.dataImg,this.missionInfo)
                 this.processResponse(value)
             } catch(err){
                 await this.authStore.useRefresh()
                 try{
-                    let value = await this.feedStore.missionConfirm(this.dataImg,"와인")
+                    let value = await this.feedStore.missionConfirm(this.dataImg,this.missionInfo)
                     this.processResponse(value)
                 } catch(err){
                     alert("서버에 오류가 발생했습니다.")
@@ -91,8 +91,10 @@ export default {
     },
     props:{
         confirmInfo : Array,
+        mission : String,
     },
     mounted(){
+        this.missionInfo = useFeedStore().getMission
         this.previewImg=this.$props.confirmInfo[1]
         this.roomName = this.$props.confirmInfo[2]
         this.dataImg = btof(this.previewImg,'temp.png')

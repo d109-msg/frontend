@@ -25,6 +25,22 @@
     outline: #8499AA;
 }
 
+.chat-input-mafia{
+    width: 97%;
+    border-radius: 5px;
+    border: red solid 3px;
+    word-wrap: break-all;
+    padding: 5px 5px 20px 5px;
+    font: 1em;
+    resize: none;
+}
+.chat-input-mafia:hover,
+.chat-input-mafia:focus
+{
+    border: red solid 3px;
+    outline: red;
+}
+
 .photo-icon{
     position: absolute;
     bottom: 20px;
@@ -140,6 +156,20 @@
     font-weight: bold;
 
 }
+
+.chat-other-mafia{
+    display: inline-block;
+    position: relative;
+    background-color: black;
+    border-radius: 0px 20px 20px 20px;
+    color: red;
+    padding: 10px 15px;
+    margin-bottom: 10px;
+    max-width: 230px;
+    font-weight: bold;
+
+}
+
 .chat-my-box{
     margin-right: 20px;
     text-align: right;
@@ -155,4 +185,43 @@
     margin-bottom: 10px;
     max-width: 230px;
     font-weight: bold;
+}
+.chat-my-mafia{
+    display: inline-block;
+    position: relative;
+    background-color: black;
+    border-radius: 20px 0px 20px 20px;
+    color: red;
+    padding: 10px 15px;
+    margin-bottom: 10px;
+    max-width: 230px;
+    font-weight: bold;
+}
+
+.mafia-chat{
+    background: url(../Img/icon_reset.png);
+    width: 15px;
+    height: 15px;
+    position: absolute;
+    bottom: 25px;
+    left: 55px;
+    background-size: cover;
+    background-repeat: no-repeat;
+    cursor: pointer;
+}
+
+.submit-mafia{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: absolute;
+    bottom: 20px; 
+    right: 20px;
+    height: 28px;
+    width: 80px;
+    background-color: black;
+    cursor: pointer;
+    color: red;
+    font-size: 1em;
+    border-radius: 5px;
 }

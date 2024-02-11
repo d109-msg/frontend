@@ -35,7 +35,15 @@
           <img :src="item.imageUrl" alt="" class="chat-img">
           <div class="chat-info" >
             <span>{{ item.title }}</span>
-            <p>{{item}}</p>
+            <p v-if="item.id in chatStore.getMessage">
+              {{ chatStore.getMessage[item.id][chatStore.getMessage[item.id].length-1].content}}
+            </p>
+            <p v-else-if="item.lastMessage !=''">
+              {{ item.lastMessage }}
+            </p>
+            <p v-else>
+              아직 생성된 메시지가 없습니다.
+            </p>
           </div>
         </div>
             
@@ -65,6 +73,7 @@ export default {
         messageList : [],
         searchResult : "",
         last : {},
+        chatStore : useChatStore()
       }
     },
     methods:{
@@ -119,16 +128,12 @@ export default {
         try{
           console.log(idx)
           let value = await chat.makeChat(idx)
-          let flag = true
-          this.messageList.forEach(item=>{
-            if(item.id == value.data.id){
-              flag = false
-            }
-          })
-          if(flag){
+          console.log(value)
+
+          if(value.status == 201){
             this.messageList.unshift(value.data)
             await chat.sub([value.data.id])
-          }else{
+          }else if(value.status== 200){
             alert('이미 존재하는 채팅방입니다.')
           }
         }catch(err){
