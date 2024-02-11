@@ -12,6 +12,7 @@ import com.ssafy.msg.message.model.repo.MessageRepository;
 import com.ssafy.msg.notification.model.repo.NotificationRepository;
 import com.ssafy.msg.notification.model.dto.NotificationIdDto;
 import com.ssafy.msg.notification.model.dto.NotificationUserIdDto;
+import com.ssafy.msg.test.model.service.TestService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -26,6 +27,8 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.http.ResponseEntity;
+import org.springframework.scheduling.annotation.Async;
+import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
@@ -34,13 +37,14 @@ import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
+import java.util.concurrent.Callable;
+import java.util.concurrent.CompletableFuture;
 import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/test")
 @RequiredArgsConstructor
 @Slf4j
-
 @Tag(name = "Test", description = "테스트 관련 API")
 public class TestController {
 
@@ -60,6 +64,7 @@ public class TestController {
     private final NotificationRepository notificationRepository;
     private final DateTimeUtil dateTimeUtil;
     private final MessageService messageService;
+    private final TestService testService;
 
     /*
     서버 상태 확인 start =============================================================
@@ -272,5 +277,69 @@ public class TestController {
     시간 테스트 end =============================================================
      */
 
+
+    @Operation(summary = "동기 처리 API", description = "동기적으로 작동하는 API")
+    @GetMapping("/sync")
+    public ResponseEntity<?> syncApi() {
+        long start = System.currentTimeMillis();
+        String result = null;
+        try {
+            result = testService.doSyncTest();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        String result2 = null;
+        try {
+            result2 = testService.doSyncTest2();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        long end = System.currentTimeMillis();
+        System.out.println("Elapsed time: " + (end - start));
+        Map<String, String> response = new HashMap<>();
+        response.put("result1", result);
+        response.put("result2", result2);
+        return ResponseEntity.ok(response);
+    }
+
+    @Operation(summary = "비동기 처리 API", description = "비동기적으로 작동하는 API")
+    @GetMapping("/async")
+    public CompletableFuture<ResponseEntity<?>> asyncApi() {
+        long start = System.currentTimeMillis();
+        CompletableFuture<String> result = null;
+        try {
+            result = testService.doAsyncTest();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        CompletableFuture<String> result2 = null;
+        try {
+            result2 = testService.doAsyncTest2();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        long end = System.currentTimeMillis();
+        System.out.println("Elapsed time: " + (end - start));
+        return result.thenCombine(result2, (r1, r2) -> {
+            Map<String, String> response = new HashMap<>();
+            response.put("result1", r1);
+            response.put("result2", r2);
+            return ResponseEntity.ok(response);
+        });
+    }
+
+    @Operation(summary = "비동기 처리 콜백 API", description = "비동기적으로 작동하는 콜백 API")
+    @GetMapping("/async/callback")
+    public ResponseEntity<?> asyncCallbackApi() {
+        long start = System.currentTimeMillis();
+        try {
+            testService.doSyncTest3();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        long end = System.currentTimeMillis();
+        System.out.println("Elapsed time: " + (end - start));
+        return ResponseEntity.ok("success");
+    }
 
 }
