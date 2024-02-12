@@ -124,20 +124,20 @@ export default {
                 else {this.size = "lg"}
             window.addEventListener('resize', this.handleResize);
         },
-        tagClick : function(){
-            const list = document.querySelectorAll('.tag')
-            this.emitter.on('pageChange',(value)=>{
-            if(this.step == 0){
-                list[value].classList.add('tag-click')
-                this.prev = value
-                this.step+=1
-            } else{
-                list[this.prev].classList.remove('tag-click')
-                list[value].classList.add('tag-click')
-                this.prev = value
-            }
-            })
-        },
+        // tagClick : function(){
+        //     const list = document.querySelectorAll('.tag')
+        //     this.emitter.on('pageChange',(value)=>{
+        //     if(this.step == 0){
+        //         list[value].classList.add('tag-click')
+        //         this.prev = value
+        //         this.step+=1
+        //     } else{
+        //         list[this.prev].classList.remove('tag-click')
+        //         list[value].classList.add('tag-click')
+        //         this.prev = value
+        //     }
+        //     })
+        // },
         manageScroll : function(){
             let navContainer = document.querySelector('.nav-container')
             this.prevScrollY = window.scrollY
@@ -209,7 +209,6 @@ export default {
 
     mounted() {
         this.reactiveSize()
-        this.tagClick()
         this.manageScroll()
     },
     watch:{
