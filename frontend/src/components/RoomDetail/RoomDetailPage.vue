@@ -7,9 +7,10 @@
     :ability="ability"
     :member="member"
     :room-time="roomTime"
-       />
-    <div class="chat-container">
-      <div class="chat-title-box" style="display: flex; justify-content: space-between;">
+    :is-dark-mode="isDarkMode"
+    />
+    <div :class="{'chat-container':!isDarkMode,'chat-container-dark':isDarkMode}">
+      <div :class="{'chat-title-box':!isDarkMode,'chat-title-box-dark':isDarkMode}" style="display: flex; justify-content: space-between;">
         <div >
           <img v-if="!roomTime" @click="dayFlag()" src="./Img/icon_sun_active.png" alt="" style="cursor: pointer;">
           <img v-else @click="dayFlag()" src="./Img/icon_sun.png" alt="" style="cursor: pointer;">
@@ -41,8 +42,9 @@
       :member="member"
       :room-time="roomTime"
       :alive-member="aliveMember"
+      :is-dark-mode="isDarkMode"
       />
-      <RoomGuide v-else-if="isOpen==2" ></RoomGuide>
+      <RoomGuide v-else-if="isOpen==2" :is-dark-mode="isDarkMode"></RoomGuide>
       <RoomVote v-else-if="isOpen==3" 
       :room-data="roomData"
       :participant="participant"
@@ -51,6 +53,7 @@
       :member="member"
       :room-time="roomTime"
       :alive-member="aliveMember"
+      :is-dark-mode="isDarkMode"
       />
       <JobAbility v-else-if="isOpen==4"
       :room-data="roomData"
@@ -60,6 +63,7 @@
       :member="member"
       :room-time="roomTime"
       :alive-member="aliveMember"
+      :is-dark-mode="isDarkMode"
       />
 
     </div>
@@ -102,8 +106,8 @@ export default {
       this.startPage()
       this.checkNight()
     },
-    watch:{
-
+    props:{
+      isDarkMode : Boolean
     },
     methods:{
       isChat(){

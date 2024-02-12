@@ -15,6 +15,14 @@
     border-radius: 10px 10px 0 0;
     box-shadow: 4px 4px 10px 1px  rgba(0, 0, 0, 0.2);
 }
+.message-user-profile-dark{
+    display: flex;
+    align-items: center;
+    height: 15%;
+    background-color: #292829;
+    border-radius: 10px 10px 0 0;
+    box-shadow: 4px 4px 10px 1px  rgba(0, 0, 0, 0.2);
+}
 
 .message-user-profile-img{
     height: 50px;
@@ -24,13 +32,23 @@
     margin-left: 30px;
     margin-right: 20px;
  
- 
 }
+.message-user-name-dark{
+    color: #EEEBEB;
+} 
 .message-content-box{
     position: relative;
     display: flex;
     height: 85%;
     background-color: #FFFDF3;
+    border-radius: 0 0 10px 10px;
+    box-shadow: 4px 4px 10px 1px  rgba(0, 0, 0, 0.2);
+}
+.message-content-box-dark{
+    position: relative;
+    display: flex;
+    height: 85%;
+    background-color: #292829;
     border-radius: 0 0 10px 10px;
     box-shadow: 4px 4px 10px 1px  rgba(0, 0, 0, 0.2);
 }
@@ -63,7 +81,7 @@
     position: absolute;
     bottom: 10px;
     left: 50%;
-    margin-left: -48.5%;
+    margin-left: -49%;
     display: flex;
     height: 15%;
     width: 95%;
@@ -71,6 +89,22 @@
     border-radius: 10px;
     border: 3px solid #EEEBEB;
     resize: none;
+    padding: 5px;
+}
+.message-textarea-dark{
+    position: absolute;
+    bottom: 10px;
+    left: 50%;
+    margin-left: -49%;
+    display: flex;
+    height: 15%;
+    width: 95%;
+    background-color: #292829;
+    border-radius: 10px;
+    border: 3px solid #464C61;
+    resize: none;
+    color: #E6E3E2;
+    padding: 5px;
 }
 .preview-img{
     width: 100px;

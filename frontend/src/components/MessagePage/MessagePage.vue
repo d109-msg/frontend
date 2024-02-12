@@ -1,9 +1,9 @@
 <template>
   <div class="message-container">
-    <MessageList @chat-info="getInfo"></MessageList>
-    <MessageDetail @user-info="userInfo" :chatInfo="detail" :chatId="detail.id"></MessageDetail>
+    <MessageList @chat-info="getInfo" :is-dark-mode="isDarkMode" ></MessageList>
+    <MessageDetail @user-info="userInfo" :chatInfo="detail" :chatId="detail.id" :is-dark-mode="isDarkMode" ></MessageDetail>
     <div>
-      <MiniProfile :userInfo="user"/>
+      <MiniProfile :userInfo="user" :is-dark-mode="isDarkMode"/>
     </div>
   </div>
 
@@ -28,6 +28,9 @@ export default {
         user: {},
         detail: {},
       }
+    },
+    props:{
+      isDarkMode : Boolean
     },
     methods: {
       userInfo : function(data){

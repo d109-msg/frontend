@@ -1,6 +1,5 @@
 <template>
-  <div class="chat-container">
-    <div class="ability-content">
+    <div :class="{'ability-content':!isDarkMode,'ability-content-dark':isDarkMode}">
         <div>{{ ability.message }}</div>
         <!-- <div>{{ ability }}</div> -->
         
@@ -28,7 +27,6 @@
         
 
     </div>
-  </div>
 
 
 </template>
@@ -56,7 +54,8 @@ export default {
       ability:Object,
       member: Object,
       roomTime:Number,
-      aliveMember:Object
+      aliveMember:Object,
+      isDarkMode:Boolean
     },
     methods:{
         judgeAbility: async function(id){

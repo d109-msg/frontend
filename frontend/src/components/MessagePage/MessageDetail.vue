@@ -4,11 +4,11 @@
         <div class="preview-img-back" @click="turnOff" v-if="imgFlag">
           <img :src="preImg" alt="" style="width: 500px; height: 500px;">
         </div>
-        <div class="message-user-profile">
+        <div :class="{'message-user-profile':!isDarkMode,'message-user-profile-dark':isDarkMode}">
             <img class="message-user-profile-img" :src="chatInfo.imageUrl" v-if="Object.keys(chatInfo).length != 0">
-            <div class="message-user-name"  v-if="Object.keys(chatInfo).length != 0">{{chatInfo.title}}</div>
+            <div :class="{'message-user-name':!isDarkMode,'message-user-name-dark':isDarkMode}"  v-if="Object.keys(chatInfo).length != 0">{{chatInfo.title}}</div>
         </div>
-        <div class="message-content-box">
+        <div :class="{'message-content-box':!isDarkMode,'message-content-box-dark':isDarkMode}">
             <div class="message-content">
               <div v-for="(item,key) in chatStore.getMessage[chatInfo.id]" :key="key" :id="'message'+key">
                 <div class="chat-my-box" v-if="userInfo.id === item.userId">
@@ -29,7 +29,7 @@
                 </div>
               </div>
             </div>
-            <textarea type="text" class="message-textarea" id="" cols="30" rows="10" v-model="message" @keyup.enter.prevent="send" 
+            <textarea type="text" :class="{'message-textarea':!isDarkMode,'message-textarea-dark':isDarkMode}" id="" cols="30" rows="10" v-model="message" @keyup.enter.prevent="send" 
             v-if="Object.keys(chatInfo).length != 0" maxlength="200">
             </textarea>
             <textarea class="message-textarea" v-else></textarea>
@@ -83,6 +83,7 @@ export default {
   props:{
     chatInfo : Object,
     chatId : String,
+    isDarkMode : Boolean
   },
   components:{
     LoadingSpinner,

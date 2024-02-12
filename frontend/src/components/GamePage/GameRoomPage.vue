@@ -1,5 +1,5 @@
 <template>
-  <div >
+  <div :class="{'game-mid':!isDarkMode, 'game-mid-dark':isDarkMode}">
     <div class="game-room-page-title">
       My Room
     </div>
@@ -41,6 +41,7 @@ export default {
     },
     props:{
       roomList : Object,
+      isDarkMode : Boolean
     },
     methods:{
       enterRoom : function(room){

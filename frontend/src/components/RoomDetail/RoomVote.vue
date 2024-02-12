@@ -1,7 +1,7 @@
 <template>
-  <div class="chat-container">
+  <!-- <div class="chat-container"> -->
 
-    <div class="chat-content">
+    <div :class="{'chat-content':!isDarkMode,'chat-content-dark':isDarkMode}">
       <template v-if="participant.jobId != '판사'"> 
         <div class="vote-title">[투표] {{voteData.voteTitle}}</div>
         <div v-if="!roomTime" class="vote-hint">주어진 시간 내에 투표하지 않으면 본인으로 투표됩니다.</div>   
@@ -42,7 +42,7 @@
       </template>
         
       </div>
-  </div>
+  <!-- </div> -->
 </template>
 
 <script>
@@ -67,7 +67,8 @@ export default {
       ability:Object,
       member: Object,
       roomTime:Number,
-      aliveMember:Object
+      aliveMember:Object,
+      isDarkMode:Boolean
     },
 
     methods: {
