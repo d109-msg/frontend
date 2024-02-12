@@ -28,8 +28,12 @@
           <span class="slider"></span>
         </label>
       </div>
-      <MyFeedVue v-if="pageNum=='1'" :is-dark-mode="isDarkMode" ></MyFeedVue>
-      <MyGameVue v-else-if="pageNum=='2'" :is-dark-mode="isDarkMode" ></MyGameVue>
+      <div>
+        <MyFeedVue v-if="pageNum=='1'" :is-dark-mode="isDarkMode" ></MyFeedVue>
+      </div>
+      <div>
+        <MyGameVue v-if="pageNum=='2'"  :is-dark-mode="isDarkMode"></MyGameVue>
+      </div>
     </div>
 
     <div class="feed-game-box" v-if="size=='md'" style="display: flex; flex-direction: column;">
@@ -40,11 +44,11 @@
         </label>
       </div>
       <MyFeedVue v-if="pageNum=='1'" :is-dark-mode="isDarkMode" ></MyFeedVue>
-      <MyGameVue v-else-if="pageNum=='2'" :is-dark-mode="isDarkMode" ></MyGameVue>
+      <MyGameVue v-else-if="pageNum=='2'"  :is-dark-mode="isDarkMode" :isMount="1"></MyGameVue>
     </div>
     <div class="feed-game-box" v-if="size=='lg'">
       <MyFeedVue :is-dark-mode="isDarkMode" ></MyFeedVue>
-      <MyGameVue :is-dark-mode="isDarkMode" ></MyGameVue>
+      <MyGameVue  :is-dark-mode="isDarkMode" :isMount="1"></MyGameVue>
     </div>
 
   </div>
@@ -76,7 +80,8 @@ export default {
         width: 0,
         height: 0,
         size : 'lg',
-        pageNum : '1'
+        pageNum : '1',
+
       }
     },
     components : {
@@ -116,6 +121,7 @@ export default {
             router.push('/login')
           }
       },
+
       changePage(){
         if (this.pageNum == 1){
           this.pageNum = 2
@@ -134,6 +140,7 @@ export default {
         try{
             await auth.useRefresh()
             const info = await this.getUser()
+            await this.getGame()
         } catch(err){console.log(err)}
       }
     },

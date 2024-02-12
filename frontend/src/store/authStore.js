@@ -184,6 +184,12 @@ export const useAuthStore = defineStore('auth',{
                 Authorization : `Bearer ${this.getAccess}`
             }
             return axios.get(ser,{headers})
+        },
+        async getGame(userId){
+            const headers = {
+                Authorization : `Bearer ${this.getAccess}`
+            }
+            return axios.get(`${server}/game/user/rate?userId=${userId}`,{headers})
         }
     },
     persist: [

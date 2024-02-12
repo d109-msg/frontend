@@ -10,16 +10,26 @@
         </p>
         <div style="display: flex; justify-content: space-evenly; ">
           <button id="invite-copy" class="invite-btn" @click="copyBtn()">초대코드 복사하기</button>
-          <button class="invite-btn">초대코드 공유하기</button>
+          <button class="invite-btn" @click="listFlag = true">초대코드 공유하기</button>
         </div>
         <p :class="{'invite-code-title':!isDarkMode,'invite-code-title-dark':isDarkMode}">아직 멤버가 다 모이지 않았어요. <span>({{member.length}}/7)</span></p>
       </div>
+    <div class="search-back" @click.self="listFlag = false" v-if="listFlag">
+      <RoomSearchList :invite="roomData.id" />
     </div>
+    </div>
+
 </template>
 
 <script>
+import RoomSearchList from './RoomSearchList.vue';
 export default {
     name: 'RoomFeedReady',
+    data(){
+      return{
+        listFlag : false,
+      }
+    },
     props:{
       roomData : Object,
       participant:Object,
@@ -28,7 +38,9 @@ export default {
       member: Object,
       roomTime:Number,
       isDarkMode:Boolean
-
+    },
+    components:{
+      RoomSearchList
     },
     methods:{
       reload: function(){
