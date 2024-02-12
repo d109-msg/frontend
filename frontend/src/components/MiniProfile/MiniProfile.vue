@@ -108,10 +108,15 @@ export default {
         visit : async function(idx,roomId){
             try{
                 this.idx = this.chat.notify[idx].articleId
-                this.detailFlag = true
+                if(idx != 0){
+                    this.detailFlag = true
+                }
                 const chat = useChatStore()
                 await chat.readNotification(roomId)
                 this.chat.notify.splice(idx,1)
+                if(idx == 0){
+                    router.push({name: 'game'})
+                }
             }catch(err){
                 console.log(err)
                 console.log('읽음처리가 정상적으로 종료되지 않음')
