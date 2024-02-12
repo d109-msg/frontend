@@ -19,7 +19,15 @@
         background-color: rgb(255, 255, 255);
         z-index: 1111;
         border-radius: 5px;
-    
+    }
+    .detail-container-dark{
+        display: flex;
+        flex-direction: column;
+        width: 70%;
+        height: 80%;
+        background-color: #292829;
+        z-index: 1111;
+        border-radius: 5px;
     }
     
     .detail-img{
@@ -84,6 +92,18 @@
         height: 1.2px;
         background-color: rgba(0, 0, 0, 0.11);
     }
+    .line-dark{
+        margin-top: 20px;
+        width: 90%;
+        height: 1.2px;
+        background-color: rgba(255, 255, 255, 0.5);
+    }
+    .line2-dark{
+        margin-bottom: 10px;
+        width: 90%;
+        height: 1.2px;
+        background-color: rgba(255, 255, 255, 0.5);
+    }
     .user-info{
         width: 90%;
         height: 55px;
@@ -139,9 +159,19 @@
         font-size: 13px;
         line-height: 15px;
     }
+    .comment-count{
+        color: #292829;
+        font-size: 0.6em;
+    }
+    .comment-count-dark{
+        color: #A9A5A5;
+        font-size: 0.6em;
+    
+    }
     .bottom{
         width: 100%;
-        padding-left: 40px;
+        height: 20%;
+        padding: 5%;
     }
     .bottom>p{
         font-size: 10px;
@@ -152,20 +182,32 @@
         font-weight: lighter;
     }
     .write-comment{
-        width: 100%;
-        height: 100%;
+        width: 85%;
+        height: 70%;
         resize: none;
         border : 1px solid rgba(238, 235, 235, 1);
         border-radius: 10px;
         outline: none;
+        margin-right: 10px;
+    }
+    .write-comment-dark{
+        width: 85%;
+        height: 70%;
+        resize: none;
+        border : 1px solid rgba(238, 235, 235, 1);
+        border-radius: 10px;
+        outline: none;
+        background-color: #3C3B3B;
+        color: #C1C1C1;
+        margin-right: 10px;
+
     }
     .submit{
-        position: absolute;
         bottom: 0;
         right: 0;
         font-size: 10px;
-        width: 60px;
-        height: 19px;
+        width: 20%;
+        height: 100%;
         border-radius: 5px;
         background: #B1AFAF;
         display: flex;
@@ -174,11 +216,27 @@
         color: white;
         cursor: pointer;
     }
+    .submit-dark{
+        bottom: 3%;
+        right: 0;
+        font-size: 12px;
+        width: 20%;
+        height: 100%;
+        border: #8B8B8B 1px solid;
+        border-radius: 5px;
+        background: #3C3B3B;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        color: white;
+        cursor: pointer;
+    }
     .write{
+        display: flex;
         width: 90%;
-        height: 50px;
-        position: relative;
+        height: 30px;
         margin-top: 10px;
+        margin-bottom: 10px;
     
     }
     .comment{
@@ -224,25 +282,26 @@
     
     .re-comment{
         margin-left: 20px;
+        height: 100%;
     }
-    .resend{
-        width: 90%;
-        height: 10%;
-        outline: none;
-        border: 1px solid rgba(0,0,0,0.2);
-        border-radius: 10px ;
-        font-size: 10px;
-    }
-    
     .resend-form{
         display: flex;
         align-items: center;
         margin-top: 3px;
     }
+    .resend{
+        width: 200px;
+        height: 30px;
+        outline: none;
+        border: 1px solid rgba(0,0,0,0.2);
+        border-radius: 3px ;
+        font-size: 10px;
+    }
+    
     .resend-button{
         margin-left: 5px;
         height: 15px;
-        width: 30px;
+        width: 50px;
         font-size: 10px;
         border-radius: 10px;
         background: #B1AFAF;
@@ -272,6 +331,21 @@
         flex-direction: column;
         justify-content: center;
     }
+    .list-container-dark{
+        position: absolute;
+        width: 130px;
+        height: 60px;
+        background: #212020;
+        border: 0.5px solid #3C3B3B;
+        top: 10px;
+        left: -100px;
+        border-radius: 5px;
+        filter: drop-shadow(0px 4px 4px rgba(0,0,0,0.25));
+        cursor: auto;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+    }
     
     .list-container>p{
         font-size: 10px;
@@ -287,7 +361,21 @@
         height: 20px;
         margin-right: 5px;
         cursor: pointer;
-    
+    }
+    .list-container-dark>p{
+        font-size: 10px;
+        font-weight: lighter;
+        color: #fff;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        cursor: pointer;
+    }
+    .list-container-dark>p>img{
+        width: 20px;
+        height: 20px;
+        margin-right: 5px;
+        cursor: pointer;
     }
     
     .edit-back{
@@ -310,6 +398,13 @@
         border-radius: 5px;
         position: relative;
     }
+    .edit-content-dark{
+        width: 300px;
+        height: 200px;
+        background-color: #292829;
+        border-radius: 5px;
+        position: relative;
+    }
     
     .edit-header{
         font-size: 20px;
@@ -317,8 +412,13 @@
         align-items: center;
         padding: 20px;
     }
-    .edit-header>img{
-    
+    .edit-header-dark{
+        font-size: 20px;
+        display: flex;
+        align-items: center;
+        padding: 20px;
+        color: #C1C1C1;
+
     }
     
     .edit-write{
@@ -329,6 +429,18 @@
         border-radius: 10px;
         padding: 10px;
        border : 1px solid rgba(0,0,0,0.3)
+    
+    }
+    .edit-write-dark{
+        resize: none;
+        outline: none;
+        width: 200px;
+        height: 50px;
+        border-radius: 10px;
+        padding: 10px;
+        border : 1px solid rgba(0,0,0,0.3);
+        background: #555;
+        color: #C1C1C1;
     
     }
     .edit-body{
@@ -371,6 +483,13 @@
         position: relative;
         padding: 20px;
     }
+    .delete-content-dark{
+        width: 300px;
+        height: 100px;
+        background-color: #212020;
+        position: relative;
+        padding: 20px;
+    }
     
     .delete-body{
         height: 50px;
@@ -378,15 +497,26 @@
        justify-content: center;
        align-items: center;
        border : 1px solid rgba(238, 235, 235, 1)
-    
+
     }
-    
+    .delete-body-dark{
+        height: 50px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+
+    }
     .delete-body>p{
         width: 300px;
         display: flex;
         align-items: center;
     }
-    
+    .delete-body-dark>p{
+        width: 300px;
+        display: flex;
+        align-items: center;
+        color: #C1C1C1;
+    }
     .delete-button{
         position: absolute;
         bottom: 10px;
@@ -451,6 +581,14 @@
     z-index: 1111;
 
 }
+.detail-container-dark{
+    width: 70%;
+    height: 80%;
+    background-color: #292829;
+    display: flex;
+    z-index: 1111;
+
+}
 
 .detail-img{
     width: 60%;
@@ -498,6 +636,18 @@
     height: 1.2px;
     background-color: rgba(0, 0, 0, 0.11);
 }
+.line-dark{
+    margin-top: 20px;
+    width: 90%;
+    height: 1.2px;
+    background-color: rgba(255, 255, 255, 0.5);
+}
+.line2-dark{
+    margin-bottom: 10px;
+    width: 90%;
+    height: 1.2px;
+    background-color: rgba(255, 255, 255, 0.5);
+}
 .user-info{
     width: 90%;
     height: 55px;
@@ -533,7 +683,7 @@
 }
 .comment-list{
     width: 100%;
-    height: 290px;
+    height: 60%;
     overflow-y: scroll;
     padding-left: 40px;
     padding-top: 10px;
@@ -552,9 +702,19 @@
     font-size: 13px;
     line-height: 15px;
 }
+.comment-count{
+    color: #292829;
+    font-size: 0.8em;
+}
+.comment-count-dark{
+    color: #A9A5A5;
+    font-size: 0.8em;
+
+}
 .bottom{
     width: 100%;
-    padding-left: 40px;
+    margin: 5%;
+    padding: 5%;
 }
 .bottom>p{
     font-size: 10px;
@@ -565,6 +725,7 @@
     font-weight: lighter;
 }
 .write-comment{
+    display: flex;
     width: 100%;
     height: 100%;
     resize: none;
@@ -572,15 +733,42 @@
     border-radius: 10px;
     outline: none;
 }
+.write-comment-dark{
+    display: flex;
+    width: 100%;
+    height: 100%;
+    resize: none;
+    border : 1px solid rgba(0, 0, 0, 1);
+    border-radius: 10px;
+    outline: none;
+    background-color: #3C3B3B;
+    color: #C1C1C1;
+}
 .submit{
     position: absolute;
-    bottom: 20%;
+    bottom: 3%;
     right: 0;
-    font-size: 10px;
+    font-size: 12px;
     width: 60px;
-    height: 19px;
+    height: 22px;
     border-radius: 5px;
     background: #B1AFAF;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: white;
+    cursor: pointer;
+}
+.submit-dark{
+    position: absolute;
+    bottom: 3%;
+    right: 0;
+    font-size: 12px;
+    width: 60px;
+    height: 22px;
+    border: #8B8B8B 1px solid;
+    border-radius: 5px;
+    background: #3C3B3B;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -638,29 +826,29 @@
 .re-comment{
     margin-left: 20px;
 }
-.resend{
-    width: 90%;
-    height: 10%;
-    outline: none;
-    border: 1px solid rgba(0,0,0,0.2);
-    border-radius: 10px ;
-    font-size: 10px;
-}
-
 .resend-form{
     display: flex;
     align-items: center;
     margin-top: 3px;
 }
+.resend{
+    width: 100px;
+    height: 20px;
+    outline: none;
+    border-radius: 3px ;
+    font-size: 10px;
+    font-size: 0.8em;
+}
+
 .resend-button{
-    display: flex;
-    justify-content: center;
     margin-left: 5px;
-    height: 15px;
+    height: 20px;
     width: 30px;
     font-size: 10px;
-    border-radius: 10px;
+    border-radius: 5px;
     background: #B1AFAF;
+    display: flex;
+    justify-content: center;
     align-items: center;
     color: white;
     cursor: pointer;
@@ -685,6 +873,21 @@
     flex-direction: column;
     justify-content: center;
 }
+.list-container-dark{
+    position: absolute;
+    width: 130px;
+    height: 60px;
+    background: #212020;
+    border: 0.5px solid #3C3B3B;
+    top: 10px;
+    left: -100px;
+    border-radius: 5px;
+    filter: drop-shadow(0px 4px 4px rgba(0,0,0,0.25));
+    cursor: auto;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
 
 .list-container>p{
     font-size: 10px;
@@ -696,6 +899,22 @@
     cursor: pointer;
 }
 .list-container>p>img{
+    width: 20px;
+    height: 20px;
+    margin-right: 5px;
+    cursor: pointer;
+
+}
+.list-container-dark>p{
+    font-size: 10px;
+    font-weight: lighter;
+    color: #fff;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+}
+.list-container-dark>p>img{
     width: 20px;
     height: 20px;
     margin-right: 5px;
@@ -723,6 +942,13 @@
     border-radius: 5px;
     position: relative;
 }
+.edit-content-dark{
+    width: 300px;
+    height: 200px;
+    background-color: #292829;
+    border-radius: 5px;
+    position: relative;
+}
 
 .edit-header{
     font-size: 20px;
@@ -730,34 +956,48 @@
     align-items: center;
     padding: 20px;
 }
-.edit-header>img{
-
+.edit-header-dark{
+    font-size: 20px;
+    display: flex;
+    align-items: center;
+    padding: 20px;
+    color: #C1C1C1;
 }
 
 .edit-write{
     resize: none;
     outline: none;
-    width: 200px;
+    width: 80%;
     height: 50px;
-    border-radius: 10px;
+    border-radius: 5px;
     padding: 10px;
    border : 1px solid rgba(0,0,0,0.3)
-
 }
+.edit-write-dark{
+    resize: none;
+    outline: none;
+    width: 80%;
+    height: 50px;
+    border-radius: 5px;
+    padding: 10px;
+    border : 1px solid rgba(0,0,0,0.3);
+    background: #555;
+    color: #C1C1C1;
+}
+
 .edit-body{
     height: 100px;
    display: flex;
    justify-content: center;
    align-items: center;
-   border : 1px solid rgba(238, 235, 235, 1)
+   /* border : 1px solid rgba(238, 235, 235, 1) */
 
 }
 .edit-button{
-    position: absolute;
     bottom: 10px;
     right: 30px;
-    height: 15px;
-    width: 50px;
+    height: 20px;
+    width: 70px;
     font-size: 10px;
     border-radius: 10px;
     background: #B1AFAF;
@@ -784,28 +1024,48 @@
     position: relative;
     padding: 20px;
 }
+.delete-content-dark{
+    width: 300px;
+    height: 100px;
+    background-color: #212020;
+    position: relative;
+    padding: 20px;
+}
+
 
 .delete-body{
-    height: 50px;
    display: flex;
+   flex-direction: column;
    justify-content: center;
    align-items: center;
-   border : 1px solid rgba(238, 235, 235, 1)
-
+   padding: 15px;
 }
 
 .delete-body>p{
     width: 300px;
     display: flex;
+    justify-content: center;
+}
+.delete-body-dark{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
     align-items: center;
+    padding: 15px;
+}
+
+.delete-body-dark>p{
+    width: 300px;
+    display: flex;
+    justify-content: center;
+    color: #C1C1C1;
 }
 
 .delete-button{
-    position: absolute;
     bottom: 10px;
     right: 30px;
-    height: 15px;
-    width: 50px;
+    height: 20px;
+    width: 70px;
     font-size: 10px;
     border-radius: 10px;
     background: rgb(180, 41, 41);
@@ -814,14 +1074,14 @@
     align-items: center;
     color: white;
     cursor: pointer;
+    margin: 2% 5%;
 }
 
 .delete-false{
-    position: absolute;
     bottom: 10px;
     right: 90px;
-    height: 15px;
-    width: 50px;
+    height: 20px;
+    width: 70px;
     font-size: 10px;
     border-radius: 10px;
     background: #B1AFAF;
@@ -830,6 +1090,7 @@
     align-items: center;
     color: white;
     cursor: pointer;
+    margin: 2% 5%;
 }
 
 .delete-false:hover{

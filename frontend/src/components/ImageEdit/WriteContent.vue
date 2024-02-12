@@ -44,6 +44,7 @@ export default {
     },
     props:{
         dataInfo : Object,
+        isDarkMode : Boolean
     },
     methods:{
         prevImg : function(){
