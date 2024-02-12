@@ -1,10 +1,10 @@
 <template>
-  <div class="image-container disable">
+  <div class="disable" :class="{'image-container':!isDarkMode,'image-container-dark':isDarkMode}">
     <div class="image-header">
-        <div class="image-title">Create Feed</div>
+        <div :class="{'image-title':!isDarkMode,'image-title-dark':isDarkMode}">Create Feed</div>
         <div class="image-editor-cancel"
         @click="closeImage(0)"
-        >X</div>
+        ></div>
     </div>
         <hr class="image-line">
         <MissonConfirm v-if="missionConfirm" 
@@ -12,11 +12,13 @@
         @mission-true="missionTrue"
         @mission-false="missionFalse"
         :confirmInfo="[imgData[0], missionSrc, roomId]"
+        :is-dark-mode="isDarkMode" 
         />
         <WriteContent v-if="writeFlag"
         :dataInfo="{imgData,imgSrc,roomId}"
         @close-write="writeFlag=false"
         @create-feed="closeImage(1)"
+        :is-dark-mode="isDarkMode" 
         />
         <div class="wrapper" v-show="!writeFlag">
             <div class="img-wrapper">
@@ -30,36 +32,39 @@
                 </div>
             </div>
             <div class="editor-panel">
-                <div class="select-container">
+                <div :class="{'select-container':!isDarkMode, 'select-container-dark':isDarkMode}">
                         <p v-if="roomId==''">일상 게시물</p>
                         <p v-else>미션 게시물</p>
                 </div>
                 
                 <div class="filter">
-                    <label class="title">Filters</label>
+                    <label :class="{'filter-title':!isDarkMode,'filter-title-dark':isDarkMode}">Filters</label>
+                    <div class="filter-box">
                         <div class="bright-info">
                             <div id="Brightness" class="brightness"></div>
-                            <p class="bright-value">{{brightness}}%</p>
+                            <p :class="{'filter-value':!isDarkMode, 'filter-value-dark':isDarkMode}">{{brightness}}%</p>
                         </div>
                         <input class="bright-slider" type="range" value="100" min="0" max="200" v-model="brightness">
                         <div class="saturation-info">
                             <div id="Saturataion" class="saturation"></div>
-                            <p class="saturation-value">{{saturation}}%</p>
+                            <p :class="{'filter-value':!isDarkMode, 'filter-value-dark':isDarkMode}">{{saturation}}%</p>
                         </div>
                         <input class="saturation-slider" type="range" value="100" min="0" max="200" v-model="saturation">
+                       
                         <div class="inversion-info">
                             <div id="Inversion" class="inversion"></div>
-                            <p class="inversion-value">{{inversion}}%</p>
+                            <p :class="{'filter-value':!isDarkMode, 'filter-value-dark':isDarkMode}">{{inversion}}%</p>
                         </div>
                         <input class="inversion-slider" type="range" value="0" min="0" max="100" v-model="inversion">
                         <div class="grayscale-info">
                             <div id="Grayscale" class="grayscale"></div>
-                            <p class="grayscale-value">{{grayscale}}%</p>
+                            <p :class="{'filter-value':!isDarkMode, 'filter-value-dark':isDarkMode}">{{grayscale}}%</p>
                         </div>
                         <input class="grayscale-slider" type="range" value="0" min="0" max="100" v-model="grayscale">
+                    </div>
                 </div>
                 <div class="rotate">
-                    <label class="title">Rotate & Flip</label>
+                    <label :class="{'filter-title':!isDarkMode,'filter-title-dark':isDarkMode}">Rotate & Flip</label>
                     <div class="options">
                         <button id="left"><i class="fa-solid fa-rotate-left"></i></button>
                         <button id="right"><i class="fa-solid fa-rotate-right"></i></button>
@@ -71,7 +76,7 @@
         </div>
         <div class="controls" v-show="!writeFlag">
             <button class="reset-filter">Reset Filters</button>
-            <div class="row">
+            <div class="row" style="display: flex; flex-direction: row;">
                 <input type="file" class="file-input" accept="image/*" hidden multiple>
                 <button class="choose-img" style="font-weight: bold;">Choose Image</button>
                 <button class="save-img" style="font-weight: bold;" @click="saveImg">NEXT</button>
@@ -118,6 +123,7 @@ export default {
     },
     props:{
         roomId : String,
+        isDarkMode : Boolean
     },
     methods:{
         openOptions : function(){
@@ -275,7 +281,12 @@ export default {
             this.previewImg.src = URL.createObjectURL(file)
             this.previewImg.addEventListener("load",()=>{
                 const container = document.querySelector(".image-container")
-                container.classList.remove("disable")
+                if(container == null){
+                    const dark = document.querySelector('.image-container-dark')
+                    dark.classList.remove('disable')
+                }else{
+                    container.classList.remove("disable")
+                }
             })
             console.log(this.imgData)
         }

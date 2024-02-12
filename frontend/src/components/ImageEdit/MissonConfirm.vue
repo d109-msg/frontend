@@ -92,6 +92,7 @@ export default {
     props:{
         confirmInfo : Array,
         mission : String,
+        isDarkMode : Boolean
     },
     mounted(){
         this.missionInfo = useFeedStore().getMission

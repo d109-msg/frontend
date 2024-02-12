@@ -1,6 +1,6 @@
 <template>
     <div class="feed-modal">
-            <ImageEdit @close="close" :roomId="roomId" :mission="missions"
+            <ImageEdit @close="close" :roomId="roomId" :mission="missions" :is-dark-mode="isDarkMode" 
             />
     </div>
 </template>
@@ -20,6 +20,7 @@ export default {
     props:{
       roomId : String,
       mission : String,
+      isDarkMode :Boolean
     },
     methods: {
       close : function(value){

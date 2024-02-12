@@ -2,7 +2,7 @@
     <div class="detail-back"
         @click.self="close"
     >
-        <div class="detail-container">
+        <div :class="{'detail-container':!isDarkMode, 'detail-container-dark':isDarkMode}">
             <div class="detail-img" id="detailImg">
                 <div class="left-arrow" @click="leftStep"></div>
                 <div class="right-arrow" @click="rightStep"></div>
@@ -18,7 +18,7 @@
                         </div>
                     </div>
                     <div class="list" @click.self.prevent="optionFlag = !optionFlag;">
-                        <div class="list-container" v-if="optionFlag && me.id==itemData.userId">
+                        <div :class="{'list-container':!isDarkMode,'list-container-dark':isDarkMode}" v-if="optionFlag && me.id==itemData.userId">
                             <p style="width: 100px;"
                             @click="editFlag=true"
                             ><img src="./Icon/edit.png" alt="">게시물 수정</p>
@@ -33,37 +33,46 @@
                     </div>
                 </div>
                 
-                <div class="line"></div>
+                <div :class="{'line':!isDarkMode,'line-dark':isDarkMode}"></div>
                 <div class="comment-list" @click="optionFlag = false">
-                    <p>댓글 {{ commentCount }}개</p>
+                    <p :class="{'comment-count':!isDarkMode, 'comment-count-dark':isDarkMode}">댓글 {{ commentCount }}개</p>
                     <div class="comment" v-for="(item,idx) in comment" :key="idx">
                         <img class="comment-img" :src="item.imageUrl">
                         <div class="info-container">
-                            <p class="comment-nick">{{ item.nickname }}</p>
-                            <p>{{ item.content }}</p>
+                            <p v-if="isDarkMode" style="color: #B1AFAF;">{{ item.nickname }}</p>
+                            <p v-else>{{ item.nickname }}</p>
+                            <p v-if="isDarkMode" style="color: #fff;">{{ item.content }}</p>
+                            <p v-else >{{ item.content }}</p>
                             <div style="display: flex; align-items: center; margin-left: 2px;">
-                                <img class="heart-img" src="./Icon/heart.png" alt="" v-if="item.isCommentLike==0"
+                                <img class="heart-img" src="./Icon/heart.png" alt="" v-if="item.isCommentLike==0 && !isDarkMode"
+                                @click.self.prevent="likeComment(item.id); item.isCommentLike = 1"
+                                >
+                                <img class="heart-img" src="./Icon/heart_dark.png" alt="" v-if="item.isCommentLike==0 && isDarkMode"
                                 @click.self.prevent="likeComment(item.id); item.isCommentLike = 1"
                                 >
                                 <img src="./Icon/fullheart.png" class="heart-img" v-if="item.isCommentLike==1"
                                 @click.self.prevent="likeComment(item.id); item.isCommentLike = 0"
                                 >
-                                <img class="chat-img" src="./Icon/chat.png" alt="" @click="showRecomment(idx,item.id)">
+                                <img v-if="isDarkMode" class="chat-img" src="./Icon/chat_dark.png" alt="" @click="showRecomment(idx,item.id)">
+                                <img v-if="!isDarkMode" class="chat-img" src="./Icon/chat.png" alt="" @click="showRecomment(idx,item.id)">
                             </div>
                             <div class="re-comment" v-if="recommentView[idx]">
                                 <div class="re-content" v-for="(re,reIdx) in recommentList[idx]" :key="reIdx">
                                     <img class="comment-img" :src="re.imageUrl">
                                     <div class="info-container">
-                                        <p class="comment-nick">{{ re.nickname }}</p>
-                                        <p>{{ re.content }}</p>
-                                        <!-- <div style="display: flex; align-items: center; margin-left: 2px;"> -->
-                                            <img class="heart-img" src="./Icon/heart.png" alt="" v-if="re.isCommentLike==0"
-                                            @click.prevent="likeComment(re.id); re.isCommentLike=1"
-                                            >
-                                            <img src="./Icon/fullheart.png" class="heart-img" v-if="re.isCommentLike==1"
-                                            @click.prevent="likeComment(re.id); re.isCommentLike=0"
-                                            >
-                                        <!-- </div> -->
+                                        <p v-if="isDarkMode" style="color: #B1AFAF;">{{ re.nickname }}</p>
+                                        <p v-else>{{ re.nickname }}</p>
+                                        <p v-if="isDarkMode" style="color: #fff;">{{ re.content }}</p>
+                                        <p v-else >{{ re.content }}</p>
+                                        <img class="heart-img" src="./Icon/heart.png" alt="" v-if="re.isCommentLike==0 && !isDarkMode"
+                                        @click.prevent="likeComment(re.id); re.isCommentLike=1"
+                                        >
+                                        <img class="heart-img" src="./Icon/heart_dark.png" alt="" v-if="re.isCommentLike==0 && isDarkMode"
+                                        @click.prevent="likeComment(re.id); re.isCommentLike=1"
+                                        >
+                                        <img src="./Icon/fullheart.png" class="heart-img" v-if="re.isCommentLike==1"
+                                        @click.prevent="likeComment(re.id); re.isCommentLike=0"
+                                        >
                                     </div>
                                 </div>
                                 <div class="resend-form">
@@ -74,36 +83,40 @@
                         </div>
                     </div>
                 </div>
-                <div class="line2"></div>
+                <div :class="{'line2':!isDarkMode,'line2-dark':isDarkMode}"></div>
                 <div class="bottom">
-                    <p>{{ likeCount }}명의 사람들이 이 글을 좋아합니다.</p>
-                    <p class="time">{{ createTime }}</p>
-                    <div class="write">
-                        <textarea  cols="30" rows="10" class="write-comment" maxlength="20"
+                    <p :class="{'comment-count':!isDarkMode, 'comment-count-dark':isDarkMode}" style="font-size: 0.9em;">{{ likeCount }}명의 사람들이 이 글을 좋아합니다.</p>
+                    <p :class="{'comment-count':!isDarkMode, 'comment-count-dark':isDarkMode}" style="font-size: 0.85em;">{{ createTime }}</p>
+                    <div class="write" style="width: 100%;">
+                        <textarea  cols="30" rows="10" :class="{'write-comment':!isDarkMode,'write-comment-dark':isDarkMode}" maxlength="20"
                         v-model="writeComment" @keyup.enter.prevent="send"
                         ></textarea>
-                        <div class="submit" @click.prevent="send">댓글쓰기</div>
+                        <div :class="{'submit':!isDarkMode, 'submit-dark':isDarkMode}" @click.prevent="send">댓글쓰기</div>
                     </div>
                 </div>
             </div>
         </div>
         <div class="edit-back" v-if="editFlag" @click.self="editFlag=false">
-            <div class="edit-content">
-                <p class="edit-header"><img src="./Icon/edit.png" alt="">게시물 내용 수정</p>
+            <div :class="{'edit-content':!isDarkMode,'edit-content-dark':isDarkMode}">
+                <p :class="{'edit-header':!isDarkMode,'edit-header-dark':isDarkMode}"><img src="./Icon/edit.png" alt="">게시물 내용 수정</p>
                 <div class="edit-body">
-                    <textarea  cols="30" rows="10" class="edit-write" maxlength="20"
+                    <textarea  cols="30" rows="10" :class="{'edit-write':!isDarkMode,'edit-write-dark':isDarkMode}" maxlength="20"
                     v-model="editComment" @keyup.enter.prevent="send"
                     ></textarea>
                 </div>
-                <div class="edit-button" @click="editFeed">edit</div>
+                <div style="display: flex; justify-content: flex-end; padding: 0px 20px;">
+                    <div class="edit-button" @click="editFeed">수정하기</div>
+                </div>
             </div>
         </div>
         <div class="edit-back" v-if="deleteFlag" @click.self="deleteFlag=false">
-            <div class="delete-content">
-                <div class="delte-body">
-                    <p><img src="./Icon/delete.png" alt="">게시물 삭제</p>
-                    <div class="delete-false" @click="deleteFlag=false">취소하기</div>
-                    <div class="delete-button" @click="deleteFeed">삭제하기</div>
+            <div :class="{'delete-content':!isDarkMode,'delete-content-dark':isDarkMode}">
+                <div :class="{'delete-body':!isDarkMode,'delete-body-dark':isDarkMode}">
+                    <p><img src="./Icon/delete.png" alt="">게시물을 삭제하시겠습니까?</p>
+                    <div style="display: flex; flex-direction: row;">
+                        <div class="delete-false" @click="deleteFlag=false">취소하기</div>
+                        <div class="delete-button" @click="deleteFeed">삭제하기</div>
+                    </div>
                 </div>
                 
             </div>
@@ -255,6 +268,7 @@ export default {
     },
     props: {
         idx : Number,
+        isDarkMode : Boolean
     },
     watch:{
         step(){
