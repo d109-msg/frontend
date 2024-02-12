@@ -44,9 +44,9 @@
       </div>
     </div>
     
-    <DetailPage v-if="detailFlag"
+    <DetailPage v-if="detailFlag" 
         @close-detail="offDetail"
-        :idx="feed.articleId"
+        :idx="feed.articleId" :is-dark-mode="isDarkMode"
         />
   </div>
 </template>
