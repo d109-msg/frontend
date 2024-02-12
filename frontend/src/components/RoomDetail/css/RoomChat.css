@@ -24,11 +24,22 @@
     border: #8499AA solid 3px;
     outline: #8499AA;
 }
+.chat-input-dark{
+    width: 97%;
+    border-radius: 5px;
+    border: #464C61 solid 3px;
+    word-wrap: break-all;
+    padding: 5px 5px 20px 5px;
+    font: 1em;
+    resize: none;
+    background: #292829;
+    color: #E6E3E2;
+}
 
 .chat-input-mafia{
     width: 97%;
     border-radius: 5px;
-    border: red solid 3px;
+    border: #791124 solid 3px;
     word-wrap: break-all;
     padding: 5px 5px 20px 5px;
     font: 1em;
@@ -37,8 +48,8 @@
 .chat-input-mafia:hover,
 .chat-input-mafia:focus
 {
-    border: red solid 3px;
-    outline: red;
+    border: #791124 solid 3px;
+    outline: #791124;
 }
 
 .photo-icon{
@@ -123,8 +134,27 @@
     padding: 3%;
     z-index: 99;
 }
+.job-box-dark{
+    position: absolute;
+    top: 10px;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    width: 97.5%;
+    height: 70px;
+    border-radius: 5px;
+    margin: 5px;
+    background: #7A4B4B;
+    font-size: 0.9em;
+    padding: 3%;
+    z-index: 99;
+}
 
-.job-box>div{
+.job-text-dark{
+    color: #fff;
+}
+
+.job-box>div, .job-box-dark>div{
     margin: 0px 0px 1px 0px;
 }
 

@@ -1,5 +1,5 @@
 <template>
-  <div class="game-mid-box">
+  <div :class="{'game-mid-box':!isDarkMode,'game-mid-box-dark':isDarkMode}">
     <div class="create-room-btn" @click="createRoom()" >
       방만들기
     </div>
@@ -33,6 +33,7 @@ export default {
     },
     props:{
       roomList : Object,
+      isDarkMode : Boolean
     },
     watch:{
       roomList(nv, ov){

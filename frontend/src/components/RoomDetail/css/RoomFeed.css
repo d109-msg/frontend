@@ -10,3 +10,16 @@
     overflow: hidden;
 
 }
+
+.feed-container-dark{
+    display: flex;
+    position: relative;
+    height: 620px;
+    width: 50%;
+    margin-right: 30px;
+    background-color: #292829;
+    border-radius: 5px;
+    box-shadow: 5px 5px 5px rgba(0, 0, 0, 0.2);
+    overflow: hidden;
+
+}

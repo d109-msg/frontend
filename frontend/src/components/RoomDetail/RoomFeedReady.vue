@@ -1,18 +1,18 @@
 <template>
-    <div class="feed-title-box">
+    <div :class="{'feed-title-box':!isDarkMode, 'feed-title-box-dark':isDarkMode}">
       <div class="invite-code-title">{{ roomData.title }}</div>
     </div>
-    <div class="feed-content">
+    <div :class="{'feed-content':!isDarkMode,'feed-content-dark':isDarkMode}">
       <div>
-        <p class="invite-code-title">초대코드</p>
-        <p class="invite-code" >
+        <p :class="{'invite-code-title':!isDarkMode,'invite-code-title-dark':isDarkMode}">초대코드</p>
+        <p :class="{'invite-code':!isDarkMode,'invite-code-dark':isDarkMode}" >
           {{ roomData.id }}
         </p>
         <div style="display: flex; justify-content: space-evenly; ">
           <button id="invite-copy" class="invite-btn" @click="copyBtn()">초대코드 복사하기</button>
           <button class="invite-btn">초대코드 공유하기</button>
         </div>
-        <p class="invite-code-title">아직 멤버가 다 모이지 않았어요. <span>({{member.length}}/7)</span></p>
+        <p :class="{'invite-code-title':!isDarkMode,'invite-code-title-dark':isDarkMode}">아직 멤버가 다 모이지 않았어요. <span>({{member.length}}/7)</span></p>
       </div>
     </div>
 </template>
@@ -27,6 +27,7 @@ export default {
       ability:Object,
       member: Object,
       roomTime:Number,
+      isDarkMode:Boolean
 
     },
     methods:{

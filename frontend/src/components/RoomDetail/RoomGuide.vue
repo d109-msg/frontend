@@ -1,16 +1,19 @@
 <template>
-  <div class="chat-container">
 
     <div class="chat-content">
-      <img class="job-guide" src="./Img/job_guide.png" alt="">
+      <img v-if="!isDarkMode" class="job-guide" src="./Img/job_guide.png" alt="">
+      <img v-else class="job-guide" src="./Img/job_guide_dark.png" alt="">
+
     </div>
 
-  </div>
 </template>
 
 <script>
 export default {
-    name: 'RoomGuide'
+    name: 'RoomGuide',
+    props:{
+      isDarkMode : Boolean
+    }
     
 }
 </script>

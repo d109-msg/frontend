@@ -1,5 +1,5 @@
 <template>
-  <div class="feed-container">
+  <div :class="{'feed-container':!isDarkMode,'feed-container-dark':isDarkMode}">
     <RoomFeedReady v-if="startFlag === false" 
     :room-data="roomData"
     :participant="participant"
@@ -7,7 +7,7 @@
     :ability="ability"
     :member="member"
     :room-time="roomTime"
-
+    :is-dark-mode="isDarkMode"
     
     ></RoomFeedReady>
     <RoomFeedStart v-else 
@@ -17,6 +17,7 @@
     :ability="ability"
     :member="member"
     :room-time="roomTime"
+    :is-dark-mode="isDarkMode"
     ></RoomFeedStart>
 
   </div>
@@ -39,6 +40,7 @@ export default {
       ability:Object,
       member: Object,
       roomTime:Number,
+      isDarkMode:Boolean
     },
     components:{
       RoomFeedReady,
