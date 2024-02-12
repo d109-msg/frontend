@@ -25,7 +25,7 @@
     </div>
     <div class="feed-game-box">
       <MyFeedVue :id="userInfo.id"></MyFeedVue>
-      <MyGameVue></MyGameVue>
+      <MyGameVue :game="gameInfo"></MyGameVue>
     </div>
   </div>
   <div v-if="isEdit==true"  >
@@ -53,6 +53,7 @@ export default {
         isEdit : false,
         userId : "",
         MyFeed : {},
+        gameInfo : {},
       }
     },
     components : {
@@ -78,6 +79,11 @@ export default {
         
         console.log(error)  
       }
+    },
+    getGame : async function(){
+      const auth = useAuthStore()
+      let value = await auth.getGame(this.$route.params.id)
+      this.gameInfo = value.data
     },
     followUser: async function(){
       const auth = useAuthStore()
@@ -110,6 +116,7 @@ export default {
       try{
           await auth.useRefresh()
           await this.getUser()
+          await this.getGame()
       } catch(err){
         console.log('팔로우 정보를 가져오지 못했습니다.')
       }
