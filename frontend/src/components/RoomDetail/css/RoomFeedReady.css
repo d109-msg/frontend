@@ -23,7 +23,19 @@
     background-color: #292829;
     color: #FFFDF3;
 }
-
+.search-back{
+    position: fixed;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: rgba(0, 0, 0, 0.55);
+    z-index: 99999;
+    cursor: pointer;
+}
 .reset-icon{
     background: url('../Img/icon_reset.png');
     background-size: contain;

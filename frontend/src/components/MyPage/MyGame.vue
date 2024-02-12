@@ -31,76 +31,150 @@
 
 <script>
 import Chart from 'chart.js/auto'
+import { useAuthStore } from '@/store/authStore'
 
 export default {
     name: 'MyGame',
     data(){
       return{
-        chart : Object,
+        chart : {},
         civil : 10,
         mafia : 20,
         civilRange : "0%",
         mafiaRange : "0%",
+        userInfo : {},
+        game : {},
       }
     },
     props:{
       pageNum : String,
       size : String,
-      isDarkMode : Boolean
-
+      isDarkMode : Boolean,
+      isMount : Number,
     },
     methods:{
+      getUser : async function(){
+        const auth = useAuthStore()
+        let value = await auth.getUser()
+        this.userInfo = value.data
+      },
+      getGame : async function(){
+        const auth = useAuthStore()
+        let value = await auth.getGame(this.userInfo.id)
+        this.game = value.data
+      },
       goGameRecord(){
         this.$emit('changePage', '2')
 
       },
       goMyfeed(){
         this.$emit('changePage', '1')
+      },
+      showgame(){
+        let total = this.game.totalGameCnt
+        let civiltotal = this.game.civilGameCnt
+        let mafiatotal = this.game.mafiaGameCnt
+        let civilValue = Math.round(200/civiltotal,1)   
+        let mafiaValue = Math.round(200/mafiatotal,1)
+        const civil = document.querySelector('.civil')
+        const mafia = document.querySelector('.mafia')
+        if(civil == null||mafia == null){
+          return
+        }
+        let civilFrame = null
+        let mafiaFrame = null
+        if(total == 0){
+          civilFrame =  [
+          {width : 0},
+          {width : `200px`}  
+        ]
+          mafiaFrame = [
+          {width : 0},
+          {width : `200px`}  
+        ]
+        this.civilRange = "0%"
+        this.mafiaRange = "0%"
+        }
+        else if(civiltotal == 0){
+            civilFrame =  [
+            {width : 0},
+            {width : `200px`}  
+          ]
+            mafiaFrame = [
+            {width : 0},
+            {width : `${mafiaValue*this.game.mafiaWinCnt}px`}  
+          ]
+          this.civilRange = `0%`
+          this.mafiaRange = `${Math.round(this.game.mafiaWinCnt/mafiatotal*100,1)}%`
+        }
+        else if(mafiatotal == 0){
+          civilFrame =  [
+          {width : 0},
+          {width : `${civilValue*this.game.civilWinCnt}px`}  
+          ]
+          mafiaFrame = [
+              {width : 0},
+              {width : '0px'} 
+          ]
+          this.civilRange = `${Math.round(this.game.civilWinCnt/civiltotal*100,1)}%`
+          this.mafiaRange = `0%`
+        }
+        else{
+          civilFrame =  [
+          {width : 0},
+          {width : `${civilValue*this.game.civilWinCnt}px`}  
+        ]
+          mafiaFrame = [
+          {width : 0},
+          {width : `${mafiaValue*this.game.mafiaWinCnt}px`}  
+        ]
+        this.civilRange = `${Math.round(this.game.civilWinCnt/civiltotal*100,1)}%`
+        this.mafiaRange = `${Math.round(this.game.mafiaWinCnt/mafiatotal*100,1)}%`
+        }
+
+        let option = {
+          duration : 2000,
+          easing : "ease",
+          fill : "forwards"
+        }
+        civil.animate(civilFrame,option)
+        mafia.animate(mafiaFrame,option)
+        let data = null
+        if(this.game.totalGameCnt>0){
+          data = [
+          { rate: "Win", count: this.game.totalWinCnt },
+          { rate: "Lose", count: (this.game.totalGameCnt-this.game.totalWinCnt) },
+          ]
+        } else{
+          data = [
+          { rate: "Win", count: 100 },
+          { rate: "Lose", count: 0 }, 
+          ]
+        }
+      this.chart = new Chart(
+        document.getElementById('doughnut'),{
+          type: 'doughnut',
+          data: {
+            labels: data.map(row=> row.rate),
+            datasets: [{
+              label: 'count',
+              data: data.map(row=> row.count),
+            }]
+          },
+        }
+      )
+      },
+      startPage : async function(){
+        await this.getUser()
+        await this.getGame()
+        this.showgame()
       }
     },
-    mounted(){
-      const total = this.civil+this.mafia
-      const value = Math.round(200/total,1)
-      const civil = document.querySelector('.civil')
-      const mafia = document.querySelector('.mafia')
-      let civilFrame =  [
-        {width : 0},
-        {width : `${value*this.civil}px`}  
-      ]
-      let mafiaFrame = [
-        {width : 0},
-        {width : `${value*this.mafia}px`}  
-      ]
-      this.civilRange = `${Math.round(this.civil/total*100,1)}%`
-      this.mafiaRange = `${Math.round(this.mafia/total*100,1)}%`
+    created(){
+        this.startPage()
+    },
+  }
 
-      let option = {
-        duration : 2000,
-        easing : "ease",
-        fill : "forwards"
-      }
-      civil.animate(civilFrame,option)
-      mafia.animate(mafiaFrame,option)
-
-      const data = [
-    { rate: "Win", count: 10 },
-    { rate: "Lose", count: 20 },
-    ]
-
-    this.chart = new Chart(
-      document.getElementById('doughnut'),{
-        type: 'doughnut',
-        data: {
-          labels: data.map(row=> row.rate),
-          datasets: [{
-            label: 'count',
-            data: data.map(row=> row.count),
-          }]
-        },
-      }
-    )
-  },
-}
 </script>
 
 <style scoped src="./css/MyGame.css">
