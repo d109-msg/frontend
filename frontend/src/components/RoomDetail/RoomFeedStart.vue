@@ -1,12 +1,12 @@
 <template>
     <div style="     width: 100%; height: 100%;">
 
-    <div class="feed-title-box">
+    <div  :class="{'feed-title-box':!isDarkMode, 'feed-title-box-dark':isDarkMode}">
       <div @click="reload(0)" class="reset-icon"></div>
-      <div class="invite-code-title">{{ roomData.title }}</div>
+      <div :class="{'invite-code-title':!isDarkMode,'invite-code-title-dark':isDarkMode}">{{ roomData.title }}</div>
       <div class="create-icon" @click="createOn"></div>
     </div>
-    <div class="feed-content">
+    <div :class="{'feed-content':!isDarkMode,'feed-content-dark':isDarkMode}">
 
         <img src="./Img/arrow_up.png" class="toggle-job" @click="missionBox=!missionBox" v-if="missionBox">
         <img src="./Img/arrow_down.png" class="toggle-job" @click="missionBox=!missionBox" v-else>
@@ -23,14 +23,14 @@
         </div>
         <div class="feed-content-box">
             <div v-for="(feed,idx) in feedList" :key="idx"  style="display: flex; justify-content: center;" :id="`feed${idx}`">
-                    <RoomFeedCardVue :item="feed" />
+                    <RoomFeedCardVue :item="feed" :is-dark-mode="isDarkMode" />
             </div>
         </div>
         
 
     </div>
-    <FeedCreate v-if="create && participant.flagMafia" @close="reload" :roomId="roomData.id"/>
-    <FeedCreate v-if="create && !(participant.flagMafia)" @close="reload" :roomId="roomData.id"/>
+    <FeedCreate v-if="create && participant.flagMafia" @close="reload" :roomId="roomData.id" :is-dark-mode="isDarkMode" />
+    <FeedCreate v-if="create && !(participant.flagMafia)" @close="reload" :roomId="roomData.id" :is-dark-mode="isDarkMode" />
 </div>
 
 </template>
@@ -60,7 +60,7 @@ export default {
       ability:Object,
       member: Object,
       roomTime:Number,
-
+      isDarkMode:Boolean
     },
     components:{
         FeedCreate,

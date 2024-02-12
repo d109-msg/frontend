@@ -1,5 +1,3 @@
-
-
 .feed-title-box{
     display: flex;
     justify-content: center;
@@ -11,7 +9,19 @@
     border-radius: 5px 5px 0 0;
     background-color: #FFFDF3;
     box-shadow: 1px 2px 5px rgba(0, 0, 0, 0.2);
-
+}
+.feed-title-box-dark{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: absolute;
+    width: 100%;
+    height: 60px;
+    top: 0;
+    border-radius: 5px 5px 0 0;
+    box-shadow: 1px 2px 5px rgba(0, 0, 0, 0.2);
+    background-color: #292829;
+    color: #FFFDF3;
 }
 
 .reset-icon{
@@ -44,6 +54,16 @@
     height: 80%;
     margin-top: 100px;
 }
+.feed-content-dark{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    height: 80%;
+    margin-top: 100px;
+    background: #292829;
+}
 
 .invite-code-title{
     display: flex;
@@ -52,11 +72,26 @@
     text-align: center;
     font-size: 1.5em;
 }
+.invite-code-title-dark{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    font-size: 1.5em;
+    color: #FFFDF3;
+}
 
 .invite-code{
     text-align: center;
     font-size: 2em;
     margin-bottom: 50px;
+}
+
+.invite-code-dark{
+    text-align: center;
+    font-size: 2em;
+    margin-bottom: 50px;
+    color: #FFFDF3;
 
 }
 

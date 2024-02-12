@@ -5,6 +5,14 @@
     padding: 5%;
 }
 
+.chat-content-dark{
+    width: 100%;
+    height: 550px;    
+    margin-top: 60px;
+    padding: 5%;
+    background: #292829;
+}
+
 .vote-title{
     color: #787171;
 }

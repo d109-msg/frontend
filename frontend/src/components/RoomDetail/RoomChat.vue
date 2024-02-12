@@ -3,10 +3,10 @@
     <div class="chat-content">
       <img src="./Img/arrow_up.png" class="toggle-job" @click="boxFlag=!boxFlag" v-if="boxFlag == true">
       <img src="./Img/arrow_down.png" class="toggle-job" @click="boxFlag=!boxFlag" v-else>
-      <div class="job-box" v-if="boxFlag">
-        <div>내 이름 : {{ participant.nickname }}</div>
-        <div v-if="participant.jobId == '미치광이'">내 직업 : 경찰</div>
-        <div v-else>내 직업 : {{participant.jobId }}</div>
+      <div :class="{'job-box':!isDarkMode,'job-box-dark':isDarkMode}" v-if="boxFlag">
+        <div :class="{'job-text':!isDarkMode,'job-text-dark':isDarkMode}">내 이름 : {{ participant.nickname }}</div>
+        <div :class="{'job-text':!isDarkMode,'job-text-dark':isDarkMode}" v-if="participant.jobId == '미치광이'">내 직업 : 경찰</div>
+        <div :class="{'job-text':!isDarkMode,'job-text-dark':isDarkMode}" v-else>내 직업 : {{participant.jobId }}</div>
       </div>
       <div class="chat-box">
         <div v-for="(message,idx) in chatStore.getMessage[roomData.id]" :key="idx" style="margin-top: 10px;" :id="'message'+idx">
@@ -52,7 +52,7 @@
     </div>
     </div>
     <div class="chat-input-box">
-      <textarea type="text" class="chat-input" id="content" cols="40" rows="3" maxlength="100" v-model="message" @keyup.enter.prevent="send"
+      <textarea type="text" :class="{'chat-input':!isDarkMode,'chat-input-dark':isDarkMode}" id="content" cols="40" rows="3" maxlength="100" v-model="message" @keyup.enter.prevent="send"
       v-if="mafiaFlag==false"
       ></textarea>
       <textarea type="text" class="chat-input-mafia" id="content" cols="40" rows="3" maxlength="100" v-model="message" @keyup.enter.prevent="sendMafia"
@@ -97,6 +97,7 @@ export default {
       ability:Object,
       member: Object,
       roomTime:Number,
+      isDarkMode:Boolean
     },
     methods:{
       getUser : async function(){

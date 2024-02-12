@@ -1,17 +1,17 @@
 <template>
-  <div>
+  <div :class="{'game-page':!isDarkMode,'game-page-dark':isDarkMode}">
     <div class="game-banner-box">
         <div class="game-banner">
             <div class="search-box">
-                <input class="search-bar" type="text" v-model="inviteCode" placeholder="초대코드 입력" >
-                <div class="search-btn" @click="enterInviteRoom()">입장</div>
+                <input :class="{'search-bar':!isDarkMode,'search-bar-dark':isDarkMode}" type="text" v-model="inviteCode" placeholder="초대코드 입력" >
+                <div :class="{'search-btn':!isDarkMode,'search-btn-dark':isDarkMode}" @click="enterInviteRoom()">입장</div>
             </div>
         </div>
     </div>
-        <GameMidPageVue :room-list="roomList"></GameMidPageVue>
-        <div class="game-bot-box">
-            <GameRoomPageVue class="game-room-box" :room-list="roomList"></GameRoomPageVue>
-            <MiniProfile v-if="size == 'lg'" :userInfo="userInfo"/>
+        <GameMidPageVue :room-list="roomList" :is-dark-mode="isDarkMode" ></GameMidPageVue>
+        <div :class="{'game-bot-box':!isDarkMode, 'game-bot-box-dark':isDarkMode}">
+            <GameRoomPageVue :class="{'game-room-box':!isDarkMode, 'game-room-box-dark':isDarkMode}" :room-list="roomList" :is-dark-mode="isDarkMode"></GameRoomPageVue>
+            <MiniProfile v-if="size == 'lg'" :userInfo="userInfo" :is-dark-mode="isDarkMode" />
         </div>
   </div>
 </template>
@@ -38,6 +38,9 @@ export default {
             roomList :{},
             inviteRoom:{}
         }
+    },
+    props:{
+        isDarkMode : Boolean
     },
     components:{
         GameMidPageVue,

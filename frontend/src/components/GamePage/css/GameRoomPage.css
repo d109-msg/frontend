@@ -1,3 +1,8 @@
+   .game-mid-dark{
+     background: #212020;
+
+   }
+
    .game-room-page-title{
         display: flex;
         flex-direction: row;

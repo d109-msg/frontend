@@ -1,23 +1,23 @@
 <template>
-  <div class="messagelist-container">
+  <div :class="{'messagelist-container':!isDarkMode,'messagelist-container-dark':isDarkMode}">
     <div class="messagelist-title-box">
         <p class="messagelist-title">Message List</p>
         <img class="messagelist-title-icon" src="./Img/icon_plus.png" alt="" @click="showList">
         <div class="list-back" v-if="listFlag" @click.self="listFlag=false">
-          <div class="list-modal">
+          <div :class="{'list-modal':!isDarkMode,'list-modal-dark':isDarkMode}">
             <div class="search-container">
-                    <input type="text" class="search-bar" placeholder="search" maxlength="30" v-model="searchResult">
+                    <input type="text" :class="{'search-bar':!isDarkMode,'search-bar-dark':isDarkMode}" placeholder="search" maxlength="30" v-model="searchResult">
                     <div class="search-icon"></div>
             </div>
             <div class="search-result">
               <div class="result" v-for="(item,key) in userList" :key="key" >
                   <img :src="item.imageUrl" class="profile-img" :id="key">
-                  <div class="info">
+                  <div :class="{'info':!isDarkMode,'info-dark':isDarkMode}">
                     <span>
                       {{ item.nickname}}
                     </span>
                     <p>
-                      plz add bio
+                      {{ item.bio}}
                     </p>
                   </div>
                   <div class="button-box" @click="chatRoom(item.userId)">
@@ -28,12 +28,12 @@
           </div>
         </div>
     </div>
-    <div class="messagelist-content">
+    <div  :class="{'messagelist-content':!isDarkMode,'messagelist-content-dark':isDarkMode}" >
         <div v-for="(item,key) in messageList" :key="key" class="chat-room" :id="key"
         @click="clickChat(key)"
         >
           <img :src="item.imageUrl" alt="" class="chat-img">
-          <div class="chat-info" >
+          <div :class="{'chat-info':!isDarkMode, 'chat-info-dark':isDarkMode}" >
             <span>{{ item.title }}</span>
             <p v-if="item.id in chatStore.getMessage">
               {{ chatStore.getMessage[item.id][chatStore.getMessage[item.id].length-1]['content']}}
@@ -75,6 +75,9 @@ export default {
         last : {},
         chatStore : useChatStore()
       }
+    },
+    props:{
+      isDarkMode : Boolean
     },
     methods:{
       showList : function(){
