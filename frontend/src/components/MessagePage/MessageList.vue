@@ -36,7 +36,7 @@
           <div class="chat-info" >
             <span>{{ item.title }}</span>
             <p v-if="item.id in chatStore.getMessage">
-              {{ chatStore.getMessage[item.id][chatStore.getMessage[item.id].length-1].content}}
+              {{ chatStore.getMessage[item.id][chatStore.getMessage[item.id].length-1]['content']}}
             </p>
             <p v-else-if="item.lastMessage !=''">
               {{ item.lastMessage }}

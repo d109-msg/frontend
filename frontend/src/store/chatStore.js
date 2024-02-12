@@ -124,11 +124,15 @@ export const useChatStore = defineStore('chat',{
             const userId = auth.getUserInfo.id
             const client = this.getStomp
             client.subscribe(`/sub/`+userId,(e)=>{
-                const data = JSON.parse(e.body)
-                if(data.dataType == "noti"){
-                    this.notify.unshift(data)
-                } else if(data.dataType == "sub"){
-                    this.subRequest(data)
+                console.log('확인값',e)
+                try{
+                    const data = JSON.parse(e.body)
+                    if(data.dataType == "noti"){
+                        this.notify.unshift(data)
+                    } else if(data.dataType == "sub"){
+                        this.subRequest(data)
+                    }
+                }catch(err){
                 }
             })
         },
@@ -140,7 +144,6 @@ export const useChatStore = defineStore('chat',{
             return axios.get(`${server}/notification`,{headers})
         },
         readNotification : async function(idx){
-            console.log('여기까진 오니?')
             const auth = useAuthStore()
             const headers = {
                 Authorization : `Bearer ${auth.getAccess}`,
