@@ -12,9 +12,11 @@
         <div v-for="(message,idx) in chatStore.getMessage[roomData.id]" :key="idx" style="margin-top: 10px;" :id="'message'+idx">
           <div v-if="message.userId == 1">
                 <div style="display: flex;">
-                  <img src="./Img/mafia.png" alt="" style="width: 35px; height: 35px;">
+                  <img src="./Img/mafia.png" alt="" style="width: 35px; height: 35px; background: #fff; border-radius: 5px;" >
                   <div>
-                    <p style="font-size: 13px; padding-left: 10px; font-weight: bold;">MSG</p>
+                    <p 
+                    :class="{'chat-nick-msg':!isDarkMode,'chat-nick-msg-dark':isDarkMode}"
+                    >MSG</p>
                     <div class="chat-other-box">
                       <div class="chat-other-text">
                         {{ message.content }}
@@ -28,9 +30,9 @@
              
               <div v-if="user.userId == message.userId">
                 <div style="display: flex;"  v-if="message.flagMafia==0">
-                  <img :src="user.imageUrl" alt="" style="width: 35px; height: 35px;">
+                  <img :src="user.imageUrl" alt="" style="width: 35px; height: 35px; background: #fff; border-radius: 5px;">
                   <div>
-                    <p style="font-size: 13px; padding-left: 10px; font-weight: bold;">{{ user.nickname }}</p>
+                    <p :class="{'chat-nick':!isDarkMode,'chat-nick-dark':isDarkMode}" >{{ user.nickname }}</p>
                     <div class="chat-other-box">
                       <div class="chat-other-text">
                         {{ message.content }}
