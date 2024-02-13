@@ -1,6 +1,8 @@
 <template>
   <div class="detail-container">
     <RoomFeed 
+    v-if="(step==0 && size=='xs') || size=='lg' || size=='md'"
+    :size="size"
     :room-data="roomData"
     :participant="participant"
     :mission="mission"
@@ -8,17 +10,19 @@
     :member="member"
     :room-time="roomTime"
     :is-dark-mode="isDarkMode"
+    @open-chat="stepUp"
     />
-    <div :class="{'chat-container':!isDarkMode,'chat-container-dark':isDarkMode}">
+    <div :class="{'chat-container':!isDarkMode,'chat-container-dark':isDarkMode}" v-if="(step==1 && size=='xs') || size=='lg' || size=='md'">
       <div :class="{'chat-title-box':!isDarkMode,'chat-title-box-dark':isDarkMode}" style="display: flex; justify-content: space-between;">
         <div >
           <img v-if="!roomTime" @click="dayFlag()" src="./Img/icon_sun_active.png" alt="" style="cursor: pointer;">
           <img v-else @click="dayFlag()" src="./Img/icon_sun.png" alt="" style="cursor: pointer;">
-
           <img v-if="roomTime" @click="nightFlag()" src="./Img/icon_moon_active.png" alt="" style="cursor: pointer;">
           <img v-else @click="nightFlag()" src="./Img/icon_moon.png" alt="" style="cursor: pointer;">
         </div>
-
+        <img src="./Img/arrow_down.png" alt="" style="width: 30px; height: 30px; rotate: 90deg; cursor: pointer;"
+        @click="step = 0"
+        >
         <div style="display: flex; flex-direction: row; align-items: center;">
           <img v-if="isOpen==1" src="./Img/icon_chat_active.png" alt="" class="is-chat" @click="isChat" >
           <img v-else src="./Img/icon_chat.png" alt="" class="is-chat" @click="isChat" >
@@ -90,7 +94,11 @@ export default {
         ability:{},
         member:{},
         roomTime : 0,
-        aliveMember:{}
+        aliveMember:{},
+        size : "",
+        width : 0,
+        height : 0,
+        step : 0,
       }
     },
     components:{
@@ -105,11 +113,30 @@ export default {
       // console.log(this.roomData)
       this.startPage()
       this.checkNight()
+      this.reactiveSize()
     },
     props:{
       isDarkMode : Boolean
     },
     methods:{
+      stepUp(data){
+        this.step = data
+      },
+      handleResize(event) {
+            this.width = window.innerWidth;
+            this.height = window.innerHeight;
+        },
+      reactiveSize : function(){
+          const viewportWidth = window.innerWidth
+          if (viewportWidth<1070) {
+                  this.size =  "xs"
+              }
+              else if (viewportWidth >= 1070 && viewportWidth < 1440
+              ) {
+                  this.size = "md"}
+              else {this.size = "lg"}
+          window.addEventListener('resize', this.handleResize);
+      },
       isChat(){
         this.isOpen = 1
       },
@@ -221,7 +248,25 @@ export default {
         await this.getMission(this.participant.id)
         await this.getAbility(this.participant.id)
       }
-    }
+    },
+    watch:{
+      width(nv,ov){
+            if(nv<1070){
+                this.size = "xs"
+            console.log('사이즈',this.size)
+
+            } else if(nv >= 1070 && nv < 1440){
+                this.size = "md"
+            console.log('사이즈',this.size)
+
+            }else{
+                this.size = "lg"
+            console.log('사이즈',this.size)
+
+            }
+        }
+    },
+
 }
 </script>
 
