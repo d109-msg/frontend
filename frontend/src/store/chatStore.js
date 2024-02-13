@@ -21,6 +21,7 @@ export const useChatStore = defineStore('chat',{
         isConnect : false,
         reloadFlag : {},
         nextRoom : {},
+        dayFlag : 0,
     }),
     getters:{
         getStomp : (state)=>{
@@ -40,9 +41,15 @@ export const useChatStore = defineStore('chat',{
         },
         getNextRoom : (state)=>{
             return state.nextRoom
+        },
+        getDay : (state)=>{
+            return state.dayFlag
         }
     },
     actions:{
+        setDay : function(value){
+            this.dayFlag = value
+        },
         messageRange : function(roomId){
             return this.message[roomId]
         },
@@ -89,6 +96,9 @@ export const useChatStore = defineStore('chat',{
             }else{
                 this.message[roomId] = [value]
                 this.countMessage[roomId] = 0
+            }
+            if(value.noticeType=="day"){
+                this.setDay(1)
             }
         },
         sub : async function(data){
