@@ -290,7 +290,7 @@ public class SchedulerServiceImpl implements SchedulerService{
 
             log.info("noticeReporterVote() target 이름 : {}", target.getNickname());
             log.info("noticeReporterVote() target 직업 : {}", target.getJobId());
-            messageService.sendGameNotice(roomId, target.getNickname() + "님의 직업은 " + target.getJobId() + "입니다.");
+            messageService.sendGameNotice(roomId, "기자가 " + target.getJobId() + " " + target.getNickname() + "님에 대한 기사를 작성했습니다.");
             //피드?
         }
     }
