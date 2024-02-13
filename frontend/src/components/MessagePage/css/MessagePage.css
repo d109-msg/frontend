@@ -1,8 +1,12 @@
+@media  screen and (max-width:860px) {
+
 .message-container{
     display: flex;
     flex-direction: row;
-    margin: 110px 80px 0px 80px;
-    height: 600px;
+    margin-top: 60px;
+    height: 95%;
+    width: 95%;
+    margin-left: 2.5%;
 }
 
 
@@ -12,3 +16,24 @@
     width: 500px;
     height: 600px;
 }
+
+}
+
+@media  screen and (min-width:861px) {
+
+    .message-container{
+        display: flex;
+        flex-direction: row;
+        margin: 110px 80px 0px 80px;
+        height: 600px;
+    }
+    
+    
+    .temp{
+        margin: 0 40px 0 50px;
+        padding: 0;
+        width: 500px;
+        height: 600px;
+    }
+    
+    }

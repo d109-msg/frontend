@@ -57,10 +57,10 @@ export default {
         },
       reactiveSize : function(){
           const viewportWidth = window.innerWidth
-          if (viewportWidth<1070) {
+          if (viewportWidth<860) {
                   this.size =  "xs"
               }
-              else if (viewportWidth >= 1070 && viewportWidth < 1440
+              else if (viewportWidth >= 860 && viewportWidth < 1440
               ) {
                   this.size = "md"}
               else {this.size = "lg"}
@@ -69,11 +69,11 @@ export default {
     },
     watch:{
       width(nv,ov){
-            if(nv<1070){
+            if(nv<860){
                 this.size = "xs"
             console.log('사이즈',this.size)
 
-            } else if(nv >= 1070 && nv < 1440){
+            } else if(nv >= 860 && nv < 1440){
                 this.size = "md"
             console.log('사이즈',this.size)
 
