@@ -250,14 +250,8 @@ export default {
         }
       },
       mounted(){
-        this.io = new IntersectionObserver(this.call,{threshold : 1.0})
+        this.io = new IntersectionObserver(this.call,{threshold : 0.7})
         this.startPage()
-        setTimeout(()=>{
-          const id = JSON.parse(this.$route.params.data).id
-          if(!(id in useChatStore().getMessage)){
-            useChatStore().sub([id])
-          }
-        },300)
       },
 
     

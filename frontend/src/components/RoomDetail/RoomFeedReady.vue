@@ -31,12 +31,7 @@ export default {
         listFlag : false,
       }
     },
-    computed:{
-      memberChange(){
-        const chat=  useChatStore()
-        return chat.getEnter
-      }
-    },
+
     props:{
       roomData : Object,
       participant:Object,
