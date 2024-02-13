@@ -102,6 +102,7 @@ export default {
         boxFlag : true,
         mafiaFlag : false,
         io : {},
+        endGame : 0,
       }
     },
     props:{
@@ -112,7 +113,20 @@ export default {
       ability:Object,
       member: Object,
       roomTime:Number,
-      isDarkMode:Boolean
+      isDarkMode:Boolean,
+    },
+    computed:{
+      endFlag : function(){
+        const chat = useChatStore()
+        return chat.getEnd
+      }
+    },
+    watch:{
+      endFlag(nv,ov){
+        if(nv==1){
+          this.endGame = 1
+        }
+      }
     },
     methods:{
       getUser : async function(){
@@ -135,7 +149,7 @@ export default {
         this.mafiaFlag = !(this.mafiaFlag)
       },
       send : function(){
-        if(this.participant.flagDie == 1){
+        if(this.participant.flagDie == 1 && this.endGame == 0){
           alert('이미 당신은 사망하였습니다. 더이상 게임에 참여하실 수 없습니다.')
           this.message = ""
           return
@@ -202,6 +216,11 @@ export default {
         })
       },
       sendMafia : function(){
+        if(this.participant.flagDie == 1 && this.endGame == 0){
+          alert('이미 당신은 사망하였습니다. 더이상 게임에 참여하실 수 없습니다.')
+          this.message = ""
+          return
+        }
         let data = {
           'roomId' : JSON.parse(this.$route.params.data).id,
           'flagMafia' : 1,
@@ -233,8 +252,8 @@ export default {
       mounted(){
         this.io = new IntersectionObserver(this.call,{threshold : 1.0})
         this.startPage()
-        const id = JSON.parse(this.$route.params.data).id
         setTimeout(()=>{
+          const id = JSON.parse(this.$route.params.data).id
           if(!(id in useChatStore().getMessage)){
             useChatStore().sub([id])
           }

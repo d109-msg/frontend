@@ -51,7 +51,7 @@
         width: 17.5%;
         bottom: 12.5%;
         left: 10%;
-        z-index: 30;
+        z-index: 1;
         border-radius: 50px;
         background: url('../Img/icon_job.PNG');
         background-size: contain;
@@ -114,7 +114,7 @@
         width: 15%;
         bottom: 15%;
         left: 20px;
-        z-index: 30;
+        z-index: 1;
         border-radius: 50px;
         background: url('../Img/icon_job.PNG');
         background-repeat: no-repeat;
@@ -177,7 +177,7 @@
         width: 50px;
         bottom: 30px;
         left: 20px;
-        z-index: 30;
+        z-index: 1;
         border-radius: 50px;
         background: url('../Img/icon_job.PNG');
         background-size: contain;
