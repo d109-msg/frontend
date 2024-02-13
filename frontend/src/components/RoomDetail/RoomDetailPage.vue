@@ -10,6 +10,11 @@
         밤이 되었습니다.
       </div>
     </div>
+    <div class="day-back" v-if="endStep">
+      <div style="font-size: 30px; color: white; font-weight: bold;">
+        게임이 종료되었습니다.
+      </div>
+    </div>
     <RoomFeed 
     v-if="(step==0 && size=='xs') || size=='lg' || size=='md'"
     :size="size"
@@ -113,9 +118,14 @@ export default {
         step : 0,
         dayStep : false,
         nightStep : false,
+        endStep : false,
       }
     },
     computed:{
+      endTurn(){
+        const chat = useChatStore()
+        return chat.getEnd()
+      },
       dayTurn (){
         const chat = useChatStore()
         return chat.getDay
@@ -123,6 +133,10 @@ export default {
       nightTurn(){
         const chat = useChatStore()
         return chat.getNight
+      },
+      enterRoom(){
+        const chat = useChatStore()
+        return chat.getEnter
       }
     },
   
@@ -320,6 +334,13 @@ export default {
             setTimeout(()=>{
               this.nightStep = false
             },3000)
+          }
+        },
+        async enterRoom(nv,ov){
+          if(nv == 1){
+            await this.getMemberList()
+            const chat = useChatStore()
+            chat.setRoom(0)
           }
         }
     },

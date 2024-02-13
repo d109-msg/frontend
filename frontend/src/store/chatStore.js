@@ -24,6 +24,7 @@ export const useChatStore = defineStore('chat',{
         dayFlag : 0,
         nightFlag : 0,
         endFlag : 0,
+        enterFlag : 0,
     }),
     getters:{
         getStomp : (state)=>{
@@ -52,9 +53,18 @@ export const useChatStore = defineStore('chat',{
         },
         getEnd : (state)=>{
             return state.endFlag
+        },
+        getEnter : (state)=>{
+            return state.enterFlag
         }
     },
     actions:{
+        setEnter : function(value){
+            this.enterFlag = value
+        },
+        setEnd : function(value){
+            this.endFlag = value
+        },
         setNight : function(value){
             this.nightFlag = value
         },
@@ -113,6 +123,12 @@ export const useChatStore = defineStore('chat',{
             }
             if(value.noticeType=='night'){
                 this.setNight(1)
+            }
+            if(value.noticeType=='end'){
+                this.setEnd(1)
+            }
+            if(value.noticeType =='enter'){
+                this.setEnter(1)
             }
         },
         sub : async function(data){
