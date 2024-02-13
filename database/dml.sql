@@ -38,7 +38,8 @@ INSERT INTO jobs (`id`, `info`, `image_url`) VALUES
 ('스파이', '스파이입니다.', 'tmpurl'),
 ('건달', '건달입니다.', 'tmpurl');
 
-INSERT INTO users (email_id, email_password, nickname, image_url, sign_up_time) VALUES 
+INSERT INTO users (email_id, email_password, nickname, image_url, sign_up_time) VALUES
+('testmc1@ssafy.com', '$2a$10$8C8PCUov//Edd6tWzdvvTupTLkAXiIOPn/OZMioTWNx5NOtgHl6rq', '사회자', 'https://team109testbucket.s3.ap-northeast-2.amazonaws.com/player1.png', NOW()),
 ('hong@ssafy.com', '$2a$10$8C8PCUov//Edd6tWzdvvTupTLkAXiIOPn/OZMioTWNx5NOtgHl6rq', '홍길동', 'https://team109testbucket.s3.ap-northeast-2.amazonaws.com/player1.png', NOW()),
 ('test1@naver.com', '$2a$10$8C8PCUov//Edd6tWzdvvTupTLkAXiIOPn/OZMioTWNx5NOtgHl6rq', 'test1', 'https://team109testbucket.s3.ap-northeast-2.amazonaws.com/player1.png', NOW()),
 ('test2@naver.com', '$2a$10$8C8PCUov//Edd6tWzdvvTupTLkAXiIOPn/OZMioTWNx5NOtgHl6rq', 'test2', 'https://team109testbucket.s3.ap-northeast-2.amazonaws.com/player1.png', NOW()),
