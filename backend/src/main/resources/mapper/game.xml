@@ -296,7 +296,7 @@
 			   r.flag_available
 		FROM rooms r
 				 JOIN participants p ON r.id = p.room_id
-		WHERE (r.data_type = '랜덤' OR r.data_type = '그룹') AND end_time IS  NULL
+		WHERE (r.data_type = '랜덤' OR r.data_type = '그룹') AND flag_available = 1
 		  AND p.user_id = #{userId};
 	</select>
 
