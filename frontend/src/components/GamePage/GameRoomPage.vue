@@ -23,6 +23,7 @@ import { Carousel, Slide } from "vue3-carousel";
 
 import 'vue3-carousel/dist/carousel.css'
 import { useGameStore } from '@/store/gameStore';
+import { useChatStore } from '@/store/chatStore';
 
 export default {
     name: 'GameRoomPage',
@@ -44,12 +45,12 @@ export default {
       isDarkMode : Boolean
     },
     methods:{
-      enterRoom : function(room){
+      enterRoom : async function(room){
+        const chat = useChatStore()
         router.push({
                 name:'room',
                 params: {
                   data: JSON.stringify(room),
-                  
                 }
                 
               }

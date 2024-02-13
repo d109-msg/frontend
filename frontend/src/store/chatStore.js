@@ -125,15 +125,12 @@ export const useChatStore = defineStore('chat',{
             const client = this.getStomp
             client.subscribe(`/sub/`+userId,(e)=>{
                 console.log('확인값',e)
-                try{
                     const data = JSON.parse(e.body)
                     if(data.dataType == "noti"){
                         this.notify.unshift(data)
                     } else if(data.dataType == "sub"){
                         this.subRequest(data)
                     }
-                }catch(err){
-                }
             })
         },
         getNotification : async function(){
