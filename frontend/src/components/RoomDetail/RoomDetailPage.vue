@@ -289,9 +289,14 @@ export default {
 
             }
         },
-        dayTurn(nv,ov){
+        async dayTurn(nv,ov){
           if(nv == 1){
-            this.getParticipant(this.roomData.id)
+            await this.getParticipant(this.roomData.id)
+            await this.getMemberList(this.roomData.id)
+            await this.getAliveMember(this.roomData.id)
+            await this.getMission(this.participant.id)
+            await this.getAbility(this.participant.id)
+
             const chat = useChatStore()
             chat.setDay(0)
             this.dayStep = true
@@ -300,9 +305,13 @@ export default {
             },3000)
           }
         },
-        nightTurn(nv,ov){
+        async nightTurn(nv,ov){
           if(nv == 1){
-            this.getParticipant(this.roomData.id)
+            await this.getParticipant(this.roomData.id)
+            await this.getMemberList(this.roomData.id)
+            await this.getAliveMember(this.roomData.id)
+            await this.getMission(this.participant.id)
+            await this.getAbility(this.participant.id)
             const chat = useChatStore()
             chat.setNight(0)
             this.nightStep = true
