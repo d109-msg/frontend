@@ -187,6 +187,8 @@ public class NotificationServiceImpl implements NotificationService {
         // MongoDB 저장
         NotificationEntity notificationEntity = NotificationEntity.builder()
                 .userId(userId)
+                .fromNickname("MSG")
+                .articleId(0)
                 .imageUrl("https://team109testbucket.s3.ap-northeast-2.amazonaws.com/2c5954d7-2aec-4cac-9c67-9ada52a1eafb")
                 .content(content)
                 .createTime(dateTimeUtil.getCurrentDateTime())
