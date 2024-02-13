@@ -254,7 +254,7 @@ public class SchedulerServiceImpl implements SchedulerService{
 
         for(ParticipantDto nonCompleter: nonCompleters){
             schedulerMapper.manageNonCompleter(nonCompleter.getId());
-            if (nonCompleter.getJobId().equals("마피아")){
+            if (GameUtil.getRoleType(nonCompleter.getJobId()).equals("마피아")){
                 messageService.sendGameNotice(roomId, "마피아 " + nonCompleter.getNickname() + "님이 실종되었습니다.");
             } else{
                 messageService.sendGameNotice(roomId, "시민 " + nonCompleter.getNickname() + "님이 실종되었습니다.");
