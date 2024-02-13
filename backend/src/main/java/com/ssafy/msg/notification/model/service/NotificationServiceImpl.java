@@ -197,8 +197,8 @@ public class NotificationServiceImpl implements NotificationService {
         notificationRepository.save(notificationEntity);
 
         // WebSocket/STOMP 메시지 전송
-        sendingOperations.convertAndSend("/sub/"+userId, content);
-        log.info(userId + " - " + content);
+        sendingOperations.convertAndSend("/sub/"+notificationEntity.toDto().getUserId(), notificationEntity.toDto());
+        log.info(notificationEntity.toDto().getUserId() + " - " + notificationEntity.toDto());
     }
 
     @Override
