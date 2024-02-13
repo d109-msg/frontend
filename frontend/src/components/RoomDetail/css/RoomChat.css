@@ -1,4 +1,21 @@
+.chat-nick-msg-dark{
+    font-size: 13px; 
+    padding-left: 10px; 
+    color: #FFD2A9;
+}
 
+.chat-nick, chat-nick-msg{
+    font-size: 13px; 
+    padding-left: 10px; 
+    font-weight: bold; 
+}
+
+.chat-nick-dark{
+    font-size: 13px; 
+    padding-left: 10px; 
+    font-weight: bold; 
+    color: #E6E3E2;
+}
 
 .chat-input-box{
     display: flex;
@@ -97,6 +114,7 @@
     height: 100%;
     overflow-y: scroll;
     z-index: 90;
+    margin-left: 10px;
 }
 .chat-content{
     position: relative;

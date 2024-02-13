@@ -93,6 +93,7 @@ import RoomVote from './RoomVote.vue';
 import JobAbility from './JobAbility.vue';
 import { useGameStore } from '@/store/gameStore';
 import { useChatStore } from '@/store/chatStore';
+import mitt from 'mitt';
 export default {
   
     name: 'RoomDetailPage',
@@ -291,12 +292,12 @@ export default {
         },
         async dayTurn(nv,ov){
           if(nv == 1){
+            this.emitter.emit('nightChange',false)
             await this.getParticipant(this.roomData.id)
             await this.getMemberList(this.roomData.id)
             await this.getAliveMember(this.roomData.id)
             await this.getMission(this.participant.id)
             await this.getAbility(this.participant.id)
-
             const chat = useChatStore()
             chat.setDay(0)
             this.dayStep = true
@@ -307,6 +308,7 @@ export default {
         },
         async nightTurn(nv,ov){
           if(nv == 1){
+            this.emitter.emit('nightChange',true)
             await this.getParticipant(this.roomData.id)
             await this.getMemberList(this.roomData.id)
             await this.getAliveMember(this.roomData.id)

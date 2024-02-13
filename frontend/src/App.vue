@@ -42,9 +42,6 @@ export default {
             // this.emitter.emit('isMode', this.isDarkMode)
     },
   },
-  mounted(){
-    // this.startPage()
-  },
   watch:{
     isDarkMode(){
       if (this.isDarkMode) {
@@ -53,6 +50,11 @@ export default {
                 document.body.classList.remove('body-dark');
             }
     }
+  },
+  mounted() {
+    this.emitter.on('nightChange',(e)=>{
+      this.isDarkMode = e
+    })
   },
   setup(){
 
