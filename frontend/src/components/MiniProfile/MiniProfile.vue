@@ -73,6 +73,7 @@
 import { useAuthStore } from '@/store/authStore'
 import { useChatStore } from '@/store/chatStore'
 import DetailPage from '../DetailPage/DetailPage.vue'
+import router from '@/router'
 export default {
     name: 'MiniProfile',
     data(){
