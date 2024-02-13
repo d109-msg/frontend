@@ -112,13 +112,13 @@ export default {
         visit : async function(idx,roomId){
             try{
                 this.idx = this.chat.notify[idx].articleId
-                if(idx != 0){
+                if(this.idx != 0){
                     this.detailFlag = true
                 }
                 const chat = useChatStore()
                 await chat.readNotification(roomId)
                 this.chat.notify.splice(idx,1)
-                if(idx == 0){
+                if(this.idx == 0){
                     router.push({name: 'game'})
                 }
             }catch(err){
