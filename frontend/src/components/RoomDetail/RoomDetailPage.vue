@@ -124,7 +124,7 @@ export default {
     computed:{
       endTurn(){
         const chat = useChatStore()
-        return chat.getEnd()
+        return chat.getEnd
       },
       dayTurn (){
         const chat = useChatStore()
@@ -333,6 +333,16 @@ export default {
             this.nightStep = true
             setTimeout(()=>{
               this.nightStep = false
+            },3000)
+          }
+        },
+        async endTurn(nv,ov){
+          if(nv == 1){
+            this.endStep = true
+            const chat = useChatStore()
+            chat.setEnd(0)
+            setTimeout(()=>{
+              this.endStep = false
             },3000)
           }
         },
