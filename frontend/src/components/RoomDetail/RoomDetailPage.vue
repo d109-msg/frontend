@@ -291,8 +291,7 @@ export default {
         },
         dayTurn(nv,ov){
           if(nv == 1){
-            console.log('이거 바뀜?')
-            this.getParticipant()
+            this.getParticipant(this.roomData.id)
             const chat = useChatStore()
             chat.setDay(0)
             this.dayStep = true
@@ -303,14 +302,13 @@ export default {
         },
         nightTurn(nv,ov){
           if(nv == 1){
-            console.log('이거 바뀜?')
-            this.getParticipant()
+            this.getParticipant(this.roomData.id)
             const chat = useChatStore()
             chat.setNight(0)
             this.nightStep = true
             setTimeout(()=>{
               this.nightStep = false
-            })
+            },3000)
           }
         }
     },

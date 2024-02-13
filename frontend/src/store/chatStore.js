@@ -108,7 +108,6 @@ export const useChatStore = defineStore('chat',{
                 this.setDay(1)
             }
             if(value.noticeType=='night'){
-                console.log('여기는 잡니?')
                 this.setNight(1)
             }
         },
