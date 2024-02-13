@@ -79,6 +79,7 @@ public class ChatServiceImpl implements  ChatService{
         chatMapper.enterRoom(participant2);
 
         // WebSocket/STOMP 메시지 전송
+        notificationService.sendRoomSubscribeRequest(createRoomDto.getUserId1(), roomId);
         notificationService.sendRoomSubscribeRequest(createRoomDto.getUserId2(), roomId);
 
         return chatMapper.getRoom(roomId);

@@ -584,6 +584,8 @@ public class GameServiceImpl implements GameService{
                 .build();
 
         chatMapper.enterRoom(participant);
+        notificationService.sendRoomSubscribeRequest(userId, roomId);
+
         messageService.sendEnterNotice(participant);
 
         return chatMapper.getRoom(roomId);
@@ -616,6 +618,8 @@ public class GameServiceImpl implements GameService{
                             .build();
 
                     chatMapper.enterRoom(participant);
+                    notificationService.sendRoomSubscribeRequest(user.getId(), roomId);
+
                     messageService.sendEnterNotice(participant);
 
                     if (participants.size() == 6){
