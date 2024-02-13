@@ -14,7 +14,7 @@ public class ParticipantResponseDto {
     private Integer id;
     private String roomId;
     private Integer userId;
-    private Integer lastMessageId;
+    private String lastMessageId;
     private Integer flagDie;
     private Integer flagWin;
     private String jobId;
