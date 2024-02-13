@@ -106,13 +106,25 @@ public class MessageServiceImpl implements MessageService{
     public void sendDayNotice(String dayOrNight, String roomId) throws SQLException {
         int day = messageMapper.calDay(roomId) + 1;
 
-        MessageEntity messageEntity = MessageEntity.builder()
-                .roomId(roomId)
-                .userId(1)
-                .dataType("notice")
-                .noticeType("day")
-                .createTime(dateTimeUtil.getCurrentDateTime())
-                .content(day+"일차 " + dayOrNight + "이 되었습니다.").build();
+        MessageEntity messageEntity = null;
+
+        if (dayOrNight.equals("아침")){
+            messageEntity = MessageEntity.builder()
+                    .roomId(roomId)
+                    .userId(1)
+                    .dataType("notice")
+                    .noticeType("day")
+                    .createTime(dateTimeUtil.getCurrentDateTime())
+                    .content(day+"일차 " + dayOrNight + "이 되었습니다.").build();
+        }else if (dayOrNight.equals("밤")){
+            messageEntity = MessageEntity.builder()
+                    .roomId(roomId)
+                    .userId(1)
+                    .dataType("notice")
+                    .noticeType("night")
+                    .createTime(dateTimeUtil.getCurrentDateTime())
+                    .content(day+"일차 " + dayOrNight + "이 되었습니다.").build();
+        }
 
         messageRepository.save(messageEntity);
 
