@@ -23,12 +23,12 @@
         <div class="wrapper" v-show="!writeFlag">
             <div class="img-wrapper">
                 <div class="save-wrapper">
-                    <img class="first-img img-list">
-                    <img class="second-img selected-img img-list" >
-                    <img class="third-img selected-img img-list" >
+                    <img class="first-img img-list"  @error="replaceImg">
+                    <img class="second-img selected-img img-list"  @error="replaceImg" >
+                    <img class="third-img selected-img img-list"  @error="replaceImg" >
                 </div>
                 <div class="preview-img">
-                    <img class="preview" >
+                    <img class="preview" @error="replaceImg">
                 </div>
             </div>
             <div class="editor-panel">
@@ -89,7 +89,7 @@
 import btof from './base64ToFile'
 import MissonConfirm from './MissonConfirm.vue'
 import WriteContent from './WriteContent.vue'
-import alt_img from './alt_img.png'
+import defaultImg from './Img/default_img.png'
 
 export default {
     name: "ImageEdit",
@@ -115,6 +115,7 @@ export default {
             missionSrc : "",
             writeFlag : false,
             fileLength : 0,
+            defaultImg : ''
         }
     },
     components:{
@@ -126,6 +127,12 @@ export default {
         isDarkMode : Boolean
     },
     methods:{
+        replaceImg(e) {
+                e.target.src = this.defaultImg
+                if (this.defaulteImg == ''){
+                    e.target.src = require(`./Img/default_img.png`);
+                } 
+        },
         openOptions : function(){
             this.optionFlag = !(this.optionFlag)
         },
