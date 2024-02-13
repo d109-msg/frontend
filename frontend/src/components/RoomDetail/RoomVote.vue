@@ -16,8 +16,8 @@
             >
             <img :src="mem.imageUrl" alt="">
             <label :for="`member-${idx}`" class="member-name">{{ mem.nickname }} </label>
-            <div v-if="!roomTime" class="vote-graph"><div :id="idx+'graph'" class="graph"></div></div>
-            <div v-if="!roomTime" class="vote-count">{{ mem.voteCount }}</div>
+            <div  class="vote-graph"><div :id="idx+'graph'" class="graph"></div></div>
+            <div  class="vote-count">{{ mem.voteCount }}</div>
           </div>
         </div>
       </template>
@@ -35,8 +35,8 @@
             >
             <img :src="mem.imageUrl" alt="">
             <label :for="`member-${idx}`" class="member-name">{{ mem.nickname }} </label>
-            <div v-if="!roomTime" class="vote-graph"><div :id="idx+'graph'" class="graph"></div></div>
-            <div v-if="!roomTime" class="vote-count">{{ mem.voteCount }}</div>
+            <div  class="vote-graph"><div :id="idx+'graph'" class="graph"></div></div>
+            <div class="vote-count">{{ mem.voteCount }}</div>
           </div>
         </div>
       </template>

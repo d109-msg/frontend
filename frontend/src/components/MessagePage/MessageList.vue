@@ -155,6 +155,7 @@ export default {
         const elem = document.getElementById(`${idx}`)
         elem.classList.add('click-chat')
         this.$emit('chatInfo',this.messageList[idx])
+        this.$emit('closeList',1)
       }
 
     },
