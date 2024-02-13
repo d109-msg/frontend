@@ -82,6 +82,7 @@ import RoomGuide from './RoomGuide.vue';
 import RoomVote from './RoomVote.vue';
 import JobAbility from './JobAbility.vue';
 import { useGameStore } from '@/store/gameStore';
+import { useChatStore } from '@/store/chatStore';
 export default {
   
     name: 'RoomDetailPage',
@@ -101,6 +102,13 @@ export default {
         step : 0,
       }
     },
+    computed:{
+      dayFlag (){
+        const chat = useChatStore()
+        return chat.getDay
+      }
+    },
+  
     components:{
         RoomFeed,
         RoomChat,
@@ -264,6 +272,13 @@ export default {
             console.log('사이즈',this.size)
 
             }
+        },
+        dayFlag(nv,ov){
+          if(nv == 1){
+            this.getParticipant()
+            const chat = useChatStore()
+            chat.setDay(0)
+          }
         }
     },
 
