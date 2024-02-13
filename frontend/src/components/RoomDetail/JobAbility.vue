@@ -80,7 +80,6 @@ export default {
                 let value = await game.useAbility(id, targetId)
                 this.abilityResult = value.data 
                 alert(this.abilityResult)
-                window.location.reload()
             }catch(err){
                 console.log(err)
             }

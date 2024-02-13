@@ -4,7 +4,7 @@
     <div  :class="{'feed-title-box':!isDarkMode, 'feed-title-box-dark':isDarkMode}">
       <div @click="refresh" class="reset-icon"></div>
       <div :class="{'invite-code-title':!isDarkMode,'invite-code-title-dark':isDarkMode}">{{ roomData.title }}</div>
-      <div class="create-icon" @click="createOn"></div>
+      <div v-if="mission.flagSuccess==0" class="create-icon" @click="createOn"></div>
     </div>
     <div :class="{'feed-content':!isDarkMode,'feed-content-dark':isDarkMode}">
 
