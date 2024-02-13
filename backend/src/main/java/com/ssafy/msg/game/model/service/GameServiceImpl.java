@@ -216,9 +216,9 @@ public class GameServiceImpl implements GameService{
      */
     @Override
     public AbilityTargetResponseDto getAbilityTarget(int participantId) throws Exception {
-        Integer day = gameMapper.getMaxDay(participantId);
+        Integer day = getMaxDay(participantId);
         log.info("getAbilityTarget() day : {}", day);
-
+        
         if(day == null) {
             log.info("getAbilityTarget() player is dead");
 
