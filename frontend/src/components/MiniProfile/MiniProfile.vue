@@ -37,17 +37,17 @@
             <img class="logout" src="./logout.png" v-if="isLogin" @click="logout" @mouseover="toolFlag=true" @mouseleave="toolFlag=false">
             <div class="tool-tip" v-if="toolFlag"><span>Logout</span></div>
         </div>
-        <div class="my-mini-content" v-if="Object.keys(userInfo).length > 0">
-            <img class="mini-image" :src="userInfo.imageUrl">
-            <div :class="{'mini-name':!isDarkMode,'mini-name-dark':isDarkMode}">{{ userInfo.nickname }}</div>
-            <div :class="{'mini-comment':!isDarkMode,'mini-comment-dark':isDarkMode}">{{ userInfo.bio }}</div>
+        <div class="my-mini-content" v-if="Object.keys(auth.getUserInfo).length > 0">
+            <img class="mini-image" :src="auth.getUserInfo.imageUrl">
+            <div :class="{'mini-name':!isDarkMode,'mini-name-dark':isDarkMode}">{{ auth.getUserInfo.nickname }}</div>
+            <div :class="{'mini-comment':!isDarkMode,'mini-comment-dark':isDarkMode}">{{ auth.getUserInfo.bio }}</div>
             <div class="mini-following-count">
                 <span class="following">Following</span>
-                <span class="count">{{ userInfo.followingCount }}</span>
+                <span class="count">{{ auth.getUserInfo.followingCount }}</span>
             </div>
             <div class="mini-following-count">
                 <span class="following">Followers</span>
-                <span class="count">{{ userInfo.followerCount }}</span>
+                <span class="count">{{ auth.getUserInfo.followerCount }}</span>
             </div>
         </div>
         <div class="my-mini-content" v-else>
@@ -84,6 +84,7 @@ export default {
             showFlag : false,
             detailFlag : false,
             idx : 1,
+            auth : useAuthStore()
         }
     },
     components:{
