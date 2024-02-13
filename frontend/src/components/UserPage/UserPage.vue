@@ -1,35 +1,71 @@
 <template>
   <div>
-
-    <div class="mypage-banner">
+    <div class="mypage-banner-box">
+      <div class="mypage-banner" :class="{'mypage-banner-light': !isDarkMode , 'mypage-banner-dark':isDarkMode}">
+      </div>
     </div>
     
     <div class="mypage-box">
-      <div class="profile-box">
+      <div :class="{'profile-box-light':!isDarkMode, 'profile-box-dark':isDarkMode}">
         <div class="profile-content">
           <img class="profile-img" :src="userInfo.imageUrl" alt="">
-          <div class="profile-section">
+          <div :class="{'profile-section':!isDarkMode, 'profile-section-dark':isDarkMode}">
           <div class="">닉네임 <span> {{ userInfo.nickname  }} </span></div>
           <div class="" >소개글 <span> {{ userInfo.bio }} </span></div>
-          <div class="profile-bot-section">
+          <div :class="{'profile-bot-section':!isDarkMode, 'profile-bot-section-dark':isDarkMode}">
             <div>게시물 <span> {{ userInfo.articleCount }} </span></div>
               <div>팔로우 <span> {{ userInfo.followerCount }} </span></div>
               <div>팔로잉 <span> {{ userInfo.followingCount }}</span></div>
           </div>
+
+        <div class="feed-game-box"  style="display: flex; flex-direction: column;" >
+
         <div class="button-box">
           <div class="follow-button" v-if="userInfo.isFollow == 0" @click="followUser">팔로우하기</div>
           <div class="message-button" @click="goMessage">메시지 보내기</div>
         </div>
         </div>
       </div>
+
     </div>
-    <div class="feed-game-box">
-      <MyFeedVue :id="userInfo.id"></MyFeedVue>
-      <MyGameVue :game="gameInfo"></MyGameVue>
     </div>
+
+
+    <div class="feed-game-box"  v-if="size=='xs'" style="display: flex; flex-direction: column;" >
+      <!-- <MyFeedVue :id="userInfo.id"></MyFeedVue>
+      <MyGameVue :game="gameInfo"></MyGameVue> -->
+      <div style="display: flex; justify-content: flex-end; margin-bottom: 5px;">
+        <label class="toggle_switch">
+          <input type="checkbox" @click="changePage">
+          <span class="slider"></span>
+        </label>
+      </div>
+      <div>
+        <MyFeedVue v-if="pageNum=='1'" :is-dark-mode="isDarkMode" :id="userInfo.id" ></MyFeedVue>
+      </div>
+      <div>
+        <MyGameVue v-if="pageNum=='2'"  :is-dark-mode="isDarkMode" :game="gameInfo"></MyGameVue>
+      </div>
+    </div>
+
+    <div class="feed-game-box" v-if="size=='md'" style="display: flex; flex-direction: column;">
+      <div style="display: flex; justify-content: flex-end; margin-bottom: 5px;">
+        <label class="toggle_switch">
+          <input type="checkbox" @click="changePage">
+          <span class="slider"></span>
+        </label>
+      </div>
+      <MyFeedVue v-if="pageNum=='1'" :is-dark-mode="isDarkMode" :id="userInfo.id"  ></MyFeedVue>
+      <MyGameVue v-else-if="pageNum=='2'"  :is-dark-mode="isDarkMode" :isMount="1" :game="gameInfo" ></MyGameVue>
+    </div>
+
+    <div class="feed-game-box" v-if="size=='lg'">
+      <MyFeedVue :is-dark-mode="isDarkMode" :id="userInfo.id" ></MyFeedVue>
+      <MyGameVue  :is-dark-mode="isDarkMode" :isMount="1" :game="gameInfo" ></MyGameVue>
+    </div>
+
   </div>
   <div v-if="isEdit==true"  >
-    <!-- <EditProfile @close-edit="isEdit=false" :userInfo="userInfo" /> -->
   </div>
   
   
@@ -54,13 +90,36 @@ export default {
         userId : "",
         MyFeed : {},
         gameInfo : {},
+        width: 0,
+        height: 0,
+        size : 'lg',
+        pageNum : '1',
+
       }
     },
     components : {
       MyFeedVue,
       MyGameVue,
     },
+    props:{
+        isDarkMode : Boolean
+    },
     methods:{
+      handleResize(event) {
+            this.width = window.innerWidth;
+            this.height = window.innerHeight;
+        },
+      reactiveSize : function(){
+          const viewportWidth = window.innerWidth
+          if (viewportWidth<700) {
+                  this.size =  "xs"
+              }
+              else if (viewportWidth >= 700 && viewportWidth < 860
+              ) {
+                  this.size = "md"}
+              else {this.size = "lg"}
+          window.addEventListener('resize', this.handleResize);
+      },
     getUser : async function(){
       const auth = useAuthStore()
       try{
@@ -70,16 +129,20 @@ export default {
           alert('존재하지 않는 회원 정보입니다.')
           router.push('/')
         }
-        // console.log(this.userInfo)
-        // this.userNickname = this.userInfo.nickname
-        // this.userEmail = this.userInfo.emailId
-        // this.userId = this.userInfo.id
-
       } catch (error) {
         
         console.log(error)  
       }
     },
+    changePage(){
+        if (this.pageNum == 1){
+          this.pageNum = 2
+
+        }else{
+          this.pageNum = 1
+
+        }
+      },
     getGame : async function(){
       const auth = useAuthStore()
       let value = await auth.getGame(this.$route.params.id)
@@ -123,6 +186,17 @@ export default {
     }
   },
   watch:{
+    width(){
+            if (this.width<700) {
+                this.size =  "xs"
+            }
+            else if (this.width >= 700 && this.width < 860) {
+                this.size = "md"}
+            else {this.size = "lg"}
+        },
+    beforeDestroy() {
+    window.removeEventListener('resize', this.handleResize);
+    },
     $route(to,from){
       if(to.path!==from.path){
         this.startPage()
@@ -133,6 +207,7 @@ export default {
     this.startPage()
     this.$route.params.id
     const chat = useChatStore()
+    this.reactiveSize()
   }
 }
 </script>
