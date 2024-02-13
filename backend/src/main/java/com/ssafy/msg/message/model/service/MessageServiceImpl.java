@@ -110,7 +110,7 @@ public class MessageServiceImpl implements MessageService{
                 .roomId(roomId)
                 .userId(1)
                 .dataType("notice")
-                .noticeType("game")
+                .noticeType("day")
                 .createTime(dateTimeUtil.getCurrentDateTime())
                 .content(day+"일차 " + dayOrNight + "이 되었습니다.").build();
 
@@ -126,7 +126,7 @@ public class MessageServiceImpl implements MessageService{
                 .roomId(roomId)
                 .userId(1)
                 .dataType("notice")
-                .noticeType("game")
+                .noticeType("start")
                 .createTime(dateTimeUtil.getCurrentDateTime())
                 .content("게임이 시작되었습니다.").build();
 
@@ -142,7 +142,7 @@ public class MessageServiceImpl implements MessageService{
                 .roomId(roomId)
                 .userId(1)
                 .dataType("notice")
-                .noticeType("game")
+                .noticeType("end")
                 .createTime(dateTimeUtil.getCurrentDateTime())
                 .content("게임이 종료되었습니다.").build();
 
