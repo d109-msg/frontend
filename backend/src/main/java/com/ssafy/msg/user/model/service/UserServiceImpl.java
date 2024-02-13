@@ -68,6 +68,7 @@ public class UserServiceImpl implements UserService {
 		userMapper.updateNickname(userDto);
 	}
 
+	@Transactional
 	@Override
 	public void resetPassword(UserDto userDto, String randomPassword) throws Exception {
 		String encodedPassword = passwordEncoder.encode(userDto.getEmailPassword());
