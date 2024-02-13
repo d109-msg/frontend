@@ -347,11 +347,9 @@ export default {
           }
         },
         async enterRoom(nv,ov){
-          if(nv == 1){
+          if(nv >=1){
             await this.getMemberList(this.roomData.id)
             await this.getParticipant(this.roomData.id)
-            const chat = useChatStore()
-            chat.setRoom(0)
           }
         }
     },

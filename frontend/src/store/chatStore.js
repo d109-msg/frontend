@@ -59,8 +59,8 @@ export const useChatStore = defineStore('chat',{
         }
     },
     actions:{
-        setEnter : function(value){
-            this.enterFlag = value
+        setEnter : function(){
+            this.enterFlag+=1
         },
         setEnd : function(value){
             this.endFlag = value
@@ -128,7 +128,7 @@ export const useChatStore = defineStore('chat',{
                 this.setEnd(1)
             }
             if(value.noticeType =='enter'){
-                this.setEnter(1)
+                this.setEnter()
             }
         },
         sub : async function(data){
