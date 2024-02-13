@@ -57,6 +57,9 @@
         text-indent: 7%;
         font-size: 0.7em;
     }
+    .search-bar-dark::placeholder{
+        color: #fff;
+    }
 
     .search-btn{
         display: flex;
@@ -200,6 +203,9 @@
         color: #fff;
         text-indent: 7%;
 
+    }
+    .search-bar-dark::placeholder{
+        color: #fff;
     }
  
     .search-btn{
@@ -360,7 +366,9 @@
         border: none;
         color: #fff;
         text-indent: 7%;
-
+    }
+    .search-bar-dark::placeholder{
+        color: #fff;
     }
     
     .search-btn{
