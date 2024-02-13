@@ -42,7 +42,8 @@
         ) as sub_ai on a.id = sub_ai.article_id
                  left join article_images ai on sub_ai.min_id = ai.id
         left join users on a.user_id = users.id
-        where a.user_id = #{userId} and a.flag_private = 0;
+        where a.user_id = #{userId} and a.flag_private = 0
+        order by create_time desc;
 
     </select>
 
