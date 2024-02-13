@@ -2,7 +2,7 @@
   <div class="detail-container">
     <div class="day-back" v-if="dayStep">
       <div style="font-size: 30px; color: white; font-weight: bold;">
-        낮이 되었습니다.
+        아침이 되었습니다.
       </div>
     </div>
     <div class="day-back" v-if="nightStep">
@@ -348,7 +348,8 @@ export default {
         },
         async enterRoom(nv,ov){
           if(nv == 1){
-            await this.getMemberList()
+            await this.getMemberList(this.roomData.id)
+            await this.getParticipant(this.roomData.id)
             const chat = useChatStore()
             chat.setRoom(0)
           }
