@@ -145,16 +145,6 @@ public class SchedulerServiceImpl implements SchedulerService{
                 messageService.sendGameNotice(roomId, participantDto.getNickname() + "님은 부패한 힘을 이용해 처형의 위기에서 벗어났습니다.");
                 gameMapper.setAbility(participantDto.getId(), -1);
                 return;
-            } else if (participantDto.getJobId().equals("변장술사") && participantDto.getAbility() > 0) {
-                //변장술사일 때
-                //변장 로직
-                ParticipantDto targetDto = schedulerMapper.getMyNormalVoteId(participantDto.getId(), day);
-
-
-
-                messageService.sendGameNotice(roomId, participantDto.getNickname() + "님은 변장술사였습니다. 처형을 피하고 다른 사람의 신분으로 활동을 재개합니다.");
-                gameMapper.setAbility(participantDto.getId(), -1);
-                return;
             } else {
                 //둘 다 아니라면 죽습니다.
                 schedulerMapper.killParticipant(participantDto.getId());
@@ -383,8 +373,7 @@ public class SchedulerServiceImpl implements SchedulerService{
                         // [알림] n일차 밤이 되었습니다.
                         // PM 마피아와 의사 투표 알림
                         messageService.sendDayNotice("밤", roomId);
-                        messageService.sendGameNotice(roomId, "타겟을 지정해주세요.");
-                        messageService.sendGameNotice(roomId, "살릴 사람을 선택해주세요.");
+                        messageService.sendGameNotice(roomId, "마피아는 타겟을 지정해주세요.");
                     }else {
                         //기자 발표
                         noticeReporterVote(roomId);
