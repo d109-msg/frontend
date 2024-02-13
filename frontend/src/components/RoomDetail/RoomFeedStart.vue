@@ -71,6 +71,10 @@ export default {
             window.location.reload()
         },
         createOn : function(){
+            if(this.participant.flagDie == 1){
+                alert('당신은 사망하셨습니다. 더이상 게임에 참여하실 수 없습니다.')
+                return
+            }
             const feed = useFeedStore()
             if(this.participant.flagMafia){
                 feed.setMission(this.mission.mafiaMission)
