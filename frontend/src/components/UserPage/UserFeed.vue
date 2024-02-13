@@ -11,7 +11,7 @@
     </div>
     <DetailPage v-if="detailFlag"
         @close-detail="offDetail"
-        :idx="detail"
+        :idx="detail.articleId"
         />
   </div>
 </template>
