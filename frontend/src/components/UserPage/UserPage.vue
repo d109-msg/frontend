@@ -167,7 +167,6 @@ export default {
         const chat = useChatStore()
         let value = await chat.makeChat(this.$route.params.id)
         if(value.status == 201){
-          await chat.sub([value.data.id])
         }
         router.push({name : 'message'})
       }catch(err){

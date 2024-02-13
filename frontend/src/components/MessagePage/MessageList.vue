@@ -134,8 +134,6 @@ export default {
           console.log(value)
 
           if(value.status == 201){
-            this.messageList.unshift(value.data)
-            await chat.sub([value.data.id])
           }else if(value.status== 200){
             alert('이미 존재하는 채팅방입니다.')
           }
