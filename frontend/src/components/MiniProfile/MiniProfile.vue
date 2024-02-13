@@ -1,7 +1,7 @@
 <template>
     <div :class="{'my-mini':!isDarkMode,'my-mini-dark':isDarkMode}"> 
         <div class="notification-back" @click.self="showFlag = false" v-if="showFlag">
-            <div class="notification-content">
+            <div :class="{'notification-content':!isDarkMode,'notification-content-dark':isDarkMode}">
                 <div class="notification-title">
                     <span class="notification-title">My Notification</span>
                 </div>
@@ -10,9 +10,11 @@
                         <div class="profile" @click="visit(key,item.id)">
                             <div class="profile-box">
                                 <img :src="item.imageUrl" alt="" class="profile-img">
-                                <div class="profile-content"><span>{{item.fromNickname}}</span>{{ item.content }}</div>
+                                <div style="display: flex; flex-direction:column; ">
+                                    <div :class="{'profile-content':!isDarkMode,'profile-content-dark':isDarkMode}"><span>{{item.fromNickname}}</span>{{ item.content }}</div>
+                                    <div :class="{'create-time':!isDarkMode,'create-time-dark':isDarkMode}">{{ item.createTime }}</div>
+                                </div>
                             </div>
-                            <div class="create-time">{{ item.createTime }}</div>
                             <!-- {{ item }} -->
                             <!-- <span class="create-time">{{ item.createTime }}</span> -->
                             
