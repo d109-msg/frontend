@@ -7,6 +7,9 @@
         <div :class="{'message-user-profile':!isDarkMode,'message-user-profile-dark':isDarkMode}">
             <img class="message-user-profile-img" :src="chatInfo.imageUrl" v-if="Object.keys(chatInfo).length != 0">
             <div :class="{'message-user-name':!isDarkMode,'message-user-name-dark':isDarkMode}"  v-if="Object.keys(chatInfo).length != 0">{{chatInfo.title}}</div>
+            <img src="./Icon/right-arrow.png" alt="" style="position: absolute; right: 50px; width: 30px; height: 30px; background-color: black; border-radius: 50px; rotate: 180deg; cursor: pointer;"
+            @click="backList" v-if="size == 'xs'"
+            >
         </div>
         <div :class="{'message-content-box':!isDarkMode,'message-content-box-dark':isDarkMode}">
             <div class="message-content">
@@ -83,7 +86,8 @@ export default {
   props:{
     chatInfo : Object,
     chatId : String,
-    isDarkMode : Boolean
+    isDarkMode : Boolean,
+    size : String,
   },
   components:{
     LoadingSpinner,
@@ -107,6 +111,9 @@ export default {
     
   },
   methods:{
+    backList : function(){
+      this.$emit('stepDown',0)
+    },
     turnOff : function(){
       this.imgFlag = false
       this.preImg = ""
