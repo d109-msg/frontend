@@ -21,6 +21,7 @@
         </div>
       </div>
     </div>
+
     <div class="feed-game-box" v-if="size=='xs'" style="display: flex; flex-direction: column;">
       <div style="display: flex; justify-content: flex-end; margin-bottom: 5px;">
         <label class="toggle_switch">
@@ -67,7 +68,6 @@ import MyGameVue from './MyGame.vue'
 import router from '@/router'
 import { useFeedStore } from '@/store/feedStore'
 import EditProfile from './EditProfile.vue'
-import { watch } from 'vue'
 
 export default {
     name : 'MyPage',
