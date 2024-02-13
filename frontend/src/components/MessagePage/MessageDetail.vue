@@ -5,11 +5,11 @@
           <img :src="preImg" alt="" style="width: 500px; height: 500px;">
         </div>
         <div :class="{'message-user-profile':!isDarkMode,'message-user-profile-dark':isDarkMode}">
-            <img class="message-user-profile-img" :src="chatInfo.imageUrl" v-if="Object.keys(chatInfo).length != 0">
-            <div :class="{'message-user-name':!isDarkMode,'message-user-name-dark':isDarkMode}"  v-if="Object.keys(chatInfo).length != 0">{{chatInfo.title}}</div>
-            <img src="./Icon/right-arrow.png" alt="" style="position: absolute; right: 50px; width: 30px; height: 30px; background-color: black; border-radius: 50px; rotate: 180deg; cursor: pointer;"
+            <img src="./Icon/right-arrow.png" alt="" style="margin-left: 10px; width: 15px; height: 30px; border-radius: 50px; cursor: pointer;"
             @click="backList" v-if="size == 'xs'"
             >
+            <img class="message-user-profile-img" :src="chatInfo.imageUrl" v-if="Object.keys(chatInfo).length != 0">
+            <div :class="{'message-user-name':!isDarkMode,'message-user-name-dark':isDarkMode}"  v-if="Object.keys(chatInfo).length != 0">{{chatInfo.title}}</div>
         </div>
         <div :class="{'message-content-box':!isDarkMode,'message-content-box-dark':isDarkMode}">
             <div class="message-content">
