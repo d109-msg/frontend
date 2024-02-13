@@ -182,7 +182,7 @@ public class NotificationServiceImpl implements NotificationService {
 
     @Override
     public void sendGameStartNotice(int userId, String title, String type) {
-        String content = ": 새로운 " + type + " 게임이 시작되었습니다." + "\"" + title + "\"";
+        String content = ": 새로운 " + type + " 게임이 시작되었습니다. - " + title;
 
         // MongoDB 저장
         NotificationEntity notificationEntity = NotificationEntity.builder()
