@@ -95,7 +95,7 @@ export default {
         stompClient : Object,
         inputNum:0,
         roomId : this.roomData.id,
-        receive :"",
+        receive :"", 
         message : "",
         chatStore : useChatStore(),
         boxFlag : true,
@@ -134,6 +134,11 @@ export default {
         this.mafiaFlag = !(this.mafiaFlag)
       },
       send : function(){
+        if(this.participant.flagDie == 1){
+          alert('이미 당신은 사망하였습니다. 더이상 게임에 참여하실 수 없습니다.')
+          this.message = ""
+          return
+        }
         let data = {
           'roomId' : JSON.parse(this.$route.params.data).id,
           'flagMafia' : 0,
