@@ -12,7 +12,7 @@
     </div>
     <div v-if="editFlag==true" class="close-list" @click="editFlag=false"></div>
     <div class="feed-item">
-      <img class="user-img" :src="feed.imageUrl">
+      <img class="user-img" :src="feed.imageUrl" @click="userProfile" style="cursor: pointer;">
       <div class="user-info">
         <div :class="{'user-name':!isDarkMode,'user-name-dark':isDarkMode}" @click="userProfile">{{ feed.nickname }}</div>
         <div class="user-comment">{{ feed.content }}</div>
