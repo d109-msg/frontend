@@ -254,7 +254,12 @@ export default {
   mounted(){
     this.io = new IntersectionObserver(this.call,{threshold:1.0})
     this.startPage()
-    
+    setTimeout(()=>{
+      const chat = useChatStore()
+      if(!(this.chatInfo.id in chat.getMessage)){
+        chat.sub([this.chatInfo.id])
+      }
+    },300)
   },
 
 }

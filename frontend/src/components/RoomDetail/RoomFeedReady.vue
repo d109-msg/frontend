@@ -22,12 +22,19 @@
 </template>
 
 <script>
+import { useChatStore } from '@/store/chatStore';
 import RoomSearchList from './RoomSearchList.vue';
 export default {
     name: 'RoomFeedReady',
     data(){
       return{
         listFlag : false,
+      }
+    },
+    computed:{
+      memberChange(){
+        const chat=  useChatStore()
+        return chat.getEnter
       }
     },
     props:{
