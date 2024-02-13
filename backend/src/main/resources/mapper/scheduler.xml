@@ -7,7 +7,7 @@
 
     <update id="updateNickname" parameterType="string">
         UPDATE participants p
-        SET nickname = CONCAT(nickname, '(', p.job_id , ')')
+        SET nickname = CONCAT(nickname, ' (', p.job_id , ')')
         WHERE room_id = #{roomId};
     </update>
 
