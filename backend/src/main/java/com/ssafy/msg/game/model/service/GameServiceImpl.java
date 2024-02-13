@@ -783,6 +783,11 @@ public class GameServiceImpl implements GameService{
     public GetRoomVoteResult getRoomVote(int userId, String roomId) throws Exception {
         ParticipantDto participantDto = gameMapper.getParticipant(new ParticipantReceiveDto(userId, roomId));
 
+        if(participantDto.getFlagDie() == 1) {
+            //죽었다면
+            return new GetRoomVoteResult("당신은 죽었습니다.", null);
+        }
+
         String job = participantDto.getJobId();
         List<VoteResultDto> list = gameMapper.getRoomVote(roomId);
         String voteTitle = "마피아로 의심되는 사람을 선택하세요.";
