@@ -287,7 +287,9 @@ public class SchedulerServiceImpl implements SchedulerService{
 
         if(targetId != null){
             ParticipantDto target = gameMapper.getParticipantWithPId(targetId);
-
+            if(target.getJobId().equals("미치광이")) {
+                target.setJobId("경찰");
+            }
             log.info("noticeReporterVote() target 이름 : {}", target.getNickname());
             log.info("noticeReporterVote() target 직업 : {}", target.getJobId());
             messageService.sendGameNotice(roomId, "기자가 " + target.getJobId() + " " + target.getNickname() + "님에 대한 기사를 작성했습니다.");
