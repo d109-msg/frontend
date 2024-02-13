@@ -21,7 +21,7 @@
           <img v-else @click="nightFlag()" src="./Img/icon_moon.png" alt="" style="cursor: pointer;">
         </div>
         <img src="./Img/arrow_down.png" alt="" style="width: 30px; height: 30px; rotate: 90deg; cursor: pointer;"
-        @click="step = 0"
+        @click="step = 0" v-if="size=='xs'"
         >
         <div style="display: flex; flex-direction: row; align-items: center;">
           <img v-if="isOpen==1" src="./Img/icon_chat_active.png" alt="" class="is-chat" @click="isChat" >
@@ -116,7 +116,7 @@ export default {
       this.reactiveSize()
     },
     props:{
-      isDarkMode : Boolean
+      isDarkMode : Boolean,
     },
     methods:{
       stepUp(data){

@@ -1,8 +1,8 @@
 <template>
-    <div style="     width: 100%; height: 100%;">
+    <div style=" width: 100%; height: 100%;">
 
     <div  :class="{'feed-title-box':!isDarkMode, 'feed-title-box-dark':isDarkMode}">
-      <div @click="reload(0)" class="reset-icon"></div>
+      <div @click="refresh" class="reset-icon"></div>
       <div :class="{'invite-code-title':!isDarkMode,'invite-code-title-dark':isDarkMode}">{{ roomData.title }}</div>
       <div class="create-icon" @click="createOn"></div>
     </div>
@@ -67,6 +67,9 @@ export default {
         RoomFeedCardVue
     },
     methods:{
+        refresh : function(){
+            window.location.reload()
+        },
         createOn : function(){
             const feed = useFeedStore()
             if(this.participant.flagMafia){
