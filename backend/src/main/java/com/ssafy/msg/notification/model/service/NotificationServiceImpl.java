@@ -31,7 +31,7 @@ public class NotificationServiceImpl implements NotificationService {
 
     @Override
     public List<NotificationResponseDto> getNotificationsById(int userId) {
-        List<NotificationEntity> notifications = notificationRepository.findByUserIdAndFlagRead(userId, 0);
+        List<NotificationEntity> notifications = notificationRepository.findByUserIdAndFlagReadOrderByCreateTimeDesc(userId, 0);
 
         return notifications.stream()
                 .map(NotificationEntity::toDto)
@@ -41,7 +41,7 @@ public class NotificationServiceImpl implements NotificationService {
 
     @Override
     public void updateAllNotificationsFlagRead(int userId) {
-        List<NotificationEntity> notifications = notificationRepository.findByUserIdAndFlagRead(userId, 0);
+        List<NotificationEntity> notifications = notificationRepository.findByUserIdAndFlagReadOrderByCreateTimeDesc(userId, 0);
         for (NotificationEntity notification : notifications) {
             notification.setFlagRead(1);
         }
