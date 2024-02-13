@@ -620,7 +620,7 @@ public class GameServiceImpl implements GameService{
 
                     if (participants.size() == 6){
                         if (getTime(8, 13)){
-                            startGroupGame(roomId, roomDto.getTitle(), participants);
+                            startGroupGame(roomId, roomDto.getTitle(), gameMapper.getParticipantsInRoom(roomId));
                         }
                     }
                 }
