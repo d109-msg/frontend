@@ -74,7 +74,6 @@
       <textarea type="text" class="chat-input-mafia" id="content" cols="40" rows="3" maxlength="100" v-model="message" @keyup.enter.prevent="sendMafia"
       v-if="participant.flagMafia && mafiaFlag==true"></textarea>
       <div class="input-num" >{{ inputNum }}/100</div>
-      <div class="photo-icon"></div>
       <div class="mafia-chat" v-if="participant.flagMafia "
       @click="mafiaChat"
       ></div>

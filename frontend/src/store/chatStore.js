@@ -23,6 +23,7 @@ export const useChatStore = defineStore('chat',{
         nextRoom : {},
         dayFlag : 0,
         nightFlag : 0,
+        endFlag : 0,
     }),
     getters:{
         getStomp : (state)=>{
@@ -48,6 +49,9 @@ export const useChatStore = defineStore('chat',{
         },
         getNight : (state)=>{
             return state.nightFlag
+        },
+        getEnd : (state)=>{
+            return state.endFlag
         }
     },
     actions:{
