@@ -22,6 +22,7 @@ export const useChatStore = defineStore('chat',{
         reloadFlag : {},
         nextRoom : {},
         dayFlag : 0,
+        nightFlag : 0,
     }),
     getters:{
         getStomp : (state)=>{
@@ -44,9 +45,15 @@ export const useChatStore = defineStore('chat',{
         },
         getDay : (state)=>{
             return state.dayFlag
+        },
+        getNight : (state)=>{
+            return state.nightFlag
         }
     },
     actions:{
+        setNight : function(value){
+            this.nightFlag = value
+        },
         setDay : function(value){
             this.dayFlag = value
         },
@@ -99,6 +106,10 @@ export const useChatStore = defineStore('chat',{
             }
             if(value.noticeType=="day"){
                 this.setDay(1)
+            }
+            if(value.noticeType=='night'){
+                console.log('여기는 잡니?')
+                this.setNight(1)
             }
         },
         sub : async function(data){

@@ -1,5 +1,15 @@
 <template>
   <div class="detail-container">
+    <div class="day-back" v-if="dayStep">
+      <div style="font-size: 30px; color: white; font-weight: bold;">
+        낮이 되었습니다.
+      </div>
+    </div>
+    <div class="day-back" v-if="nightStep">
+      <div style="font-size: 30px; color: white; font-weight: bold;">
+        밤이 되었습니다.
+      </div>
+    </div>
     <RoomFeed 
     v-if="(step==0 && size=='xs') || size=='lg' || size=='md'"
     :size="size"
@@ -100,12 +110,18 @@ export default {
         width : 0,
         height : 0,
         step : 0,
+        dayStep : false,
+        nightStep : false,
       }
     },
     computed:{
-      dayFlag (){
+      dayTurn (){
         const chat = useChatStore()
         return chat.getDay
+      },
+      nightTurn(){
+        const chat = useChatStore()
+        return chat.getNight
       }
     },
   
@@ -172,7 +188,7 @@ export default {
         try{
           let value = await game.nightFlag()
           console.log('밤으로 변경')
-          window.location.reload()
+          // window.location.reload()
         }catch(err){
           console.log(err)
         }
@@ -182,7 +198,7 @@ export default {
         try{
           let value = await game.dayFlag()
           console.log('아침으로 변경')
-          window.location.reload()
+          // window.location.reload()
 
         }catch(err){
           console.log(err)
@@ -273,11 +289,28 @@ export default {
 
             }
         },
-        dayFlag(nv,ov){
+        dayTurn(nv,ov){
           if(nv == 1){
+            console.log('이거 바뀜?')
             this.getParticipant()
             const chat = useChatStore()
             chat.setDay(0)
+            this.dayStep = true
+            setTimeout(()=>{
+              this.dayStep = false
+            },3000)
+          }
+        },
+        nightTurn(nv,ov){
+          if(nv == 1){
+            console.log('이거 바뀜?')
+            this.getParticipant()
+            const chat = useChatStore()
+            chat.setNight(0)
+            this.nightStep = true
+            setTimeout(()=>{
+              this.nightStep = false
+            })
           }
         }
     },
