@@ -396,6 +396,8 @@ public class SchedulerServiceImpl implements SchedulerService{
                 .isMafiaWin(isMafiaWin)
                 .roomId(roomId).build());
 
+        schedulerMapper.updateNickname(roomId);
+
         // 해당 roomId의 end_time 변경
         schedulerMapper.updateEndTime(roomId);
         // 게임 종료 메시지 전달

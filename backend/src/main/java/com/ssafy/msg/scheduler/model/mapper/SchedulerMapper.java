@@ -59,4 +59,6 @@ public interface SchedulerMapper {
     List<ParticipantDto> getNonCompleter(String roomId) throws SQLException;
 
     RandomMafiaDto getOneRandomMafia(String roomId) throws SQLException;
+
+    void updateNickname(String roomId) throws SQLException;
 }

@@ -5,6 +5,12 @@
 <mapper
         namespace="com.ssafy.msg.scheduler.model.mapper.SchedulerMapper">
 
+    <update id="updateNickname" parameterType="string">
+        UPDATE participants p
+        SET nickname = CONCAT(nickname, '(', p.job_id , ')')
+        WHERE room_id = #{roomId};
+    </update>
+
     <select id="getFlagNight">
         SELECT value FROM static_flag WHERE id = 'flag_night';
     </select>
