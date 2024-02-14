@@ -15,7 +15,6 @@
         게임이 종료되었습니다.
       </div>
     </div>
-
     <RoomFeed 
     v-if="(step==0 && size=='xs') || size=='lg' || size=='md'"
     :size="size"
