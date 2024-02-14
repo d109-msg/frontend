@@ -14,14 +14,30 @@
           <div class="" >소개글 <span> {{ userInfo.bio }} </span></div>
           <div :class="{'profile-bot-section':!isDarkMode, 'profile-bot-section-dark':isDarkMode}">
             <div>게시물 <span> {{ userInfo.articleCount }} </span></div>
-              <div>팔로우 <span> {{ userInfo.followerCount }} </span></div>
-              <div>팔로잉 <span> {{ userInfo.followingCount }}</span></div>
+              <div style="cursor: pointer;" @click="followClick(1)">팔로우 <span> {{ userInfo.followerCount }} </span></div>
+              <div style="cursor: pointer;" @click="followClick(2)">팔로잉 <span> {{ userInfo.followingCount }}</span></div>
               
           </div>
           <div class="button-box">
           <div class="follow-button" v-if="userInfo.isFollow == 0" @click="followUser">팔로우하기</div>
           <div class="message-button" @click="goMessage">메시지 보내기</div>
         </div>
+        <div class="follow-back" @click.self="followStep = 0" v-if="followStep>0">
+      <div class="follow-modal">
+        <div class="follow-title">
+          {{ followTitle }}
+        </div>
+        <div class="follow-content">
+          <div class="follow-body" v-for="(i) in [1,2,3]" :key="i">
+            <img src="" class="follow-img">
+            <p class="follow-name">ㅋㅋㅋ</p>
+            <div class="follow-btn" v-if="true" @click="follow">Follow</div>
+            <div class="follow-btn" v-if="false" @click="follow">Unfollow</div>
+
+          </div>
+        </div>
+      </div>
+    </div>
         <div class="feed-game-box"  style="display: flex; flex-direction: column;" >
 
   
@@ -95,7 +111,9 @@ export default {
         height: 0,
         size : 'lg',
         pageNum : '1',
-
+        followStep : 0,
+        followData : [],
+        followTitle : "",
       }
     },
     components : {
@@ -106,6 +124,25 @@ export default {
         isDarkMode : Boolean
     },
     methods:{
+      async follow(idx){
+        try{
+          const auth = useAuthStore()
+          await auth.follow(idx)
+        }catch(err){
+          
+        }
+      },
+      async followClick(value){
+        if(value == 1){
+          this.followData
+          this.followTitle = "My Follow"
+        }else{
+          this.followData
+          this.followTitle = "My Following"
+
+        }
+        this.followStep = value
+      },
       handleResize(event) {
             this.width = window.innerWidth;
             this.height = window.innerHeight;

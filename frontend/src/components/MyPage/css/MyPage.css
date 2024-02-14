@@ -195,6 +195,88 @@
     .toggle_switch input[type="checkbox"]:checked + .slider::before { 
         transform:translateX(36px); 
     } 
+    .follow-back{
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0,0,0,0.75);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        z-index: 100;
+        cursor: pointer;
+    }
+    .follow-modal{
+        background-color: white;
+        border-radius: 10px;
+        height: 70%;
+        width: 70%;
+        box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.25);
+        overflow: hidden;
+        cursor: auto;
+
+    }
+    .follow-title{
+        height: 10%;
+        width: 100%;
+        background-color: #486880;
+        color: white;
+        display: flex;
+        align-items: center;
+        padding-left: 20px;
+    }
+    .follow-content{
+        height: 100%;
+        overflow-y: scroll;
+    }
+    .follow-content::-webkit-scrollbar{
+        width: 5px;
+    }
+    
+    .follow-content::-webkit-scrollbar-thumb{
+        height: 30%;
+        background: #486880;
+        border-radius: 10px;
+    }
+    
+    .follow-content::-webkit-scrollbar-track{
+        background: transparent
+    }
+    .follow-body{
+        box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.25);
+        height: 70px;
+        width: 100%;
+        display: flex;
+        background-color: #FFFDF3;
+        margin-bottom: 5px;
+        align-items: center;
+        padding-left: 10px;
+        position: relative;
+    }
+    .follow-img{
+        width: 50px;
+        height: 50px;
+        border-radius: 10px;
+        margin-right: 20px;
+
+    }
+    .follow-name{
+        font-size: 13px;
+        font-weight: bold;
+    }
+    .follow-btn{
+        width: 70px;
+        height: 30px;
+        position: absolute;
+        right: 30px;
+        border: 1px solid black;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        cursor: pointer;
+    }
 
 
 }
@@ -363,7 +445,88 @@
         width: 90%;
         margin-left: 2.5%;
     }
+    .follow-back{
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0,0,0,0.75);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        z-index: 100;
+        cursor: pointer;
+    }
+    .follow-modal{
+        background-color: white;
+        border-radius: 10px;
+        height: 70%;
+        width: 30%;
+        box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.25);
+        overflow: hidden;
+        cursor: auto;
+
+    }
+    .follow-title{
+        height: 10%;
+        width: 100%;
+        background-color: #486880;
+        color: white;
+        display: flex;
+        align-items: center;
+        padding-left: 20px;
+    }
+    .follow-content{
+        height: 100%;
+        overflow-y: scroll;
+    }
+    .follow-content::-webkit-scrollbar{
+        width: 5px;
+    }
     
+    .follow-content::-webkit-scrollbar-thumb{
+        height: 30%;
+        background: #486880;
+        border-radius: 10px;
+    }
+    
+    .follow-content::-webkit-scrollbar-track{
+        background: transparent
+    }
+    .follow-body{
+        box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.25);
+        height: 70px;
+        width: 100%;
+        display: flex;
+        background-color: #FFFDF3;
+        margin-bottom: 5px;
+        align-items: center;
+        padding-left: 10px;
+        position: relative;
+    }
+    .follow-img{
+        width: 50px;
+        height: 50px;
+        border-radius: 10px;
+        margin-right: 20px;
+    }
+    .follow-name{
+        font-size: 13px;
+        font-weight: bold;
+    }
+    .follow-btn{
+        width: 80px;
+        height: 30px;
+        position: absolute;
+        right: 30px;
+        border: 1px solid black;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        border-radius: 5px;
+        cursor: pointer;
+    }
 
     
 }
