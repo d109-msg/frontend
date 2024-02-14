@@ -15,6 +15,23 @@
         게임이 종료되었습니다.
       </div>
     </div>
+    <div class="follow-back" v-if="gameMemberFlag==0" @click="gameMemberFlag=0">
+      <div class="follow-modal">
+        <div class="follow-title">
+          GAME MEMBER
+        </div>
+        <div class="follow-content">
+          <div v-for="(mem,idx) in member" :key="idx">
+            <div class="follow-body" v-if="mem.id != participant.id">
+              <img :src="mem.imageUrl" class="follow-img" @click="goFriend(mem.userId)">
+              <p class="follow-name" @click="goFriend(mem.userId)">{{ mem.nickname }}</p>
+              <div class="follow-btn" v-if="!mem.isFollowing" @click="follow(mem.userId)">Follow</div>
+              <div class="follow-btn" v-if="mem.isFollowing" @click="follow(mem.userId)">Unfollow</div>
+          </div>
+        </div>
+        </div>
+      </div>
+    </div>
     <RoomFeed 
     v-if="(step==0 && size=='xs') || size=='lg' || size=='md'"
     :size="size"
@@ -103,6 +120,7 @@ import JobAbility from './JobAbility.vue';
 import { useGameStore } from '@/store/gameStore';
 import { useChatStore } from '@/store/chatStore';
 import mitt from 'mitt';
+import router from '@/router';
 export default {
   
     name: 'RoomDetailPage',
@@ -123,6 +141,7 @@ export default {
         dayStep : false,
         nightStep : false,
         endStep : false,
+        gameMemberFlag : 0,
       }
     },
     computed:{
@@ -162,6 +181,9 @@ export default {
       isDarkMode : Boolean,
     },
     methods:{
+      goFriend(data){
+        router.push(`/user/${data}`)
+      },
       stepUp(data){
         this.step = data
       },
@@ -342,11 +364,14 @@ export default {
         },
         async endTurn(nv,ov){
           if(nv == 1){
+            await this.getMemberList(this.roomData.id)
+            await this.getParticipant(this.roomData.id)
             this.endStep = true
             const chat = useChatStore()
             chat.setEnd(0)
             setTimeout(()=>{
               this.endStep = false
+              this.gameMemberFlag = 1
             },3000)
           }
         },
