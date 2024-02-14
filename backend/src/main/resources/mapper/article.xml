@@ -100,7 +100,8 @@
         AND a.user_id NOT IN (SELECT f.to_user_id FROM follows f WHERE f.from_user_id = #{userId})
         AND #{offset} > a.id
         GROUP BY a.id
-        ORDER BY likes_count DESC, a.create_time DESC
+<!--        ORDER BY likes_count DESC, a.create_time DESC-->
+        ORDER BY a.id DESC
         LIMIT #{limit};
     </select>
 
@@ -137,7 +138,8 @@
         LEFT JOIN users u ON a.user_id = u.id AND a.user_id = 1
         WHERE a.room_id = #{roomId} AND #{offset} > a.id
         GROUP BY a.id
-        ORDER BY a.create_time DESC
+<!--        ORDER BY a.create_time DESC-->
+        ORDER BY a.id DESC
         LIMIT #{limit};
     </select>
 
