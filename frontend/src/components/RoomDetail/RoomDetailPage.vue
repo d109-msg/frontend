@@ -35,15 +35,18 @@
           <img v-if="roomTime" @click="nightFlag()" src="./Img/icon_moon_active.png" alt="" style="cursor: pointer;">
           <img v-else @click="nightFlag()" src="./Img/icon_moon.png" alt="" style="cursor: pointer;">
         </div>
-        <img src="./Img/arrow_down.png" alt="" style="width: 30px; height: 30px; rotate: 90deg; cursor: pointer;"
-        @click="step = 0" v-if="size=='xs'"
-        >
         <div style="display: flex; flex-direction: row; align-items: center;">
+
+          <img src="./Img/icon_feed.png" class="is-feed" @click="step = 0" v-if="size=='xs'">
           <img v-if="isOpen==1" src="./Img/icon_chat_active.png" alt="" class="is-chat" @click="isChat" >
           <img v-else src="./Img/icon_chat.png" alt="" class="is-chat" @click="isChat" >
           
-          <div v-if="isOpen==2" class="is-guide-active" @click="isGuide"></div>
-          <div v-else class="is-guide" @click="isGuide"></div>
+          <div v-if="isOpen==2" class="is-guide-active tooltip " @click="isGuide">
+            <span class="tooltiptext tooltip-top" >게임 가이드</span>
+          </div>
+          <div v-else class="is-guide tooltip" @click="isGuide">
+            <span class="tooltiptext tooltip-top" >게임 가이드</span>
+          </div>
           
           <div v-if="isOpen==3" class="is-vote-active" @click="isVote"></div>
           <div v-else class="is-vote" @click="isVote"></div>
@@ -51,7 +54,7 @@
           <div v-if="isOpen==4" class="is-ability-active" @click="isAbility"></div>
           <div v-else class="is-ability" @click="isAbility"></div>
         </div>
-          
+        
     </div>
       <RoomChat v-if="isOpen==1" 
       :room-data="roomData"
@@ -84,6 +87,7 @@
       :alive-member="aliveMember"
       :is-dark-mode="isDarkMode"
       />
+
 
     </div>
 
@@ -167,10 +171,10 @@ export default {
         },
       reactiveSize : function(){
           const viewportWidth = window.innerWidth
-          if (viewportWidth<1070) {
+          if (viewportWidth<860) {
                   this.size =  "xs"
               }
-              else if (viewportWidth >= 1070 && viewportWidth < 1440
+              else if (viewportWidth >= 860 && viewportWidth < 1000
               ) {
                   this.size = "md"}
               else {this.size = "lg"}
@@ -290,11 +294,11 @@ export default {
     },
     watch:{
       width(nv,ov){
-            if(nv<1070){
+            if(nv<860){
                 this.size = "xs"
             console.log('사이즈',this.size)
 
-            } else if(nv >= 1070 && nv < 1440){
+            } else if(nv >= 860 && nv < 1000){
                 this.size = "md"
             console.log('사이즈',this.size)
 

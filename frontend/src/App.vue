@@ -100,7 +100,7 @@ body{
 @media  screen and (max-width:860px) {
   .theme-switch-wrapper {
         position: absolute;
-        z-index: 10000;
+        z-index: 990;
         display: flex;
         align-items: center;
         justify-content: center;
@@ -168,7 +168,7 @@ body{
 @media  screen and (min-width:861px) {
   .theme-switch-wrapper {
         position: absolute;
-        z-index: 10000;
+        z-index: 990;
         display: flex;
         align-items: center;
         justify-content: center;

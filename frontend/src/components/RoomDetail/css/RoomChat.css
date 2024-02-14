@@ -1,3 +1,4 @@
+@media  screen and (max-width:860px) {
 .chat-nick-msg-dark{
     font-size: 13px; 
     padding-left: 10px; 
@@ -182,7 +183,7 @@
     height: 20px;
     right: 20px;
     top: 20px;
-    z-index: 999;
+    z-index: 990;
     cursor: pointer;
 }
 .chat-other-box{
@@ -273,3 +274,262 @@
     font-size: 1em;
     border-radius: 5px;
 }
+}
+@media  screen and (min-width:861px) {
+
+    .chat-input-box{
+        display: flex;
+        justify-content: center;
+        position: absolute;
+        bottom: 0;
+        width: 100%;
+        height: 100px;
+        padding: 10px;
+    }
+    .chat-input{
+        width: 97%;
+        border-radius: 5px;
+        border: #B1AFAF solid 3px;
+        word-wrap: break-all;
+        padding: 5px 5px 20px 5px;
+        font: 1em;
+        resize: none;
+    }
+    .chat-input:hover,
+    .chat-input:focus
+    {
+        border: #8499AA solid 3px;
+        outline: #8499AA;
+    }
+    .chat-input-dark{
+        width: 97%;
+        border-radius: 5px;
+        border: #464C61 solid 3px;
+        word-wrap: break-all;
+        padding: 5px 5px 20px 5px;
+        font: 1em;
+        resize: none;
+        background: #292829;
+        color: #E6E3E2;
+    }
+    
+    .chat-input-mafia{
+        width: 97%;
+        border-radius: 5px;
+        border: #791124 solid 3px;
+        word-wrap: break-all;
+        padding: 5px 5px 20px 5px;
+        font: 1em;
+        resize: none;
+    }
+    .chat-input-mafia:hover,
+    .chat-input-mafia:focus
+    {
+        border: #791124 solid 3px;
+        outline: #791124;
+    }
+    
+    .photo-icon{
+        position: absolute;
+        bottom: 20px;
+        left: 25px;
+        height: 20px;
+        width: 20px;
+        background: url('../Img/icon_photo.png');
+        background-repeat: no-repeat;
+        background-size: contain;
+        cursor: pointer;
+    }
+    
+    .submit-icon{
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        position: absolute;
+        bottom: 20px; 
+        right: 20px;
+        height: 28px;
+        width: 80px;
+        background-color: #B1AFAF;
+        cursor: pointer;
+        color: #FFFFFF;
+        font-size: 1em;
+        border-radius: 5px;
+    }
+    
+    .submit-icon:hover{
+        background-color: #8499AA;
+    }
+    
+    .input-num{
+        position: absolute;
+        bottom: 20px;
+        right: 110px;
+        font-size: 1em;
+        color: #B1AFAF;
+        height: 25px;
+    }
+    .chat-box{
+        width: 100%;
+        height: 100%;
+        overflow-y: scroll;
+        z-index: 90;
+    }
+    .chat-content{
+        position: relative;
+        width: 100%;
+        height: 460px;
+        margin-top: 60px;
+    }
+    .chat-box::-webkit-scrollbar{
+        width: 8px;
+    }
+    
+    .chat-box::-webkit-scrollbar-thumb{
+        height: 30%;
+        background: #486880;
+        border-radius: 10px;
+    }
+    
+    .chat-box::-webkit-scrollbar-track{
+        background: transparent; 
+    }
+    
+    
+    .job-box{
+        position: absolute;
+        top: 10px;
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-start;
+        width: 97.5%;
+        height: 70px;
+        border-radius: 5px;
+        margin: 5px;
+        background: #FFD2A9;
+        font-size: 0.9em;
+        padding: 3%;
+        z-index: 99;
+    }
+    .job-box-dark{
+        position: absolute;
+        top: 10px;
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-start;
+        width: 97.5%;
+        height: 70px;
+        border-radius: 5px;
+        margin: 5px;
+        background: #7A4B4B;
+        font-size: 0.9em;
+        padding: 3%;
+        z-index: 99;
+    }
+    
+    .job-text-dark{
+        color: #fff;
+    }
+    
+    .job-box>div, .job-box-dark>div{
+        margin: 0px 0px 1px 0px;
+    }
+    
+    .toggle-job{
+        position: absolute;
+        width: 20px;
+        height: 20px;
+        right: 20px;
+        top: 20px;
+        z-index: 990;
+        cursor: pointer;
+    }
+    .chat-other-box{
+        margin-right: 20px;
+        text-align: left;
+        margin-top: 5px;
+        padding-left: 15px;
+    }
+    
+    .chat-other-text{
+        display: inline-block;
+        position: relative;
+        background-color: #E6E3E2;
+        border-radius: 0px 20px 20px 20px;
+        color: #000000;
+        padding: 10px 15px;
+        margin-bottom: 10px;
+        max-width: 230px;
+        font-weight: bold;
+    
+    }
+    
+    .chat-other-mafia{
+        display: inline-block;
+        position: relative;
+        background-color: black;
+        border-radius: 0px 20px 20px 20px;
+        color: red;
+        padding: 10px 15px;
+        margin-bottom: 10px;
+        max-width: 230px;
+        font-weight: bold;
+    
+    }
+    
+    .chat-my-box{
+        margin-right: 20px;
+        text-align: right;
+    }
+    
+    .chat-my-text{
+        display: inline-block;
+        position: relative;
+        background-color: #486880;
+        border-radius: 20px 0px 20px 20px;
+        color: #fff;
+        padding: 10px 15px;
+        margin-bottom: 10px;
+        max-width: 230px;
+        font-weight: bold;
+    }
+    .chat-my-mafia{
+        display: inline-block;
+        position: relative;
+        background-color: black;
+        border-radius: 20px 0px 20px 20px;
+        color: red;
+        padding: 10px 15px;
+        margin-bottom: 10px;
+        max-width: 230px;
+        font-weight: bold;
+    }
+    
+    .mafia-chat{
+        background: url(../Img/icon_reset.png);
+        width: 15px;
+        height: 15px;
+        position: absolute;
+        bottom: 25px;
+        left: 55px;
+        background-size: cover;
+        background-repeat: no-repeat;
+        cursor: pointer;
+    }
+    
+    .submit-mafia{
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        position: absolute;
+        bottom: 20px; 
+        right: 20px;
+        height: 28px;
+        width: 80px;
+        background-color: black;
+        cursor: pointer;
+        color: red;
+        font-size: 1em;
+        border-radius: 5px;
+    }
+    }
