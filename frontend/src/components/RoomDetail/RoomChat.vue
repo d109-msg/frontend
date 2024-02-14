@@ -73,7 +73,7 @@
       <div class="mafia-chat" v-if="participant.flagMafia "
       @click="mafiaChat"
       ></div>
-      <div class="submit-icon" @click.prevent="send" v-if="mafiaFlag == false">보내기</div>
+      <div :class="{'submit-icon':!isDarkMode,'submit-icon-dark':isDarkMode}" @click.prevent="send" v-if="mafiaFlag == false">보내기</div>
       <div class="submit-mafia" @click.prevent="sendMafia" v-if="participant.flagMafia  && mafiaFlag==true">보내기</div>
   </div>
   </div>

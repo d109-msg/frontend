@@ -91,12 +91,29 @@
     right: 20px;
     height: 28px;
     width: 80px;
-    background-color: #B1AFAF;
+    background-color: rgba(100, 100, 100, 0.5);
     cursor: pointer;
     color: #FFFFFF;
     font-size: 1em;
     border-radius: 5px;
 }
+.submit-icon-dark{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: absolute;
+    bottom: 20px; 
+    right: 20px;
+    height: 28px;
+    width: 80px;
+    cursor: pointer;
+    border: 2px solid #746E6E;
+    color: #746E6E;
+    font-size: 1em;
+    border-radius: 5px;
+}
+
+
 
 .submit-icon:hover{
     background-color: #8499AA;
@@ -401,6 +418,21 @@
         background-color: #B1AFAF;
         cursor: pointer;
         color: #FFFFFF;
+        font-size: 1em;
+        border-radius: 5px;
+    }
+    .submit-icon-dark{
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        position: absolute;
+        bottom: 20px; 
+        right: 20px;
+        height: 28px;
+        width: 80px;
+        border: 2px solid #746E6E;
+        color: #746E6E;
+        cursor: pointer;
         font-size: 1em;
         border-radius: 5px;
     }
