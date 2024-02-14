@@ -1,10 +1,9 @@
 <template>
-  <div >
+  <div style="height: 100%; width: 100%; position: relative;" class="test">
     <div class="mypage-banner-box">
       <div :class="{'mypage-banner-light': !isDarkMode , 'mypage-banner-dark':isDarkMode}">
       </div>
     </div>
-
     <div class="mypage-box">
       <div :class="{'profile-box-light':!isDarkMode, 'profile-box-dark':isDarkMode}">
         <div class="profile-content">
