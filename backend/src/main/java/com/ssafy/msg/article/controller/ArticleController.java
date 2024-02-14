@@ -39,7 +39,7 @@ public class ArticleController {
     @Operation(summary = "게시물 작성", description = "이미지추가와 내용 작성")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "201", description = "게시물 작성 성공"),
-            @ApiResponse(responseCode = "400", description = "게시물 작성 실패", content = @Content) })
+            @ApiResponse(responseCode = "400", description = "게시물 작성 실패", content = @Content)})
     public ResponseEntity<?> createArticle(@ModelAttribute ArticleCreateDto articleCreateDto, HttpServletRequest request) {
         log.info("(controller) create Start");
 
@@ -68,7 +68,7 @@ public class ArticleController {
     @Operation(summary = "게시물 수정", description = "게시물 내용 수정")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "게시물 수정 성공"),
-            @ApiResponse(responseCode = "400", description = "게시물 수정 실패", content = @Content) })
+            @ApiResponse(responseCode = "400", description = "게시물 수정 실패", content = @Content)})
     public ResponseEntity<?> updateArticle(@RequestBody UpdateArticleDto updateArticleDto, HttpServletRequest request) {
 
         int userId = (int) request.getAttribute("id");
@@ -96,7 +96,7 @@ public class ArticleController {
     @Operation(summary = "게시물 삭제", description = "게시물 삭제")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "게시물 삭제 성공"),
-            @ApiResponse(responseCode = "400", description = "게시물 삭제 실패", content = @Content) })
+            @ApiResponse(responseCode = "400", description = "게시물 삭제 실패", content = @Content)})
     public ResponseEntity<?> deleteArticle(@RequestParam("articleId") int articleId, HttpServletRequest request) {
 
         int userId = (int) request.getAttribute("id");
@@ -123,8 +123,8 @@ public class ArticleController {
     @Operation(summary = "프로필 게시물", description = "프로필 게시물 조회")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "게시물 리스트 조회 성공", content = {
-                    @Content(mediaType = "application/json", schema = @Schema(implementation = ArticleWithUrlDto.class)) }),
-            @ApiResponse(responseCode = "400", description = "게시물 리스트 조회 실패", content = @Content) })
+                    @Content(mediaType = "application/json", schema = @Schema(implementation = ArticleWithUrlDto.class))}),
+            @ApiResponse(responseCode = "400", description = "게시물 리스트 조회 실패", content = @Content)})
     public ResponseEntity<?> getArticles(@RequestParam("userId") int userId) {
 
         try {
@@ -147,9 +147,9 @@ public class ArticleController {
     @GetMapping(value = "/detail")
     @Operation(summary = "게시물 상세", description = "게시물 상세 내용 보기")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "게시물 상세 조회 성공", content ={
-                    @Content(mediaType = "application/json", schema = @Schema(implementation = ArticleDetailDto.class)) }),
-            @ApiResponse(responseCode = "400", description = "게시물 상세 조회 실패", content = @Content) })
+            @ApiResponse(responseCode = "200", description = "게시물 상세 조회 성공", content = {
+                    @Content(mediaType = "application/json", schema = @Schema(implementation = ArticleDetailDto.class))}),
+            @ApiResponse(responseCode = "400", description = "게시물 상세 조회 실패", content = @Content)})
     public ResponseEntity<?> getArticleDetail(@RequestParam("articleId") int articleId,
                                               HttpServletRequest request) {
         log.info("(ArticleController) 게시물 상세보기 시작");
@@ -180,17 +180,50 @@ public class ArticleController {
     @GetMapping("/feed/room")
     @Operation(summary = "게임방 피드", description = "게임방 피드에 보여줄 게시물 리스트")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "조회 성공", content ={
-                    @Content(mediaType = "application/json", schema = @Schema(implementation = RoomFeedResponseDto.class)) }),
+            @ApiResponse(responseCode = "200", description = "조회 성공", content = {
+                    @Content(mediaType = "application/json", schema = @Schema(implementation = RoomFeedResponseDto.class))}),
             @ApiResponse(responseCode = "400", description = "조회 실패", content = @Content)})
     public ResponseEntity<?> getFeedByRoomId(HttpServletRequest request,
-            @Parameter(description = "게임방Id") @RequestParam(value = "roomId", required = true, defaultValue = "room4") String roomId,
+                                             @Parameter(description = "게임방Id") @RequestParam(value = "roomId", required = true, defaultValue = "room4") String roomId,
                                              @Parameter(description = "마지막으로 로딩한 타겟") @RequestParam(value = "offset", required = false, defaultValue = "0") Integer offset,
-                                             @Parameter(description = "페이지당 타겟 개수") @RequestParam(value = "limit", required = false, defaultValue = "100") Integer limit) {
+                                             @Parameter(description = "페이지당 타겟 개수") @RequestParam(value = "limit", required = false, defaultValue = "5") Integer limit) {
 
-        try{
-            String currentUrl = request.getRequestURL().toString();
-            RoomFeedResponseDto result = articleService.getFeedByRoomId(new ArticleByRoomIdDto(roomId, limit, offset, currentUrl));
+//        try {
+//            String currentUrl = request.getRequestURL().toString();
+//            RoomFeedResponseDto result = articleService.getFeedByRoomId(new ArticleByRoomIdDto(roomId, limit, offset, currentUrl));
+//
+//            return new ResponseEntity<>(result, HttpStatus.OK);
+//        } catch (Exception e) {
+//            log.error("getFeedByRoomId() -> error : {}", e);
+//
+//            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+//        } finally {
+//            log.info("getFeedByRoomId() end");
+//        }
+
+        if (offset == 0) {
+            offset = Integer.MAX_VALUE;
+        }
+
+        ArticleByRoomIdDto articleByRoomIdDto = ArticleByRoomIdDto.builder()
+                .roomId(roomId)
+                .offset(offset)
+                .limit(limit)
+                .build();
+
+        try {
+            RoomFeedResponseDto result = articleService.getFeedByRoomId(articleByRoomIdDto);
+
+            //  보여줄 피드가 없을 때 조건 넣어주기
+            if (result.getArticles().isEmpty()) {
+                return null;
+            }
+
+            int lastId = result.getArticles().get(result.getArticles().size() - 1).getArticleId();
+
+            String nextUrl = "?roomId=" + roomId + "&offset=" + lastId + "&limit=" + limit;
+
+            result.setNextUrl(nextUrl);
 
             return new ResponseEntity<>(result, HttpStatus.OK);
         } catch (Exception e) {
@@ -206,12 +239,12 @@ public class ArticleController {
     @GetMapping(value = "/feed")
     @Operation(summary = "피드 게시물 리스트", description = "피드에 보여줄 게시물 리스트")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "피드 게시물 조회 성공", content ={
-                    @Content(mediaType = "application/json", schema = @Schema(implementation = FeedResponseDto.class)) }),
-            @ApiResponse(responseCode = "400", description = "피드 게시물 조회 실패", content = @Content) })
+            @ApiResponse(responseCode = "200", description = "피드 게시물 조회 성공", content = {
+                    @Content(mediaType = "application/json", schema = @Schema(implementation = FeedResponseDto.class))}),
+            @ApiResponse(responseCode = "400", description = "피드 게시물 조회 실패", content = @Content)})
     public ResponseEntity<?> getFeedArticleList(HttpServletRequest request,
-            @Parameter(description = "마지막으로 로딩한 타겟") @RequestParam(value = "offset", required = false, defaultValue = "0") Integer offset,
-            @Parameter(description = "페이지당 타겟 개수") @RequestParam(value = "limit", required = false, defaultValue = "5") Integer limit) {
+                                                @Parameter(description = "마지막으로 로딩한 타겟") @RequestParam(value = "offset", required = false, defaultValue = "0") Integer offset,
+                                                @Parameter(description = "페이지당 타겟 개수") @RequestParam(value = "limit", required = false, defaultValue = "5") Integer limit) {
         log.info("getFollowList() -> Start");
 
         int userId = (Integer) request.getAttribute("id");
@@ -235,13 +268,13 @@ public class ArticleController {
                 return null;
             }
 
-            int lastId = articleDetailDtos.get(articleDetailDtos.size() -1).getArticleId();
+            int lastId = articleDetailDtos.get(articleDetailDtos.size() - 1).getArticleId();
             log.info("(offset) {}", offset);
             log.info("(articleDetailDtos) {}", articleDetailDtos);
             log.info("(lasteId) {}", lastId);
 
 
-            String nextUrl = "?offset=" + lastId + "&limit=" + limit ;
+            String nextUrl = "?offset=" + lastId + "&limit=" + limit;
             log.info("(ArticleController) nextUrel {}", nextUrl);
             FeedResponseDto feedResponseDto = FeedResponseDto.builder()
                     .articleDetailDtos(articleDetailDtos)
@@ -262,16 +295,46 @@ public class ArticleController {
     @GetMapping("/guest")
     @Operation(summary = "비회원 피드", description = "비로그인 시 게스트로 볼 수 있는 피드")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "게스트 피드 조회 성공", content ={
-                    @Content(mediaType = "application/json", schema = @Schema(implementation = GuestArticleResponseDto.class)) }),
-            @ApiResponse(responseCode = "400", description = "게스트 피드 조회 실패", content = @Content) })
+            @ApiResponse(responseCode = "200", description = "게스트 피드 조회 성공", content = {
+                    @Content(mediaType = "application/json", schema = @Schema(implementation = GuestArticleResponseDto.class))}),
+            @ApiResponse(responseCode = "400", description = "게스트 피드 조회 실패", content = @Content)})
     public ResponseEntity<?> getGuestFeed(@RequestParam(value = "offset", required = false, defaultValue = "0") Integer offset,
                                           @RequestParam(value = "limit", required = false, defaultValue = "5") Integer limit) {
         log.info("(ArticleController) 게스트 피드 리스트");
 
-        FeedParamDto feedParamDto = FeedParamDto.builder().offset(offset).limit(limit).build();
+//        FeedParamDto feedParamDto = FeedParamDto.builder().offset(offset).limit(limit).build();
+//        try {
+//            GusetFeedResponseDto result = articleService.getGuestFeed(feedParamDto);
+//            return new ResponseEntity<>(result, HttpStatus.OK);
+//        } catch (Exception e) {
+//            log.error("(ArticleController) 게시물 피드 조회 실패", e);
+//            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+//        } finally {
+//            log.info("(ArticleController) 게스트 피드 조회 끝");
+//        }
+
+        if (offset == 0) {
+            offset = Integer.MAX_VALUE;
+        }
+
+        FeedParamDto feedParamDto = FeedParamDto.builder()
+                .offset(offset)
+                .limit(limit)
+                .build();
+
         try {
             GusetFeedResponseDto result = articleService.getGuestFeed(feedParamDto);
+
+            //  보여줄 피드가 없을 때 조건 넣어주기
+            if (result.getArticles().isEmpty()) {
+                return null;
+            }
+
+            int lastId = result.getArticles().get(result.getArticles().size() - 1).getArticleId();
+
+            String nextUrl = "?offset=" + lastId + "&limit=" + limit;
+            result.setNextUrl(nextUrl);
+
             return new ResponseEntity<>(result, HttpStatus.OK);
         } catch (Exception e) {
             log.error("(ArticleController) 게시물 피드 조회 실패", e);
@@ -282,24 +345,54 @@ public class ArticleController {
 
     }
 
-    // 인기 게시물
+    // 인기 게시물 -> 안쓰나?
     // 비회원 메인 페이지
     @GetMapping("/popular-feed")
     @Operation(summary = "인기 피드", description = "내 피드 모두 조회 후 인기 피드 조회")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "인기 피드 조회 성공", content ={
-                    @Content(mediaType = "application/json", schema = @Schema(implementation = GuestArticleResponseDto.class)) }),
-            @ApiResponse(responseCode = "400", description = "인기 피드 조회 실패", content = @Content) })
+            @ApiResponse(responseCode = "200", description = "인기 피드 조회 성공", content = {
+                    @Content(mediaType = "application/json", schema = @Schema(implementation = GuestArticleResponseDto.class))}),
+            @ApiResponse(responseCode = "400", description = "인기 피드 조회 실패", content = @Content)})
     public ResponseEntity<?> getPopularFeed(@RequestParam(value = "offset", required = false, defaultValue = "0") Integer offset,
-                                          @RequestParam(value = "limit", required = false, defaultValue = "5") Integer limit,
-                                          HttpServletRequest request) {
+                                            @RequestParam(value = "limit", required = false, defaultValue = "5") Integer limit,
+                                            HttpServletRequest request) {
         log.info("(ArticleController) 인기 피드 리스트");
 
-        int userId = (Integer) request.getAttribute("id");
-        FeedParamDto feedParamDto = FeedParamDto.builder().userId(userId).offset(offset).limit(limit).build();
+//        int userId = (Integer) request.getAttribute("id");
+//        FeedParamDto feedParamDto = FeedParamDto.builder().userId(userId).offset(offset).limit(limit).build();
+//
+//        try {
+//            GusetFeedResponseDto result = articleService.getGuestFeed(feedParamDto);
+//            return new ResponseEntity<>(result, HttpStatus.OK);
+//        } catch (Exception e) {
+//            log.error("(ArticleController) 인기 피드 조회 실패", e);
+//            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+//        } finally {
+//            log.info("(ArticleController) 인기 피드 조회 끝");
+//        }
+
+        if (offset == 0) {
+            offset = Integer.MAX_VALUE;
+        }
+
+        FeedParamDto feedParamDto = FeedParamDto.builder()
+                .offset(offset)
+                .limit(limit)
+                .build();
 
         try {
             GusetFeedResponseDto result = articleService.getGuestFeed(feedParamDto);
+
+            //  보여줄 피드가 없을 때 조건 넣어주기
+            if (result.getArticles().isEmpty()) {
+                return null;
+            }
+
+            int lastId = result.getArticles().get(result.getArticles().size() - 1).getArticleId();
+
+            String nextUrl = "?offset=" + lastId + "&limit=" + limit;
+            result.setNextUrl(nextUrl);
+
             return new ResponseEntity<>(result, HttpStatus.OK);
         } catch (Exception e) {
             log.error("(ArticleController) 인기 피드 조회 실패", e);
@@ -314,9 +407,9 @@ public class ArticleController {
     @PostMapping(value = "/like")
     @Operation(summary = "게시물 좋아요", description = "게시물 좋아요")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "좋아요 성공", content ={
-                    @Content(mediaType = "application/json", schema = @Schema(implementation = ArticleLikeDto.class)) }),
-            @ApiResponse(responseCode = "400", description = "좋아요 실패", content = @Content) })
+            @ApiResponse(responseCode = "200", description = "좋아요 성공", content = {
+                    @Content(mediaType = "application/json", schema = @Schema(implementation = ArticleLikeDto.class))}),
+            @ApiResponse(responseCode = "400", description = "좋아요 실패", content = @Content)})
     public ResponseEntity<?> articleLike(@RequestParam("articleId") int articleId, HttpServletRequest request) {
         log.info("(ArticleController) articleLike() -> 게시물 좋아요 시작");
 
@@ -344,10 +437,10 @@ public class ArticleController {
     @GetMapping(value = "/like-userlist")
     @Operation(summary = "좋아요 유저 리스트", description = "좋아요 누른 유저 리스트를 조회")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "좋아요 리스트 조회 성공" , content ={
-                    @Content(mediaType = "application/json", schema = @Schema(implementation = LikeUserListDto.class)) }),
-            @ApiResponse(responseCode = "400", description = "좋아요 리스트 조회 실패", content = @Content) })
-    public ResponseEntity<?> getLikeUserList(@RequestParam("articleId") int articleId ) {
+            @ApiResponse(responseCode = "200", description = "좋아요 리스트 조회 성공", content = {
+                    @Content(mediaType = "application/json", schema = @Schema(implementation = LikeUserListDto.class))}),
+            @ApiResponse(responseCode = "400", description = "좋아요 리스트 조회 실패", content = @Content)})
+    public ResponseEntity<?> getLikeUserList(@RequestParam("articleId") int articleId) {
         log.info("(ArticleController) likeUserList 조회 시작");
 
         try {
@@ -366,9 +459,9 @@ public class ArticleController {
     @PostMapping(value = "/comment")
     @Operation(summary = "댓글 작성", description = "댓글 작성하기")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "201", description = "댓글 작성 성공" , content ={
-                    @Content(mediaType = "application/json", schema = @Schema(implementation = CommentDto.class)) }),
-            @ApiResponse(responseCode = "400", description = "댓글 작성 실패", content = @Content) })
+            @ApiResponse(responseCode = "201", description = "댓글 작성 성공", content = {
+                    @Content(mediaType = "application/json", schema = @Schema(implementation = CommentDto.class))}),
+            @ApiResponse(responseCode = "400", description = "댓글 작성 실패", content = @Content)})
     public ResponseEntity<?> createComment(HttpServletRequest request,
                                            @RequestBody CreateCommentDto createCommentDto) {
 
@@ -376,7 +469,7 @@ public class ArticleController {
                 .userId((Integer) request.getAttribute("id"))
                 .articleId(createCommentDto.getArticleId())
                 .content(createCommentDto.getContent())
-                .parentCommentId(createCommentDto.getCommentId() > 0 ? createCommentDto.getCommentId(): null) // 유효한 ID가 아니라면 null을 할당
+                .parentCommentId(createCommentDto.getCommentId() > 0 ? createCommentDto.getCommentId() : null) // 유효한 ID가 아니라면 null을 할당
                 .build();
         log.info("(controller) createComment() 댓글 작성 시작 {}", commentDto);
 
@@ -397,7 +490,7 @@ public class ArticleController {
     @Operation(summary = "댓글 수정", description = "댓글 내용 수정")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "댓글 수정 성공"),
-            @ApiResponse(responseCode = "400", description = "댓글 수정 실패", content = @Content) })
+            @ApiResponse(responseCode = "400", description = "댓글 수정 실패", content = @Content)})
     public ResponseEntity<?> updateComment(@RequestBody UpdateCommentDto updateCommentDto, HttpServletRequest request) {
         log.info("(ArticleController) 댓글 수정 시작");
 
@@ -427,7 +520,7 @@ public class ArticleController {
     @Operation(summary = "댓글 삭제", description = "댓글 삭제")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "게시물 삭제 성공"),
-            @ApiResponse(responseCode = "400", description = "게시물 삭제 실패", content = @Content) })
+            @ApiResponse(responseCode = "400", description = "게시물 삭제 실패", content = @Content)})
     public ResponseEntity<?> deleteComment(@RequestParam("commentId") int commentId, HttpServletRequest request) {
 
         int userId = (int) request.getAttribute("id");
@@ -453,8 +546,8 @@ public class ArticleController {
     @Operation(summary = "댓글 목록 조회", description = "댓글 목록 조회하기")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "댓글 조회 성공", content = {
-                    @Content(mediaType = "application/json", schema = @Schema(implementation = CommentDto.class)) }),
-            @ApiResponse(responseCode = "400", description = "댓글 조회 실패", content = @Content) })
+                    @Content(mediaType = "application/json", schema = @Schema(implementation = CommentDto.class))}),
+            @ApiResponse(responseCode = "400", description = "댓글 조회 실패", content = @Content)})
     public ResponseEntity<?> getComments(@RequestParam("articleId") int articleId,
                                          @RequestParam(value = "parentCommentId", required = false) Integer parentCommentId,
                                          HttpServletRequest request) {
@@ -483,8 +576,8 @@ public class ArticleController {
     @Operation(summary = "대댓글 목록 조회", description = "대댓글 목록 조회하기")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "대댓글 조회 성공", content = {
-                    @Content(mediaType = "application/json", schema = @Schema(implementation = CommentDto.class)) }),
-            @ApiResponse(responseCode = "400", description = "대댓글 조회 실패", content = @Content) })
+                    @Content(mediaType = "application/json", schema = @Schema(implementation = CommentDto.class))}),
+            @ApiResponse(responseCode = "400", description = "대댓글 조회 실패", content = @Content)})
     public ResponseEntity<?> getChildCommentList(@RequestParam("commentId") int commentId,
                                                  @RequestParam("articleId") int articleId) {
 
@@ -508,9 +601,9 @@ public class ArticleController {
     @PostMapping(value = "/comment-like")
     @Operation(summary = "댓글 좋아요", description = "게시물 좋아요")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "댓글 좋아요 성공", content ={
-                    @Content(mediaType = "application/json", schema = @Schema(implementation = CommentLikeDto.class)) }),
-            @ApiResponse(responseCode = "400", description = "댓글 좋아요 실패", content = @Content) })
+            @ApiResponse(responseCode = "200", description = "댓글 좋아요 성공", content = {
+                    @Content(mediaType = "application/json", schema = @Schema(implementation = CommentLikeDto.class))}),
+            @ApiResponse(responseCode = "400", description = "댓글 좋아요 실패", content = @Content)})
     public ResponseEntity<?> commentLike(@RequestParam("commentId") int commentId, HttpServletRequest request) {
         log.info("(ArticleController) articleLike() -> 게시물 좋아요 시작");
 
@@ -538,10 +631,10 @@ public class ArticleController {
     @GetMapping(value = "/comment-like-userlist")
     @Operation(summary = "댓글 좋아요 유저 리스트", description = "댓글 좋아요 누른 유저 리스트를 조회")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "댓글 좋아요 리스트 조회 성공" , content ={
-                    @Content(mediaType = "application/json", schema = @Schema(implementation = LikeUserListDto.class)) }),
-            @ApiResponse(responseCode = "400", description = "댓글 좋아요 리스트 조회 실패", content = @Content) })
-    public ResponseEntity<?> getCommentLikeUserList(@RequestParam("commentId") int commentId ) {
+            @ApiResponse(responseCode = "200", description = "댓글 좋아요 리스트 조회 성공", content = {
+                    @Content(mediaType = "application/json", schema = @Schema(implementation = LikeUserListDto.class))}),
+            @ApiResponse(responseCode = "400", description = "댓글 좋아요 리스트 조회 실패", content = @Content)})
+    public ResponseEntity<?> getCommentLikeUserList(@RequestParam("commentId") int commentId) {
         log.info("(ArticleController) commentLikeUserList 조회 시작");
 
         try {

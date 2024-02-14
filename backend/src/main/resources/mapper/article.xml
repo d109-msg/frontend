@@ -49,53 +49,96 @@
 
 <!--    비회원 피드 보기 -->
     <select id="getGuestFeed" parameterType="FeedParamDto" resultType="GuestArticleResultDto">
+<!--        SELECT-->
+<!--            a.id AS articleId,-->
+<!--            a.user_id,-->
+<!--            u.nickname,-->
+<!--            u.email_id,-->
+<!--            u.image_url,-->
+<!--            a.content,-->
+<!--            a.create_time,-->
+<!--            a.modify_time,-->
+<!--            COALESCE(l.likes_count, 0) AS likes_count,-->
+<!--            GROUP_CONCAT(ai.url ORDER BY ai.id SEPARATOR ',') AS urls-->
+<!--        FROM articles a-->
+<!--                 LEFT JOIN users u ON a.user_id = u.id-->
+<!--                 LEFT JOIN (-->
+<!--                        SELECT-->
+<!--                            article_id,-->
+<!--                            COUNT(*) AS likes_count-->
+<!--                        FROM article_likes-->
+<!--                        GROUP BY article_id) l ON a.id = l.article_id-->
+<!--                 LEFT JOIN article_images ai ON a.id = ai.article_id-->
+<!--        where a.flag_private = 0 and a.user_id != #{userId}-->
+<!--          and a.user_id not in (select f.to_user_id from follows f where f.from_user_id = #{userId})-->
+<!--        GROUP BY a.id-->
+<!--        ORDER BY likes_count DESC, a.create_time desc-->
+<!--            LIMIT #{limit} OFFSET #{offset};-->
         SELECT
-            a.id AS articleId,
-            a.user_id,
-            u.nickname,
-            u.email_id,
-            u.image_url,
-            a.content,
-            a.create_time,
-            a.modify_time,
-            COALESCE(l.likes_count, 0) AS likes_count,
-            GROUP_CONCAT(ai.url ORDER BY ai.id SEPARATOR ',') AS urls
+        a.id AS articleId,
+        a.user_id,
+        u.nickname,
+        u.email_id,
+        u.image_url,
+        a.content,
+        a.create_time,
+        a.modify_time,
+        COALESCE(l.likes_count, 0) AS likes_count,
+        GROUP_CONCAT(ai.url ORDER BY ai.id SEPARATOR ',') AS urls
         FROM articles a
-                 LEFT JOIN users u ON a.user_id = u.id
-                 LEFT JOIN (
-                        SELECT
-                            article_id,
-                            COUNT(*) AS likes_count
-                        FROM article_likes
-                        GROUP BY article_id) l ON a.id = l.article_id
-                 LEFT JOIN article_images ai ON a.id = ai.article_id
-        where a.flag_private = 0 and a.user_id != #{userId}
-          and a.user_id not in (select f.to_user_id from follows f where f.from_user_id = #{userId})
+        LEFT JOIN users u ON a.user_id = u.id
+        LEFT JOIN (
+        SELECT
+        article_id,
+        COUNT(*) AS likes_count
+        FROM article_likes
+        GROUP BY article_id
+        ) l ON a.id = l.article_id
+        LEFT JOIN article_images ai ON a.id = ai.article_id
+        WHERE a.flag_private = 0
+        AND a.user_id != #{userId}
+        AND a.user_id NOT IN (SELECT f.to_user_id FROM follows f WHERE f.from_user_id = #{userId})
+        AND #{offset} > a.id
         GROUP BY a.id
-        ORDER BY likes_count DESC, a.create_time desc
-            LIMIT #{limit} OFFSET #{offset};
-
-
+        ORDER BY likes_count DESC, a.create_time DESC
+        LIMIT #{limit};
     </select>
 
     <select id="getArticleListByRoomId" resultType="RoomArticleResultDto" parameterType="ArticleByRoomIdDto">
+<!--        SELECT-->
+<!--            a.id AS articleId,-->
+<!--            a.user_id AS userId,-->
+<!--            COALESCE(u.id, p.id) AS participantId,-->
+<!--            COALESCE(u.nickname, p.nickname) AS nickname,-->
+<!--            COALESCE(u.image_url, p.image_url) AS iconUrl,-->
+<!--            a.content AS content,-->
+<!--            a.create_time AS createTime,-->
+<!--            GROUP_CONCAT(ai.url ORDER BY ai.id SEPARATOR ',') AS urls-->
+<!--        FROM articles a-->
+<!--                 left join participants p ON a.user_id = p.user_id AND a.room_id = p.room_id-->
+<!--                 LEFT JOIN article_images ai ON a.id = ai.article_id-->
+<!--                 left join users u on a.user_id = u.id and a.user_id = 1-->
+<!--        WHERE a.room_id = #{roomId}-->
+<!--        GROUP BY a.id-->
+<!--        ORDER BY a.create_time DESC-->
+<!--            LIMIT #{limit} OFFSET #{offset};-->
         SELECT
-            a.id AS articleId,
-            a.user_id AS userId,
-            COALESCE(u.id, p.id) AS participantId,
-            COALESCE(u.nickname, p.nickname) AS nickname,
-            COALESCE(u.image_url, p.image_url) AS iconUrl,
-            a.content AS content,
-            a.create_time AS createTime,
-            GROUP_CONCAT(ai.url ORDER BY ai.id SEPARATOR ',') AS urls
+        a.id AS articleId,
+        a.user_id AS userId,
+        COALESCE(u.id, p.id) AS participantId,
+        COALESCE(u.nickname, p.nickname) AS nickname,
+        COALESCE(u.image_url, p.image_url) AS iconUrl,
+        a.content AS content,
+        a.create_time AS createTime,
+        GROUP_CONCAT(ai.url ORDER BY ai.id SEPARATOR ',') AS urls
         FROM articles a
-                 left join participants p ON a.user_id = p.user_id AND a.room_id = p.room_id
-                 LEFT JOIN article_images ai ON a.id = ai.article_id
-                 left join users u on a.user_id = u.id and a.user_id = 1
-        WHERE a.room_id = #{roomId}
+        LEFT JOIN participants p ON a.user_id = p.user_id AND a.room_id = p.room_id
+        LEFT JOIN article_images ai ON a.id = ai.article_id
+        LEFT JOIN users u ON a.user_id = u.id AND a.user_id = 1
+        WHERE a.room_id = #{roomId} AND #{offset} > a.id
         GROUP BY a.id
         ORDER BY a.create_time DESC
-            LIMIT #{limit} OFFSET #{offset};
+        LIMIT #{limit};
     </select>
 
     <select id="getArticleDetail" parameterType="ArticleDto" resultType="ArticleDetailDto">
