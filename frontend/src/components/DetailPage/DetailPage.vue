@@ -84,7 +84,9 @@
                     </div>
                 </div>
                 <div :class="{'line2':!isDarkMode,'line2-dark':isDarkMode}"></div>
-                <div class="bottom">
+                <div class="bottom" style="margin-top: -10px;">
+                    <img src="./Icon/heart_dark.png" alt="" v-if="itemData.isLike==0" style="height: 20px; width: 20px; cursor: pointer;" @click="likeArticle">
+                    <img src="./Icon/fullheart.png" alt="" v-if="itemData.isLike==1" style="height: 20px; width: 20px; cursor: pointer;" @click="likeArticle">
                     <p :class="{'comment-count':!isDarkMode, 'comment-count-dark':isDarkMode}" style="font-size: 0.9em;">{{ likeCount }}명의 사람들이 이 글을 좋아합니다.</p>
                     <p :class="{'comment-count':!isDarkMode, 'comment-count-dark':isDarkMode}" style="font-size: 0.85em;">{{ createTime }}</p>
                     <div class="write" style="width: 100%;">
@@ -152,6 +154,12 @@ export default {
         }   
     },
     methods: {
+        likeArticle: async function(){
+            const feed = useFeedStore()
+            await feed.likeArticle(this.itemData.articleId)
+            await this.readDetail(this.idx)
+            this.$emit('updateLike')
+        },
         close : function(){
             this.$emit('closeDetail')
         },

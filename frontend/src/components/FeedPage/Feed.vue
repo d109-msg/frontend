@@ -46,6 +46,7 @@
     
     <DetailPage v-if="detailFlag" 
         @close-detail="offDetail"
+        @update-like="updateLike"
         :idx="feed.articleId" :is-dark-mode="isDarkMode"
         />
   </div>
@@ -69,6 +70,9 @@ export default {
         }
     },
     methods: {
+      updateLike : function(){
+        this.feed.isLike = !this.feed.isLike
+      },
       closeDetail : function(){
         this.detailFlag = !this.detailFlag
       },
