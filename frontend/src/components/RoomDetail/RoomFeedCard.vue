@@ -1,5 +1,5 @@
 <template>
-    <div class="feed-card" >
+    <div :class="{'feed-card':!isDarkMode,'feed-card-dark':isDarkMode}" >
     <div class="list-svg" @click="editFlag=!editFlag">
       <div class="list-container" v-if="userInfo.id==feed.userId && editFlag == true">
           <p style="width: 100px;"
@@ -14,15 +14,15 @@
     <div class="feed-item">
       <img class="user-img" :src="feed.iconUrl">
       <div class="user-info">
-        <div class="user-name" @click="userProfile" v-if="room.endTime!=null">{{ feed.nickname }}</div>
-        <div class="user-name" v-if="room.endTime==null">{{ feed.nickname }}</div>
+        <div :class="{'user-name':!isDarkMode,'user-name-dark':isDarkMode}" @click="userProfile" v-if="room.endTime!=null">{{ feed.nickname }}</div>
+        <div :class="{'user-name':!isDarkMode,'user-name-dark':isDarkMode}" v-if="room.endTime==null">{{ feed.nickname }}</div>
         <div class="user-comment">{{ feed.content }}</div>
       </div>
     </div>
     <div class="feed-comment">
     </div>
     <img class="feed-img" :src="feed.urls[0]" @click.prevent="onDetail">
-    <div class="feed-btn">
+    <!-- <div class="feed-btn">
       <img class="heart-icon"  
       v-if="item.isLike==0"
       @click.prevent="likeArticle">
@@ -32,7 +32,7 @@
       <div class="chat-icon" @click.prevent="onDetail"></div>
 
       <div class="share-icon"></div>
-    </div>
+    </div> -->
     <div class="feed-chat">
       <div class="latest-chat">
         <div class="chat-user-name"></div>
@@ -104,6 +104,7 @@ export default {
     props:{
       item : Object,
       room : Object,
+      isDarkMode:Boolean
     },
     components:{
       DetailPage,

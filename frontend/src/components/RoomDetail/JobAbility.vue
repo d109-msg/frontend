@@ -1,7 +1,9 @@
 <template>
     <div :class="{'ability-content':!isDarkMode,'ability-content-dark':isDarkMode}">
         <div>{{ ability.message }}</div>
-        <!-- <div>{{ ability }}</div> -->
+        <div v-if="participant.jobId == '훼방꾼' || participant.jobId == '스파이' || participant.jobId == '건달' || participant.jobId == '정치인' || participant.jobId == '군인' ||participant.jobId == '판사' || participant.jobId == '기자' || participant.jobId == '자경단'"
+        >(1회 한정) 
+            <span v-if="participant.jobId == '훼방꾼' || participant.jobId == '스파이' || participant.jobId == '건달' || participant.jobId == '판사' || participant.jobId == '기자'" >신중히 사용해주세요.</span></div>
         
         <!-- 지목대상이 필요한 능력이라면 -->
         <template v-if="ability.flagTarget"  >

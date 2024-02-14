@@ -64,13 +64,13 @@
 
                 <!-- <div class="tag" >HOME</div> -->
                 <img v-if="!isDarkMode" class="tag" src="./Img/icon_game.png" alt=""  @click="$router.push('/game')" id="/game" style="height: 35px; width: 35px;">
-                <img v-else class="tag" src="./Img/icon_game_dark.png" alt=""  @click="$router.push('/')" id="/" style="height: 35px; width: 35px;">
+                <img v-else class="tag" src="./Img/icon_game_dark.png" alt=""  @click="$router.push('/game')" id="/" style="height: 35px; width: 35px;">
 
                 <img v-if="!isDarkMode" class="tag" src="./Img/icon_message.png" alt=""  @click="$router.push('/message')" id="/message" style="height: 45px; width: 45px;">
-                <img v-else class="tag" src="./Img/icon_message_dark.png" alt=""  @click="$router.push('/')" id="/" style="height: 45px; width: 45px;">
+                <img v-else class="tag" src="./Img/icon_message_dark.png" alt=""  @click="$router.push('/message')" id="/" style="height: 45px; width: 45px;">
 
                 <img v-if="!isDarkMode" class="tag" src="./Img/icon_mypage.png" alt=""  @click="$router.push('/mypage')" id="/mypage" style="height: 50px; width: 50px;">
-                <img v-else class="tag" src="./Img/icon_mypage_dark.png" alt=""  @click="$router.push('/')" id="/" style="height: 50px; width: 50px;">
+                <img v-else class="tag" src="./Img/icon_mypage_dark.png" alt=""  @click="$router.push('/mypage')" id="/" style="height: 50px; width: 50px;">
 
             </div>
         </div>

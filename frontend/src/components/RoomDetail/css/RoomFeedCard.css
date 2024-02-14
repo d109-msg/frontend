@@ -1,12 +1,21 @@
 @media screen and (max-width:500px){
     .feed-card{
-        width: 95%;
+        position: relative;
+        width: 85%;
         border-radius: 10px;
         border: #FFFDF3 solid 1px;
         background-color: #FFFDF3;
         box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.25);
         margin: 0px 10px 45px 10px;
+    }
+    .feed-card-dark{
         position: relative;
+        width: 85%;
+        border-radius: 10px;
+        border: #333233 solid 1px;
+        background-color: #333233;
+        box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.25);
+        margin: 0px 10px 45px 10px;
     }
     .feed-item{
         margin: 30px 25px 0px 20px;
@@ -15,8 +24,8 @@
     
     }
     .user-img{
-        width: 60px;
-        height: 60px;
+        width: 40px;
+        height: 40px;
         border-radius: 10px;
         margin-right: 15.5px;
     }
@@ -28,8 +37,13 @@
     }
     
     .user-name{
-        font-size: 18px;
+        font-size: 0.9em;
         color: #474646;
+        cursor: pointer;
+    }
+    .user-name-dark{
+        font-size: 0.9em;
+        color: #FFFDF3;
         cursor: pointer;
     }
     .user-comment{
@@ -186,10 +200,20 @@
 @media screen and (min-width:501px){
 
 .feed-card{
-    width: 450px;
+    width: 300px;
     border-radius: 10px;
     border: #FFFDF3 solid 1px;
     background-color: #FFFDF3;
+    box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.25);
+    margin: 0px 10px 45px 10px;
+    position: relative;
+}
+
+.feed-card-dark{
+    width: 300px;
+    border-radius: 10px;
+    border: #333233 solid 1px;
+    background-color: #333233;
     box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.25);
     margin: 0px 10px 45px 10px;
     position: relative;
@@ -216,6 +240,11 @@
 .user-name{
     font-size: 18px;
     color: #474646;
+    cursor: pointer;
+}
+.user-name-dark{
+    font-size: 18px;
+    color: #FFFDF3;
     cursor: pointer;
 }
 .user-comment{
@@ -245,8 +274,8 @@
 
 .feed-img{
     cursor: pointer;
-    width: 450px;
-    height: 450px;
+    width: 300px;
+    height: 300px;
     border-right: none;
     border-left: none;
 }
@@ -366,4 +395,203 @@
     background: rgba(0, 0, 0, 0);
     z-index: 900;
 }
+}
+
+@media screen and (min-width:860px){
+    .feed-card{
+        position: relative;
+        width: 350px;
+        border-radius: 10px;
+        border: #FFFDF3 solid 1px;
+        background-color: #FFFDF3;
+        box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.25);
+        margin: 0px 10px 45px 10px;
+    }
+    .feed-card-dark{
+        position: relative;
+        width: 350px;
+        border-radius: 10px;
+        border: #333233 solid 1px;
+        background-color: #333233;
+        box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.25);
+        margin: 0px 10px 45px 10px;
+    }
+    .feed-item{
+        margin: 30px 25px 0px 20px;
+        display: flex;
+        flex-direction: row;
+    
+    }
+    .user-img{
+        width: 40px;
+        height: 40px;
+        border-radius: 10px;
+        margin-right: 15.5px;
+    }
+    
+    .user-info{
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+    }
+    
+    .user-name{
+        font-size: 0.9em;
+        color: #474646;
+        cursor: pointer;
+    }
+    .user-name-dark{
+        font-size: 0.9em;
+        color: #FFFDF3;
+        cursor: pointer;
+    }
+    .user-comment{
+        font-size: 15px;
+        color: #A9A5A5;
+    
+    }
+    .list-svg{
+        position: absolute;
+        top: 30px;
+        right: 20px;
+        width: 30px;
+        height: 20px;
+        background-repeat:no-repeat;
+        margin-left: 110px;
+        cursor: pointer;
+    }
+    
+    .feed-comment{
+        margin-top: 13px;
+        margin-left: 28px;
+        margin-bottom: 19px;
+        width: 352px;
+        color: #838080;
+        font-size: 15px
+    }
+    
+    .feed-img{
+        cursor: pointer;
+        width: 350px;
+        height: 350px;
+        border-right: none;
+        border-left: none;
+    }
+    
+    .feed-btn{
+        margin-top: 10px;
+        margin-left: 10px;
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        margin-bottom: 17px;
+    }
+    .heart-icon{
+        background-position: 50% 50%;
+        width: 24px;
+        height: 24px;
+        background-size: contain;
+        background-repeat: no-repeat;
+        margin-right: 10px;
+        cursor: pointer;
+        animation: heart 0.3s forwards ;
+    }
+    .chat-icon{
+        background-size: contain;
+        background-repeat: no-repeat;
+        background-position: 50% 50%;
+        cursor: pointer;
+        margin-right: 10px;
+        width: 24px;
+        height: 23px;
+    }
+    .share-icon{
+        background-position: 50% 50%;
+        cursor: pointer;
+        background-size: contain;
+        background-repeat: no-repeat;
+        width: 22px;
+        height: 23px;
+    }
+    
+    .latest-chat{
+        font-size: 10px;
+        
+    }
+    .chat-info{
+        margin-left: 28px;
+        margin-bottom: 17px;
+        font-size: 10px;
+        display: flex;
+        flex-direction: row;
+    }
+    .see-all{
+        margin-left: 8px;
+    }
+    
+    .chat-user-name{
+        margin-right: 23px;
+    }
+    
+    .heart-icon:hover{
+        transform: scale(0.9);
+        transition: 0.5s ease;
+    }
+    .chat-icon:hover{
+        transform: scale(0.9);
+        transition: 0.5s ease;
+    }
+    
+    @keyframes heart{
+        0%{
+            scale: 0.7;
+        }
+        100%{
+            scale: 1;
+        }
+    }
+    
+    
+    .list-container{
+        position: absolute;
+        width: 130px;
+        height: 60px;
+        background: #fff;
+        top: 10px;
+        left: -100px;
+        border-radius: 5px;
+        filter: drop-shadow(0px 4px 4px rgba(0,0,0,0.25));
+        cursor: auto;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        z-index: 1000;
+    }
+    
+    .list-container>p{
+        font-size: 10px;
+        font-weight: lighter;
+        color: #777272;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        cursor: pointer;
+    }
+    .list-container>p>img{
+        width: 20px;
+        height: 20px;
+        margin-right: 5px;
+        cursor: pointer;
+    
+    }
+    .close-list{
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0);
+        z-index: 9
+}
+
 }
