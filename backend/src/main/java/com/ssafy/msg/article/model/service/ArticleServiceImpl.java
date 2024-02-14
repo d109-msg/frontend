@@ -3,7 +3,10 @@ package com.ssafy.msg.article.model.service;
 import com.ssafy.msg.article.model.dto.*;
 import com.ssafy.msg.article.model.mapper.ArticleMapper;
 import com.ssafy.msg.article.util.S3Util;
+import com.ssafy.msg.game.model.dto.ParticipantDto;
+import com.ssafy.msg.game.model.dto.ParticipantResponseDto;
 import com.ssafy.msg.game.model.service.GameService;
+import com.ssafy.msg.message.model.service.MessageService;
 import com.ssafy.msg.notification.model.service.NotificationService;
 import com.ssafy.msg.user.exception.UserNotFoundException;
 import com.ssafy.msg.webpush.model.service.WebPushService;
@@ -29,6 +32,8 @@ public class ArticleServiceImpl implements ArticleService{
     private final NotificationService notificationService;
 
     private final S3Util s3Util;
+
+    private final MessageService messageService;
 
 
 
@@ -72,6 +77,10 @@ public class ArticleServiceImpl implements ArticleService{
                     articleMapper.insertArticleImage(new ArticleImageDto(articleDto.getId(), url, uuid, 0));
                 }
             }
+
+            ParticipantResponseDto participant = gameService.getParticipant(articleDto.getUserId(), articleDto.getRoomId());
+
+            messageService.sendGameNotice(articleDto.getRoomId(), participant.getNickname() + "님이 미션을 완료했습니다.");
         }
         log.info("(service) end");
     }
