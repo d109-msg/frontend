@@ -5,8 +5,25 @@
       <div @click="refresh" class="reset-icon"></div>
       <div :class="{'invite-code-title':!isDarkMode,'invite-code-title-dark':isDarkMode}">{{ roomData.title }}</div>
       <div v-if="mission.flagSuccess==0" class="create-icon" @click="createOn"></div>
-      <div v-else class="create-icon" style="background: url('./Img/create_feed_disable.png');" ></div>
+      <div v-else class="disable-icon"></div>
 
+    </div>
+    <div class="follow-back" v-if="gameMemberFlag==1" @click.self="gameMemberFlag=0">
+      <div class="follow-modal">
+        <div class="follow-title">
+          GAME MEMBER
+        </div>
+        <div class="follow-content">
+          <div v-for="(mem,idx) in member" :key="idx">
+            <div class="follow-body" v-if="mem.id != participant.id">
+              <img :src="mem.imageUrl" style="cursor: pointer;" class="follow-img" @click="goFriend(mem.userId)">
+              <p class="follow-name" style="cursor: pointer;" @click="goFriend(mem.userId)">{{ mem.nickname }}</p>
+              <div class="follow-btn" v-if="!mem.isFollowing" @click="follow(mem.userId,idx)">Follow</div>
+              <div class="follow-btn" v-if="mem.isFollowing" @click="follow(mem.userId,idx)">Unfollow</div>
+          </div>
+        </div>
+        </div>
+      </div>
     </div>
     <div :class="{'feed-content':!isDarkMode,'feed-content-dark':isDarkMode}">
 
@@ -27,6 +44,7 @@
             <div v-for="(feed,idx) in feedList" :key="idx"  style="display: flex; justify-content: center;" :id="`feed${idx}`">
                     <RoomFeedCardVue :item="feed" :is-dark-mode="isDarkMode" :room="roomData"/>
             </div>
+            <div class="member-btn" @click="gameMemberFlag=1" v-if="roomData.endTime != null || (roomData.id in chat.getEndRoom)">Member List</div>
         </div>
         
 
@@ -43,6 +61,8 @@ import FeedCreate from '../FeedPage/FeedCreate.vue';
 import { useFeedStore } from '@/store/feedStore';
 import { useGameStore } from '@/store/gameStore';
 import RoomFeedCardVue from './RoomFeedCard.vue';
+import router from '@/router';
+import { useChatStore } from '@/store/chatStore';
 export default {
     name:'RoomFeedStart',
     data(){
@@ -53,6 +73,7 @@ export default {
             io : {},
             feedList : [],
             missionBox : true,
+            chat : useChatStore()
         }
     },
     props:{
@@ -62,13 +83,23 @@ export default {
       ability:Object,
       member: Object,
       roomTime:Number,
-      isDarkMode:Boolean
+      isDarkMode:Boolean,
+      gameMemberFlag : Number,
     },
     components:{
         FeedCreate,
         RoomFeedCardVue
     },
     methods:{
+
+        async follow(data,idx){
+            const auth = useAuthStore()
+            await auth.follow(data)
+            this.member[idx].isFollowing = !this.member[idx].isFollowing
+        },
+        goFriend(data){
+        router.push(`/user/${data}`)
+      },
         refresh : function(){
             window.location.reload()
         },
@@ -129,7 +160,6 @@ export default {
                     await this.readFeed()
                 }
             })
-            
         }
 
 

@@ -145,7 +145,7 @@ export default {
         this.mafiaFlag = !(this.mafiaFlag)
       },
       send : function(){
-        if(this.participant.flagDie == 1 && this.endGame == 0){
+        if(this.participant.flagDie == 1 && this.endGame == 0 && this.roomData.endTime == null){
           alert('이미 당신은 사망하였습니다. 더이상 게임에 참여하실 수 없습니다.')
           this.message = ""
           return

@@ -25,6 +25,7 @@ export const useChatStore = defineStore('chat',{
         nightFlag : 0,
         endFlag : 0,
         enterFlag : 0,
+        endRoom : {},
     }),
     getters:{
         getStomp : (state)=>{
@@ -56,6 +57,9 @@ export const useChatStore = defineStore('chat',{
         },
         getEnter : (state)=>{
             return state.enterFlag
+        },
+        getEndRoom : (state)=>{
+            return state.endRoom
         }
     },
     actions:{
@@ -126,6 +130,7 @@ export const useChatStore = defineStore('chat',{
             }
             if(value.noticeType=='end'){
                 this.setEnd(1)
+                this.endRoom[roomId] = 1
             }
             if(value.noticeType =='enter'){
                 this.setEnter()

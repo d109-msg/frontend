@@ -116,6 +116,9 @@ export default {
     },
     // 실시간 투표 현황 보여주기
     graphShow : function(){
+      if(this.voteData.voteList ==null){
+        return
+      }
       for(let i=0; i<this.voteData.voteList.length;i++){
         const item = document.getElementById(`${i}graph`)
         if(item == null){

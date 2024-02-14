@@ -16,8 +16,12 @@ export const useAuthStore = defineStore('auth',{
         access: "",
         userInfo : {},
         refresh : "",
+        mode : false,
     }),
     getters: {
+        getMode : (state)=>{
+            return state.mode
+        },
         getAccess: (state)=>{
             return state.access
         },
@@ -26,6 +30,9 @@ export const useAuthStore = defineStore('auth',{
         }
     },
     actions: {
+        turnMode(value){
+            this.mode = value
+        },
         reset(){
             this.access = ""
             this.userInfo = {}
@@ -190,11 +197,17 @@ export const useAuthStore = defineStore('auth',{
                 Authorization : `Bearer ${this.getAccess}`
             }
             return axios.get(`${server}/game/user/rate?userId=${userId}`,{headers})
+        },
+        async followAll(userId,type){
+            const headers = {
+                Authorization : `Bearer ${this.getAccess}`
+            }
+            return axios.get(`${server}/user/follow-all?id=${userId}&type=${type}`,{headers})
         }
     },
     persist: [
         {
-            paths: ['access'],
+            paths: ['access','mode'],
             storage : localStorage,
             //해당 accessToken local로 저장, refresh는 cookie에서 따로 관리
         },
