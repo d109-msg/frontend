@@ -77,7 +77,7 @@
         <div class="controls" v-show="!writeFlag">
             <button class="reset-filter">Reset Filters</button>
             <div class="row" style="display: flex; flex-direction: row;">
-                <input type="file" class="file-input" accept="image/*" hidden multiple>
+                <input type="file" class="file-input" accept="image/gif, image/jpeg, image/png" hidden multiple>
                 <button class="choose-img" style="font-weight: bold;">Choose Image</button>
                 <button class="save-img" style="font-weight: bold;" @click="saveImg">NEXT</button>
             </div>
@@ -276,6 +276,10 @@ export default {
         const loadImage = ()=>{
             let files = fileInput.files
             let file = files[0] // user가 선택한 파일 1개(가장 처음)
+            if(!(file.type.includes('image'))){
+                alert('이미지 파일을 올려주세요')
+                return
+            }
             let saveImg = document.querySelectorAll('.save-wrapper>img')
             for(let i=0; i<saveImg.length;i++){
                 saveImg[i].src = ""

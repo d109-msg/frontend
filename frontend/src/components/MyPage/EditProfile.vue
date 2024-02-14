@@ -10,7 +10,7 @@
           <div style="display: flex; flex-direction: column; justify-content: center; align-items: center;">
             <img  class="edit-profile-img"  alt="" :src="userPhoto">
             <div style="display: flex;">
-                <input  class="choice-profile-img-btn" type="File" id="userPhoto">
+                <input  class="choice-profile-img-btn" type="File" id="userPhoto" accept="image/gif, image/jpeg, image/png">
                 <label for="userPhoto" class="edit-profile-img-btn">선택</label> 
                 <button class="edit-profile-img-btn" @click="updatePhoto">변경</button>
             </div>
@@ -61,7 +61,8 @@ export default {
             userNickname: this.userInfo.nickname,
             userIntro: this.userInfo.bio,
             userPhoto :this.userInfo.imageUrl,
-            photoFile : {}
+            photoFile : {},
+            myFile : {},
         }
     },
     props:{
@@ -72,7 +73,17 @@ export default {
     },
     mounted(){
         const fileImage = document.getElementById('userPhoto')
-        fileImage.addEventListener('change',()=>{
+        fileImage.addEventListener('change',(event)=>{
+          const files = event.target
+          if(files.length<=0){
+            return
+          }
+          const check = event.target.files[0]
+          const fileType = check.type
+          if(!fileType.includes('image')){
+            alert('이미지 파일을 올려주세요')
+            return
+          }
             const file = fileImage.files
             if(file.length >0){
               this.userPhoto = URL.createObjectURL(file[0])
