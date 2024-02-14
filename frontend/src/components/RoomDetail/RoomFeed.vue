@@ -18,7 +18,8 @@
     :ability="ability"
     :member="member"
     :room-time="roomTime"
-    :is-dark-mode="isDarkMode"  
+    :is-dark-mode="isDarkMode" 
+    :gameMemberFlag="gameMemberFlag" 
     >
   </RoomFeedStart>
 
@@ -45,6 +46,7 @@ export default {
       roomTime:Number,
       isDarkMode:Boolean,
       size : String,
+      gameMemberFlag : Number,
     },
     components:{
       RoomFeedReady,

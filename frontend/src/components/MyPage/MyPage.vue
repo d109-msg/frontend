@@ -26,12 +26,11 @@
           {{ followTitle }}
         </div>
         <div class="follow-content">
-          <div class="follow-body" v-for="(i) in [1,2,3]" :key="i">
-            <img src="" class="follow-img">
-            <p class="follow-name">ㅋㅋㅋ</p>
-            <div class="follow-btn" v-if="true" @click="follow">Follow</div>
-            <div class="follow-btn" v-if="false" @click="follow">Unfollow</div>
-
+          <div class="follow-body" v-for="(member,idx) in followData" :key="idx">
+            <img :src="member.imageUrl" style="cursor: pointer;" @click="goFriend(member.userId)" class="follow-img">
+            <p class="follow-name" style="cursor: pointer;" @click="goFriend(member.userId)">{{member.nickname}}</p>
+            <div class="follow-btn" v-if="!member.isFollow" @click="follow(member.userId)">Follow</div>
+            <div class="follow-btn" v-if="member.isFollow" @click="follow(member.userId)">Unfollow</div>
           </div>
         </div>
       </div>
@@ -109,10 +108,25 @@ export default {
         isDarkMode : Boolean
     },
     methods:{
+      goFriend(idx){
+        const auth = useAuthStore()
+        if(idx == auth.getUserInfo.id){
+          router.push('/mypage')
+        }
+        else{
+          router.push(`/user/${idx}`)
+        }
+        this.followStep = 0 
+      },
       async follow(idx){
         try{
           const auth = useAuthStore()
           await auth.follow(idx)
+          if(this.followTitle=="My Follow"){
+            await this.followClick(1)
+          }else{
+            await this.followClick(2)
+          }
         }catch(err){
           
         }
@@ -160,11 +174,16 @@ export default {
         this.isEdit=true;
       },
       async followClick(value){
+        const auth = useAuthStore()
         if(value == 1){
-          this.followData
+          let value = await auth.followAll(this.userId,"to")
+          this.followData = value.data.followUserList
+          console.log(this.followData)
           this.followTitle = "My Follow"
         }else{
-          this.followData
+          let value = await auth.followAll(this.userId,"from")
+          this.followData = value.data.followUserList
+          console.log(this.followData)
           this.followTitle = "My Following"
 
         }
@@ -175,7 +194,6 @@ export default {
         try{
             await auth.useRefresh()
             const info = await this.getUser()
-            await this.getGame()
         } catch(err){console.log(err)}
       }
     },

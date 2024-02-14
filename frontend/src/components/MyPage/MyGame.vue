@@ -101,7 +101,7 @@ export default {
         else if(civiltotal == 0){
             civilFrame =  [
             {width : 0},
-            {width : `200px`}  
+            {width : 0}  
           ]
             mafiaFrame = [
             {width : 0},
@@ -117,7 +117,7 @@ export default {
           ]
           mafiaFrame = [
               {width : 0},
-              {width : '0px'} 
+              {width : 0} 
           ]
           this.civilRange = `${Math.round(this.game.civilWinCnt/civiltotal*100,1)}%`
           this.mafiaRange = `0%`
