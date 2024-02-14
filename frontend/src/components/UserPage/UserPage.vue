@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div style="width: 100%; height: 100%; position: relative;"> 
     <div class="mypage-banner-box">
       <div class="mypage-banner" :class="{'mypage-banner-light': !isDarkMode , 'mypage-banner-dark':isDarkMode}">
       </div>
@@ -16,14 +16,15 @@
             <div>게시물 <span> {{ userInfo.articleCount }} </span></div>
               <div>팔로우 <span> {{ userInfo.followerCount }} </span></div>
               <div>팔로잉 <span> {{ userInfo.followingCount }}</span></div>
+              
           </div>
-
-        <div class="feed-game-box"  style="display: flex; flex-direction: column;" >
-
-        <div class="button-box">
+          <div class="button-box">
           <div class="follow-button" v-if="userInfo.isFollow == 0" @click="followUser">팔로우하기</div>
           <div class="message-button" @click="goMessage">메시지 보내기</div>
         </div>
+        <div class="feed-game-box"  style="display: flex; flex-direction: column;" >
+
+  
         </div>
       </div>
 
@@ -41,10 +42,10 @@
         </label>
       </div>
       <div>
-        <MyFeedVue v-if="pageNum=='1'" :is-dark-mode="isDarkMode" :id="userInfo.id" ></MyFeedVue>
+        <UserFeed v-show="pageNum==1" :is-dark-mode="isDarkMode" :id="userInfo.id"></UserFeed>
       </div>
       <div>
-        <MyGameVue v-if="pageNum=='2'"  :is-dark-mode="isDarkMode" :game="gameInfo"></MyGameVue>
+        <UserGame v-show="pageNum=='2'"  :is-dark-mode="isDarkMode" :game="gameInfo"></UserGame>
       </div>
     </div>
 
@@ -55,13 +56,13 @@
           <span class="slider"></span>
         </label>
       </div>
-      <MyFeedVue v-if="pageNum=='1'" :is-dark-mode="isDarkMode" :id="userInfo.id"  ></MyFeedVue>
-      <MyGameVue v-else-if="pageNum=='2'"  :is-dark-mode="isDarkMode" :isMount="1" :game="gameInfo" ></MyGameVue>
+      <UserFeed v-show="pageNum=='1'" :is-dark-mode="isDarkMode" :id="userInfo.id"></UserFeed>
+      <UserGame v-show="pageNum=='2'"  :is-dark-mode="isDarkMode" :isMount="1" :game="gameInfo" ></UserGame>
     </div>
 
     <div class="feed-game-box" v-if="size=='lg'">
-      <MyFeedVue :is-dark-mode="isDarkMode" :id="userInfo.id" ></MyFeedVue>
-      <MyGameVue  :is-dark-mode="isDarkMode" :isMount="1" :game="gameInfo" ></MyGameVue>
+      <UserFeed :is-dark-mode="isDarkMode" :id="userInfo.id"></UserFeed>
+      <UserGame  :is-dark-mode="isDarkMode" :isMount="1" :game="gameInfo" ></UserGame>
     </div>
 
   </div>
@@ -74,8 +75,8 @@
 
 <script>  
 import { useAuthStore } from '@/store/authStore'
-import MyFeedVue from './UserFeed.vue'
-import MyGameVue from './UserGame.vue'
+import UserFeed from './UserFeed.vue'
+import UserGame from './UserGame.vue'
 import router from '@/router'
 import { useFeedStore } from '@/store/feedStore'
 import { watch } from 'vue'
@@ -98,8 +99,8 @@ export default {
       }
     },
     components : {
-      MyFeedVue,
-      MyGameVue,
+      UserFeed,
+      UserGame,
     },
     props:{
         isDarkMode : Boolean
@@ -143,11 +144,7 @@ export default {
 
         }
       },
-    getGame : async function(){
-      const auth = useAuthStore()
-      let value = await auth.getGame(this.$route.params.id)
-      this.gameInfo = value.data
-    },
+
     followUser: async function(){
       const auth = useAuthStore()
       try{
@@ -178,7 +175,7 @@ export default {
       try{
           await auth.useRefresh()
           await this.getUser()
-          await this.getGame()
+          await this.getG()
       } catch(err){
         console.log('팔로우 정보를 가져오지 못했습니다.')
       }

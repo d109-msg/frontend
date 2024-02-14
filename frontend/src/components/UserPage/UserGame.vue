@@ -34,18 +34,27 @@ export default {
     name: 'UserGame',
     data(){
       return{
-        chart : {},
+        chart : null,
         civilRange : "0%",
         mafiaRange : "0%",
+        game : {},
       }
     },
-    props:{
-      game : Object
-    },
     watch:{
-      game(nv,ov){
-        if(Object.keys(nv).length > 0){
-          console.log(this.game)
+        
+        },
+      
+    methods:{
+      getG : async function(){
+        const auth = useAuthStore()
+        console.log(this.$route.params.id)
+        let value = await auth.getGame(this.$route.params.id)
+        this.game = value.data
+      },
+      showChart : function(){
+        if(this.chart !== null){
+          this.chart.destroy()
+        }
         let total = this.game.totalGameCnt
         let civiltotal = this.game.civilGameCnt
         let mafiatotal = this.game.mafiaGameCnt
@@ -135,12 +144,12 @@ export default {
           },
         }
       )
-        }
-      }
+    }
     },
-    methods:{
-
-    },
+    async mounted(){
+      await this.getG()
+      await this.showChart()
+    }
 
 }
 </script>

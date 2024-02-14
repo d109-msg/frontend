@@ -33,7 +33,7 @@
               </div>
             </div>
             <textarea type="text" :class="{'message-textarea':!isDarkMode,'message-textarea-dark':isDarkMode}" id="" cols="30" rows="10" v-model="message" @keyup.enter.prevent="send" 
-            v-if="Object.keys(chatInfo).length != 0" maxlength="200">
+            v-if="Object.keys(chatInfo).length != 0" maxlength="200" >
             </textarea>
             <textarea class="message-textarea" v-else></textarea>
             <label for="imageInput" class="btn-label">
@@ -141,6 +141,11 @@ export default {
       })
     },
     send : function(){
+      this.message = this.message.replace('\n','')
+      if(this.message.length == 0){
+        this.scrollToBottom()
+        return
+      }
       let data = {
         'roomId' : this.chatInfo.id,
         'flagMafia' : 0,

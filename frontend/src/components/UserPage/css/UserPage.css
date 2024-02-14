@@ -4,6 +4,8 @@
  
     .mypage-box{
         display: flex;
+        position: absolute;
+        top: 0px;
         justify-content: center;
         flex-direction: column;
         padding: 0;
@@ -137,7 +139,8 @@
         justify-content: space-between;
         width: 90%;
         margin-left: 5%;
-
+        position: absolute;
+        top: 600px;
     }
 
     .myfeed-box, .mygame-box{
@@ -281,7 +284,7 @@
         width: 95%;
         padding: 0px;
         margin-left: 5%;
-        top: 10%;
+        top: 0px;
     }
     
     .profile-box-light{
@@ -390,6 +393,8 @@
     }
     
     .feed-game-box{
+        position: absolute;
+        top: 600px;
         display: flex;
         flex-direction: row;
         margin-top: 50px;
