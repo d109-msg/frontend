@@ -14,7 +14,8 @@
     <div class="feed-item">
       <img class="user-img" :src="feed.iconUrl">
       <div class="user-info">
-        <div class="user-name" @click="userProfile">{{ feed.nickname }}</div>
+        <div class="user-name" @click="userProfile" v-if="room.endTime!=null">{{ feed.nickname }}</div>
+        <div class="user-name" v-if="room.endTime==null">{{ feed.nickname }}</div>
         <div class="user-comment">{{ feed.content }}</div>
       </div>
     </div>
@@ -102,6 +103,7 @@ export default {
     },
     props:{
       item : Object,
+      room : Object,
     },
     components:{
       DetailPage,

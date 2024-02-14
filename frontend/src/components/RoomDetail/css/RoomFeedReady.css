@@ -82,26 +82,26 @@
     align-items: center;
     justify-content: center;
     text-align: center;
-    font-size: 1.5em;
+    font-size: 1.2em;
 }
 .invite-code-title-dark{
     display: flex;
     align-items: center;
     justify-content: center;
     text-align: center;
-    font-size: 1.5em;
+    font-size: 1.2em;
     color: #FFFDF3;
 }
 
 .invite-code{
     text-align: center;
-    font-size: 2em;
+    font-size: 1.5em;
     margin-bottom: 50px;
 }
 
 .invite-code-dark{
     text-align: center;
-    font-size: 2em;
+    font-size: 1.5em;
     margin-bottom: 50px;
     color: #FFFDF3;
 
