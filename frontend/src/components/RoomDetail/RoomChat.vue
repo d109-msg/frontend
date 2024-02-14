@@ -12,9 +12,11 @@
         <div v-for="(message,idx) in chatStore.getMessage[roomData.id]" :key="idx" style="margin-top: 10px;" :id="'message'+idx">
           <div v-if="message.userId == 1">
                 <div style="display: flex;">
-                  <img src="./Img/mafia.png" alt="" style="width: 35px; height: 35px;">
+                  <img src="./Img/mafia.png" alt="" style="width: 35px; height: 35px; background: #fff; border-radius: 5px;" >
                   <div>
-                    <p style="font-size: 13px; padding-left: 10px; font-weight: bold;">MSG</p>
+                    <p 
+                    :class="{'chat-nick-msg':!isDarkMode,'chat-nick-msg-dark':isDarkMode}"
+                    >MSG</p>
                     <div class="chat-other-box">
                       <div class="chat-other-text">
                         {{ message.content }}
@@ -28,9 +30,9 @@
              
               <div v-if="user.userId == message.userId">
                 <div style="display: flex;"  v-if="message.flagMafia==0">
-                  <img :src="user.imageUrl" alt="" style="width: 35px; height: 35px;">
+                  <img :src="user.imageUrl" alt="" style="width: 35px; height: 35px; background: #fff; border-radius: 5px;">
                   <div>
-                    <p style="font-size: 13px; padding-left: 10px; font-weight: bold;">{{ user.nickname }}</p>
+                    <p :class="{'chat-nick':!isDarkMode,'chat-nick-dark':isDarkMode}" >{{ user.nickname }}</p>
                     <div class="chat-other-box">
                       <div class="chat-other-text">
                         {{ message.content }}
@@ -72,7 +74,6 @@
       <textarea type="text" class="chat-input-mafia" id="content" cols="40" rows="3" maxlength="100" v-model="message" @keyup.enter.prevent="sendMafia"
       v-if="participant.flagMafia && mafiaFlag==true"></textarea>
       <div class="input-num" >{{ inputNum }}/100</div>
-      <div class="photo-icon"></div>
       <div class="mafia-chat" v-if="participant.flagMafia "
       @click="mafiaChat"
       ></div>
@@ -101,6 +102,7 @@ export default {
         boxFlag : true,
         mafiaFlag : false,
         io : {},
+        endGame : 0,
       }
     },
     props:{
@@ -111,7 +113,20 @@ export default {
       ability:Object,
       member: Object,
       roomTime:Number,
-      isDarkMode:Boolean
+      isDarkMode:Boolean,
+    },
+    computed:{
+      endFlag : function(){
+        const chat = useChatStore()
+        return chat.getEnd
+      }
+    },
+    watch:{
+      endFlag(nv,ov){
+        if(nv==1){
+          this.endGame = 1
+        }
+      }
     },
     methods:{
       getUser : async function(){
@@ -134,7 +149,7 @@ export default {
         this.mafiaFlag = !(this.mafiaFlag)
       },
       send : function(){
-        if(this.participant.flagDie == 1){
+        if(this.participant.flagDie == 1 && this.endGame == 0){
           alert('이미 당신은 사망하였습니다. 더이상 게임에 참여하실 수 없습니다.')
           this.message = ""
           return
@@ -201,6 +216,11 @@ export default {
         })
       },
       sendMafia : function(){
+        if(this.participant.flagDie == 1 && this.endGame == 0){
+          alert('이미 당신은 사망하였습니다. 더이상 게임에 참여하실 수 없습니다.')
+          this.message = ""
+          return
+        }
         let data = {
           'roomId' : JSON.parse(this.$route.params.data).id,
           'flagMafia' : 1,
@@ -230,14 +250,8 @@ export default {
         }
       },
       mounted(){
-        this.io = new IntersectionObserver(this.call,{threshold : 1.0})
+        this.io = new IntersectionObserver(this.call,{threshold : 0.7})
         this.startPage()
-        const id = JSON.parse(this.$route.params.data).id
-        setTimeout(()=>{
-          if(!(id in useChatStore().getMessage)){
-            useChatStore().sub([id])
-          }
-        },300)
       },
 
     

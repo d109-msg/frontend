@@ -22,6 +22,7 @@
 </template>
 
 <script>
+import { useChatStore } from '@/store/chatStore';
 import RoomSearchList from './RoomSearchList.vue';
 export default {
     name: 'RoomFeedReady',
@@ -30,6 +31,7 @@ export default {
         listFlag : false,
       }
     },
+
     props:{
       roomData : Object,
       participant:Object,

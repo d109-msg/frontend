@@ -39,7 +39,9 @@
             <label for="imageInput" class="btn-label">
               <div class="btn-upload"></div>
             </label>
-            <input type="file" id="imageInput" @change="convertToBase64" v-if="Object.keys(chatInfo).length != 0">
+            <input type="file" id="imageInput" @change="convertToBase64" v-if="Object.keys(chatInfo).length != 0"
+            accept="image/gif, image/jpeg, image/png"
+            >
             
             <button class="message-submit-btn" @click.prevent="send" v-if="Object.keys(chatInfo).length != 0" @click="loadChat"></button>
             <button class="message-submit-btn" v-else ></button>
@@ -238,7 +240,17 @@ export default {
     },
     convertToBase64: function(event){
       this.loading = true
+      const files = event.target
+      if(files.length<=0){
+        return
+      }
       const file = event.target.files[0]
+      const fileType = file.type
+      if(!fileType.includes('image')){
+        alert('이미지 파일을 올려주세요')
+        this.loading = false
+        return
+      }
       if(file){
         const reader = new FileReader()
         reader.onload = (e)=>{
@@ -252,9 +264,9 @@ export default {
     }
   },
   mounted(){
-    this.io = new IntersectionObserver(this.call,{threshold:1.0})
+    this.io = new IntersectionObserver(this.call,{threshold:0.7})
     this.startPage()
-    
+
   },
 
 }

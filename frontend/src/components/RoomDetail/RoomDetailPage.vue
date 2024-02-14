@@ -1,5 +1,20 @@
 <template>
   <div class="detail-container">
+    <div class="day-back" v-if="dayStep">
+      <div style="font-size: 30px; color: white; font-weight: bold;">
+        아침이 되었습니다.
+      </div>
+    </div>
+    <div class="day-back" v-if="nightStep">
+      <div style="font-size: 30px; color: white; font-weight: bold;">
+        밤이 되었습니다.
+      </div>
+    </div>
+    <div class="day-back" v-if="endStep">
+      <div style="font-size: 30px; color: white; font-weight: bold;">
+        게임이 종료되었습니다.
+      </div>
+    </div>
     <RoomFeed 
     v-if="(step==0 && size=='xs') || size=='lg' || size=='md'"
     :size="size"
@@ -87,6 +102,7 @@ import RoomVote from './RoomVote.vue';
 import JobAbility from './JobAbility.vue';
 import { useGameStore } from '@/store/gameStore';
 import { useChatStore } from '@/store/chatStore';
+import mitt from 'mitt';
 export default {
   
     name: 'RoomDetailPage',
@@ -104,12 +120,27 @@ export default {
         width : 0,
         height : 0,
         step : 0,
+        dayStep : false,
+        nightStep : false,
+        endStep : false,
       }
     },
     computed:{
-      dayFlag (){
+      endTurn(){
+        const chat = useChatStore()
+        return chat.getEnd
+      },
+      dayTurn (){
         const chat = useChatStore()
         return chat.getDay
+      },
+      nightTurn(){
+        const chat = useChatStore()
+        return chat.getNight
+      },
+      enterRoom(){
+        const chat = useChatStore()
+        return chat.getEnter
       }
     },
   
@@ -176,7 +207,7 @@ export default {
         try{
           let value = await game.nightFlag()
           console.log('밤으로 변경')
-          window.location.reload()
+          // window.location.reload()
         }catch(err){
           console.log(err)
         }
@@ -186,7 +217,7 @@ export default {
         try{
           let value = await game.dayFlag()
           console.log('아침으로 변경')
-          window.location.reload()
+          // window.location.reload()
 
         }catch(err){
           console.log(err)
@@ -277,11 +308,52 @@ export default {
 
             }
         },
-        dayFlag(nv,ov){
+        async dayTurn(nv,ov){
           if(nv == 1){
-            this.getParticipant()
+            this.emitter.emit('nightChange',false)
+            await this.getParticipant(this.roomData.id)
+            await this.getMemberList(this.roomData.id)
+            await this.getAliveMember(this.roomData.id)
+            await this.getMission(this.participant.id)
+            await this.getAbility(this.participant.id)
             const chat = useChatStore()
             chat.setDay(0)
+            this.dayStep = true
+            setTimeout(()=>{
+              this.dayStep = false
+            },3000)
+          }
+        },
+        async nightTurn(nv,ov){
+          if(nv == 1){
+            this.emitter.emit('nightChange',true)
+            await this.getParticipant(this.roomData.id)
+            await this.getMemberList(this.roomData.id)
+            await this.getAliveMember(this.roomData.id)
+            await this.getMission(this.participant.id)
+            await this.getAbility(this.participant.id)
+            const chat = useChatStore()
+            chat.setNight(0)
+            this.nightStep = true
+            setTimeout(()=>{
+              this.nightStep = false
+            },3000)
+          }
+        },
+        async endTurn(nv,ov){
+          if(nv == 1){
+            this.endStep = true
+            const chat = useChatStore()
+            chat.setEnd(0)
+            setTimeout(()=>{
+              this.endStep = false
+            },3000)
+          }
+        },
+        async enterRoom(nv,ov){
+          if(nv >=1){
+            await this.getMemberList(this.roomData.id)
+            await this.getParticipant(this.roomData.id)
           }
         }
     },
