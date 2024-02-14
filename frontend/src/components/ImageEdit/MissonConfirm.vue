@@ -1,6 +1,6 @@
 <template>
     <div>
-    <LoadingSpinner v-if="spinnerFlag"/>
+    <LoadingSpinner v-if="spinnerFlag" style="z-index: 9999999;"/>
         <div class="mission-gray">
         
         <div class="mission-container">
