@@ -3,6 +3,7 @@ package com.ssafy.msg.game.model.service;
 import com.ssafy.msg.article.util.OpenAiUtil;
 import com.ssafy.msg.chat.model.dto.CreateRoomDto;
 import com.ssafy.msg.chat.model.dto.RoomDto;
+import com.ssafy.msg.chat.model.dto.RoomResponseDto;
 import com.ssafy.msg.chat.model.mapper.ChatMapper;
 import com.ssafy.msg.chat.model.service.ChatService;
 import com.ssafy.msg.game.exception.GroupRoomDuplicateException;
@@ -12,14 +13,18 @@ import com.ssafy.msg.game.model.dto.*;
 import com.ssafy.msg.game.model.mapper.GameMapper;
 import com.ssafy.msg.game.util.GameUtil;
 
+import com.ssafy.msg.message.model.entity.MessageEntity;
 import com.ssafy.msg.message.model.mapper.MessageMapper;
 //import com.ssafy.msg.message.model.service.MessageService;
+import com.ssafy.msg.message.model.repo.MessageRepository;
 import com.ssafy.msg.message.model.service.MessageService;
+import com.ssafy.msg.notification.model.service.NotificationService;
 import com.ssafy.msg.scheduler.model.mapper.SchedulerMapper;
 import com.ssafy.msg.user.model.dto.UserDto;
 import com.ssafy.msg.user.model.mapper.UserMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.bson.types.ObjectId;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -41,6 +46,9 @@ public class GameServiceImpl implements GameService{
 
     private final ChatService chatService;
     private final MessageService messageService;
+    private final NotificationService notificationService;
+
+    private final MessageRepository messageRepository;
 
     private final OpenAiUtil openAiUtil;
 
@@ -48,6 +56,11 @@ public class GameServiceImpl implements GameService{
     @Override
     public List<ParticipantDto> getParticipants(String roomId) throws Exception {
         return gameMapper.getParticipants(roomId);
+    }
+
+    @Override
+    public List<ParticipantWithFollowDto> getParticipantWithFollow(String roomId, int userId) throws Exception {
+        return gameMapper.getParticipantWithFollow(roomId, userId);
     }
 
     @Override
@@ -208,9 +221,9 @@ public class GameServiceImpl implements GameService{
      */
     @Override
     public AbilityTargetResponseDto getAbilityTarget(int participantId) throws Exception {
-        Integer day = gameMapper.getMaxDay(participantId);
+        Integer day = getMaxDay(participantId);
         log.info("getAbilityTarget() day : {}", day);
-
+        
         if(day == null) {
             log.info("getAbilityTarget() player is dead");
 
@@ -362,8 +375,8 @@ public class GameServiceImpl implements GameService{
                     resultDto.setStatus(false);
                 } else {
                     //낮이라면
-                    resultDto.setMessage("내가 선택한 사람이 마피아로 지목됩니다.");
-                    resultDto.setFlagTarget(true); //사람 고르기
+                    resultDto.setMessage("내가 투표한 사람이 마피아로 지목됩니다.");
+                    resultDto.setFlagTarget(false); //사람 고르기
                     resultDto.setStatus(true);
                 }
             } else if (job.equals("변장술사")) {
@@ -576,6 +589,8 @@ public class GameServiceImpl implements GameService{
                 .build();
 
         chatMapper.enterRoom(participant);
+        notificationService.sendRoomSubscribeRequest(userId, roomId);
+
         messageService.sendEnterNotice(participant);
 
         return chatMapper.getRoom(roomId);
@@ -594,7 +609,7 @@ public class GameServiceImpl implements GameService{
             if (isParticipantInRoom){
                 throw new GroupRoomDuplicateException();
             }else {
-                List<Integer> participants = gameMapper.getParticipantsInRoom(roomId);
+                List<ParticipantIdDto> participants = gameMapper.getParticipantsInRoom(roomId);
                 if (participants.size() >= 7){
                     throw new GroupRoomFullException();
                 }else {
@@ -608,11 +623,13 @@ public class GameServiceImpl implements GameService{
                             .build();
 
                     chatMapper.enterRoom(participant);
+                    notificationService.sendRoomSubscribeRequest(user.getId(), roomId);
+
                     messageService.sendEnterNotice(participant);
 
                     if (participants.size() == 6){
                         if (getTime(8, 13)){
-                            startGroupGame(roomId, participants);
+                            startGroupGame(roomId, roomDto.getTitle(), gameMapper.getParticipantsInRoom(roomId));
                         }
                     }
                 }
@@ -715,10 +732,18 @@ public class GameServiceImpl implements GameService{
         List<String> result = new ArrayList<>();
 
         //랜덤 직업을 바로 배정
-        result.addAll(GameUtil.getMafiaRoles(2));
-        result.addAll(GameUtil.getCivilRoles(num - 2));
+//        result.addAll(GameUtil.getMafiaRoles(2));
+//        result.addAll(GameUtil.getCivilRoles(num - 2));
+//
+//        Collections.shuffle(result);
 
-        Collections.shuffle(result);
+        result.add("판사");
+        result.add("미치광이");
+        result.add("경찰");
+        result.add("훼방꾼");
+        result.add("불침번");
+        result.add("의사");
+        result.add("스파이");
 
         log.info("getJobs() result : {}", result);
 
@@ -731,8 +756,38 @@ public class GameServiceImpl implements GameService{
      * @return Rooms list를 반환
      */
     @Override
-    public List<RoomDto> getUserRooms(int userId) throws Exception{
-        return gameMapper.getUserRooms(userId);
+    public List<RoomResponseDto> getUserRooms(int userId) throws Exception{
+        List<RoomResponseDto> userRooms = gameMapper.getUserRooms(userId);
+
+        for (RoomResponseDto room: userRooms){
+            MessageEntity messageEntity = messageRepository.findLastMessageByRoomId(room.getId());
+
+            // 기존 메시지가 있는 경우
+            if (messageEntity != null){
+                // 새로운 메시지가 있는 경우
+                if (room.getLastMessageId() == null
+                        || new ObjectId(messageEntity.getId()).getTimestamp() > new ObjectId(room.getLastMessageId()).getTimestamp()){
+                    // 이미지 메시지인 경우
+                    if(messageEntity.getContent() == null){
+                        room.setLastMessage("사진");
+                    }else{
+                        room.setLastMessage(messageEntity.getContent());
+                    }
+                    room.setLastMessageCreateTime(messageEntity.getCreateTime());
+                    room.setFlagNewMessage(1);
+                }else{
+                    if (messageEntity.getContent() == null){
+                        room.setLastMessage("사진");
+                    }else{
+                        room.setLastMessage(messageEntity.getContent());
+                    }
+                    room.setLastMessageCreateTime(messageEntity.getCreateTime());
+                }
+
+            }
+        }
+
+        return userRooms;
     }
 
     /**
@@ -744,6 +799,11 @@ public class GameServiceImpl implements GameService{
     @Override
     public GetRoomVoteResult getRoomVote(int userId, String roomId) throws Exception {
         ParticipantDto participantDto = gameMapper.getParticipant(new ParticipantReceiveDto(userId, roomId));
+
+        if(participantDto.getFlagDie() == 1) {
+            //죽었다면
+            return new GetRoomVoteResult("당신은 죽었습니다.", null);
+        }
 
         String job = participantDto.getJobId();
         List<VoteResultDto> list = gameMapper.getRoomVote(roomId);
@@ -1061,9 +1121,14 @@ public class GameServiceImpl implements GameService{
                     .build();
             schedulerMapper.createRoom(roomDto);
 
-            RoomStartReceiveDto roomStartReceiveDto = new RoomStartReceiveDto(roomId, waitingUsersId.subList(i*7, i*7+7));
+            RoomStartReceiveDto roomStartReceiveDto = new RoomStartReceiveDto(roomId, roomDto.getTitle(), waitingUsersId.subList(i*7, i*7+7));
 
-            randomGameStart(roomStartReceiveDto);
+            List<ParticipantDto> participantDtos = randomGameStart(roomStartReceiveDto);
+
+            for(ParticipantDto participantDto: participantDtos){
+                notificationService.sendRoomSubscribeRequest(participantDto.getUserId(), roomStartReceiveDto.getRoomId());
+                notificationService.sendGameStartNotice(participantDto.getUserId(), roomStartReceiveDto.getRoomTitle(), "랜덤");
+            }
             messageService.sendStartNotice(roomId);
 
             newDayMission(roomId);
@@ -1072,7 +1137,7 @@ public class GameServiceImpl implements GameService{
     }
 
     @Override
-    public void startGroupGame(String roomId, List<Integer> participantList) throws Exception{
+    public void startGroupGame(String roomId, String roomTitle, List<ParticipantIdDto> participantList) throws Exception{
         int numOfPlayers = participantList.size();
         List<RandomNameDto> randomNicknames = null;
 
@@ -1084,7 +1149,7 @@ public class GameServiceImpl implements GameService{
 
         for(int i = 0; i  < numOfPlayers; i++) {
             UpdateParticipantDto updateParticipantDto = UpdateParticipantDto.builder()
-                    .id(participantList.get(i))
+                    .id(participantList.get(i).getId())
                     .nickname(randomNicknames.get(i).getFirstName() + " " + randomNicknames.get(i).getLastName())
                     .jobId(randomJobs.get(i))
                     .imageUrl(randomNicknames.get(i).getImgUrl())
@@ -1094,6 +1159,10 @@ public class GameServiceImpl implements GameService{
         }
 
         gameMapper.updateStartTime(roomId);
+
+        for(int i = 0; i < numOfPlayers; i++){
+            notificationService.sendGameStartNotice(participantList.get(i).getUserId(), roomTitle, "그룹");
+        }
         messageService.sendStartNotice(roomId);
         newDayMission(roomId);
     }

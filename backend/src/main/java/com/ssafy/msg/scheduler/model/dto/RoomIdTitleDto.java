@@ -1,16 +1,15 @@
-package com.ssafy.msg.game.model.dto;
+package com.ssafy.msg.scheduler.model.dto;
 
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.List;
-
 @Data
+@Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class RoomStartReceiveDto {
+public class RoomIdTitleDto {
     private String roomId;
-    private String roomTitle;
-    private List<Integer> userList;
+    private String title;
 }

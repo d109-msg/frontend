@@ -1,6 +1,7 @@
 package com.ssafy.msg.game.model.mapper;
 
 import com.ssafy.msg.chat.model.dto.RoomDto;
+import com.ssafy.msg.chat.model.dto.RoomResponseDto;
 import com.ssafy.msg.game.model.dto.*;
 import com.ssafy.msg.user.model.dto.UserDto;
 import org.apache.ibatis.annotations.Mapper;
@@ -26,11 +27,13 @@ public interface GameMapper {
 
     void deleteParticipant(int userId) throws SQLException;
 
-    List<RoomDto> getUserRooms(int userId) throws SQLException;
+    List<RoomResponseDto> getUserRooms(int userId) throws SQLException;
 
     List<VoteResultDto> getRoomVote(String roomId) throws SQLException;
 
     ParticipantDto getParticipant(ParticipantReceiveDto participantReceiveDto) throws SQLException;
+
+    List<ParticipantWithFollowDto> getParticipantWithFollow(String roomId, Integer userId) throws SQLException;
 
     List<AliveParticipantDto> getAliveParticipants(String roomId) throws SQLException;
 
@@ -59,7 +62,7 @@ public interface GameMapper {
 
     Integer completeMission(int participantId, int day) throws SQLException;
 
-    List<Integer> getParticipantsInRoom(String roomId) throws SQLException;
+    List<ParticipantIdDto> getParticipantsInRoom(String roomId) throws SQLException;
 
     void updateStartTime(String roomId) throws SQLException;
 

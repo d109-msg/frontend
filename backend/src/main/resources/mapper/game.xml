@@ -46,6 +46,20 @@
 
 	</select>
 
+	<select id="getParticipantWithFollow" parameterType="map" resultType="ParticipantWithFollowDto">
+		SELECT
+			p.*,
+			EXISTS (
+				SELECT 1
+				FROM follows f
+				WHERE f.from_user_id = #{userId} AND f.to_user_id = p.user_id
+			) AS is_following
+		FROM
+			participants p
+		WHERE
+			p.room_id = #{roomId};
+	</select>
+
 	<update id="completeMission" parameterType="CompleteMissionDto">
 		UPDATE daily_missions
 		SET flag_success = 1
@@ -284,11 +298,19 @@
 			p.id, p.image_url, p.nickname;
 	</select>
 
-	<select id="getUserRooms" parameterType="integer" resultType="RoomDto">
-		SELECT r.*
+	<select id="getUserRooms" parameterType="integer" resultType="RoomResponseDto">
+		SELECT r.id,
+			   p.last_message_id,
+			   r.data_type,
+			   r.create_time,
+			   r.end_time,
+			   r.start_time,
+			   r.title,
+			   r.image_url,
+			   r.flag_available
 		FROM rooms r
 				 JOIN participants p ON r.id = p.room_id
-		WHERE (r.data_type = '랜덤' OR r.data_type = '그룹') AND end_time IS  NULL
+		WHERE (r.data_type = '랜덤' OR r.data_type = '그룹') AND flag_available = 1
 		  AND p.user_id = #{userId};
 	</select>
 
@@ -364,8 +386,8 @@
 	</select>
 
 	<select id="getParticipantsInRoom" parameterType="string"
-			resultType="int">
-		select id
+			resultType="ParticipantIdDto">
+		select id, user_id
 		from participants
 		where room_id = #{roomId};
 	</select>

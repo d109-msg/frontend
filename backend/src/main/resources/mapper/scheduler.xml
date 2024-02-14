@@ -5,6 +5,12 @@
 <mapper
         namespace="com.ssafy.msg.scheduler.model.mapper.SchedulerMapper">
 
+    <update id="updateNickname" parameterType="string">
+        UPDATE participants p
+        SET nickname = CONCAT(nickname, ' (', p.job_id , ')')
+        WHERE room_id = #{roomId};
+    </update>
+
     <select id="getFlagNight">
         SELECT value FROM static_flag WHERE id = 'flag_night';
     </select>
@@ -42,8 +48,8 @@
     </select>
 
     <select id="getUnstartRoom"
-            resultType="string">
-        select p.room_id
+            resultType="RoomIdTitleDto">
+        select p.room_id, r.title
         from participants p
                  join rooms r on p.room_id = r.id
         where r.start_time is null and r.data_type = '그룹'
@@ -133,7 +139,7 @@
             )
         ) latest_day ON dm.day = latest_day.max_day
         WHERE dm.participant_id IN (
-            SELECT id FROM participants WHERE room_id = #{roomId} and flag_die = 0 and job_id='마피아'
+            SELECT id FROM participants WHERE room_id = #{roomId} and flag_die = 0 and job_id IN ('마피아', '훼방꾼', '변장술사', '스파이', '건달')
         )
         group by dm.mafia_vote
         having count(dm.mafia_vote) = (
@@ -147,7 +153,7 @@
                 )
             ) latest_day ON dm.day = latest_day.max_day
             WHERE dm.participant_id IN (
-                SELECT id FROM participants WHERE room_id = #{roomId} and flag_die = 0 and job_id='마피아'
+                SELECT id FROM participants WHERE room_id = #{roomId} and flag_die = 0 and job_id IN ('마피아', '훼방꾼', '변장술사', '스파이', '건달')
             )
             group by dm.mafia_vote
             order by count(dm.mafia_vote) desc

@@ -1,9 +1,6 @@
 package com.ssafy.msg.message.controller;
 
-import com.ssafy.msg.message.model.dto.MessageIdDto;
-import com.ssafy.msg.message.model.dto.MessageRequestDto;
-import com.ssafy.msg.message.model.dto.MessageScrollResponseDto;
-import com.ssafy.msg.message.model.dto.StompPrincipalDto;
+import com.ssafy.msg.message.model.dto.*;
 import com.ssafy.msg.message.model.entity.MessageEntity;
 import com.ssafy.msg.message.model.repo.MessageRepository;
 import com.ssafy.msg.message.model.service.MessageService;
@@ -90,26 +87,32 @@ public class MessageController {
     }
 
 
-//    @Operation(summary = "채팅방 lastMessageId 수정", description = "roomId와 messageId를 통해 유저가 마지막으로 본 메시지 업데이트")
-//    @ApiResponses(value = {
-//            @ApiResponse(responseCode = "200", description = "채팅방 lastMessageId 수정 성공", content = @Content),
-//            @ApiResponse(responseCode = "400", description = "채팅방 lastMessageId 수정 실패", content = @Content) })
-//    @PatchMapping("/message/lastMessageId")
-//    public ResponseEntity<?> updateLastMessageId(@Valid HttpServletRequest request, @RequestBody MessageIdDto messageIdDto) {
-//        log.info("updateLastMessageId() -> Start");
-//
-//        int userId = (int) request.getAttribute("id");
-//
-//
-//        try {
-//            notificationService.updateNotificationFlagRead(notificationIdDto);
-//            log.info("updateLastMessageId() -> Success");
-//            return new ResponseEntity<>(HttpStatus.OK);
-//        } catch (Exception e) {
-//            log.error("updateLastMessageId() -> Exception : {}", e);
-//            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-//        } finally {
-//            log.info("updateLastMessageId() -> End");
-//        }
-//    }
+    @Operation(summary = "채팅방 lastMessageId 수정", description = "roomId와 messageId를 통해 유저가 마지막으로 본 메시지 업데이트")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "채팅방 lastMessageId 수정 성공", content = @Content),
+            @ApiResponse(responseCode = "400", description = "채팅방 lastMessageId 수정 실패", content = @Content) })
+    @PatchMapping("/message/last-message-id")
+    public ResponseEntity<?> updateLastMessageId(@Valid HttpServletRequest request,
+                                                 @Parameter(description = "방 아이디") @RequestParam(value = "roomId") String roomId,
+                                                 @Parameter(description = "메시지 아이디") @RequestParam(value = "messageId") String messageId) {
+        log.info("updateLastMessageId() -> Start");
+
+        int userId = (int) request.getAttribute("id");
+
+        LastMessageUpdateDto lastMessageUpdateDto = LastMessageUpdateDto.builder()
+                .userId(userId)
+                .roomId(roomId)
+                .messageId(messageId).build();
+
+        try {
+            messageService.updateLastMessageId(lastMessageUpdateDto);
+            log.info("updateLastMessageId() -> Success");
+            return new ResponseEntity<>(HttpStatus.OK);
+        } catch (Exception e) {
+            log.error("updateLastMessageId() -> Exception : {}", e);
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        } finally {
+            log.info("updateLastMessageId() -> End");
+        }
+    }
 }

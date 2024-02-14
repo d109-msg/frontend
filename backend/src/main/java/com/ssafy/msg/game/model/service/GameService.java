@@ -3,6 +3,7 @@ package com.ssafy.msg.game.model.service;
 import com.ssafy.msg.chat.model.dto.CreateRoomDto;
 import com.ssafy.msg.chat.model.dto.OpponentDto;
 import com.ssafy.msg.chat.model.dto.RoomDto;
+import com.ssafy.msg.chat.model.dto.RoomResponseDto;
 import com.ssafy.msg.game.model.dto.*;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
@@ -12,6 +13,8 @@ import java.util.List;
 public interface GameService {
 
     List<ParticipantDto> getParticipants(String roomId) throws Exception;
+
+    List<ParticipantWithFollowDto> getParticipantWithFollow(String roomId, int userId) throws Exception;
 
     boolean getRandomGameApplyStatus(int userId) throws Exception;
 
@@ -35,7 +38,7 @@ public interface GameService {
 
     List<String> getJobs(int num);
 
-    List<RoomDto> getUserRooms(int userId) throws Exception;
+    List<RoomResponseDto> getUserRooms(int userId) throws Exception;
 
     GetRoomVoteResult getRoomVote(int userId, String roomId) throws Exception;
 
@@ -63,7 +66,7 @@ public interface GameService {
 
     void startRandomGame() throws Exception;
 
-    void startGroupGame(String roomId, List<Integer> participantList) throws Exception;
+    void startGroupGame(String roomId, String roomTitle, List<ParticipantIdDto> participantList) throws Exception;
 
     void newDayMission(String roomId) throws Exception;
 

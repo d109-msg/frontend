@@ -20,7 +20,10 @@ public class RoomResponseDto {
     private String imageUrl;
     private int flagAvailable;
 
+    @Builder.Default
     private String lastMessage = "";
+    @Builder.Default
     private String lastMessageCreateTime = "";
+    @Builder.Default
     private int flagNewMessage = 0;
 }

@@ -31,7 +31,7 @@ public class NotificationServiceImpl implements NotificationService {
 
     @Override
     public List<NotificationResponseDto> getNotificationsById(int userId) {
-        List<NotificationEntity> notifications = notificationRepository.findByUserIdAndFlagRead(userId, 0);
+        List<NotificationEntity> notifications = notificationRepository.findByUserIdAndFlagReadOrderByCreateTimeDesc(userId, 0);
 
         return notifications.stream()
                 .map(NotificationEntity::toDto)
@@ -41,7 +41,7 @@ public class NotificationServiceImpl implements NotificationService {
 
     @Override
     public void updateAllNotificationsFlagRead(int userId) {
-        List<NotificationEntity> notifications = notificationRepository.findByUserIdAndFlagRead(userId, 0);
+        List<NotificationEntity> notifications = notificationRepository.findByUserIdAndFlagReadOrderByCreateTimeDesc(userId, 0);
         for (NotificationEntity notification : notifications) {
             notification.setFlagRead(1);
         }
@@ -181,8 +181,26 @@ public class NotificationServiceImpl implements NotificationService {
     }
 
     @Override
-    public void sendGameStartNotice() {
+    public void sendGameStartNotice(int userId, String title, String type) {
+        String content = ": 새로운 " + type + " 게임이 시작되었습니다. - " + title;
 
+        // MongoDB 저장
+        NotificationEntity notificationEntity = NotificationEntity.builder()
+                .userId(userId)
+                .fromNickname("MSG")
+                .articleId(0)
+                .imageUrl("https://team109testbucket.s3.ap-northeast-2.amazonaws.com/2c5954d7-2aec-4cac-9c67-9ada52a1eafb")
+                .content(content)
+                .createTime(dateTimeUtil.getCurrentDateTime())
+                .flagRead(0)
+                .dataType("noti") // noti, sub
+                .build();
+
+        notificationRepository.save(notificationEntity);
+
+        // WebSocket/STOMP 메시지 전송
+        sendingOperations.convertAndSend("/sub/"+notificationEntity.toDto().getUserId(), notificationEntity.toDto());
+        log.info(notificationEntity.toDto().getUserId() + " - " + notificationEntity.toDto());
     }
 
     @Override

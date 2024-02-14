@@ -1,5 +1,6 @@
 package com.ssafy.msg.game.model.dto;
 
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -9,7 +10,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class AliveParticipantDto {
+public class ParticipantWithFollowDto {
     private Integer id;
     private String roomId;
     private Integer userId;
@@ -19,6 +20,6 @@ public class AliveParticipantDto {
     private String jobId;
     private String nickname;
     private String imageUrl;
-    private int flagSuccess;
-    private int ability;
+    private Integer ability;
+    private Integer isFollowing;
 }

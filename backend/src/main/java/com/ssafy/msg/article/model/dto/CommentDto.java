@@ -16,7 +16,7 @@ public class CommentDto {
     private String emailId;
 
     private int id;
-    private int userId;
+    private int userId; // 댓글 단 사람의 userId
     private int articleId;
     private Integer parentCommentId;
     private String content;

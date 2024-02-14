@@ -68,6 +68,7 @@ public class UserServiceImpl implements UserService {
 		userMapper.updateNickname(userDto);
 	}
 
+	@Transactional
 	@Override
 	public void resetPassword(UserDto userDto, String randomPassword) throws Exception {
 		String encodedPassword = passwordEncoder.encode(userDto.getEmailPassword());
@@ -153,5 +154,10 @@ public class UserServiceImpl implements UserService {
 	@Override
 	public List<String> getRooms(int id) throws Exception {
 		return userMapper.getRooms(id);
+	}
+
+	@Override
+	public List<FollowUserDto> getFollowListAll(FollowParamDto followParamDto) throws Exception {
+		return userMapper.getFollowListAll(followParamDto);
 	}
 }

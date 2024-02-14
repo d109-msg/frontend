@@ -602,10 +602,10 @@ public class UserController {
 		}
 	}
 
-	@Operation(summary = "회원 팔로워(to)/팔로잉(from) 목록 조회", description = "액세스 토큰으로 회원 팔로워(to)/팔로잉(from) 목록 조회")
-	@ApiResponses(value = { @ApiResponse(responseCode = "200", description = "회원 팔로워(to)/팔로잉(from) 목록 조회 성공", content = {
+	@Operation(summary = "본인 팔로워(to)/팔로잉(from) 목록 조회", description = "액세스 토큰으로 본인 팔로워(to)/팔로잉(from) 목록 조회")
+	@ApiResponses(value = { @ApiResponse(responseCode = "200", description = "본인 팔로워(to)/팔로잉(from) 목록 조회 성공", content = {
 			@Content(mediaType = "application/json", schema = @Schema(implementation = FollowUserDto[].class)) }),
-			@ApiResponse(responseCode = "404", description = "회원 팔로우(to)/팔로잉(from) 목록 조회 실패", content = @Content) })
+			@ApiResponse(responseCode = "404", description = "본인 팔로우(to)/팔로잉(from) 목록 조회 실패", content = @Content) })
 	@GetMapping("/follow")
 	public ResponseEntity<?> getFollowList(HttpServletRequest request,
 	        @Parameter(description = "키워드") @RequestParam(value = "keyword", required = false, defaultValue = "") String keyword,
@@ -613,10 +613,6 @@ public class UserController {
 	        @Parameter(description = "페이지당 타겟 개수") @RequestParam(value = "limit", required = false, defaultValue = "10") Integer limit,
 	        @Parameter(description = "팔로워(to)/팔로잉(from) 여부") @RequestParam(value = "type", required = true) String type) {
 	    log.info("getFollowList() -> Start");
-	    log.info("getFollowList() -> Receive keyword : {}", keyword);
-	    log.info("getFollowList() -> Receive offset : {}", offset);
-	    log.info("getFollowList() -> Receive limit : {}", limit);
-	    log.info("getFollowList() -> Receive type (to/from) : {}", type);
 
 	    // Use lastItemId to determine the starting point for the next batch
 	    FollowParamDto followParamDto = FollowParamDto.builder()
@@ -654,6 +650,46 @@ public class UserController {
 	    }
 	}
 
+	@Operation(summary = "회원 팔로워(to)/팔로잉(from) 목록 조회", description = "액세스 토큰으로 회원 팔로워(to)/팔로잉(from) 목록 조회")
+	@ApiResponses(value = { @ApiResponse(responseCode = "200", description = "회원 팔로워(to)/팔로잉(from) 목록 조회 성공", content = {
+			@Content(mediaType = "application/json", schema = @Schema(implementation = FollowUserDto[].class)) }),
+			@ApiResponse(responseCode = "404", description = "회원 팔로우(to)/팔로잉(from) 목록 조회 실패", content = @Content) })
+	@GetMapping("/follow-all")
+	public ResponseEntity<?> getFollowListAll(HttpServletRequest request,
+										   @Parameter(description = "조회 대상자 아이디") @RequestParam(value = "id", required = true) int id,
+										   @Parameter(description = "팔로워(to)/팔로잉(from) 여부") @RequestParam(value = "type", required = true) String type) {
+		log.info("getFollowListAll() -> Start");
+
+		// Use lastItemId to determine the starting point for the next batch
+		FollowParamDto followParamDto = FollowParamDto.builder()
+				.id(id)
+				.type(type)
+				.build();
+
+		try {
+			List<FollowUserDto> followList = userService.getFollowListAll(followParamDto);
+			// 더이상 보여줄 리스트가 없으면 null 리턴
+			if (followList.isEmpty()) {
+				log.info("(UserController) 팔로우리스트 null 반환");
+				return null;
+			}
+
+			FollowResponseDto followResponseDto = FollowResponseDto.builder()
+					.followUserList(followList)
+					.build();
+
+			log.info("getFollowList() -> Success");
+			return new ResponseEntity<>(followResponseDto, HttpStatus.OK);
+		} catch (Exception e) {
+			log.error("getFollowList() -> Exception : {}", e);
+			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+		} finally {
+			log.info("getFollowList() -> End");
+		}
+	}
+
+
+
 	// 자기소개 작성하기
 	@PatchMapping(value = "/bio")
 	@Operation(summary = "자기소개 작성", description = "자기소개 작성하기")
@@ -677,11 +713,11 @@ public class UserController {
 	}
 
 	@GetMapping(value = "/bio")
-	@Operation(summary = "자기소개 작성", description = "자기소개 작성하기")
+	@Operation(summary = "자기소개 가져오기", description = "자기소개 가져오기")
 	@ApiResponses(value = {
-			@ApiResponse(responseCode = "201", description = "자기소개 작성 성공" , content ={
+			@ApiResponse(responseCode = "200", description = "자기소개 가져오기 성공" , content ={
 					@Content(mediaType = "application/json", schema = @Schema(implementation = BioDto.class)) }),
-			@ApiResponse(responseCode = "400", description = "자기소개 작성 실패", content = @Content) })
+			@ApiResponse(responseCode = "400", description = "자기소개 가져오기 실패", content = @Content) })
 	public ResponseEntity<?> getBio(@RequestParam("bio") String bio,
 									@RequestParam("userId") int userId) {
 

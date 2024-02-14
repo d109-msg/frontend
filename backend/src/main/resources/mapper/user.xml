@@ -165,32 +165,60 @@
 			<when test="type == 'to'">
 				select u.id as user_id, u.email_id, u.nickname, u.image_url,
 				u.image_uuid,
-				u.identifier, f.id
+				u.identifier, f.id as id,
+				case when f2.from_user_id = #{id} then 1
+				else 0
+				end as is_follow
 				from follows as f
-				join users u on
-				f.from_user_id = u.id
-				where f.to_user_id =
-				#{id}
+				join users u on f.from_user_id = u.id
+				left join follows f2 on f2.to_user_id = f.from_user_id and f2.from_user_id = #{id}
+				where f.to_user_id = #{id}
 				and f.id > #{offset}
-				and u.nickname like concat('%',
-				#{keyword}, '%')
-				order by f.id asc
+				and u.nickname like concat('%', #{keyword}, '%')
+				order by u.nickname asc
 				limit #{limit}
 			</when>
 			<when test="type == 'from'">
 				select u.id as user_id, u.email_id, u.nickname, u.image_url,
 				u.image_uuid,
-				u.identifier, f.id
+				u.identifier, f.id as id,
+				1 as is_follow
 				from follows as f
-				join users u on
-				f.to_user_id = u.id
-				where f.from_user_id =
-				#{id}
+				join users u on f.to_user_id = u.id
+				where f.from_user_id = #{id}
 				and f.id > #{offset}
-				and u.nickname like concat('%',
-				#{keyword}, '%')
-				order by f.id asc
+				and u.nickname like concat('%', #{keyword}, '%')
+				order by u.nickname asc
 				limit #{limit}
+			</when>
+		</choose>
+	</select>
+
+	<select id="getFollowListAll" parameterType="FollowParamDto"
+			resultType="FollowUserDto">
+		<choose>
+			<when test="type == 'to'">
+				select u.id as user_id, u.email_id, u.nickname, u.image_url,
+				u.image_uuid,
+				u.identifier, f.id as id,
+				case when f2.from_user_id = #{id} then 1
+				else 0
+				end as is_follow
+				from follows as f
+				join users u on f.from_user_id = u.id
+				left join follows f2 on f2.to_user_id = f.from_user_id and f2.from_user_id = #{id}
+				where f.to_user_id = #{id}
+				order by u.nickname asc
+			</when>
+			<when test="type == 'from'">
+				select u.id as user_id, u.email_id, u.nickname, u.image_url,
+				u.image_uuid,
+				u.identifier, f.id as id,
+				1 as is_follow
+				from follows as f
+				join users u on f.to_user_id = u.id
+				where f.from_user_id = #{id}
+				order by u.nickname asc
 			</when>
 		</choose>
 	</select>
