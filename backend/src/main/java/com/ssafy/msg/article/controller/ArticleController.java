@@ -186,7 +186,7 @@ public class ArticleController {
     public ResponseEntity<?> getFeedByRoomId(HttpServletRequest request,
             @Parameter(description = "게임방Id") @RequestParam(value = "roomId", required = true, defaultValue = "room4") String roomId,
                                              @Parameter(description = "마지막으로 로딩한 타겟") @RequestParam(value = "offset", required = false, defaultValue = "0") Integer offset,
-                                             @Parameter(description = "페이지당 타겟 개수") @RequestParam(value = "limit", required = false, defaultValue = "100") Integer limit) {
+                                             @Parameter(description = "페이지당 타겟 개수") @RequestParam(value = "limit", required = false, defaultValue = "5") Integer limit) {
 
         try{
             String currentUrl = request.getRequestURL().toString();
