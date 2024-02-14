@@ -155,4 +155,9 @@ public class UserServiceImpl implements UserService {
 	public List<String> getRooms(int id) throws Exception {
 		return userMapper.getRooms(id);
 	}
+
+	@Override
+	public List<FollowUserDto> getFollowListAll(FollowParamDto followParamDto) throws Exception {
+		return userMapper.getFollowListAll(followParamDto);
+	}
 }

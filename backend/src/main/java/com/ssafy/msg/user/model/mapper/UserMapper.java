@@ -54,4 +54,6 @@ public interface UserMapper {
 	Integer getIsFollow(int targetId, int id) throws SQLException;
 
 	List<String> getRooms(int id) throws SQLException;
+
+    List<FollowUserDto> getFollowListAll(FollowParamDto followParamDto) throws SQLException;
 }

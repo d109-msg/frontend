@@ -35,4 +35,7 @@ public class FollowUserDto {
 	
 	@Schema(description = "회원 식별 아이디", nullable = true)
 	private String identifier;
+
+	@Schema(description = "팔로잉 여부", nullable = false)
+	private int isFollow;
 }

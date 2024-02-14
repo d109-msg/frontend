@@ -51,4 +51,6 @@ public interface UserService {
     TargetUserInfoDto getTargetUserInfo(int targetId, int id) throws Exception;
 
 	List<String> getRooms(int id) throws Exception;
+
+    List<FollowUserDto> getFollowListAll(FollowParamDto followParamDto) throws Exception;
 }
