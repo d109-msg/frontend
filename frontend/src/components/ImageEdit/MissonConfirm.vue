@@ -4,29 +4,30 @@
         <div class="mission-gray">
         
         <div class="mission-container">
-            
-                <div class="confirm-box">
-                    <img class="img-box" :src="previewImg">
-                    <div class="content-box">
-                        <div class="confirm">
-                            <p class="check-style">선택한 미션과 본인 미션을 확인해주세요</p>
-                            <p class="check-style-room">방 : {{ roomName }}</p>
-                            <p class="check-style-mission">미션 : {{ missionInfo }}</p>
-                        </div>
-                        <div class="call-confirm">
-                            <p class="">해당 사진으로 등록하시겠습니까?</p>
-                            <div class="is-picture">
-                                <input type="checkbox" name="" id="" class="check"
-                                v-model="checkFlag"
-                                @click="axiosAi"
-                                >
-                                <span>미션 성공여부 확인하기</span>
-                            </div>
-                        </div>
-                        
+            <div class="cancel-box">
+                <span class="cancel" @click="closeImage"></span>
+            </div>
+            <div class="confirm-box">
+                <img class="img-box" :src="previewImg">
+                <div class="content-box">
+                    <div class="confirm">
+                        <p class="check-style">선택한 미션과 본인 미션을 확인해주세요</p>
+                        <p class="check-style-room">방 : {{ roomName }}</p>
+                        <p class="check-style-mission">미션 : {{ missionInfo }}</p>
                     </div>
+                    <div class="call-confirm">
+                        <p class="check-title">해당 사진으로 등록하시겠습니까?</p>
+                        <div class="is-picture">
+                            <input type="checkbox" name="" id="" class="check"
+                            v-model="checkFlag"
+                            @click="axiosAi"
+                            >
+                            <span class="check-title" >미션 성공여부 확인하기</span>
+                        </div>
+                    </div>
+                    
                 </div>
-                <span class="cancel" @click="closeImage">X</span>
+            </div>
         </div>
     </div>  
 </div>

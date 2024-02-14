@@ -1,16 +1,16 @@
 <template>
   <div :class="{'feed-container':!isDarkMode,'feed-container-dark':isDarkMode}">
-    <img src="./Img/arrow_down.png" alt="" style="width: 50px; height: 50px; z-index: 99999; cursor: pointer; rotate: -90deg;" @click="$emit('openChat',1)" v-if="size=='xs'">
-    <RoomFeedReady v-if="startFlag === false" 
-    :room-data="roomData"
-    :participant="participant"
-    :mission="mission"
-    :ability="ability"
-    :member="member"
-    :room-time="roomTime"
-    :is-dark-mode="isDarkMode"
-    
-    ></RoomFeedReady>
+      <img src="./Img/icon_chat.png" alt="" class="is-chat" @click="$emit('openChat',1)" v-if="size=='xs'">
+      <RoomFeedReady v-if="startFlag === false" 
+      :room-data="roomData"
+      :participant="participant"
+      :mission="mission"
+      :ability="ability"
+      :member="member"
+      :room-time="roomTime"
+      :is-dark-mode="isDarkMode">
+    </RoomFeedReady>
+
     <RoomFeedStart v-else 
     :room-data="roomData"
     :participant="participant"
@@ -19,8 +19,10 @@
     :member="member"
     :room-time="roomTime"
     :is-dark-mode="isDarkMode"
-    ></RoomFeedStart>
+    >
+  </RoomFeedStart>
 
+    
   </div>
 </template>
 
