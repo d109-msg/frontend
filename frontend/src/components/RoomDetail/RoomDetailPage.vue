@@ -15,23 +15,7 @@
         게임이 종료되었습니다.
       </div>
     </div>
-    <div class="follow-back" v-if="gameMemberFlag==0" @click="gameMemberFlag=0">
-      <div class="follow-modal">
-        <div class="follow-title">
-          GAME MEMBER
-        </div>
-        <div class="follow-content">
-          <div v-for="(mem,idx) in member" :key="idx">
-            <div class="follow-body" v-if="mem.id != participant.id">
-              <img :src="mem.imageUrl" class="follow-img" @click="goFriend(mem.userId)">
-              <p class="follow-name" @click="goFriend(mem.userId)">{{ mem.nickname }}</p>
-              <div class="follow-btn" v-if="!mem.isFollowing" @click="follow(mem.userId)">Follow</div>
-              <div class="follow-btn" v-if="mem.isFollowing" @click="follow(mem.userId)">Unfollow</div>
-          </div>
-        </div>
-        </div>
-      </div>
-    </div>
+
     <RoomFeed 
     v-if="(step==0 && size=='xs') || size=='lg' || size=='md'"
     :size="size"
@@ -42,6 +26,7 @@
     :member="member"
     :room-time="roomTime"
     :is-dark-mode="isDarkMode"
+    :gameMemberFlag="gameMemberFlag"
     @open-chat="stepUp"
     />
     <div :class="{'chat-container':!isDarkMode,'chat-container-dark':isDarkMode}" v-if="(step==1 && size=='xs') || size=='lg' || size=='md'">
@@ -181,9 +166,7 @@ export default {
       isDarkMode : Boolean,
     },
     methods:{
-      goFriend(data){
-        router.push(`/user/${data}`)
-      },
+
       stepUp(data){
         this.step = data
       },
@@ -369,6 +352,7 @@ export default {
             this.endStep = true
             const chat = useChatStore()
             chat.setEnd(0)
+            this.roomData.endTime = '끝'
             setTimeout(()=>{
               this.endStep = false
               this.gameMemberFlag = 1

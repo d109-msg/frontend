@@ -1,10 +1,10 @@
 <template>
   <body>
-    <div :class="{'body-light':!isDarkMode, 'body-dark' : isDarkMode}">
-      <router-view :is-dark-mode="isDarkMode"></router-view>
+    <div :class="{'body-light':!auth.getMode, 'body-dark' : auth.getMode}">
+      <router-view :is-dark-mode="auth.getMode"></router-view>
       <div class="theme-switch-wrapper">
         <label class="theme-switch" for="checkbox">
-          <input type="checkbox" id="checkbox" @change="toggleTheme"/>
+          <input type="checkbox" id="checkbox" @change="toggleTheme" :checked="auth.getMode"/>
           <div class="slider round"></div>
         </label>
       </div>
@@ -25,26 +25,25 @@ export default {
   data(){
     return{
       stompClient : {},
-      isDarkMode : false
+      auth : useAuthStore()
     }
   },
   computed:{
-    theme(){
-            return{
-                isDarkMode: false,
-            }
-        }
+    isDarkMode(){
+      return useAuthStore().getMode
+    }
   },
   methods:{
-    toggleTheme() {
+    toggleTheme(target) {
+            
             // 토글 상태 변경
-            this.isDarkMode = !this.isDarkMode; 
+            this.auth.turnMode(!this.auth.getMode)
             // this.emitter.emit('isMode', this.isDarkMode)
     },
   },
   watch:{
-    isDarkMode(){
-      if (this.isDarkMode) {
+    isDarkMode(nv,ov){
+      if (nv) {
                 document.body.classList.add('body-dark');
             } else {
                 document.body.classList.remove('body-dark');
@@ -53,8 +52,14 @@ export default {
   },
   mounted() {
     this.emitter.on('nightChange',(e)=>{
-      this.isDarkMode = e
+      this.auth.turnMode(e)
     })
+    const mode = this.auth.getMode
+    if(mode){
+      document.body.classList.add('body-dark')
+    }else{
+      document.body.classList.remove('body-dark')
+    }
   },
   setup(){
 
