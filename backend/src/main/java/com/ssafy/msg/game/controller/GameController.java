@@ -43,11 +43,12 @@ public class GameController {
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "조회 성공", content = @Content),
             @ApiResponse(responseCode = "400", description = "조회 실패", content = @Content) })
-    public ResponseEntity<?> getParticipants(@RequestParam("roomId") String roomId){
+    public ResponseEntity<?> getParticipants(HttpServletRequest request, @RequestParam("roomId") String roomId){
         log.info("getParticipants() -> roomId : {}", roomId);
+        int userId = (int) request.getAttribute("id");
 
         try {
-            List<ParticipantDto> list = gameService.getParticipants(roomId);
+            List<ParticipantWithFollowDto> list = gameService.getParticipantWithFollow(roomId, userId);
             log.info("getParticipants() -> list : {}", list);
 
             return new ResponseEntity<>(list, HttpStatus.OK);

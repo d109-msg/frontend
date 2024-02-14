@@ -14,6 +14,8 @@ public interface GameService {
 
     List<ParticipantDto> getParticipants(String roomId) throws Exception;
 
+    List<ParticipantWithFollowDto> getParticipantWithFollow(String roomId, int userId) throws Exception;
+
     boolean getRandomGameApplyStatus(int userId) throws Exception;
 
     boolean applyRandomGame(int userId) throws Exception;
