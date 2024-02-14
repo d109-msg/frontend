@@ -1,7 +1,7 @@
 <template>
   <div class="message-container">
-    <MessageList @chat-info="getInfo" :is-dark-mode="isDarkMode" @close-list="stepUp" v-if="(step == 0&& size=='xs') || size=='md' || size=='lg' "></MessageList>
-    <MessageDetail @user-info="userInfo" :chatInfo="detail" :chatId="detail.id" :is-dark-mode="isDarkMode" v-if="size=='md' || size=='lg' || (step == 1 && size=='xs')" :size="size"
+    <MessageList @chat-info="getInfo" :is-dark-mode="isDarkMode" @close-list="stepUp" v-show="(step == 0&& size=='xs') || size=='md' || size=='lg' "></MessageList>
+    <MessageDetail @user-info="userInfo" :chatInfo="detail" :chatId="detail.id" :is-dark-mode="isDarkMode" v-show="size=='md' || size=='lg' || (step == 1 && size=='xs')" :size="size"
     @step-down="stepDown"
     ></MessageDetail>
     <div>
