@@ -46,6 +46,20 @@
 
 	</select>
 
+	<select id="getParticipantWithFollow" parameterType="map" resultType="ParticipantWithFollowDto">
+		SELECT
+			p.*,
+			EXISTS (
+				SELECT 1
+				FROM follows f
+				WHERE f.from_user_id = #{userId} AND f.to_user_id = p.user_id
+			) AS is_following
+		FROM
+			participants p
+		WHERE
+			p.room_id = #{roomId};
+	</select>
+
 	<update id="completeMission" parameterType="CompleteMissionDto">
 		UPDATE daily_missions
 		SET flag_success = 1

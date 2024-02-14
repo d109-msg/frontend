@@ -59,6 +59,11 @@ public class GameServiceImpl implements GameService{
     }
 
     @Override
+    public List<ParticipantWithFollowDto> getParticipantWithFollow(String roomId, int userId) throws Exception {
+        return gameMapper.getParticipantWithFollow(roomId, userId);
+    }
+
+    @Override
     public boolean getRandomGameApplyStatus(int userId) throws Exception {
         return gameMapper.getRandomGameApplyStatus(userId);
     }
@@ -370,8 +375,8 @@ public class GameServiceImpl implements GameService{
                     resultDto.setStatus(false);
                 } else {
                     //낮이라면
-                    resultDto.setMessage("내가 선택한 사람이 마피아로 지목됩니다.");
-                    resultDto.setFlagTarget(true); //사람 고르기
+                    resultDto.setMessage("내가 투표한 사람이 마피아로 지목됩니다.");
+                    resultDto.setFlagTarget(false); //사람 고르기
                     resultDto.setStatus(true);
                 }
             } else if (job.equals("변장술사")) {
