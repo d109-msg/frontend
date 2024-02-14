@@ -732,10 +732,18 @@ public class GameServiceImpl implements GameService{
         List<String> result = new ArrayList<>();
 
         //랜덤 직업을 바로 배정
-        result.addAll(GameUtil.getMafiaRoles(2));
-        result.addAll(GameUtil.getCivilRoles(num - 2));
+//        result.addAll(GameUtil.getMafiaRoles(2));
+//        result.addAll(GameUtil.getCivilRoles(num - 2));
+//
+//        Collections.shuffle(result);
 
-        Collections.shuffle(result);
+        result.add("판사");
+        result.add("미치광이");
+        result.add("경찰");
+        result.add("훼방꾼");
+        result.add("불침번");
+        result.add("의사");
+        result.add("스파이");
 
         log.info("getJobs() result : {}", result);
 
