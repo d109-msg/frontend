@@ -37,7 +37,7 @@ export default {
     name: 'MyGame',
     data(){
       return{
-        chart : {},
+        chart : null,
         civil : 10,
         mafia : 20,
         civilRange : "0%",
@@ -71,6 +71,9 @@ export default {
         this.$emit('changePage', '1')
       },
       showgame(){
+        if(this.chart !== null){
+          this.chart.destroy()
+        }
         let total = this.game.totalGameCnt
         let civiltotal = this.game.civilGameCnt
         let mafiatotal = this.game.mafiaGameCnt
