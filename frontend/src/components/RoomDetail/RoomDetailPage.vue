@@ -15,7 +15,7 @@
         게임이 종료되었습니다.
       </div>
     </div>
-    <div class="follow-back" v-if="gameMemberFlag==0" @click="gameMemberFlag=0">
+    <div class="follow-back" v-if="gameMemberFlag==1" @click="gameMemberFlag=0">
       <div class="follow-modal">
         <div class="follow-title">
           GAME MEMBER
