@@ -1,7 +1,7 @@
 <template>
   <div :class="{'feed-container':!isDarkMode,'feed-container-dark':isDarkMode}">
       <img src="./Img/icon_chat.png" alt="" class="is-chat" @click="$emit('openChat',1)" v-if="size=='xs'">
-      <RoomFeedReady v-if="startFlag === false" 
+      <RoomFeedReady v-if="member.length!=7" 
       :room-data="roomData"
       :participant="participant"
       :mission="mission"
@@ -10,15 +10,14 @@
       :room-time="roomTime"
       :is-dark-mode="isDarkMode">
     </RoomFeedReady>
-
-    <RoomFeedStart v-else 
+    <RoomFeedStart v-if="member.length==7" 
     :room-data="roomData"
     :participant="participant"
     :mission="mission"
     :ability="ability"
     :member="member"
     :room-time="roomTime"
-    :is-dark-mode="isDarkMode"
+    :is-dark-mode="isDarkMode"  
     >
   </RoomFeedStart>
 
