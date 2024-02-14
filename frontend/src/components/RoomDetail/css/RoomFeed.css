@@ -29,6 +29,23 @@
     border-radius: 50%;
     box-shadow: 2px 2px 2px rgba(0, 0, 0, 0.2);
     border: 1px solid rgba(0, 0, 0, 0.2);
+    background: #FFF8ED; 
+    bottom: 0;
+    right: 0;
+    z-index: 99;
+    width: 40px;
+    height: 40px;
+    cursor: pointer;
+    margin-right: 10px;
+    margin-bottom: 10px;
+    padding: 5px;
+}
+.is-chat-dark{
+    position: absolute;
+    border-radius: 50%;
+    box-shadow: 2px 2px 2px rgba(0, 0, 0, 0.2);
+    border: 1px solid rgba(0, 0, 0, 0.2);
+    background: #292829;
     bottom: 0;
     right: 0;
     z-index: 99;
