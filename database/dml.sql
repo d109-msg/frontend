@@ -116,21 +116,21 @@ WHERE id = 'room4';
 
 
 INSERT INTO `participants` (`id`, `room_id`, `user_id`, `last_message_id`, `flag_die`, `job_id`, `image_url`, `nickname`) VALUES
-(1, 'room4', 1, NULL, 0, '기자', 'https://team109testbucket.s3.ap-northeast-2.amazonaws.com/player21.png', '거짓말쟁이 니콜슨'),
-(2, 'room4', 2, NULL, 0, '마피아', 'https://team109testbucket.s3.ap-northeast-2.amazonaws.com/player18.png', '재능 있는 젠킨스'),
-(3, 'room4', 3, NULL, 0, '훼방꾼', 'https://team109testbucket.s3.ap-northeast-2.amazonaws.com/player10.png', '능숙한 스틸'),
-(4, 'room4', 4, NULL, 0, '의사', 'https://team109testbucket.s3.ap-northeast-2.amazonaws.com/player9.png', '우울한 터너'),
-(5, 'room4', 5, NULL, 0, '경찰', 'https://team109testbucket.s3.ap-northeast-2.amazonaws.com/player11.png', '은밀한 데모네'),
-(6, 'room4', 6, NULL, 0, '미치광이', 'https://team109testbucket.s3.ap-northeast-2.amazonaws.com/player6.png', '비밀스러운 콜레오네'),
-(7, 'room4', 7, NULL, 0, '판사', 'https://team109testbucket.s3.ap-northeast-2.amazonaws.com/player1.png', '기발한 윈터스');
+(1, 'room4', 2, NULL, 0, '기자', 'https://team109testbucket.s3.ap-northeast-2.amazonaws.com/player21.png', '거짓말쟁이 니콜슨'),
+(2, 'room4', 3, NULL, 0, '마피아', 'https://team109testbucket.s3.ap-northeast-2.amazonaws.com/player18.png', '재능 있는 젠킨스'),
+(3, 'room4', 4, NULL, 0, '훼방꾼', 'https://team109testbucket.s3.ap-northeast-2.amazonaws.com/player10.png', '능숙한 스틸'),
+(4, 'room4', 5, NULL, 0, '의사', 'https://team109testbucket.s3.ap-northeast-2.amazonaws.com/player9.png', '우울한 터너'),
+(5, 'room4', 6, NULL, 0, '경찰', 'https://team109testbucket.s3.ap-northeast-2.amazonaws.com/player11.png', '은밀한 데모네'),
+(6, 'room4', 7, NULL, 0, '미치광이', 'https://team109testbucket.s3.ap-northeast-2.amazonaws.com/player6.png', '비밀스러운 콜레오네'),
+(7, 'room4', 8, NULL, 0, '판사', 'https://team109testbucket.s3.ap-northeast-2.amazonaws.com/player1.png', '기발한 윈터스');
 
 INSERT INTO `participants` (`id`, `room_id`, `user_id`, `last_message_id`, `nickname`) VALUES
-(11, 'room1', 1, NULL,'거짓말쟁이 니콜슨'),
-(12, 'room1', 2, NULL, '재능 있는 젠킨스'),
-(13, 'room1', 3, NULL, '능숙한 스틸'),
-(14, 'room1', 4, NULL, '우울한 터너'),
-(15, 'room1', 5, NULL, '은밀한 데모네'),
-(16, 'room1', 6, NULL, '비밀스러운 콜레오네')
+(11, 'room1', 3, NULL,'거짓말쟁이 니콜슨'),
+(12, 'room1', 4, NULL, '재능 있는 젠킨스'),
+(13, 'room1', 5, NULL, '능숙한 스틸'),
+(14, 'room1', 6, NULL, '우울한 터너'),
+(15, 'room1', 7, NULL, '은밀한 데모네'),
+(16, 'room1', 8, NULL, '비밀스러운 콜레오네')
 -- (17, 'room1', 7, NULL, '바보')
 ;
 
