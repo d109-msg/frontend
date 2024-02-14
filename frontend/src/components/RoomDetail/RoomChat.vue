@@ -12,17 +12,13 @@
         <div v-for="(message,idx) in chatStore.getMessage[roomData.id]" :key="idx" style="margin-top: 10px;" :id="'message'+idx">
           <div v-if="message.userId == 1">
                 <div style="display: flex;">
-                  <img src="./Img/mafia.png" alt="" style="width: 35px; height: 35px; background: #fff; border-radius: 5px;" >
-                  <div>
-                    <p 
-                    :class="{'chat-nick-msg':!isDarkMode,'chat-nick-msg-dark':isDarkMode}"
-                    >MSG</p>
-                    <div class="chat-other-box">
-                      <div class="chat-other-text">
+                  <!-- <img src="./Img/mafia.png" alt="" style="width: 35px; height: 35px; background: #fff; border-radius: 5px;" > -->
+                    <!-- <p :class="{'chat-nick-msg':!isDarkMode,'chat-nick-msg-dark':isDarkMode}">MSG</p> -->
+                    <div class="chat-msg-box">
+                      <div class="chat-msg-text">
                         {{ message.content }}
                       </div>
                     </div>
-                  </div>
                 </div>
               </div>
           <div v-if="message.userId != participant.userId">

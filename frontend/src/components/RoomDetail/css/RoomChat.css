@@ -191,18 +191,42 @@
     text-align: left;
     margin-top: 5px;
     padding-left: 15px;
+    width: 100%;
+
+}
+.chat-msg-box{
+    margin-right: 20px;
+    text-align: center;
+    margin-top: 5px;
+    padding-left: 15px;
+    width: 100%;
 }
 
 .chat-other-text{
     display: inline-block;
     position: relative;
-    background-color: #E6E3E2;
-    border-radius: 0px 20px 20px 20px;
+    background-color: #FFD2A9;
+    opacity: 50%;
+    border-radius: 20px;
     color: #000000;
     padding: 10px 15px;
     margin-bottom: 10px;
-    max-width: 230px;
-    font-weight: bold;
+    max-width: 100%;
+    font-size: 0.9em
+
+    /* font-weight: bold; */
+}
+.chat-msg-text{
+    display: inline-block;
+    position: relative;
+    background-color: #D9D9D9;
+    border-radius: 20px;
+    color: #513737;
+    padding: 10px 15px;
+    margin-bottom: 10px;
+    max-width: 90%;
+    /* font-weight: bold; */
+    font-size: 0.9em
 
 }
 
@@ -214,8 +238,10 @@
     color: red;
     padding: 10px 15px;
     margin-bottom: 10px;
-    max-width: 230px;
-    font-weight: bold;
+    max-width: 100%;
+    font-size: 0.9em
+
+    /* font-weight: bold; */
 
 }
 
@@ -232,8 +258,10 @@
     color: #fff;
     padding: 10px 15px;
     margin-bottom: 10px;
-    max-width: 230px;
-    font-weight: bold;
+    max-width: 100%;
+    font-size: 0.9em
+
+    /* font-weight: bold; */
 }
 .chat-my-mafia{
     display: inline-block;
@@ -243,17 +271,19 @@
     color: red;
     padding: 10px 15px;
     margin-bottom: 10px;
-    max-width: 230px;
-    font-weight: bold;
+    max-width: 100%;
+    font-size: 0.9em
+
+    /* font-weight: bold; */
 }
 
 .mafia-chat{
-    background: url(../Img/icon_reset.png);
+    background: url(../Img/icon_mafia_chat.png);
     width: 15px;
     height: 15px;
     position: absolute;
     bottom: 25px;
-    left: 55px;
+    left: 30px;
     background-size: cover;
     background-repeat: no-repeat;
     cursor: pointer;
@@ -276,7 +306,25 @@
 }
 }
 @media  screen and (min-width:861px) {
-
+    .chat-nick-msg-dark{
+        font-size: 13px; 
+        padding-left: 10px; 
+        color: #FFD2A9;
+    }
+    
+    .chat-nick, chat-nick-msg{
+        font-size: 13px; 
+        padding-left: 10px; 
+        font-weight: bold; 
+    }
+    
+    .chat-nick-dark{
+        font-size: 13px; 
+        padding-left: 10px; 
+        font-weight: bold; 
+        color: #E6E3E2;
+    }
+    
     .chat-input-box{
         display: flex;
         justify-content: center;
@@ -449,19 +497,41 @@
         text-align: left;
         margin-top: 5px;
         padding-left: 15px;
+        width: 100%;
+    }
+    .chat-msg-box{
+        margin-right: 20px;
+        text-align: center;
+        margin-top: 5px;
+        padding-left: 15px;
+        width: 100%;
     }
     
     .chat-other-text{
         display: inline-block;
         position: relative;
-        background-color: #E6E3E2;
-        border-radius: 0px 20px 20px 20px;
+        background-color: #FFD2A9;
+        opacity: 70%;
+        border-radius: 20px;
         color: #000000;
         padding: 10px 15px;
         margin-bottom: 10px;
-        max-width: 230px;
-        font-weight: bold;
-    
+        max-width: 100%;
+        font-size: 0.9em
+
+        /* font-weight: bold; */
+    }
+    .chat-msg-text{
+        display: inline-block;
+        position: relative;
+        background-color: #D9D9D9;
+        border-radius: 20px;
+        color: #513737;
+        padding: 10px 15px;
+        margin-bottom: 10px;
+        max-width: 100%;
+        /* font-weight: bold; */
+        font-size: 0.9em
     }
     
     .chat-other-mafia{
@@ -472,8 +542,8 @@
         color: red;
         padding: 10px 15px;
         margin-bottom: 10px;
-        max-width: 230px;
-        font-weight: bold;
+        max-width: 100%;
+        /* font-weight: bold; */
     
     }
     
@@ -490,8 +560,8 @@
         color: #fff;
         padding: 10px 15px;
         margin-bottom: 10px;
-        max-width: 230px;
-        font-weight: bold;
+        max-width: 100%;
+        /* font-weight: bold; */
     }
     .chat-my-mafia{
         display: inline-block;
@@ -501,17 +571,19 @@
         color: red;
         padding: 10px 15px;
         margin-bottom: 10px;
-        max-width: 230px;
-        font-weight: bold;
+        max-width: 100%;
+        font-size: 0.9em
+
+        /* font-weight: bold; */
     }
     
     .mafia-chat{
-        background: url(../Img/icon_reset.png);
+        background: url(../Img/icon_mafia_chat.png);
         width: 15px;
         height: 15px;
         position: absolute;
         bottom: 25px;
-        left: 55px;
+        left: 30px;
         background-size: cover;
         background-repeat: no-repeat;
         cursor: pointer;
