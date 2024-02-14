@@ -25,7 +25,7 @@
         </div>
         <div class="feed-content-box">
             <div v-for="(feed,idx) in feedList" :key="idx"  style="display: flex; justify-content: center;" :id="`feed${idx}`">
-                    <RoomFeedCardVue :item="feed" :is-dark-mode="isDarkMode" />
+                    <RoomFeedCardVue :item="feed" :is-dark-mode="isDarkMode" :room="roomData"/>
             </div>
         </div>
         
