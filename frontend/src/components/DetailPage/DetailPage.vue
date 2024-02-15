@@ -196,6 +196,7 @@ export default {
                 img.style.background = `url(${this.imgList[this.step]})`
                 img.style.backgroundSize = 'contain'
                 img.style.backgroundRepeat = 'no-repeat'
+                img.style.backgroundPosition = 'center'
             } catch(err){
                 this.$emit('closeDetail')
                 toast("로그인이 필요한 페이지입니다.",{
@@ -313,6 +314,7 @@ export default {
             img.style.background = `url(${this.imgList[this.step]})`
             img.style.backgroundSize = 'contain'
             img.style.backgroundRepeat = 'no-repeat'
+            img.style.backgroundPosition = 'center'
         }
     },
     mounted(){
