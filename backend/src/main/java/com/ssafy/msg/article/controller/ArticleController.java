@@ -215,7 +215,7 @@ public class ArticleController {
             RoomFeedResponseDto result = articleService.getFeedByRoomId(articleByRoomIdDto);
 
             //  보여줄 피드가 없을 때 조건 넣어주기
-            if (result.getArticles() == null || result.getArticles().isEmpty()) {
+            if (result == null || result.getArticles().isEmpty()) {
                 return null;
             }
 
@@ -326,7 +326,7 @@ public class ArticleController {
             GusetFeedResponseDto result = articleService.getGuestFeed(feedParamDto);
 
             //  보여줄 피드가 없을 때 조건 넣어주기
-            if (result.getArticles() == null || result.getArticles().isEmpty()) {
+            if (result == null || result.getArticles().isEmpty()) {
                 return null;
             }
 
@@ -385,7 +385,7 @@ public class ArticleController {
             GusetFeedResponseDto result = articleService.getGuestFeed(feedParamDto);
 
 //            //  보여줄 피드가 없을 때 조건 넣어주기
-            if (result.getArticles() == null || result.getArticles().isEmpty()) {
+            if (result == null || result.getArticles().isEmpty()) {
                 return null;
             }
 
