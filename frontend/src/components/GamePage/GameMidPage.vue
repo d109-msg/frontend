@@ -72,7 +72,7 @@ export default {
         },
         createRoom: async function(){
           const game = useGameStore()
-          if (this.roomList.length <6 ){
+          if (this.roomList.length <10 ){ //6
             try{
               let value = await game.createRoom()
               this.gameData = value.data
