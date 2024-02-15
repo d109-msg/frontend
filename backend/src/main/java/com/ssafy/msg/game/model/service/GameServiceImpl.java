@@ -738,12 +738,12 @@ public class GameServiceImpl implements GameService{
 //        Collections.shuffle(result);
 
         result.add("판사");
-        result.add("미치광이");
         result.add("경찰");
         result.add("훼방꾼");
         result.add("불침번");
         result.add("의사");
         result.add("건달");
+        result.add("미치광이");
 
         log.info("getJobs() result : {}", result);
 
@@ -1145,6 +1145,9 @@ public class GameServiceImpl implements GameService{
 
         // 각 participant 랜덤 닉네임, 랜덤 직업, 랜덤 이미지로 update
         randomNicknames = gameMapper.getRandomNicknames(numOfPlayers);
+
+//        randomNicknames.add(new RandomNameDto("명석한", "호도"));
+
         List<String> randomJobs = getJobs(numOfPlayers);
 
         for(int i = 0; i  < numOfPlayers; i++) {
