@@ -22,8 +22,11 @@ import GameRoomPageVue from './GameRoomPage.vue'
 import MiniProfile from '../MiniProfile/MiniProfile.vue'
 import { useAuthStore } from '@/store/authStore'
 import { useGameStore } from '@/store/gameStore';
+import { toast} from 'vue3-toastify'
+import "vue3-toastify/dist/index.css"
 
 import router from '@/router'
+import { useChatStore } from '@/store/chatStore'
 
 export default {
     name: "GamePage",
@@ -37,6 +40,12 @@ export default {
             inviteCode: "",
             roomList :{},
             inviteRoom:{}
+        }
+    },
+    computed : {
+        gameReset(){
+            const chat = useChatStore()
+            return  chat.getGameReset
         }
     },
     props:{
@@ -106,16 +115,38 @@ export default {
                         }
                     })
                 }else if (value.status == 204){
-                    alert('존재하지 않는 방입니다.')
+                    toast('존재하지 않는 방입니다.',{
+                    theme : "auto",
+                    "type": "error",
+                    "pauseOnHover": false,
+                    "position": "top-center",
+                    "transition": "slide",
+                    "autoClose": 1000,
+                })
                 }
 
 
             }catch(err){
                 console.log(err.response.status)
                 if(err.response.status == 409){
-                    alert('이미 참여 중인 게임방입니다.')
+                    toast('이미 참여 중인 게임방입니다.',{
+                    theme : "auto",
+                    "type": "error",
+                    "pauseOnHover": false,
+                    "position": "top-center",
+                    "transition": "slide",
+                    "autoClose": 1000,
+                })
+
                 }else if(err.response.status == 403)
-                    alert('인원이 다 찬 방입니다.')
+                toast('인원이 다 찬 방입니다.',{
+                    theme : "auto",
+                    "type": "error",
+                    "pauseOnHover": false,
+                    "position": "top-center",
+                    "transition": "slide",
+                    "autoClose": 1000,
+                })
             }
 
         }
@@ -146,6 +177,13 @@ export default {
                 // console.log(this.size)
         }
         },
+        gameReset(nv,ov){
+            if(nv == 1){
+                this.getRoomList()
+                const chat = useChatStore()
+                chat.setGameReset(0)
+            }
+        }
     }
 }
 </script>

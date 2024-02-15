@@ -62,6 +62,8 @@ import router from '@/router'
 import { nextTick } from 'vue';
 import LoadingSpinner from '../LoadingSpinner/LoadingSpinner.vue';
 import servers from '@/server';
+import { toast} from 'vue3-toastify'
+import "vue3-toastify/dist/index.css"
 
 
 export default {
@@ -257,7 +259,14 @@ export default {
       const file = event.target.files[0]
       const fileType = file.type
       if(!fileType.includes('image')){
-        alert('이미지 파일을 올려주세요')
+        toast('이미지 파일을 올려주세요',{
+                    theme : "auto",
+                    "type": "warning",
+                    "pauseOnHover": false,
+                    "position": "top-center",
+                    "transition": "slide",
+                    "autoClose": 1000,
+                })
         this.loading = false
         return
       }
