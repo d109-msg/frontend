@@ -194,7 +194,7 @@ export default {
                 }
                 const img = document.getElementById('detailImg')
                 img.style.background = `url(${this.imgList[this.step]})`
-                img.style.backgroundSize = 'cover'
+                img.style.backgroundSize = 'contain'
                 img.style.backgroundRepeat = 'no-repeat'
             } catch(err){
                 this.$emit('closeDetail')
@@ -311,7 +311,7 @@ export default {
         step(){
             const img = document.getElementById('detailImg')
             img.style.background = `url(${this.imgList[this.step]})`
-            img.style.backgroundSize = 'cover'
+            img.style.backgroundSize = 'contain'
             img.style.backgroundRepeat = 'no-repeat'
         }
     },
