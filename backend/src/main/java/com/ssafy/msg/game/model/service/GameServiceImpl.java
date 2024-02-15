@@ -270,7 +270,7 @@ public class GameServiceImpl implements GameService{
                 int targetId = abilityResult.getAbility();
                 ParticipantDto targetDto = gameMapper.getParticipantWithPId(targetId);
 
-                String result = "";
+//                String result = "";
 
 //                if (targetId == participantId) {
 //                    //미치광이가 본인을 찍었다면
