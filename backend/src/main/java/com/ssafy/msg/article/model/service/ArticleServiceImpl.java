@@ -48,7 +48,7 @@ public class ArticleServiceImpl implements ArticleService{
     public void createArticle(ArticleDto articleDto) throws Exception {
         log.info("(service) Start");
 
-        if (articleDto.getRoomId().isEmpty()) { // 일반 게시물 작성 (room_id 가 비어있을 때)
+        if (articleDto.getRoomId() == null || articleDto.getRoomId().isEmpty()) { // 일반 게시물 작성 (room_id 가 비어있을 때)
             articleDto.setRoomId(null); // 룸 id 가 비어 있으면 null 값을 넣어줌
             articleMapper.createArticle(articleDto);
             log.info("(service) 일반 게시물 작성 성공 articleId: {}", articleDto.getId());
@@ -189,7 +189,7 @@ public class ArticleServiceImpl implements ArticleService{
         ArticleDetailDto articleDetailDto = articleMapper.getArticleDetail(articleDto);
         articleDetailDto.setLikeCount(articleMapper.getLikeCount(articleDto.getId())); // 좋아요 수 넣어주기
         articleDetailDto.setIsLike(isLike(articleDto)); // 좋아요 여부 알려주기
-        
+
 
         // 댓글 리스트 넣어주기
         articleDetailDto.setCommentList(getComments(CommentDto.builder().userId(id).articleId(articleDto.getId()).build()));
