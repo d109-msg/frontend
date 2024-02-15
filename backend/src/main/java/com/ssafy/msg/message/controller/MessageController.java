@@ -92,17 +92,15 @@ public class MessageController {
             @ApiResponse(responseCode = "200", description = "채팅방 lastMessageId 수정 성공", content = @Content),
             @ApiResponse(responseCode = "400", description = "채팅방 lastMessageId 수정 실패", content = @Content) })
     @PatchMapping("/message/last-message-id")
-    public ResponseEntity<?> updateLastMessageId(@Valid HttpServletRequest request,
-                                                 @Parameter(description = "방 아이디") @RequestParam(value = "roomId") String roomId,
-                                                 @Parameter(description = "메시지 아이디") @RequestParam(value = "messageId") String messageId) {
+    public ResponseEntity<?> updateLastMessageId(@Valid HttpServletRequest request, @RequestBody LastMessageUpdateRequestDto lastMessageUpdateRequestDto) {
         log.info("updateLastMessageId() -> Start");
 
         int userId = (int) request.getAttribute("id");
 
         LastMessageUpdateDto lastMessageUpdateDto = LastMessageUpdateDto.builder()
                 .userId(userId)
-                .roomId(roomId)
-                .messageId(messageId).build();
+                .roomId(lastMessageUpdateRequestDto.getRoomId())
+                .messageId(lastMessageUpdateRequestDto.getMessageId()).build();
 
         try {
             messageService.updateLastMessageId(lastMessageUpdateDto);

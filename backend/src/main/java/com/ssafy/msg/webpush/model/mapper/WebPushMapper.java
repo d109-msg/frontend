@@ -5,11 +5,7 @@ import org.apache.ibatis.annotations.Mapper;
 
 @Mapper
 public interface WebPushMapper {
-    String getFCMTokenByArticleId(int id);
-
-    String getNicknameById(int id);
-
-    String getFCMTokenByParentCommentId(int id);
-
     void registerFCMToken(FCMTokenDto fcmTokenDto);
+
+    String getFCMTokenByUserId(int id);
 }
