@@ -743,7 +743,7 @@ public class GameServiceImpl implements GameService{
         result.add("훼방꾼");
         result.add("불침번");
         result.add("의사");
-        result.add("스파이");
+        result.add("건달");
 
         log.info("getJobs() result : {}", result);
 
