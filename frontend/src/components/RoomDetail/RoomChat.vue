@@ -87,6 +87,8 @@
 
 import { useAuthStore } from '@/store/authStore'
 import { useChatStore } from '@/store/chatStore'
+import { toast} from 'vue3-toastify'
+import "vue3-toastify/dist/index.css"
 
 
 export default {
@@ -106,6 +108,7 @@ export default {
         showNewMessageButton: false, // 새 메시지 버튼 표시 여부
       }
     },
+
     props:{
       isOpen: Number,
       roomData: Object,
@@ -127,6 +130,9 @@ export default {
         if(nv==1){
           this.endGame = 1
         }
+      },
+      message(nv,ov){
+        this.inputNum = this.message.length
       }
     },
     methods:{
@@ -171,8 +177,20 @@ export default {
       },
       send : function(){
         if(this.participant.flagDie == 1 && this.endGame == 0 && this.roomData.endTime == null){
-          alert('이미 당신은 사망하였습니다. 더이상 게임에 참여하실 수 없습니다.')
+          toast('이미 당신은 사망하였습니다. 더이상 게임에 참여하실 수 없습니다.',{
+                    theme : "auto",
+                    "type": "warning",
+                    "pauseOnHover": false,
+                    "position": "top-center",
+                    "transition": "slide",
+                    "autoClose": 1000,
+                })
           this.message = ""
+          return
+        }
+        this.message = this.message.replace('/n','')
+        if(this.message.length == 0){
+          this.scrollToBottom()
           return
         }
         let data = {

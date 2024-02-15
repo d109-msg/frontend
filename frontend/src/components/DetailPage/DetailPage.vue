@@ -129,6 +129,8 @@
 <script>
 import { useFeedStore } from '@/store/feedStore'
 import { useAuthStore } from '@/store/authStore'
+import { toast} from 'vue3-toastify'
+import "vue3-toastify/dist/index.css"
 export default {
     name: "DetailPage",
     data(){
@@ -196,7 +198,16 @@ export default {
                 img.style.backgroundRepeat = 'no-repeat'
             } catch(err){
                 this.$emit('closeDetail')
-                alert('로그인이 필요한 페이지입니다.')
+                toast("로그인이 필요한 페이지입니다.",{
+                    theme : "auto",
+                    "type": "error",
+                    "pauseOnHover": false,
+                    "position": "top-center",
+                    "transition": "slide",
+                    "dangerouslyHTMLString": true,
+                    "autoClose": 1000,
+                })
+                // alert('로그인이 필요한 페이지입니다.')
             }
         },
         leftStep : function(){
@@ -252,9 +263,18 @@ export default {
         const feed =useFeedStore()
         try{
             let value = await feed.editFeed(this.me.id,this.idx,this.editComment)
-            alert('게시글 수정이 완료되었습니다.')
+            toast("게시글 수정이 완료되었습니다.",{
+                    theme : "auto",
+                    "type": "success",
+                    "pauseOnHover": false,
+                    "position": "top-center",
+                    "transition": "slide",
+                    "autoClose": 1000,
+                })
+            setTimeout(async ()=>{
+                await this.readDetail(this.idx)
+            },1000)
             this.editFlag = false
-            this.readDetail(this.idx)
         } catch(err){
             console.log(err)
         }
@@ -263,8 +283,17 @@ export default {
         const feed = useFeedStore()
         try{
             await feed.deleteFeed(this.idx)
-            alert("게시글 삭제가 완료되었습니다.")
-            window.location.reload()
+            toast("게시글 삭제가 완료되었습니다.",{
+                    theme : "auto",
+                    "type": "success",
+                    "pauseOnHover": false,
+                    "position": "top-center",
+                    "transition": "slide",
+                    "autoClose": 1000,
+                })
+            setTimeout(()=>{
+                window.location.reload()
+            },1000)
         }catch(err){
             console.log(err)
         }

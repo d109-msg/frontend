@@ -141,6 +141,7 @@ const server2 = 'https://i10d109.p.ssafy.io/api'
                             }
                 } else{
                     this.axiosPopular()
+
                 }
                 },
 
@@ -232,6 +233,8 @@ const server2 = 'https://i10d109.p.ssafy.io/api'
                         await this.getUser()
                         this.isLogin = true
                         await this.axiosRead()
+                        // await this.axiosGuest()
+
                         //로그인 상태 시 유저 피드 호출
                     }
             }

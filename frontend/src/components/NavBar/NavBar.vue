@@ -83,6 +83,8 @@
 <script>
 import router from '@/router'
 import { useAuthStore } from '@/store/authStore';
+import { toast} from 'vue3-toastify'
+import "vue3-toastify/dist/index.css"
 
 export default {    
     name : 'NavBar',
@@ -157,7 +159,14 @@ export default {
         searchUser : async function(){
             const auth  = useAuthStore()
             if(auth.getAccess==""){
-                alert('로그인이 필요한 기능입니다.')
+                toast('로그인이 필요한 기능입니다.',{
+                    theme : "auto",
+                    "type": "warning",
+                    "pauseOnHover": false,
+                    "position": "top-center",
+                    "transition": "slide",
+                    "autoClose": 1000,
+                })
                 this.keyword = ""
             } else{
                 try{

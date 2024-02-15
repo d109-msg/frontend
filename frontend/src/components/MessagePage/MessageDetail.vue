@@ -33,9 +33,10 @@
               </div>
             </div>
             <textarea type="text" :class="{'message-textarea':!isDarkMode,'message-textarea-dark':isDarkMode}" id="" cols="30" rows="10" v-model="message" @keyup.enter.prevent="send" 
-            v-if="Object.keys(chatInfo).length != 0" maxlength="200" >
+            v-if="Object.keys(chatInfo).length != 0" maxlength="100" >
             </textarea>
             <textarea :class="{'message-textarea':!isDarkMode,'message-textarea-dark':isDarkMode}" v-else></textarea>
+            <div class="input-num" >{{ inputNum }}/100</div>
             <label for="imageInput" class="btn-label">
               <div class="btn-upload"></div>
             </label>
@@ -61,6 +62,8 @@ import router from '@/router'
 import { nextTick } from 'vue';
 import LoadingSpinner from '../LoadingSpinner/LoadingSpinner.vue';
 import servers from '@/server';
+import { toast} from 'vue3-toastify'
+import "vue3-toastify/dist/index.css"
 
 
 export default {
@@ -83,6 +86,7 @@ export default {
       preImg : "",
       step : 0,
       io : {},
+      inputNum : 0,
     }
   },
   props:{
@@ -109,6 +113,9 @@ export default {
     async chatId(nv,ov){
       await this.loadChat()
       this.scrollToBottom()
+    },
+    message(){
+      this.inputNum = this.message.length
     }
     
   },
@@ -252,7 +259,14 @@ export default {
       const file = event.target.files[0]
       const fileType = file.type
       if(!fileType.includes('image')){
-        alert('이미지 파일을 올려주세요')
+        toast('이미지 파일을 올려주세요',{
+                    theme : "auto",
+                    "type": "warning",
+                    "pauseOnHover": false,
+                    "position": "top-center",
+                    "transition": "slide",
+                    "autoClose": 1000,
+                })
         this.loading = false
         return
       }

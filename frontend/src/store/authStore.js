@@ -198,12 +198,26 @@ export const useAuthStore = defineStore('auth',{
             }
             return axios.get(`${server}/game/user/rate?userId=${userId}`,{headers})
         },
+        async registerFCMToken(FCMToken){
+            console.log(FCMToken)
+            const data = {
+                "token": FCMToken,
+            }
+            const token = this.getAccess
+            const headers = {
+                "Content-Type": `application/json`,
+                Authorization : `Bearer ${token}`
+            }
+            return axios.post(`${server}/webpush`,JSON.stringify(data),{ headers })
+        },
         async followAll(userId,type){
             const headers = {
                 Authorization : `Bearer ${this.getAccess}`
             }
             return axios.get(`${server}/user/follow-all?id=${userId}&type=${type}`,{headers})
-        }
+        },
+        
+        
     },
     persist: [
         {
