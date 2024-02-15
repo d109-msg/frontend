@@ -272,25 +272,30 @@ public class GameServiceImpl implements GameService{
 
                 String result = "";
 
-                if (targetId == participantId) {
-                    //미치광이가 본인을 찍었다면
-                    result = targetDto.getNickname() + "는 마피아가 아닙니다.";
+//                if (targetId == participantId) {
+//                    //미치광이가 본인을 찍었다면
+//                    result = targetDto.getNickname() + "는 마피아가 아닙니다.";
+//                } else {
+//                    //랜덤으로 마피아 여부 리턴
+//                    Random random = new Random(targetId); // ID를 시드로 사용
+//
+//                    int num = random.nextInt(25);
+//
+//                    log.info("useAbility() random : {}", num);
+//
+//                    if (num % 2 == 0) {
+//                        result = targetDto.getNickname() + "는 마피아가 맞습니다.";
+//                    } else {
+//                        result = targetDto.getNickname() + "는 마피아가 아닙니다.";
+//                    }
+//                }
+                if (!GameUtil.getRoleType(targetDto.getJobId()).equals("마피아")) {
+                    resultDto.setMessage(targetDto.getNickname() + "님은 마피아가 맞습니다.");
                 } else {
-                    //랜덤으로 마피아 여부 리턴
-                    Random random = new Random(targetId); // ID를 시드로 사용
-
-                    int num = random.nextInt(25);
-
-                    log.info("useAbility() random : {}", num);
-
-                    if (num % 2 == 0) {
-                        result = targetDto.getNickname() + "는 마피아가 맞습니다.";
-                    } else {
-                        result = targetDto.getNickname() + "는 마피아가 아닙니다.";
-                    }
+                    resultDto.setMessage(targetDto.getNickname() + "님은 마피아가 아닙니다.");
                 }
 
-                resultDto.setMessage(result);
+//                resultDto.setMessage(result);
             } else if(job.equals("스파이")) {
                 ParticipantDto targetDto = gameMapper.getParticipantWithPId(abilityResult.getAbility());
                 
