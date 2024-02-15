@@ -10,6 +10,7 @@ import com.ssafy.msg.notification.model.dto.NotificationResponseDto;
 import com.ssafy.msg.notification.model.entity.NotificationEntity;
 import com.ssafy.msg.notification.model.mapper.NotificationMapper;
 import com.ssafy.msg.notification.model.repo.NotificationRepository;
+import com.ssafy.msg.webpush.model.service.WebPushService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.messaging.simp.SimpMessageSendingOperations;
@@ -28,6 +29,8 @@ public class NotificationServiceImpl implements NotificationService {
     private final NotificationRepository notificationRepository;
     private final DateTimeUtil dateTimeUtil;
     private final SimpMessageSendingOperations sendingOperations;
+
+    private final WebPushService webPushService;
 
     @Override
     public List<NotificationResponseDto> getNotificationsById(int userId) {
@@ -87,6 +90,7 @@ public class NotificationServiceImpl implements NotificationService {
             log.info(notificationEntity.toDto().getUserId() + " - " + notificationEntity.toDto());
 
             // WebPush
+            webPushService.sendWebPush(notificationEntity.getUserId(), fromNickname + notificationEntity.getContent());
         }
     }
 
@@ -145,6 +149,8 @@ public class NotificationServiceImpl implements NotificationService {
             log.info(notificationEntity.toDto().getUserId() + " - " + notificationEntity.toDto());
 
             // WebPush
+            // WebPush
+            webPushService.sendWebPush(notificationEntity.getUserId(), fromNickname + notificationEntity.getContent());
         }
     }
 
@@ -177,6 +183,7 @@ public class NotificationServiceImpl implements NotificationService {
             log.info(notificationEntity.toDto().getUserId() + " - " + notificationEntity.toDto());
 
             // WebPush
+            webPushService.sendWebPush(notificationEntity.getUserId(), fromNickname + notificationEntity.getContent());
         }
     }
 

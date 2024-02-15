@@ -33,5 +33,11 @@
         where id = #{userId}
     </update>
 
+    <select id="getFCMTokenByUserId" parameterType="int"
+            resultType="String">
+        select u.firebase_token
+        from users u
+        where u.id = #{id};
+    </select>
 </mapper>
 
