@@ -31,10 +31,10 @@
     <div :class="{'chat-container':!isDarkMode,'chat-container-dark':isDarkMode}" v-if="(step==1 && size=='xs') || size=='lg' || size=='md'">
       <div :class="{'chat-title-box':!isDarkMode,'chat-title-box-dark':isDarkMode}" style="display: flex; justify-content: space-between;">
         <div >
-          <img v-if="!roomTime" @click="dayFlag()" src="./Img/icon_sun_active.png" alt="" style="cursor: pointer;">
-          <img v-else @click="dayFlag()" src="./Img/icon_sun.png" alt="" style="cursor: pointer;">
-          <img v-if="roomTime" @click="nightFlag()" src="./Img/icon_moon_active.png" alt="" style="cursor: pointer;">
-          <img v-else @click="nightFlag()" src="./Img/icon_moon.png" alt="" style="cursor: pointer;">
+          <img v-if="!roomTime && size!='xs'" @click="dayFlag()" src="./Img/icon_sun_active.png" alt="" style="cursor: pointer;">
+          <img v-else-if="size!='xs'" @click="dayFlag()" src="./Img/icon_sun.png" alt="" style="cursor: pointer;">
+          <img v-if="roomTime && size!='xs'" @click="nightFlag()" src="./Img/icon_moon_active.png" alt="" style="cursor: pointer;">
+          <img v-else-if="size!='xs'" @click="nightFlag()" src="./Img/icon_moon.png" alt="" style="cursor: pointer;">
         </div>
         <div style="display: flex; flex-direction: row; align-items: center;">
 
