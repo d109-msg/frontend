@@ -35,7 +35,7 @@
             <textarea type="text" :class="{'message-textarea':!isDarkMode,'message-textarea-dark':isDarkMode}" id="" cols="30" rows="10" v-model="message" @keyup.enter.prevent="send" 
             v-if="Object.keys(chatInfo).length != 0" maxlength="100" >
             </textarea>
-            <textarea class="message-textarea" v-else></textarea>
+            <textarea :class="{'message-textarea':!isDarkMode,'message-textarea-dark':isDarkMode}" v-else></textarea>
             <div class="input-num" >{{ inputNum }}/100</div>
             <label for="imageInput" class="btn-label">
               <div class="btn-upload"></div>
