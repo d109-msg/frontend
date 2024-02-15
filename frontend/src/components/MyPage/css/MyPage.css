@@ -297,7 +297,7 @@
     }
     .mypage-banner-light{
         position: absolute;
-        background: url('../Img/background_mypage_light.png');
+        background: url('https://team109testbucket.s3.ap-northeast-2.amazonaws.com/background_mypage_light.png');
         background-size: cover;
         background-position: center;
         height: 100%;
@@ -308,7 +308,7 @@
 
     .mypage-banner-dark{
         position: absolute;
-        background: url('../Img/background_mypage_dark.png');
+        background: url('https://team109testbucket.s3.ap-northeast-2.amazonaws.com/background_mypage_dark.png');
         background-size: cover;
         background-position: center;
         height: 100%;

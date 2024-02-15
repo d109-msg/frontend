@@ -16,7 +16,7 @@
         overflow: hidden;
     }
     .game-banner-box .game-banner{
-        background: url(../Img/banner.png), lightgray 50%;
+        background: url('https://team109testbucket.s3.ap-northeast-2.amazonaws.com/banner.png'), lightgray 50%;
         position: absolute;
         background-repeat: no-repeat;
         background-position: center;
@@ -145,7 +145,7 @@
     }
     .game-banner-box .game-banner{
         position: absolute;
-        background: url(../Img/banner.png), lightgray 50%;
+        background: url('https://team109testbucket.s3.ap-northeast-2.amazonaws.com/banner.png'), lightgray 50%;
         background-repeat: no-repeat;
         background-position: center;
         background-size:cover;
@@ -305,7 +305,7 @@
     }
     .game-banner-box .game-banner{
         position: absolute;
-        background: url(../Img/banner.png), lightgray 50%;
+        background: url('https://team109testbucket.s3.ap-northeast-2.amazonaws.com/banner.png'), lightgray 50%;
         background-repeat: no-repeat;
         background-position: center;
         background-size:cover;
