@@ -122,9 +122,11 @@ const server2 = 'https://i10d109.p.ssafy.io/api'
                 
             },
             axiosRead : async function(){
+                console.log('여기 들어오나요?')
                 if(this.baseUrl != null){
                     const feed = useFeedStore()
                     let value = await feed.readFeed(this.baseUrl+this.nextUrl)
+                    console.log('벨류 데이터',value)
                     if(value.data != ""){
                         value.data.articleDetailDtos.forEach(item=>{
                             this.feedList.push(item)
@@ -136,10 +138,11 @@ const server2 = 'https://i10d109.p.ssafy.io/api'
                                 this.io.observe(last)
                             }
                         })
-                    }   else{
+                    }   else{   console.log('파퓰러 시작')
                                 this.axiosPopular()
                             }
                 } else{
+                    console.log('파퓰러 시작')
                     this.axiosPopular()
 
                 }
@@ -206,6 +209,8 @@ const server2 = 'https://i10d109.p.ssafy.io/api'
                                 this.popularIo.observe(last)
                             }
                         })
+                    } else{
+                        console.log('없다고?')
                     }
                 } else{
                     console.log('피드 끝')
@@ -255,9 +260,9 @@ const server2 = 'https://i10d109.p.ssafy.io/api'
         },
         mounted(){
             const auth = useAuthStore()
-            this.io = new IntersectionObserver(this.callBack,{ threshold : 0.7})
-            this.guestio = new IntersectionObserver(this.guestCall,{threshold : 0.7})
-            this.popularIo = new IntersectionObserver(this.popularCall, {threshold : 0.7})
+            this.io = new IntersectionObserver(this.callBack,{ threshold : 0.5})
+            this.popularIo = new IntersectionObserver(this.popularCall, {threshold : 0.5})
+            this.guestio = new IntersectionObserver(this.guestCall,{threshold : 0.5})
             //요소의 가시성을 0.7로 설정, 요소가 70% 뷰포트에 가시 될 시 지정한 callBack 함수 실행
             this.startPage()
         },
