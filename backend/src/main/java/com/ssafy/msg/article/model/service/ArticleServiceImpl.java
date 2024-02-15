@@ -134,9 +134,9 @@ public class ArticleServiceImpl implements ArticleService{
             guestArticleResponseDtos.add(dto);
         }
 
-        int offset = feedParamDto.getOffset() + feedParamDto.getLimit();
-
-        String nextUrl = "?offset=" + offset + "&limit=" + feedParamDto.getLimit();
+//        int offset = feedParamDto.getOffset() + feedParamDto.getLimit();
+//
+//        String nextUrl = "?offset=" + offset + "&limit=" + feedParamDto.getLimit();
 
         return GusetFeedResponseDto.builder().articles(guestArticleResponseDtos).nextUrl(nextUrl).build();
     }
