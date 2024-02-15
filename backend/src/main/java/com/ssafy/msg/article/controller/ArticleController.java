@@ -358,7 +358,7 @@ public class ArticleController {
                                             HttpServletRequest request) {
         log.info("(ArticleController) 인기 피드 리스트");
 
-//        int userId = (Integer) request.getAttribute("id");
+        int userId = (Integer) request.getAttribute("id");
 //        FeedParamDto feedParamDto = FeedParamDto.builder().userId(userId).offset(offset).limit(limit).build();
 //
 //        try {
@@ -376,6 +376,7 @@ public class ArticleController {
         }
 
         FeedParamDto feedParamDto = FeedParamDto.builder()
+                .userId(userId)
                 .offset(offset)
                 .limit(limit)
                 .build();
