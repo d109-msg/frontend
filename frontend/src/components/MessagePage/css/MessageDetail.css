@@ -197,6 +197,14 @@
     font-weight: bold;
 
 }
+.input-num{
+    position: absolute;
+    bottom: 20px;
+    right: 80px;
+    font-size: 1em;
+    color: #B1AFAF;
+    height: 25px;
+}
 }
 
 @media  screen and (min-width:861px) {
@@ -398,5 +406,13 @@
         max-width: 230px;
         font-weight: bold;
     
+    }
+    .input-num{
+        position: absolute;
+        bottom: 20px;
+        right: 80px;
+        font-size: 1em;
+        color: #B1AFAF;
+        height: 25px;
     }
     }

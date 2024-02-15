@@ -33,9 +33,10 @@
               </div>
             </div>
             <textarea type="text" :class="{'message-textarea':!isDarkMode,'message-textarea-dark':isDarkMode}" id="" cols="30" rows="10" v-model="message" @keyup.enter.prevent="send" 
-            v-if="Object.keys(chatInfo).length != 0" maxlength="200" >
+            v-if="Object.keys(chatInfo).length != 0" maxlength="100" >
             </textarea>
             <textarea :class="{'message-textarea':!isDarkMode,'message-textarea-dark':isDarkMode}" v-else></textarea>
+            <div class="input-num" >{{ inputNum }}/100</div>
             <label for="imageInput" class="btn-label">
               <div class="btn-upload"></div>
             </label>
@@ -83,6 +84,7 @@ export default {
       preImg : "",
       step : 0,
       io : {},
+      inputNum : 0,
     }
   },
   props:{
@@ -109,6 +111,9 @@ export default {
     async chatId(nv,ov){
       await this.loadChat()
       this.scrollToBottom()
+    },
+    message(){
+      this.inputNum = this.message.length
     }
     
   },
