@@ -8,7 +8,7 @@
         <div :class="{'job-text':!isDarkMode,'job-text-dark':isDarkMode}" v-if="participant.jobId == '미치광이'">내 직업 : 경찰</div>
         <div :class="{'job-text':!isDarkMode,'job-text-dark':isDarkMode}" v-else>내 직업 : {{participant.jobId }}</div>
       </div>
-      <div class="chat-box">
+      <div class="chat-box" ref="chatBox">
         <div v-for="(message,idx) in chatStore.getMessage[roomData.id]" :key="idx" style="margin-top: 10px;" :id="'message'+idx">
           <div v-if="message.userId == 1">
                 <div style="display: flex;">
@@ -61,6 +61,10 @@
             </div>
           </div>
         </div>
+        <!-- v-if="showNewMessageButton" -->
+        <button  v-if="showNewMessageButton"  @click="scrollToBottom" class="new-message">새 메시지 보기</button>
+
+
     </div>
     </div>
     <div class="chat-input-box">
@@ -69,7 +73,7 @@
       ></textarea>
       <textarea type="text" class="chat-input-mafia" id="content" cols="40" rows="3" maxlength="100" v-model="message" @keyup.enter.prevent="sendMafia"
       v-if="participant.flagMafia && mafiaFlag==true"></textarea>
-      <div class="input-num" >{{ inputNum }}/100</div>
+      <!-- <div class="input-num" >{{ inputNum }}/100</div> -->
       <div class="mafia-chat" v-if="participant.flagMafia "
       @click="mafiaChat"
       ></div>
@@ -101,6 +105,7 @@ export default {
         mafiaFlag : false,
         io : {},
         endGame : 0,
+        showNewMessageButton: false, // 새 메시지 버튼 표시 여부
       }
     },
 
@@ -141,11 +146,31 @@ export default {
             console.log(err)
           }
         },
-      scrollToBottom(){
-        this.$nextTick(()=>{
-          const messageContent =  document.querySelector('.chat-box')
-          messageContent.scrollTop = messageContent.scrollHeight
-        })
+      // scrollToBottom(){
+      //   this.$nextTick(()=>{
+      //     const messageContent =  document.querySelector('.chat-box')
+      //     messageContent.scrollTop = messageContent.scrollHeight
+      //   })
+      // },
+      checkScroll() {
+        const chatBox = this.$refs.chatBox;
+        // 스크롤이 맨 아래에 있지 않은 경우 true 반환
+        const isNotAtBottom = chatBox.scrollHeight - chatBox.scrollTop !== chatBox.clientHeight;
+        this.showNewMessageButton = isNotAtBottom;
+      },
+      scrollToBottom: function() {
+        this.$nextTick(() => {
+          const chatBox = this.$refs.chatBox;
+          // if (chatBox) {
+            chatBox.scrollTop = chatBox.scrollHeight;
+            this.showNewMessageButton = false; // 버튼 숨기기
+          // }
+        });
+      },
+      onNewMessage() {
+        // 새 메시지가 도착했을 때 호출되는 함수
+        this.checkScroll();
+        // 추가적인 로직...
       },
       mafiaChat(){
         this.mafiaFlag = !(this.mafiaFlag)
@@ -266,6 +291,14 @@ export default {
       mounted(){
         this.io = new IntersectionObserver(this.call,{threshold : 0.7})
         this.startPage()
+        this.$refs.chatBox.addEventListener('scroll', this.checkScroll);
+      },
+      // updated() {
+      //   this.scrollToBottom(); // 컴포넌트 업데이트(메시지 수신) 후 스크롤
+      // }
+      beforeDestroy() {
+        
+        this.$refs.chatBox.removeEventListener('scroll', this.checkScroll);
       },
 
     

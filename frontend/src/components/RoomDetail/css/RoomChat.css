@@ -1,3 +1,24 @@
+.new-message-box{
+    display: flex;
+    width: 100%;
+    justify-content: center;
+    position: absolute;
+}
+
+.new-message{
+    position: absolute;
+    text-align: center;
+    margin-left: 35%;
+    width: 30%;
+    height: 30px;
+    background: #8499AA;
+    border-radius: 30px;
+    border: none;
+    bottom: 0;
+    color: white;
+    cursor: pointer;
+}
+
 @media  screen and (max-width:860px) {
 .chat-nick-msg-dark{
     font-size: 13px; 
