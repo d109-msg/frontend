@@ -122,7 +122,11 @@ export default {
     computed:{
       endFlag : function(){
         const chat = useChatStore()
-        return chat.getEnd
+        if(chat.getEndRoom[this.roomData.id] != null){
+          return chat.getEndRoom[this.roomData.id]
+        }else{
+          return 0
+        }
       },
       chatLength : function(){
         const chat = useChatStore()

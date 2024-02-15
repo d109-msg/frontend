@@ -131,7 +131,11 @@ export default {
     computed:{
       endTurn(){
         const chat = useChatStore()
-        return chat.getEnd
+        if(chat.getEndRoom[this.roomData.id] != null){
+          return chat.getEndRoom[this.roomData.id]
+        }else{
+          return 0
+        }
       },
       dayTurn (){
         const chat = useChatStore()
@@ -350,7 +354,6 @@ export default {
             await this.getParticipant(this.roomData.id)
             this.endStep = true
             const chat = useChatStore()
-            chat.setEnd(0)
             this.roomData.endTime = '끝'
             setTimeout(()=>{
               this.endStep = false
