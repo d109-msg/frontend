@@ -312,7 +312,7 @@ export default {
             }
             let saveImg = document.querySelectorAll('.save-wrapper>img')
             for(let i=0; i<saveImg.length;i++){
-                saveImg[i].src = ""
+                saveImg[i].src = "https://team109testbucket.s3.ap-northeast-2.amazonaws.com/alt_img.png"
             }
             if(!file || files.length>3) return; // user가 파일 선택하지 않았을때 돌아가.
             for(let i=0; i<files.length;i++){

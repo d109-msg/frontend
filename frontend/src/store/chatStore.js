@@ -167,6 +167,7 @@ export const useChatStore = defineStore('chat',{
             ()=>{
                 this.isConnect = false
             })
+            client.reconnect_delay = 5000
         },
         notifyConnect : async function(){
             let value = await this.getNotification()
