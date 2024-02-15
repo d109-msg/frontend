@@ -56,6 +56,9 @@
 import axios from 'axios'
 import router from '@/router'
 import { useAuthStore } from '@/store/authStore'
+import { toast} from 'vue3-toastify'
+import "vue3-toastify/dist/index.css"
+
 
 
 export default {
@@ -120,9 +123,16 @@ export default {
                     const auth = useAuthStore()
                     await auth.signUp(this.name, this.email, this.password)
                     router.push('/login')
-                    alert(`${this.name}님 회원가입에 축하드립니다.`)
+
                 } catch(err){
-                    alert('예기치 못한 오류가 발생했습니다.')
+                    toast('중복된 이메일이거나 형식에 맞지않는 정보입니다.',{
+                        theme : "auto",
+                        "type": "error",
+                        "pauseOnHover": false,
+                        "position": "top-center",
+                        "transition": "slide",
+                        "autoClose": 1000,
+                    })
                 }
             }else{
                 if(this.nameCheck){this.name = ""}

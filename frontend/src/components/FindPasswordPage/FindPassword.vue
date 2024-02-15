@@ -66,6 +66,9 @@ import axios from 'axios'
 import router from '@/router'
 import { useAuthStore } from '@/store/authStore'
 import LoadingSpinner from '../LoadingSpinner/LoadingSpinner.vue'
+import { toast} from 'vue3-toastify'
+import "vue3-toastify/dist/index.css"
+
 export default {
     name : 'FindPassword',
     data(){
@@ -90,11 +93,25 @@ export default {
                 this.spinFlag = true
                 const auth = useAuthStore()
                 await auth.resetPassword(this.email)
-                alert('임시비밀번호가 발송되었습니다.')
+                toast('임시비밀번호가 발송되었습니다.',{
+                    theme : "auto",
+                    "type": "info",
+                    "pauseOnHover": false,
+                    "position": "top-center",
+                    "transition": "slide",
+                    "autoClose": 1000,
+                })
                 this.spinFlag = false
                 router.push('/login')
                 } catch(err) {
-                    alert('존재하지 않는 이메일입니다. 다시 이메일을 확인해주세요.')
+                    toast('존재하지 않는 이메일입니다. 다시 이메일을 확인해주세요.',{
+                    theme : "auto",
+                    "type": "error",
+                    "pauseOnHover": false,
+                    "position": "top-center",
+                    "transition": "slide",
+                    "autoClose": 1000,
+                })
                     emailInput.focus()
                 }
             } else {
@@ -115,7 +132,14 @@ export default {
             } catch(error){
                 console.log(error)
                 tempPasswordInput.focus()
-                alert('잘못된 비밀번호입니다.')
+                toast('잘못된 비밀번호입니다.',{
+                    theme : "auto",
+                    "type": "warning",
+                    "pauseOnHover": false,
+                    "position": "top-center",
+                    "transition": "slide",
+                    "autoClose": 1000,
+                })
             }
             
         },

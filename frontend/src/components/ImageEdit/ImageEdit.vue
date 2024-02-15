@@ -90,6 +90,8 @@ import btof from './base64ToFile'
 import MissonConfirm from './MissonConfirm.vue'
 import WriteContent from './WriteContent.vue'
 import defaultImg from './Img/default_img.png'
+import { toast} from 'vue3-toastify'
+import "vue3-toastify/dist/index.css"
 
 export default {
     name: "ImageEdit",
@@ -174,7 +176,14 @@ export default {
             console.log(list.length)
             for(let i=0; i<this.fileLength;i++){
                 if(i==0 && list[i].src==""){
-                    alert("입력된 이미지가 없습니다.")
+                    toast("입력된 이미지가 없습니다.",{
+                    theme : "auto",
+                    "type": "error",
+                    "pauseOnHover": false,
+                    "position": "top-center",
+                    "transition": "slide",
+                    "autoClose": 1000,
+                })
                     return
                 }else{
                     if(list[i].getAttribute('src')==""){
@@ -220,11 +229,25 @@ export default {
         missionTrue : function(){
             this.missionConfirm = false
             this.writeFlag = true
-            alert("미션에 성공하였습니다 !!!!")
+            toast("미션에 성공하였습니다 !!!!",{
+                    theme : "auto",
+                    "type": "success",
+                    "pauseOnHover": false,
+                    "position": "top-center",
+                    "transition": "slide",
+                    "autoClose": 1000,
+                })
         },
         missionFalse : function(){
             this.missionConfirm=false
-            alert("미션에 성공하지 못했습니다. 이미지를 수정하거나 교체 후 다시 시도하십시오.")
+            toast("미션에 성공하지 못했습니다. 이미지를 수정하거나 교체 후 다시 시도하십시오.",{
+                    theme : "auto",
+                    "type": "warning",
+                    "pauseOnHover": false,
+                    "position": "top-center",
+                    "transition": "slide",
+                    "autoClose": 1000,
+                })
         }
     },
     mounted(){
@@ -277,7 +300,14 @@ export default {
             let files = fileInput.files
             let file = files[0] // user가 선택한 파일 1개(가장 처음)
             if(!(file.type.includes('image'))){
-                alert('이미지 파일을 올려주세요')
+                toast('이미지 파일을 올려주세요',{
+                    theme : "auto",
+                    "type": "error",
+                    "pauseOnHover": false,
+                    "position": "top-center",
+                    "transition": "slide",
+                    "autoClose": 1000,
+                })
                 return
             }
             let saveImg = document.querySelectorAll('.save-wrapper>img')

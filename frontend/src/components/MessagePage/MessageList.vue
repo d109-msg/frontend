@@ -56,8 +56,9 @@ import { useAuthStore } from '@/store/authStore'
 import { nextTick } from 'vue'
 import { useChatStore } from '@/store/chatStore'
 import servers from '@/server'
-// const server =  'https://i10d109.p.ssafy.io/api'
-// const server2 = 'http://localhost:8080/api'
+import { toast} from 'vue3-toastify'
+import "vue3-toastify/dist/index.css"
+
 const server = servers
 const server2 = 'https://i10d109.p.ssafy.io/api'
 
@@ -136,10 +137,24 @@ export default {
           if(value.status == 201){
             this.messageList.unshift(value.data)
           }else if(value.status== 200){
-            alert('이미 존재하는 채팅방입니다.')
+            toast('이미 존재하는 채팅방입니다.',{
+                    theme : "auto",
+                    "type": "warning",
+                    "pauseOnHover": false,
+                    "position": "top-center",
+                    "transition": "slide",
+                    "autoClose": 1000,
+                })
           }
         }catch(err){
-          alert('잘못된 요청입니다.')
+          toast('잘못된 요청입니다.',{
+                    theme : "auto",
+                    "type": "error",
+                    "pauseOnHover": false,
+                    "position": "top-center",
+                    "transition": "slide",
+                    "autoClose": 1000,
+                })
 
           console.log(err)
         }

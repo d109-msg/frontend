@@ -83,6 +83,8 @@
 
 import { useAuthStore } from '@/store/authStore'
 import { useChatStore } from '@/store/chatStore'
+import { toast} from 'vue3-toastify'
+import "vue3-toastify/dist/index.css"
 
 
 export default {
@@ -150,7 +152,14 @@ export default {
       },
       send : function(){
         if(this.participant.flagDie == 1 && this.endGame == 0 && this.roomData.endTime == null){
-          alert('이미 당신은 사망하였습니다. 더이상 게임에 참여하실 수 없습니다.')
+          toast('이미 당신은 사망하였습니다. 더이상 게임에 참여하실 수 없습니다.',{
+                    theme : "auto",
+                    "type": "warning",
+                    "pauseOnHover": false,
+                    "position": "top-center",
+                    "transition": "slide",
+                    "autoClose": 1000,
+                })
           this.message = ""
           return
         }

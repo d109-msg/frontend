@@ -47,6 +47,9 @@
 
 <script>
 import { useGameStore } from '@/store/gameStore';
+import { toast} from 'vue3-toastify'
+import "vue3-toastify/dist/index.css"
+
 export default {
     name: 'RoomVote',
     data(){
@@ -81,10 +84,24 @@ export default {
           console.log('투표 성공')
           console.log(this.voteResult)
           if (this.voteResult == 'you lost your vote to a gangster.'){
-            alert('투표권을 건달에게 압수당하여 오늘은 투표할 수 없습니다.')
+            toast('투표권을 건달에게 압수당하여 오늘은 투표할 수 없습니다.',{
+                    theme : "auto",
+                    "type": "warning",
+                    "pauseOnHover": false,
+                    "position": "top-center",
+                    "transition": "slide",
+                    "autoClose": 1000,
+                })
           }
           else if (this.voteResult == 'mission uncompleted'){
-            alert('오늘의 미션을 완료해주세요.')
+            toast('오늘의 미션을 완료해주세요.',{
+                    theme : "auto",
+                    "type": "error",
+                    "pauseOnHover": false,
+                    "position": "top-center",
+                    "transition": "slide",
+                    "autoClose": 1000,
+                })
           }else{
             await this.getvoteRoom(this.participant.roomId)
             this.$nextTick(()=>{

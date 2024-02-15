@@ -21,6 +21,8 @@
 import { useAuthStore } from '@/store/authStore';
 import { useGameStore } from '@/store/gameStore';
 import router from '@/router';
+import { toast} from 'vue3-toastify'
+import "vue3-toastify/dist/index.css"
 
 export default {
     name: 'GameMidPage',
@@ -91,7 +93,14 @@ export default {
               this.createFlag = false
             }
           }else{
-            alert('더이상 방을 생성할 수 없어요.')
+            toast('더이상 방을 생성할 수 없어요.',{
+                    theme : "auto",
+                    "type": "warning",
+                    "pauseOnHover": false,
+                    "position": "top-center",
+                    "transition": "slide",
+                    "autoClose": 1000,
+                })
           }
         },
         checkRandomFlag: async function(){

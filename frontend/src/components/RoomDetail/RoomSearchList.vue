@@ -28,6 +28,9 @@
   import { nextTick } from 'vue'
   import { useChatStore } from '@/store/chatStore'
   import servers from '@/server'
+  import { toast} from 'vue3-toastify'
+  import "vue3-toastify/dist/index.css"
+
   // const server =  'https://i10d109.p.ssafy.io/api'
   // const server2 = 'http://localhost:8080/api'
   const server = servers
@@ -118,11 +121,23 @@
             }else if(value.status== 200){
                 chat.getStomp.send("/pub/message",JSON.stringify(data))
             }
-            alert('초대코드 전송 완료')
+            toast('초대코드 전송 완료',{
+                    theme : "auto",
+                    "type": "success",
+                    "pauseOnHover": false,
+                    "position": "top-center",
+                    "transition": "slide",
+                    "autoClose": 1000,
+                })
           }catch(err){
-            alert('잘못된 요청입니다.')
-  
-            console.log(err)
+            toast('잘못된 요청입니다.',{
+                    theme : "auto",
+                    "type": "error",
+                    "pauseOnHover": false,
+                    "position": "top-center",
+                    "transition": "slide",
+                    "autoClose": 1000,
+                })
           }
         },
         clickChat : async function(idx){

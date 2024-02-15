@@ -26,8 +26,12 @@ export const useChatStore = defineStore('chat',{
         endFlag : 0,
         enterFlag : 0,
         endRoom : {},
+        gameReset : 0
     }),
     getters:{
+        getGameReset : (state)=>{
+            return state.gameReset
+        },
         getStomp : (state)=>{
             return state.stompClient
         },
@@ -63,6 +67,9 @@ export const useChatStore = defineStore('chat',{
         }
     },
     actions:{
+        setGameReset : function(value){
+            this.gameReset = value
+        },
         setEnter : function(){
             this.enterFlag+=1
         },
@@ -174,6 +181,9 @@ export const useChatStore = defineStore('chat',{
                     const data = JSON.parse(e.body)
                     if(data.dataType == "noti"){
                         this.notify.unshift(data)
+                        if(data.articleId == 0){
+                            this.setGameReset(1)
+                        }
                     } else if(data.dataType == "sub"){
                         this.subRequest(data)
                     }

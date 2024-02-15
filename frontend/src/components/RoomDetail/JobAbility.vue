@@ -35,6 +35,8 @@
 
 <script>
 import { useGameStore } from '@/store/gameStore';
+import { toast} from 'vue3-toastify'
+import "vue3-toastify/dist/index.css"
 
 export default {
     name:'jobAbility',
@@ -71,7 +73,14 @@ export default {
             try{
                 let value = await game.useAbility(id, targetId)
                 this.judgeResult = value.data 
-                alert(this.judgeResult)
+                toast(this.judgeResult,{
+                    theme : "auto",
+                    "type": "success",
+                    "pauseOnHover": false,
+                    "position": "top-center",
+                    "transition": "slide",
+                    "autoClose": 1000,
+                })
             }catch(err){
                 console.log(err)
             }
