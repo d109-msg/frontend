@@ -48,7 +48,7 @@ public class OpenAiUtil {
                 "{ \"role\": \"user\", " +
                 "\"content\": [ " +
                 "{ \"type\": \"text\", " +
-                "\"text\": \"If the photo and condition match, answer True or False, If it's not a real picture, make sure to return false, Reason : A simple answer for the reason in Korean. condition : %s\" }, " +
+                "\"text\": \"If the photo and condition match, answer True or False, Reason : A simple answer for the reason in Korean. condition : %s\" }, " +
                 "{ \"type\": \"image_url\", \"image_url\": { \"url\": \"data:image/jpeg;base64,%s\" } } ] } ]," +
                 " \"max_tokens\": 300 }", condition, base64Image);
 
