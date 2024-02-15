@@ -13,12 +13,13 @@
                r.create_time,
                r.end_time,
                r.start_time,
-               p2.nickname AS title, -- 다른 참여자의 닉네임
-               p2.image_url, -- 다른 참여자의 이미지 URL
+               u.nickname AS title,
+               u.image_url,
                r.flag_available
         FROM rooms r
                  JOIN participants p ON r.id = p.room_id AND p.user_id = #{id}
                  JOIN participants p2 ON r.id = p2.room_id AND p2.user_id != #{id}
+            JOIN users u ON p2.user_id = u.id
         WHERE r.data_type = "개인";
     </select>
 

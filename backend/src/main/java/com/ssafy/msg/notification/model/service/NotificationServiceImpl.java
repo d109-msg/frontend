@@ -113,7 +113,7 @@ public class NotificationServiceImpl implements NotificationService {
                         .fromNickname(fromNickname)
                         .articleId(commentDto.getArticleId())
                         .imageUrl(articleInfoDto.getImageUrl())
-                        .content(" 님이 회원님의 게시글에 댓글을 남겼습니다.\n\"" + commentDto.getContent() + "\"")
+                        .content(" 님이 회원님의 게시글에 댓글을 남겼습니다.\n\"" + commentDto.getContent().replace("\n", "") + "\"")
                         .createTime(dateTimeUtil.getCurrentDateTime())
                         .flagRead(0)
                         .dataType("noti") // noti, sub
@@ -132,7 +132,7 @@ public class NotificationServiceImpl implements NotificationService {
                         .fromNickname(fromNickname)
                         .articleId(commentDto.getArticleId())
                         .imageUrl(commentInfoDto.getImageUrl())
-                        .content(" 님이 회원님의 댓글에 답글을 남겼습니다.\n\""+commentDto.getContent()+"\"")
+                        .content(" 님이 회원님의 댓글에 답글을 남겼습니다.\n\""+commentDto.getContent().replace("\n", "")+"\"")
                         .createTime(dateTimeUtil.getCurrentDateTime())
                         .flagRead(0)
                         .dataType("noti") // noti, sub
