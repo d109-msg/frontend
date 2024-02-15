@@ -25,7 +25,7 @@
 }
 }
 .main-banner-light{
-    background: url(./Img/banner_day.png), lightgray 50%;
+    background: url('https://team109testbucket.s3.ap-northeast-2.amazonaws.com/banner_day.png'), lightgray 50%;
     position: absolute;
     background-repeat: no-repeat;
     background-position: center;
@@ -36,7 +36,7 @@
     left: 0;
 }
 .main-banner-dark{
-    background: url(./Img/banner_night.png), lightgray 50%;
+    background: url('https://team109testbucket.s3.ap-northeast-2.amazonaws.com/banner_night.png'), lightgray 50%;
     position: absolute;
     background-repeat: no-repeat;
     background-position: center;
