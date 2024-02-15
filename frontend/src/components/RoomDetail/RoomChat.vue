@@ -62,7 +62,7 @@
           </div>
         </div>
         <!-- v-if="showNewMessageButton" -->
-        <button  v-if="showNewMessageButton"  @click="scrollToBottom" class="new-message">새 메시지 보기</button>
+        <!-- <button  v-if="showNewMessageButton"  @click="scrollToBottom" class="new-message">새 메시지 보기</button> -->
 
 
     </div>
@@ -123,6 +123,15 @@ export default {
       endFlag : function(){
         const chat = useChatStore()
         return chat.getEnd
+      },
+      chatLength : function(){
+        const chat = useChatStore()
+        let result = chat.getMessage[this.roomId]
+        if(result != null){
+          return result.length
+        }else{
+          return 0
+        }
       }
     },
     watch:{
@@ -133,6 +142,20 @@ export default {
       },
       message(nv,ov){
         this.inputNum = this.message.length
+      },
+      chatLength(nv,ov){
+        const box = document.querySelector('.chat-box')
+        if(box != null){
+          const scrollPosition = box.scrollTop + box.clientHeight
+        const total = box.scrollHeight
+        let judge = (total-scrollPosition) <= 400; 
+        console.log(total)
+        console.log(scrollPosition)
+        if(nv!=0 && judge){
+          this.scrollToBottom()
+        }
+        }
+        
       }
     },
     methods:{
@@ -146,32 +169,22 @@ export default {
             console.log(err)
           }
         },
-      // scrollToBottom(){
-      //   this.$nextTick(()=>{
-      //     const messageContent =  document.querySelector('.chat-box')
-      //     messageContent.scrollTop = messageContent.scrollHeight
-      //   })
-      // },
-      checkScroll() {
-        const chatBox = this.$refs.chatBox;
-        // 스크롤이 맨 아래에 있지 않은 경우 true 반환
-        const isNotAtBottom = chatBox.scrollHeight - chatBox.scrollTop !== chatBox.clientHeight;
-        this.showNewMessageButton = isNotAtBottom;
+      scrollToBottom(){
+        this.$nextTick(()=>{
+          const messageContent =  document.querySelector('.chat-box')
+          messageContent.scrollTop = messageContent.scrollHeight
+        })
       },
+
       scrollToBottom: function() {
         this.$nextTick(() => {
           const chatBox = this.$refs.chatBox;
           // if (chatBox) {
             chatBox.scrollTop = chatBox.scrollHeight;
-            this.showNewMessageButton = false; // 버튼 숨기기
           // }
         });
       },
-      onNewMessage() {
-        // 새 메시지가 도착했을 때 호출되는 함수
-        this.checkScroll();
-        // 추가적인 로직...
-      },
+
       mafiaChat(){
         this.mafiaFlag = !(this.mafiaFlag)
       },
@@ -291,15 +304,12 @@ export default {
       mounted(){
         this.io = new IntersectionObserver(this.call,{threshold : 0.7})
         this.startPage()
-        this.$refs.chatBox.addEventListener('scroll', this.checkScroll);
+
       },
       // updated() {
       //   this.scrollToBottom(); // 컴포넌트 업데이트(메시지 수신) 후 스크롤
       // }
-      beforeDestroy() {
-        
-        this.$refs.chatBox.removeEventListener('scroll', this.checkScroll);
-      },
+
 
     
 }
