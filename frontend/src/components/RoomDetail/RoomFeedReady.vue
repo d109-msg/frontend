@@ -24,6 +24,9 @@
 <script>
 import { useChatStore } from '@/store/chatStore';
 import RoomSearchList from './RoomSearchList.vue';
+import { toast} from 'vue3-toastify'
+import "vue3-toastify/dist/index.css"
+
 export default {
     name: 'RoomFeedReady',
     data(){
@@ -57,7 +60,14 @@ export default {
           textArea.select()
           try{
             const successful = document.execCommand('copy');
-            alert('초대코드가 클립보드에 복사되었습니다.')
+            toast('초대코드가 클립보드에 복사되었습니다.',{
+                    theme : "auto",
+                    "type": "success",
+                    "pauseOnHover": false,
+                    "position": "top-center",
+                    "transition": "slide",
+                    "autoClose": 1000,
+                })
           }catch(err){
             console.err('클립보드 복사에 실패했습니다:', err)
           }

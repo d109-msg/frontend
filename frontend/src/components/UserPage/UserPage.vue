@@ -96,6 +96,9 @@ import router from '@/router'
 import { useFeedStore } from '@/store/feedStore'
 import { watch } from 'vue'
 import { useChatStore } from '@/store/chatStore'
+import { toast} from 'vue3-toastify'
+import "vue3-toastify/dist/index.css"
+
 
 export default {
     name : 'UserPage',
@@ -183,7 +186,14 @@ export default {
         let value = await auth.getOtherUser(this.$route.params.id)
         this.userInfo = value.data
         if(value.data === ""){
-          alert('존재하지 않는 회원 정보입니다.')
+          toast('존재하지 않는 회원 정보입니다.',{
+                    theme : "auto",
+                    "type": "error",
+                    "pauseOnHover": false,
+                    "position": "top-center",
+                    "transition": "slide",
+                    "autoClose": 1000,
+                })
           router.push('/')
         }
       } catch (error) {

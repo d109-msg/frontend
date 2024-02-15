@@ -53,6 +53,9 @@
 <script>
 import { useAuthStore } from '@/store/authStore'
 import base64toFile from '../ImageEdit/base64ToFile'
+import { toast} from 'vue3-toastify'
+import "vue3-toastify/dist/index.css"
+
 export default {
     name: 'EditProfile',
     data(){
@@ -81,7 +84,14 @@ export default {
           const check = event.target.files[0]
           const fileType = check.type
           if(!fileType.includes('image')){
-            alert('이미지 파일을 올려주세요')
+            toast('이미지 파일을 올려주세요',{
+                    theme : "auto",
+                    "type": "warning",
+                    "pauseOnHover": false,
+                    "position": "top-center",
+                    "transition": "slide",
+                    "autoClose": 1000,
+                })
             return
           }
             const file = fileImage.files

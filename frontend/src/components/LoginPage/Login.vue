@@ -42,6 +42,8 @@ import axios from 'axios'
 import dotenv from 'dotenv'
 import router from '@/router'
 import { useAuthStore } from '@/store/authStore'
+import { toast} from 'vue3-toastify'
+import "vue3-toastify/dist/index.css"
 
 dotenv.config()
 
@@ -63,7 +65,14 @@ export default {
                 router.push('/')
             } catch(error) {
                 console.log(error)
-                alert('로그인에 실패하였습니다.')
+                toast('로그인에 실패하였습니다.',{
+                    theme : "auto",
+                    "type": "warning",
+                    "pauseOnHover": false,
+                    "position": "top-center",
+                    "transition": "slide",
+                    "autoClose": 1000,
+                })
                 document.querySelector('input').focus()
             }   
         },

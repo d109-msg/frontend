@@ -49,7 +49,7 @@
           아침이 되었습니다. (08시 ~ 20시)</div>
         <div :class="{'content':!isDarkMode,'content-dark':isDarkMode}">아침이 되면 <span class="red">미션</span>을 배당받습니다. 각자 미션에 해당하는 <span class="red">미션 피드</span>를 올려주세요.</div>
         <div :class="{'content':!isDarkMode,'content-dark':isDarkMode}">미션을 수행해야 <span class="blue">마피아 지목 투표</span>가 가능합니다. 성실히 미션을 수행해주세요! </div>
-        <div :class="{'content':!isDarkMode,'content-dark':isDarkMode}">미션을 수행하지 않은 사람은 <span class="red">실종</span> 처리가 되버립니다. 더 이상 게임에 참여할 수 없어요.</div>
+        <div :class="{'content':!isDarkMode,'content-dark':isDarkMode}">미션을 수행하지 않은 사람은 <span class="red">실종</span> 처리가 돼버립니다. 더 이상 게임에 참여할 수 없어요.</div>
         <br>
         <div :class="{'job-content':!isDarkMode,'job-content-dark':isDarkMode}"  style="display: flex; flex-direction: row; align-items: center;" >
           <div class="night"></div>

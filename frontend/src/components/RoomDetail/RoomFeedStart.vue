@@ -20,6 +20,7 @@
               <p class="follow-name" style="cursor: pointer;" @click="goFriend(mem.userId)">{{ mem.nickname }}</p>
               <div class="follow-btn" v-if="!mem.isFollowing" @click="follow(mem.userId,idx)">Follow</div>
               <div class="follow-btn" v-if="mem.isFollowing" @click="follow(mem.userId,idx)">Unfollow</div>
+              <div class="report-btn" @click="report(mem.nickname)">Report</div>
           </div>
         </div>
         </div>
@@ -44,7 +45,7 @@
             <div v-for="(feed,idx) in feedList" :key="idx"  style="display: flex; justify-content: center;" :id="`feed${idx}`">
                     <RoomFeedCardVue :item="feed" :is-dark-mode="isDarkMode" :room="roomData"/>
             </div>
-            <div class="member-btn" @click="gameMemberFlag=1" v-if="roomData.endTime != null || (roomData.id in chat.getEndRoom)">Member List</div>
+            <div :class="{'member-btn':!isDarkMode,'member-btn-dark':isDarkMode}" @click="gameMemberFlag=1" v-if="roomData.endTime != null || (roomData.id in chat.getEndRoom)">Member List</div>
         </div>
         
 
@@ -63,6 +64,9 @@ import { useGameStore } from '@/store/gameStore';
 import RoomFeedCardVue from './RoomFeedCard.vue';
 import router from '@/router';
 import { useChatStore } from '@/store/chatStore';
+import { toast} from 'vue3-toastify'
+import "vue3-toastify/dist/index.css"
+
 export default {
     name:'RoomFeedStart',
     data(){
@@ -91,11 +95,41 @@ export default {
         RoomFeedCardVue
     },
     methods:{
-
+        report(value){
+            toast(`${value} 사용자 신고가 완료되었습니다.`,{
+                    theme : "auto",
+                    "type": "error",
+                    "pauseOnHover": false,
+                    "position": "top-center",
+                    "transition": "slide",
+                    "dangerouslyHTMLString": true,
+                    "autoClose": 1000,
+                    
+                })
+        },
         async follow(data,idx){
             const auth = useAuthStore()
             await auth.follow(data)
             this.member[idx].isFollowing = !this.member[idx].isFollowing
+            let value = false
+            let type = "success"
+
+            if(this.member[idx].isFollowing == 0){
+                value = "팔로우 취소"
+                type = "error"
+            }else{
+                value = "팔로우"
+            }
+            toast(`${this.member[idx].nickname} ${value}가 완료되었습니다.`,{
+                    theme : "auto",
+                    "type": type,
+                    "pauseOnHover": false,
+                    "position": "top-center",
+                    "transition": "slide",
+                    "dangerouslyHTMLString": true,
+                    "autoClose": 1000,
+                    
+                })
         },
         goFriend(data){
         router.push(`/user/${data}`)
@@ -105,7 +139,14 @@ export default {
         },
         createOn : function(){
             if(this.participant.flagDie == 1){
-                alert('당신은 사망하셨습니다. 더이상 게임에 참여하실 수 없습니다.')
+                toast('당신은 사망하셨습니다. 더이상 게임에 참여하실 수 없습니다.',{
+                    theme : "auto",
+                    "type": "error",
+                    "pauseOnHover": false,
+                    "position": "top-center",
+                    "transition": "slide",
+                    "autoClose": 1000,
+                })
                 return
             }
             const feed = useFeedStore()
@@ -173,5 +214,7 @@ export default {
 </script>
 
 <style scoped src="./css/RoomFeedStart.css">
-
+#top-center{
+    z-index: 10000000;
+}
 </style>
