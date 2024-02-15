@@ -215,9 +215,9 @@ public class ArticleController {
             RoomFeedResponseDto result = articleService.getFeedByRoomId(articleByRoomIdDto);
 
             //  보여줄 피드가 없을 때 조건 넣어주기
-//            if (result.getArticles().isEmpty()) {
-//                return null;
-//            }
+            if (result.getArticles() == null || result.getArticles().isEmpty()) {
+                return null;
+            }
 
             int lastId = result.getArticles().get(result.getArticles().size() - 1).getArticleId();
 
@@ -326,9 +326,9 @@ public class ArticleController {
             GusetFeedResponseDto result = articleService.getGuestFeed(feedParamDto);
 
             //  보여줄 피드가 없을 때 조건 넣어주기
-//            if (result.getArticles().isEmpty()) {
-//                return null;
-//            }
+            if (result.getArticles() == null || result.getArticles().isEmpty()) {
+                return null;
+            }
 
             int lastId = result.getArticles().get(result.getArticles().size() - 1).getArticleId();
 
@@ -385,9 +385,9 @@ public class ArticleController {
             GusetFeedResponseDto result = articleService.getGuestFeed(feedParamDto);
 
 //            //  보여줄 피드가 없을 때 조건 넣어주기
-//            if (result.getArticles().isEmpty()) {
-//                return null;
-//            }
+            if (result.getArticles() == null || result.getArticles().isEmpty()) {
+                return null;
+            }
 
             int lastId = result.getArticles().get(result.getArticles().size() - 1).getArticleId();
 
