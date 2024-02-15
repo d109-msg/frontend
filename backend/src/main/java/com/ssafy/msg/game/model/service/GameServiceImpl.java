@@ -737,13 +737,13 @@ public class GameServiceImpl implements GameService{
 //
 //        Collections.shuffle(result);
 
-        result.add("판사");
-        result.add("경찰");
-        result.add("훼방꾼");
-        result.add("불침번");
-        result.add("의사");
-        result.add("건달");
-        result.add("미치광이");
+        result.add("판사");   //공정한 커닝햄
+        result.add("경찰");      //정의로운 젠킨스
+        result.add("훼방꾼");  //방해되는 드미트리
+        result.add("불침번");  //잠이 없는 니콜슨
+        result.add("의사");   //영리한 제임스
+        result.add("건달");   //건방진 게릭
+        result.add("미치광이");//광적인 켄달
 
         log.info("getJobs() result : {}", result);
 
@@ -1139,14 +1139,22 @@ public class GameServiceImpl implements GameService{
     @Override
     public void startGroupGame(String roomId, String roomTitle, List<ParticipantIdDto> participantList) throws Exception{
         int numOfPlayers = participantList.size();
-        List<RandomNameDto> randomNicknames = null;
+        List<RandomNameDto> randomNicknames = new ArrayList<>();
 
         log.info("startGroupGame() -> roomId : {}", roomId);
 
         // 각 participant 랜덤 닉네임, 랜덤 직업, 랜덤 이미지로 update
-        randomNicknames = gameMapper.getRandomNicknames(numOfPlayers);
+//        randomNicknames = gameMapper.getRandomNicknames(numOfPlayers);
 
-//        randomNicknames.add(new RandomNameDto("명석한", "호도"));
+
+
+        randomNicknames.add(new RandomNameDto("공정한", "커닝햄", "https://team109testbucket.s3.ap-northeast-2.amazonaws.com/player19.png"));
+        randomNicknames.add(new RandomNameDto("정의로운", "드미트리", "https://team109testbucket.s3.ap-northeast-2.amazonaws.com/player1.png"));
+        randomNicknames.add(new RandomNameDto("방해되는", "젠킨스", "https://team109testbucket.s3.ap-northeast-2.amazonaws.com/player2.png"));
+        randomNicknames.add(new RandomNameDto("잠이 없는", "니콜슨", "https://team109testbucket.s3.ap-northeast-2.amazonaws.com/player3.png"));
+        randomNicknames.add(new RandomNameDto("영리한", "제임스", "https://team109testbucket.s3.ap-northeast-2.amazonaws.com/player10.png"));
+        randomNicknames.add(new RandomNameDto("건방진", "게릭", "https://team109testbucket.s3.ap-northeast-2.amazonaws.com/player15.png"));
+        randomNicknames.add(new RandomNameDto("광적인", "켄달", "https://team109testbucket.s3.ap-northeast-2.amazonaws.com/player20.png"));
 
         List<String> randomJobs = getJobs(numOfPlayers);
 
