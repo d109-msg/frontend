@@ -101,6 +101,7 @@ export default {
         endGame : 0,
       }
     },
+
     props:{
       isOpen: Number,
       roomData: Object,
@@ -122,6 +123,9 @@ export default {
         if(nv==1){
           this.endGame = 1
         }
+      },
+      message(nv,ov){
+        this.inputNum = this.message.length
       }
     },
     methods:{
@@ -148,6 +152,11 @@ export default {
         if(this.participant.flagDie == 1 && this.endGame == 0 && this.roomData.endTime == null){
           alert('이미 당신은 사망하였습니다. 더이상 게임에 참여하실 수 없습니다.')
           this.message = ""
+          return
+        }
+        this.message = this.message.replace('/n','')
+        if(this.message.length == 0){
+          this.scrollToBottom()
           return
         }
         let data = {
