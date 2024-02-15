@@ -7,7 +7,7 @@
           ><img src="./Icon/delete.png" alt="">게시물 삭제</p>
       </div>
       <div class="list-container" v-if="userInfo.id!=feed.userId  && editFlag == true">
-          <p style="width: 100px;"><img src="./Icon/report.png" alt="">게시물 신고</p>
+          <p style="width: 100px;" @click="report"><img src="./Icon/report.png" alt="">게시물 신고</p>
       </div>
     </div>
     <div v-if="editFlag==true" class="close-list" @click="editFlag=false"></div>
@@ -57,6 +57,8 @@ import { useFeedStore } from '@/store/feedStore';
 import DetailPage from '../DetailPage/DetailPage.vue';
 import { useAuthStore } from '@/store/authStore';
 import router from '@/router';
+import { toast} from 'vue3-toastify'
+import "vue3-toastify/dist/index.css"
 
 export default {
     name: "FeedComp",
@@ -70,6 +72,18 @@ export default {
         }
     },
     methods: {
+      report : function(){
+        toast(`게시글 신고가 완료되었습니다.`,{
+                    theme : "auto",
+                    "type": "error",
+                    "pauseOnHover": false,
+                    "position": "top-center",
+                    "transition": "slide",
+                    "dangerouslyHTMLString": true,
+                    "autoClose": 1000,
+                    
+                })
+      },
       updateLike : function(){
         this.feed.isLike = !this.feed.isLike
       },
