@@ -149,7 +149,6 @@ public class NotificationServiceImpl implements NotificationService {
             log.info(notificationEntity.toDto().getUserId() + " - " + notificationEntity.toDto());
 
             // WebPush
-            // WebPush
             webPushService.sendWebPush(notificationEntity.getUserId(), fromNickname + notificationEntity.getContent());
         }
     }
