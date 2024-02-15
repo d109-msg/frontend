@@ -137,10 +137,10 @@ const server2 = 'https://i10d109.p.ssafy.io/api'
                             }
                         })
                     }   else{
-                                this.axiosPopular()
+                                this.axiosGuest()
                             }
                 } else{
-                    this.axiosPopular()
+                    this.axiosGuest()
                 }
                 },
 
