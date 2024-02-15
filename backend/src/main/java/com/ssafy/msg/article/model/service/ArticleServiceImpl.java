@@ -185,11 +185,11 @@ public class ArticleServiceImpl implements ArticleService{
     @Override
     public ArticleDetailDto getArticleDetail(ArticleDto articleDto, int id) throws Exception {
         log.info("(ArticleServiceImpl) getArticleDetail 시작(이미지 제외)");
+        articleDto.setUserId(id);
         ArticleDetailDto articleDetailDto = articleMapper.getArticleDetail(articleDto);
-
         articleDetailDto.setLikeCount(articleMapper.getLikeCount(articleDto.getId())); // 좋아요 수 넣어주기
         articleDetailDto.setIsLike(isLike(articleDto)); // 좋아요 여부 알려주기
-
+        
 
         // 댓글 리스트 넣어주기
         articleDetailDto.setCommentList(getComments(CommentDto.builder().userId(id).articleId(articleDto.getId()).build()));
