@@ -594,6 +594,8 @@
     width: 60%;
     height: 100%;
     position: relative;
+    border-right: 1px solid black;
+    border-left: 1px solid black;
 }
 .left-arrow{
     position: absolute;
