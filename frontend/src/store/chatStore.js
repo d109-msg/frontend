@@ -136,7 +136,6 @@ export const useChatStore = defineStore('chat',{
                 this.setNight(1)
             }
             if(value.noticeType=='end'){
-                this.setEnd(1)
                 this.endRoom[roomId] = 1
             }
             if(value.noticeType =='enter'){
