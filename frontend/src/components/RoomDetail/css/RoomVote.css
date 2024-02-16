@@ -59,6 +59,13 @@
     font-size: 0.6em;
 }
 
+.member-name-dark{
+    margin-top: 2px;
+    text-align: center;
+    font-size: 0.6em;
+    color: #E3AB9A;
+}
+
 .vote-hint{
     display: flex;
     flex-direction: column;

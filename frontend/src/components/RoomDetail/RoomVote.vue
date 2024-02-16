@@ -15,7 +15,7 @@
             @click="postVote(participant.id,participant.jobId,mem.id)"
             >
             <img :src="mem.imageUrl" alt="">
-            <label :for="`member-${idx}`" class="member-name">{{ mem.nickname }} </label>
+            <label :for="`member-${idx}`" :class="{'member-name':!isDarkMode,'member-name-dark':isDarkMode}">{{ mem.nickname }} </label>
             <div  class="vote-graph"><div :id="idx+'graph'" class="graph"></div></div>
             <div  class="vote-count">{{ mem.voteCount }}</div>
           </div>

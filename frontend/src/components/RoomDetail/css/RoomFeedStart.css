@@ -255,18 +255,19 @@
     font-weight: bold;
 }
 .follow-btn{
-    width: 70px;
+    width: 35px;
     height: 30px;
     position: absolute;
-    right: 100px;
+    right: 50px;
     border: 1px solid black;
     display: flex;
     justify-content: center;
     align-items: center;
     cursor: pointer;
+    font-size: 0.6em;
 }
 .report-btn{
-    width: 70px;
+    width: 35px;
     height: 30px;
     position: absolute;
     right: 10px;
@@ -275,6 +276,7 @@
     justify-content: center;
     align-items: center;
     cursor: pointer;
+    font-size: 0.6em;
 }
 
 }
