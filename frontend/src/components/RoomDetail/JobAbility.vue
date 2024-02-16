@@ -89,8 +89,15 @@ export default {
         const game = useGameStore()
             try{
                 let value = await game.useAbility(id, targetId)
-                this.abilityResult = value.data 
-                alert(this.abilityResult)
+                this.abilityResult = value.data
+                toast(this.abilityResult,{
+                    theme : "auto",
+                    "type": "warning",
+                    "pauseOnHover": false,
+                    "position": "top-center",
+                    "transition": "slide",
+                    "autoClose": 1000,
+                }) 
             }catch(err){
                 console.log(err)
             }
@@ -100,5 +107,7 @@ export default {
 </script>
 
 <style scoped src="./css/jobAbility.css">
-
+#top-center{
+    z-index: 10000000;
+}
 </style>
