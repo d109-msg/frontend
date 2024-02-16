@@ -29,14 +29,14 @@
     @open-chat="stepUp"
     />
     <div :class="{'chat-container':!isDarkMode,'chat-container-dark':isDarkMode}" v-if="(step==1 && size=='xs') || size=='lg' || size=='md'">
-      <div :class="{'chat-title-box':!isDarkMode,'chat-title-box-dark':isDarkMode}" style="display: flex; justify-content: space-between;">
-        <div >
+      <div :class="{'chat-title-box':!isDarkMode,'chat-title-box-dark':isDarkMode}" style="display: flex;  justify-content: flex-end;">
+        <!-- <div >
           <img v-if="!roomTime && size!='xs'" @click="dayFlag()" src="./Img/icon_sun_active.png" alt="" style="cursor: pointer;">
           <img v-else-if="size!='xs'" @click="dayFlag()" src="./Img/icon_sun.png" alt="" style="cursor: pointer;">
           <img v-if="roomTime && size!='xs'" @click="nightFlag()" src="./Img/icon_moon_active.png" alt="" style="cursor: pointer;">
           <img v-else-if="size!='xs'" @click="nightFlag()" src="./Img/icon_moon.png" alt="" style="cursor: pointer;">
-        </div>
-        <div style="display: flex; flex-direction: row; align-items: center;">
+        </div> -->
+        <!-- <div style="display: flex; flex-direction: row; align-items: center;"> -->
 
           <img src="./Img/icon_feed.png" class="is-feed" @click="step = 0" v-if="size=='xs'">
           <img v-if="isOpen==1" src="./Img/icon_chat_active.png" alt="" class="is-chat" @click="isChat" >
@@ -54,7 +54,7 @@
           
           <div v-if="isOpen==4" class="is-ability-active" @click="isAbility"></div>
           <div v-else class="is-ability" @click="isAbility"></div>
-        </div>
+        <!-- </div> -->
         
     </div>
       <RoomChat v-if="isOpen==1" 
