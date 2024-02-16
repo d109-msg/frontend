@@ -320,5 +320,7 @@ export default {
 </script>
 
 <style scoped src="./css/RoomChat.css">
-
+#top-center{
+    z-index: 10000000;
+}
 </style>
